@@ -69,7 +69,8 @@ alias real-rm=$(which rm)
 alias rm=trash
 
 # Nobody likes node_modules
-alias tree='tree -I node_modules'
+alias real-tree=$(which tree)
+alias tree='tree -I "dist|node_modules"'
 
 # faaaasteeer
 function mkcd() { mkdir "$1" && cd "$1"; }
