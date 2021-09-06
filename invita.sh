@@ -33,17 +33,23 @@ alias dns='dig +noall +answer'
 alias website='python3 -m http.server 8080 --directory'
 # making requests with HTTPie, is a lot simpler then with curl.
 alias https='http --default-scheme=https'
+alias bash-options='echo $-'
+alias bash-lvl='echo $SHLVL'
 
-# `export` environment variables, from a .env file, into the current shell process.
-# WARNING: This can be dangerous, DONT RUN MORE THEN ONCE.
-# Because it does not "unset" previously exported vars, as one might expect.
-# Generally it is better to set your env variables manually one by one, per shell session.
-function export-all {
-  file=$1
+# `source` shell scripts into a new shell process, using the `-a` option.
+# So environment variables are `export`ed by default, usefull for .env files.
+enter() {
+  scripts=$@
+  echo "Use \`exit\` to leave"
+  bash --rcfile <(echo "
+    source ~/.bashrc
 
-  set -a
-  source $file
-  set +a
+    set -a
+    for script in $scripts
+      do source \$script
+      done
+    set +a
+  ")
 }
 
 # Mount a Google Cloud Storage bucket localy in /mnt
