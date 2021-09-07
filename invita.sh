@@ -80,5 +80,5 @@ alias tree='tree -I "dist|node_modules"'
 
 # faaaasteeer
 function mkcd() { mkdir "$1" && cd "$1"; }
-alias l='ls -1'
+alias l='ls -1 --group-directories-first'
 alias ll='ls -lAh'
