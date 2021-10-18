@@ -36,6 +36,8 @@ alias https='http --default-scheme=https'
 alias bash-options='echo $-'
 alias bash-lvl='echo $SHLVL'
 
+gCreds=GOOGLE_APPLICATION_CREDENTIALS
+
 # `source` shell scripts into a new shell process, using the `-a` option.
 # So environment variables are `export`ed by default, usefull for .env files.
 enter() {
