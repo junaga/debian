@@ -39,7 +39,7 @@ alias bash-lvl='echo $SHLVL'
 gCreds=GOOGLE_APPLICATION_CREDENTIALS
 
 # `source` shell scripts into a new shell process, using the `-a` option.
-# So environment variables are `export`ed by default, usefull for .env files.
+# With `-a` environment variables are `export`ed by default, usefull for .env files.
 enter() {
   scripts=$@
   echo "Use \`exit\` to leave"

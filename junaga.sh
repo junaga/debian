@@ -1,13 +1,13 @@
-# commit all files in working dir
-alias commit-all="git add ./ && git commit"
+alias gitCommitAll="git add ./ && git commit"
+alias gitAmendAll="git add ./ && git commit --amend --no-edit"
 
-# run a command, commit all files, the commit msg is the command
-function commit-cmd {
+# run a command, commit all files, the commit msg is the command wrapped in ``$ MSG``
+function gitCommitCmd {
   cmd=$1
 
   eval $cmd &&
   git add ./ &&
-  git commit -m "\`$cmd\`"
+  git commit -m "\`$ $cmd\`"
 }
 
 # rename the master branch of an empty repo created with `git init`
