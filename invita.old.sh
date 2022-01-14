@@ -3,15 +3,6 @@
 # Invita bash shell rc.
 
 
-##### random intro
-# Hi :D This file got placed in your home directory (~) because you ran the install.sh script.
-# Please edit, no.. you have to edit! - this file to suite your needs. Delete this comment, etc.
-# If you wanna check out what new helpers got added to the 'system/files/shellrc' default,
-# with vscode you could for example do: `code --diff ~/shellrc ~/invita/system/files/shellrc`
-# Also check out our recommended packages from `system/dependencies` with i.e. `wajig show PKG`
-echo Hi! :D from shellrc
-
-
 
 ##### WSL 2
 # so you can `cd $windows` or `mv $windows/Downloads/1.jpg ./` 
