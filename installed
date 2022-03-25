@@ -2,6 +2,7 @@ bash-completion
 git
 gpg
 httpie
+nodejs
 trash-cli
 tree
 wget
