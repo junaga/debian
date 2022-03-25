@@ -1,8 +1,10 @@
 bash-completion
+gh
 git
 gpg
 httpie
 nodejs
+shellcheck
 trash-cli
 tree
 wget
