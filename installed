@@ -1,4 +1,7 @@
 bash-completion
-wget
-tree
 git
+gpg
+httpie
+trash-cli
+tree
+wget
