@@ -21,7 +21,7 @@ function bucket {
   echo Use \`sudo umount $dir\` to clear
 }
 
-##### system
+##### I like the terminal
 # So files `rm`ed won't go to limbo
 alias real-rm=$(which rm)
 alias rm=trash
@@ -29,3 +29,21 @@ alias rm=trash
 # Nobody likes node_modules
 alias real-tree=$(which tree)
 alias tree='tree -I "dist|node_modules"'
+
+mkcd() { mkdir "$1" && cd "$1"; }
+alias l='ls -1 --group-directories-first'
+alias ll='ls -lAh'
+# such a long variable..
+gCreds=GOOGLE_APPLICATION_CREDENTIALS
+
+# git-igins
+alias gitCommitAll="git add ./ && git commit"
+alias gitAmendAll="git add ./ && git commit --amend --no-edit"
+# run a command, commit all files, the commit msg is the command wrapped in ``$ MSG``
+function gitCommitCmd {
+  cmd=$1
+
+  eval $cmd &&
+  git add ./ &&
+  git commit -m "\`$ $cmd\`"
+}
