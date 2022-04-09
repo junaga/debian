@@ -1,32 +1,22 @@
 #!/bin/bash
 # Invita bash shell rc file
 
-##### The little things #####
+echo Welcome $USER
+
+# VS Code everything
 export EDITOR='code --wait'
-# Errors thrown in promises should kill!
-alias run='node --unhandled-rejections=strict'
-# quick maths
-versions() {
-  node --version
-  yarn --version
-  git --version
-  bash --version
-}
+# If it has to be used..
+export PAGER='less'
 
-
-##### I like the Terminal #####
-mkcd() { mkdir "$1" && cd "$1"; }
-alias l='ls -1 --group-directories-first'
-alias ll='ls -lAh'
-# such a long variable..
-gCreds=GOOGLE_APPLICATION_CREDENTIALS
-
-# Usefull for dotenv (`.env`) files. # https://github.com/motdotla/dotenv
-# Create a new shell process with the environment variables from the file.
-# Use `exit` to leave, effectively unloading the environment variables.
+# TODO: This is actually bad. We should not `source` the file.
 #
-# i.e. `$ enter prod.env ../myvars.env`
-# Variables in `myvars.env` overwrite `prod.env`
+# Create a new shell instance, with the variables from
+# a dotenv (`.env`) file, set into the process environment.
+# Quit the shell, and the environment disappears.
+#
+# https://github.com/motdotla/dotenv
+# For example: `$ enter prod.env ../myvars.env`,
+# variables in `myvars.env` overwrite `prod.env`
 enter() {
   scripts=$@
   echo "Use \`exit\` to leave"
@@ -39,4 +29,20 @@ enter() {
       done
     set +a
   ")
+}
+
+
+##### The little things #####
+# Errors thrown in promises should kill!
+alias run='node --unhandled-rejections=strict'
+
+update() {
+  sudo apt update
+  sudo apt upgrade -y
+  sudo apt autoremove
+}
+versions() {
+  echo node: $(node --version)
+  echo git: $(git --version)
+  echo bash: $BASH_VERSION
 }
