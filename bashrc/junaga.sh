@@ -13,7 +13,7 @@ GLOBIGNORE='.:..'
 alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
 
 # Quickly run the firebase CLI
-alias fire='npx firebase-tools --project $FIREBASE_PROJECT'
+alias fire='npx firebase-tools --project $APP_PROJECT_ID'
 
 # `apt show` the package of a binary in `$PATH``
 function show-pkg {
