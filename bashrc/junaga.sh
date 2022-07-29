@@ -5,6 +5,9 @@
 # "HH:MM" + " " + "ESC[Bold;Blue" + "PWD" + "ESC[Reset" + "Git branch" + "$ "
 export PS1="\A \e[1;34m\w\e[0m\$(__git_ps1 '[%s]')$ "
 
+# Allow quick hacking with a local ~/bin directory.
+PATH=$PATH:$HOME/bin
+
 # Configure Bash glob expansion
 shopt -s dotglob globstar failglob
 GLOBIGNORE='.:..'
