@@ -8,3 +8,6 @@ shellcheck
 trash-cli
 tree
 wget
+jq
+curl
+python3
