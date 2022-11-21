@@ -11,3 +11,4 @@ wget
 jq
 curl
 python3
+rclone
