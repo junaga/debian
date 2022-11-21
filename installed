@@ -12,3 +12,4 @@ jq
 curl
 python3
 rclone
+fuse
