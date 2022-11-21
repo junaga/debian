@@ -36,11 +36,6 @@ enter() {
 # Errors thrown in promises should kill!
 alias run='node --unhandled-rejections=strict'
 
-update() {
-  sudo apt update
-  sudo apt upgrade -y
-  sudo apt autoremove
-}
 versions() {
   echo node: $(node --version)
   echo git: $(git --version)

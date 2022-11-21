@@ -18,6 +18,18 @@ alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
 # Quickly run the firebase CLI
 alias fire='npx firebase-tools --project $APP_PROJECT_ID'
 
+function update {
+  # update the system
+  sudo apt update && \
+  sudo apt upgrade -y && \
+  sudo apt autoremove -y && \
+  # update the npm packages
+  sudo npm --global update && \
+  tldr --update
+
+  echo -e "\n\n\n===== system updated ====="
+}
+
 # `apt show` the package of a binary in `$PATH``
 function show-pkg {
   path=$(which "$1")
