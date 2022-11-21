@@ -13,3 +13,4 @@ curl
 python3
 rclone
 fuse
+gcsfuse
