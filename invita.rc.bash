@@ -15,7 +15,7 @@ HISTFILESIZE=-1
 # shellcheck disable=SC1091 
 source /usr/share/bash-completion/bash_completion
 
-alias ls='ls --color=auto'
+alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
 
 ##### We work with #####
