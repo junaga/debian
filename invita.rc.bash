@@ -18,6 +18,18 @@ source /usr/share/bash-completion/bash_completion
 alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
 
+##### History not Mystery #####
+# https://manpages.debian.org/bullseye/bash/bash.1.en.html#HISTORY
+HISTSIZE=-1 # save all commands, not just the last 500
+HISTIGNORE="export *" # keep secrets secret
+
+PROMPT_COMMAND="history -a" # write memory (history) to file on every command entered
+
+log="$HOME/logs/bash-$(date --utc +%Y-%m-%d-%H-%M-%S).log"
+mkdir -p "$HOME/logs/" && touch "$log"
+HISTFILE="$log"
+unset log
+
 ##### We work with #####
 export PAGER="less"
 export EDITOR="code --wait" # VS Code FTW
