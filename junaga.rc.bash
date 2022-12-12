@@ -20,14 +20,26 @@ set -C # redirection (`>`) overwites' error out
 PS1="\A \[\e[34;1m\]\w\[\e[m\]\$(__git_ps1 '|%s')$ "
 PS2="  "
 
+
 ##### Aliases #####
 alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 alias rm="trash-put"
 alias vs="code --diff"
 function man { echo "CTRL+Click: https://manpages.debian.org/bullseye//$1..en.html"; }
 
+alias md5="md5sum"
 alias js='node --unhandled-rejections=strict'
 alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
+
+function pack {
+  tar -czvf "$(realpath "$1").tar.gz" "$1"
+}
+function unpack {
+  if tar -xzvf "$@"; then
+    rm "$@"
+  fi
+}
+
 
 ##### Custom Functions #####
 function inst {
