@@ -23,7 +23,7 @@ PS2="  "
 ##### Aliases #####
 alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 alias rm="trash-put"
-alias diff="code --diff"
+alias vs="code --diff"
 function man { echo "CTRL+Click: https://manpages.debian.org/bullseye//$1..en.html"; }
 
 alias js='node --unhandled-rejections=strict'
