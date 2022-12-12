@@ -46,7 +46,7 @@ function unpack {
 function inst {
   (echo "===== Debian (\`apt\`) =====" && sudo apt install -y "$1") ||
   (echo "===== Python (\`pip\`) =====" && sudo pip install "$1") ||
-  (echo "===== Node (\`npm\`) =====" sudo npm install --global "$1")
+  (echo "===== Node (\`npm\`) =====" && sudo npm install --global "$1")
 }
 function show {
   (echo "===== Debian (\`apt\`) =====" && apt show "$1") ||
