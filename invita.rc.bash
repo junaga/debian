@@ -1,4 +1,4 @@
-echo "Welcome $USER, shell log:"
+echo "Welcome $USER, \$HISTFILE:"
 trap 'echo "Goodbye $USER, now lvl $((SHLVL-1))"' EXIT
 
 ##### Fix the Shell #####
