@@ -1,20 +1,15 @@
-echo "Welcome $USER, lvl $SHLVL"
-trap 'echo "Goodbye $USER, lvl $((SHLVL-1))"' EXIT
+echo "Welcome $USER, shell log:"
+trap 'echo "Goodbye $USER, now lvl $((SHLVL-1))"' EXIT
 
 ##### Fix the Shell #####
-# disable command hashmap, recrawl $PATH on every prompt
+# disable memory hashmap, recrawl $PATH on every command entered
 set +h
 
-# sensible ~/.bash_history settings
-HISTIGNORE="export *"
-shopt -s histappend
-PROMPT_COMMAND="history -a; history -n"
-HISTSIZE=-1
-HISTFILESIZE=-1
-
+# tab tab tab
 # shellcheck disable=SC1091
 source /usr/share/bash-completion/bash_completion
 
+# show me someone with a CRT monitor
 alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
 
@@ -28,6 +23,7 @@ PROMPT_COMMAND="history -a" # write memory (history) to file on every command en
 log="$HOME/logs/bash-$(date --utc +%Y-%m-%d-%H-%M-%S).log"
 mkdir -p "$HOME/logs/" && touch "$log"
 HISTFILE="$log"
+echo "  $log"
 unset log
 
 ##### We work with #####
