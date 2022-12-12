@@ -7,13 +7,14 @@ apt upgrade -y
 apt autoremove -y
 
 echo "===== Python (\`pip\`) ====="
-for pkg in $(
-  pip list --outdated --format=freeze \
-  | grep -v '^\-e' \
-  | cut -d "=" -f 1
-); do
-  pip install "$pkg"
-done
+# shellcheck disable=SC2046
+pip install $(pip list \
+  --outdated --format=json \
+  --disable-pip-version-check \
+  |python3 -c "import json, sys; print(' '.join(
+    [pkg['name'] for pkg in json.load(sys.stdin)]
+  ))"
+)
 
 echo "===== Node (\`npm\`) ====="
 npm --global update
