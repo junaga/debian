@@ -23,7 +23,7 @@ PROMPT_COMMAND="history -a" # write memory to file on every command entered
 log="$HOME/logs/bash-$(date --utc +%Y-%m-%d-%H-%M-%S).log"
 HISTFILE="$log"
 
-touch -p "$log" && echo "  $log"
+mkdir -p "$HOME/logs" && touch "$log" && echo "  $log"
 unset log
 
 ##### We work with #####
