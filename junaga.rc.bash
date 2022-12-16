@@ -22,12 +22,11 @@ PS2="  "
 
 
 ##### Aliases #####
-alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 alias rm="trash-put"
+alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 function man { echo "CTRL+Click: https://manpages.debian.org/bullseye//$1..en.html"; }
 
 alias e="code"
-alias vs="code --diff"
 alias js='node --unhandled-rejections=strict'
 alias md5="md5sum"
 alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
@@ -49,9 +48,9 @@ function inst {
   (echo "===== Node (\`npm\`) =====" && sudo npm install --global "$1")
 }
 function show {
-  (echo "===== Debian (\`apt\`) =====" && apt show "$1") ||
-  (echo "===== Python (\`pip\`) =====" && pip show "$1") ||
-  (echo "===== Node (\`npm\`) =====" && npm show "$1")
+  (echo "===== Debian (\`apt\`) =====" && apt show "$@")
+  (echo "===== Python (\`pip\`) =====" && pip show "$@")
+  (echo "===== Node (\`npm\`) =====" && npm show "$@")
 }
 
 function search-pkg {
@@ -69,3 +68,5 @@ function list-pkg-bins {
   dpkg --listfiles "$1" | \
   grep -E "$(echo "$PATH" | tr ':' '|')"
 }
+
+alias baudrate="stty --file \$(tty) speed"
