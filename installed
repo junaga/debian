@@ -7,10 +7,11 @@ python3-pip
 git
 unzip
 
+bash-completion
+trash-cli
+
 httpie
 gh
 jq
 gcsfuse
-
-bash-completion
-trash-cli
+ffmpeg
