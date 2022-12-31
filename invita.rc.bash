@@ -32,9 +32,3 @@ export EDITOR="code --wait" # VS Code FTW
 # unset WINDOW_MANAGER
 # export BROWSER="chrome" # everything is chrome in the future
 
-prev=$PROMPT_COMMAND
-# only required when App setting "terminal.integrated.shellIntegration.enabled" is false.
-# shellcheck disable=SC1090
-source "$(code --locate-shell-integration-path bash)"
-PROMPT_COMMAND="$prev; $PROMPT_COMMAND"
-unset prev
