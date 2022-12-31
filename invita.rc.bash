@@ -1,18 +1,18 @@
-echo "Welcome $USER, \$HISTFILE:"
+echo "Welcome $USER"
 trap 'echo "Goodbye $USER, now lvl $((SHLVL-1))"' EXIT
 
 ##### Fix the Shell #####
-# disable memory hashmap, recrawl $PATH on every command entered
+# disable in-memory command hashmap, recrawl $PATH on every command entered
 set +h
-# keep memory of all commands (else 500) entered
+# keep history of all commands in-memory (not just the last 500) entered
 HISTSIZE=-1
 
-# show me someone with a CRT monitor
+# show me someone with a b&w CRT monitor
+# nvm: https://www.reddit.com/r/crtgaming/comments/u2nbu4/may_i_present_you_this_tiny_bw_crt_its_only_5/
 alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
 
 # tab tab tab
-# shellcheck disable=SC1091
 source /usr/share/bash-completion/bash_completion
 
 ##### History not Mystery #####
@@ -20,15 +20,12 @@ source /usr/share/bash-completion/bash_completion
 
 HISTIGNORE="export *" # but keep secrets secret
 PROMPT_COMMAND="history -a" # write memory to file on every command entered
-log="$HOME/logs/bash-$(date --utc +%Y-%m-%d-%H-%M-%S).log"
-HISTFILE="$log"
+HISTFILE="$HOME/logs/bash-$(date --utc +%Y-%m-%d-%H-%M-%S).log"
 
-mkdir -p "$HOME/logs" && touch "$log" && echo "  $log"
-unset log
+mkdir -p "$HOME/logs" && touch "$HISTFILE" && echo "\$HISTFILE is: $HISTFILE"
 
 ##### We work with #####
 export PAGER="less"
 export EDITOR="code --wait" # VS Code FTW
-# unset WINDOW_MANAGER
+# unset XDG_CURRENT_DESKTOP # We don't need no desktop
 # export BROWSER="chrome" # everything is chrome in the future
-
