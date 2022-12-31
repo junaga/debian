@@ -27,6 +27,7 @@ alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 function man { echo "CTRL+Click: https://manpages.debian.org/bullseye//$1..en.html"; }
 
 alias e="code"
+alias dl="curl --location" # follow redirects
 alias js='node --unhandled-rejections=strict'
 alias md5="md5sum"
 alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
