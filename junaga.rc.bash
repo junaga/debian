@@ -27,10 +27,11 @@ alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 function man { echo "CTRL+Click: https://manpages.debian.org/bullseye//$1..en.html"; }
 
 alias e="code"
-alias dl="curl --location" # follow redirects
+alias dl="curl --location"
 alias js='node --unhandled-rejections=strict'
 alias md5="md5sum"
 alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
+alias baudrate="stty --file \$(tty) speed"
 
 function pack {
   tar -czvf "$(realpath "$1").tar.gz" "$1"
@@ -42,7 +43,7 @@ function unpack {
 }
 
 
-##### Custom Functions #####
+##### Package management #####
 function inst {
   (echo "===== Debian (\`apt\`) =====" && sudo apt install -y "$1") ||
   (echo "===== Python (\`pip\`) =====" && sudo pip install "$1") ||
@@ -69,5 +70,3 @@ function list-pkg-bins {
   dpkg --listfiles "$1" | \
   grep -E "$(echo "$PATH" | tr ':' '|')"
 }
-
-alias baudrate="stty --file \$(tty) speed"
