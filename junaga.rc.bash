@@ -2,6 +2,9 @@
 export PATH=$PATH:$HOME/bin
 set -C # redirection (`>`) overwites' error out
 
+# Bash prompt variables
+# https://manpages.debian.org/stretch/bash/bash.1.en.html#PROMPTING
+
 # Terminal, ANSI Escape Code, Control Sequence Introducer, Select Graphic Rendition, Parameters (or simply ANSI color codes)
 # https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
 #
@@ -16,10 +19,13 @@ set -C # redirection (`>`) overwites' error out
 # escape the color codes with "\[" "\]"
 # Otherwise the shell and terminal cursor position will get out of sync.
 
-# HH:MM+" "+BLUE;BOLD+PWD+RESET+<"|"+GIT_BRANCH>+"$"+" "
-PS1="\A \[\e[34;1m\]\w\[\e[m\]\$(__git_ps1 '|%s')$ "
-PS2="  "
+blue_bold='\[\e[34;1m\]'
+reset='\[\e[m\]'
 
+# "HH:MM"+" "+PWD+<"|"+GIT_BRANCH>+"$"+" "
+PS1="\A $blue_bold\w$reset\$(__git_ps1 '|%s')$ "
+PS2="  "
+unset blue_bold reset
 
 ##### Aliases #####
 alias rm="trash-put"
