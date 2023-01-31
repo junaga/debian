@@ -40,39 +40,39 @@ alias main-lives-matter='git symbolic-ref HEAD refs/heads/main'
 alias baudrate="stty --file \$(tty) speed"
 
 function pack {
-  tar -czvf "$(realpath "$1").tar.gz" "$1"
+	tar -czvf "$(realpath "$1").tar.gz" "$1"
 }
 function unpack {
-  if tar -xzvf "$@"; then
-    rm "$@"
-  fi
+	if tar -xzvf "$@"; then
+		rm "$@"
+	fi
 }
 
 
 ##### Package management #####
 function inst {
-  (echo "===== Debian (\`apt\`) =====" && sudo apt install -y "$1") ||
-  (echo "===== Python (\`pip\`) =====" && sudo pip install "$1") ||
-  (echo "===== Node (\`npm\`) =====" && sudo npm install --global "$1")
+	(echo "===== Debian (\`apt\`) =====" && sudo apt install -y "$1") ||
+	(echo "===== Python (\`pip\`) =====" && sudo pip install "$1") ||
+	(echo "===== Node (\`npm\`) =====" && sudo npm install --global "$1")
 }
 function show {
-  (echo "===== Debian (\`apt\`) =====" && apt show "$@")
-  (echo "===== Python (\`pip\`) =====" && pip show "$@")
-  (echo "===== Node (\`npm\`) =====" && npm show "$@")
+	(echo "===== Debian (\`apt\`) =====" && apt show "$@")
+	(echo "===== Python (\`pip\`) =====" && pip show "$@")
+	(echo "===== Node (\`npm\`) =====" && npm show "$@")
 }
 
 function search-pkg {
-  if [ "$(type -a "$1" | wc -l)" -gt 1 ];
-  then
-    echo -e "multiple binaries found:\n" && type -a "$1" >&2
-    return 1
-  else
-    echo -e "type $(type "$1") placed by:\n"
-    apt show "$(dpkg --search "$(type -P "$1")" | sed 's/: .*//')"
-  fi
+	if [ "$(type -a "$1" | wc -l)" -gt 1 ];
+	then
+		echo -e "multiple binaries found:\n" && type -a "$1" >&2
+		return 1
+	else
+		echo -e "type $(type "$1") placed by:\n"
+		apt show "$(dpkg --search "$(type -P "$1")" | sed 's/: .*//')"
+	fi
 }
 
 function list-pkg-bins {
-  dpkg --listfiles "$1" | \
-  grep -E "$(echo "$PATH" | tr ':' '|')"
+	dpkg --listfiles "$1" | \
+	grep -E "$(echo "$PATH" | tr ':' '|')"
 }
