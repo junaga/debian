@@ -7,14 +7,13 @@ then
     exit 1
 fi
 
-# https://www.debian.org/releases/
 echo "===== Debian (\`apt\`) ====="
+# https://www.debian.org/releases/
 apt update
 apt upgrade -y
 apt autoremove -y
 
 echo "===== Python (\`pip\`) ====="
-# shellcheck disable=SC2046
 pip install $(pip list \
   --outdated --format=json \
   --disable-pip-version-check \
