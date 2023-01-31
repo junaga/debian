@@ -1,4 +1,11 @@
-[ "$(whoami)" == "root" ] || { echo "run with \`$ sudo bash -e \$FILE\`" >&2; exit 1; }
+#!/bin/bash
+# Update all software on my Debian system
+
+if test "$(whoami)" != "root"
+then
+    echo "Error: run with \`$ sudo bash -e \$FILE\`" >&2
+    exit 1
+fi
 
 # https://www.debian.org/releases/
 echo "===== Debian (\`apt\`) ====="
