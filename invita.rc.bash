@@ -19,10 +19,8 @@ source /usr/share/bash-completion/bash_completion
 # https://manpages.debian.org/bullseye/bash/bash.1.en.html#HISTORY
 
 HISTIGNORE="export *" # but keep secrets secret
+shopt -s histappend # append to the history file, don't overwrite it
 PROMPT_COMMAND="history -a" # write memory to file on every command entered
-HISTFILE="$HOME/logs/bash-$(date --utc +%Y-%m-%d-%H-%M-%S).log"
-
-mkdir -p "$HOME/logs" && touch "$HISTFILE" && echo "\$HISTFILE is: $HISTFILE"
 
 ##### We work with #####
 export PAGER="less"
