@@ -11,6 +11,9 @@ set +h
 alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
 
+# Enable duplicate `**` glob expansion
+shopt -s globstar
+
 # tab tab tab
 source /usr/share/bash-completion/bash_completion
 
