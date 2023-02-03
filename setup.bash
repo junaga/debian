@@ -8,6 +8,7 @@ then
 	exit 1
 fi
 
+echo "What is the user home directory? Should be something like `/home/junaga/`"
 read -e -p "user home: " -i "$PWD" home
 
 #=== Bash Shell profile ===
@@ -43,7 +44,4 @@ $uninstall isc-dhcp-common
 $uninstall tasksel
 
 apt upgrade -y
-for pkg in $(cat ./packages)
-do
-	apt install -y $pkg
-done
+apt install -y $(cat ./packages)
