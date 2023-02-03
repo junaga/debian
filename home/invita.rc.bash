@@ -30,9 +30,3 @@ PROMPT_COMMAND="history -a"
 # # nvm: https://www.reddit.com/r/crtgaming/comments/u2nbu4/may_i_present_you_this_tiny_bw_crt_its_only_5/
 alias ls='ls --color=auto -h'
 alias grep='grep --color=auto'
-
-##### We work with #####
-export PAGER="less"
-export EDITOR="code --wait" # VS Code FTW
-# unset XDG_CURRENT_DESKTOP # We don't need no desktop
-# export BROWSER="chrome" # everything is chrome in the future
