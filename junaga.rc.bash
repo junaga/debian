@@ -1,5 +1,5 @@
 ##### Customized Prompt #####
-export PATH=$PATH:$HOME/bin
+export PATH=$HOME/bin:$PATH
 set -C # redirection (`>`) overwites' error out
 
 # Bash prompt variables
@@ -54,18 +54,16 @@ function unpack {
 
 
 ##### Package management #####
-function inst {
-	(echo "===== Debian (\`apt\`) =====" && sudo apt install -y "$1") ||
-	(echo "===== Python (\`pip\`) =====" && sudo pip install "$1") ||
-	(echo "===== Node (\`npm\`) =====" && sudo npm install --global "$1")
-}
 function show {
-	(echo "===== Debian (\`apt\`) =====" && apt show "$@")
-	(echo "===== Python (\`pip\`) =====" && pip show "$@")
-	(echo "===== Node (\`npm\`) =====" && npm show "$@")
+	apt show "$1"
+	echo Binaries:
+	dpkg --listfiles "$1" | grep --extended-regexp "$(echo "$PATH" | tr ":" "|")"
+}
+function install {
+	sudo apt-get install 
 }
 
-function search-pkg {
+function pkg-bin {
 	if [ "$(type -a "$1" | wc -l)" -gt 1 ];
 	then
 		echo -e "multiple binaries found:\n" && type -a "$1" >&2
@@ -74,9 +72,4 @@ function search-pkg {
 		echo -e "type $(type "$1") placed by:\n"
 		apt show "$(dpkg --search "$(type -P "$1")" | sed 's/: .*//')"
 	fi
-}
-
-function list-pkg-bins {
-	dpkg --listfiles "$1" | \
-	grep -E "$(echo "$PATH" | tr ':' '|')"
 }
