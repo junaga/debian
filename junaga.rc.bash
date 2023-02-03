@@ -52,7 +52,6 @@ function unpack {
 	fi
 }
 
-
 ##### Package management #####
 function show {
 	apt show "$1"
