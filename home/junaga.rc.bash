@@ -30,6 +30,11 @@ unset blue_bold reset
 # CTRL + Backspace hotkey to delete a word
 bind '"\C-H":backward-kill-word'
 
+##### I work with #####
+export PAGER="less"
+export EDITOR="code --wait" # VS Code FTW
+# unset XDG_CURRENT_DESKTOP # We don't need no desktop
+# export BROWSER="chrome" # everything is chrome in the future
 
 ##### Aliases #####
 alias rm="trash-put"
