@@ -8,12 +8,12 @@ then
 	exit 1
 fi
 
-echo "What is the user home directory? Should be something like `/home/junaga/`"
+echo "What is the user home directory? Should be something like \`/home/junaga/\`"
 read -e -p "user home: " -i "$PWD" home
 
 #=== Bash Shell profile ===
 rm $home/{.profile,.bashrc,.bash_logout}
-cp -r ./home/* $home
+cp -r ./home/. $home
 unset home
 
 rm /etc/profile
@@ -26,13 +26,13 @@ rm -r /etc/sudoers.d/ # walls and ladders
 rm -r /etc/terminfo # don't create new terminfos
 
 #=== add `apt` sources ===
-cp -r ./trusted/* /usr/share/keyrings
-echo -e "\n\n" >> /etc/sources.list
-cat sources.list >> /etc/sources.list
+cp -r ./trusted/. /usr/share/keyrings/
+echo -e "\n\n" >> /etc/apt/sources.list
+cat sources.list >> /etc/apt/sources.list
+apt update
 
 #=== un-/install packages ===
-uninstall='apt-get remove --purge -y'
-apt update
+uninstall='apt remove --purge -y'
 
 # I use the "VS Code" editor exclusively
 $uninstall vim-tiny vim-common # nano sensible-utils
