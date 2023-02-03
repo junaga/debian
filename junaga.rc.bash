@@ -27,6 +27,10 @@ PS1="\A $blue_bold\w$reset\$(__git_ps1 '|%s')$ "
 PS2="  "
 unset blue_bold reset
 
+# CTRL + Backspace hotkey to delete a word
+bind '"\C-H":backward-kill-word'
+
+
 ##### Aliases #####
 alias rm="trash-put"
 alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
