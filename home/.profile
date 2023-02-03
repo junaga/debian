@@ -1,2 +1,2 @@
-source invita.rc.bash
-source junaga.rc.bash
+source ~/invita.rc.bash
+source ~/junaga.rc.bash

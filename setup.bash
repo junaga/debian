@@ -13,7 +13,7 @@ read -e -p "user home: " -i "$PWD" home
 
 #=== Bash Shell profile ===
 rm $home/{.profile,.bashrc,.bash_logout}
-cp -r ./home/. $home
+cp -ra ./home/. $home
 unset home
 
 rm /etc/profile
@@ -26,8 +26,8 @@ rm -r /etc/sudoers.d/ # walls and ladders
 rm -r /etc/terminfo # don't create new terminfos
 
 #=== add `apt` sources ===
-cp -r ./trusted/. /usr/share/keyrings/
-echo -e "\n\n" >> /etc/apt/sources.list
+cp -ra ./trusted/. /usr/share/keyrings/
+echo -e "\n" >> /etc/apt/sources.list
 cat sources.list >> /etc/apt/sources.list
 apt update
 
@@ -45,3 +45,5 @@ $uninstall tasksel
 
 apt upgrade -y
 apt install -y $(cat ./packages)
+
+echo That's it, now `bash --login` and ygtg
