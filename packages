@@ -2,6 +2,7 @@ git
 ffmpeg
 imagemagick
 curl
+file
 unzip
 trash-cli
 bash-completion
