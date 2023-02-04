@@ -1,17 +1,7 @@
-curl
-nodejs
-python3
-python3-pip
-git
-unzip
 bash-completion
 trash-cli
-httpie
-gh
-jq
-ffmpeg
-ttyd
-gpg
+curl
+unzip
+git
 
-gcsfuse
-vhs
+nodejs
