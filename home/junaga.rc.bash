@@ -37,6 +37,7 @@ export EDITOR="code --wait" # VS Code FTW
 # export BROWSER="chrome" # everything is chrome in the future
 
 ##### Aliases #####
+alias hd="od -tx1 -cb"
 alias rm="trash-put"
 alias time='date +"%Y-%m-%dT%H:%M:%S%:z"'
 function man { echo "CTRL+Click: https://manpages.debian.org/bullseye//$1..en.html"; }
