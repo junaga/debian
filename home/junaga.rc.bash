@@ -59,6 +59,14 @@ function unpack {
 }
 
 ##### Package management #####
+function install {
+	sudo apt install --error-on=any -y "$@"
+}
+function uninstall {
+	sudo apt remove --error-on=any --purge -y "$@"
+	sudo apt autoremove -y
+}
+
 function show {
 	pkgname="$1"
 	
@@ -74,9 +82,6 @@ function show {
 		grep $pkgname
 
 	unset pkgname
-}
-function install {
-	sudo apt-get install 
 }
 
 function pkg-bin {
