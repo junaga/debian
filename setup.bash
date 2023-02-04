@@ -2,37 +2,28 @@
 # WARN: needs to be run from this directory
 # setup a new Debian VM in my preferred way.
 
-if test "$(whoami)" != "root"
+if test $(whoami) != root
 then
 	echo "Error: run with \`$ sudo bash -e \$FILE\`" >&2
 	exit 1
 fi
 
-echo "What is the user home directory? Should be something like \`/home/junaga/\`"
-read -e -p "user home: " -i "$PWD" home
-
 #=== Bash Shell profile ===
+echo "Where to place shell user profile?"
+read -e -p "user home: " -i $PWD home
+
 rm $home/{.profile,.bashrc,.bash_logout}
 cp -ra ./home/. $home
 unset home
 
-rm /etc/profile
-rm -r /etc/profile.d/
-rm /etc/bash.bashrc
-
-#=== cleanup `/etc` ===
-rm -r /etc/skel # new user $HOME template
-rm -r /etc/sudoers.d/ # walls and ladders
-rm -r /etc/terminfo # don't create new terminfos
-
-#=== add `apt` sources ===
+#=== configure `apt` ===
 cp -ra ./trusted/. /usr/share/keyrings/
 echo -e "\n" >> /etc/apt/sources.list
 cat sources.list >> /etc/apt/sources.list
 apt update
 
 #=== un-/install packages ===
-uninstall='apt remove --purge -y'
+uninstall="apt remove --purge -y"
 
 # I use the "VS Code" editor exclusively
 $uninstall vim-tiny vim-common # nano sensible-utils
@@ -46,4 +37,17 @@ $uninstall tasksel
 apt upgrade -y
 apt install -y $(cat ./packages)
 
-echo That's it, now `bash --login` and ygtg
+#=== cleanup `/etc` ===
+# We have a shell profile in $HOME
+rm /etc/profile
+rm -r /etc/profile.d/
+rm /etc/bash.bashrc
+
+rm -r /etc/skel # new user $HOME template
+rm -r /etc/sudoers.d/ # walls and ladders
+rm -r /etc/terminfo # don't create new terminfos
+
+#=== That's it ===
+echo That\'s it, you\'re gtg.
+echo now: \`$ bash --login\`
+echo next: \`$ cd .. && rm -r my-debian\`
