@@ -60,9 +60,20 @@ function unpack {
 
 ##### Package management #####
 function show {
-	apt show "$1"
+	pkgname="$1"
+	
+	apt show $pkgname
 	echo Binaries:
-	dpkg --listfiles "$1" | grep --extended-regexp "$(echo "$PATH" | tr ":" "|")"
+	dpkg --listfiles $pkgname | grep \
+		-e /usr/local/sbin/ -e /usr/local/bin/ \
+		-e /usr/sbin/ -e /usr/bin/ \
+		-e /sbin/ -e /bin/
+	echo Bash completions:
+	dpkg --listfiles bash-completion | \
+		grep /usr/share/bash-completion/completions/ | \
+		grep $pkgname
+
+	unset pkgname
 }
 function install {
 	sudo apt-get install 
