@@ -17,6 +17,9 @@ cp -ra ./home/. $home
 unset home
 
 #=== configure `apt` ===
+apt-mark auto $(apt-mark showmanual)
+apt-mark manual $(cat ./packages)
+
 cp -ra ./trusted/. /usr/share/keyrings/
 echo -e "\n" >> /etc/apt/sources.list
 cat sources.list >> /etc/apt/sources.list
