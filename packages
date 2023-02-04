@@ -1,7 +1,9 @@
-bash-completion
-trash-cli
+git
+ffmpeg
+imagemagick
 curl
 unzip
-git
+trash-cli
+bash-completion
 
 nodejs
