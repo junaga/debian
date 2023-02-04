@@ -1,5 +1,5 @@
 echo "Welcome $USER"
-trap 'echo "Goodbye $USER, now lvl $((SHLVL-1))"' EXIT
+trap 'echo "Goodbye $USER, now on lvl $((SHLVL-1))"' EXIT
 
 ##### Fix the shell #####
 # don't cache binary locations. search $PATH on every command entered
