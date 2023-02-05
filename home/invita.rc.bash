@@ -17,7 +17,7 @@ source /usr/share/bash-completion/bash_completion
 # requires the apt:command-not-found package
 function command_not_found_handle { /usr/bin/command-not-found "$1"; }
 
-##### History not Mystery #####
+##### History not mystery #####
 # https://manpages.debian.org/bullseye/bash/bash.1.en.html#HISTORY
 HISTIGNORE="export *" # but keep secrets secret
 HISTSIZE=-1 # keep history of all commands (not just 500) entered
