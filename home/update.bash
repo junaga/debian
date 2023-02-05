@@ -1,7 +1,7 @@
 #!/bin/bash -e
 # Update all software on my Debian system
 
-if test "$(whoami)" != "root"
+if test $(whoami) != root
 then
 	echo "Error: run with \`$ sudo bash -e \$FILE\`" >&2
 	exit 1
