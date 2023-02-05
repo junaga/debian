@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # Update all software on my Debian system
 
 if test "$(whoami)" != "root"

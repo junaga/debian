@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # WARN: needs to be run from this directory
 # setup a new Debian VM in my preferred way.
 
