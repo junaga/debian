@@ -1,11 +1,12 @@
+bash-completion
+command-not-found
+trash-cli
+
 git
 ffmpeg
 imagemagick
 curl
 file
 unzip
-trash-cli
-bash-completion
-command-not-found
 
 nodejs
