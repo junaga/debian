@@ -6,5 +6,6 @@ file
 unzip
 trash-cli
 bash-completion
+command-not-found
 
 nodejs

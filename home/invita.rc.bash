@@ -10,7 +10,12 @@ shopt -s nullglob globstar dotglob
 GLOBIGNORE=.:..
 
 # tab tab tab
+# requires the apt:bash-completion package
 source /usr/share/bash-completion/bash_completion
+
+# think of the noobs
+# requires the apt:command-not-found package
+function command_not_found_handle { /usr/bin/command-not-found "$1"; }
 
 ##### History not Mystery #####
 # https://manpages.debian.org/bullseye/bash/bash.1.en.html#HISTORY
