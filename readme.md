@@ -31,7 +31,7 @@ Linux > Windows. period. If you think differently, stop reading my files, turn o
 ### 2. It's tiny and [lightweight](https://www.debian.org/releases/stable/amd64/ch03s04.en.html)
 
 - ~200 packages in new install
-- ~500MB in new install (with docs, i18n and systemd)
+- ~500MB in new install (with docs, i18n and `systemd`)
 - 2GB storage and 500MB memory, system requirements
 
 ### 3. It's huge and powerfull
