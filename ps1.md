@@ -1,4 +1,4 @@
-# Custom Bash shell prompt `$PS1`
+# Bash shell prompt - `$PS1`
 
 ## Examples
 
