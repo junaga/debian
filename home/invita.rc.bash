@@ -28,6 +28,6 @@ PROMPT_COMMAND="history -a" # write memory to history file on every command ente
 # send ANSI color codes to the terminal
 # # show me someone with a b&w CRT monitor
 # # nvm: https://www.reddit.com/r/crtgaming/comments/u2nbu4/may_i_present_you_this_tiny_bw_crt_its_only_5/
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias diff='diff --color=auto'
+alias ls='ls --color=always'
+alias grep='grep --color=always'
+alias diff='diff --color=always'
