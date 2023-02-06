@@ -33,9 +33,9 @@ PS1="\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ "
 - "`@`" stays "`@`"
 - "`\h`" (hostname) becomes "`home-box`"
 - "`\[\e[0m\]`" reset, color end
-- "`:`" becomes "`:`"
+- "`:`" stays "`:`"
 - "`\[\e[1;34m\]`" bold and blue, color begin
-- "`\w`" (present working directory, or "`~`") becomes "`/etc/apt`"
+- "`\w`" (present working directory, or "`~`") for example "`/etc/apt`"
 - "`\[\e[0m\]`" reset, color end
 - "`\$`" escapes "`$`"
 - "` `" stays "` `"
@@ -51,10 +51,10 @@ PS1="\A \[\e[1;34m\]\w\[\e[0m\]\$(__git_ps1 '|%s')\$ "
 # > "00:00 /$ "
 ```
 
-- "`\A`" (time in HH:MM) becomes "`14:57`"
+- "`\A`" (time in HH:MM) for example "`14:57`"
 - "` `" stays "` `"
 - "`\[\e[1;34m\]`" bold blue, color begin
-- "`\w`" (present working directory, or "`~`") becomes "`/etc/apt`"
+- "`\w`" (present working directory, or "`~`") for example "`/etc/apt`"
 - "`\[\e[0m\]`" reset, color end
 - "`\$(__git_ps1 '|%s')`" \
   Subshell that invoces a function from `git`. If the present working directory is a git repository, the expression evaluates to the repositorie's checked out branch with a leading `"|"`. So `"|main"` or `"|fix-account-signup"`. A string is only returned by `__git_ps1` if a repo is checked out. So `"|"` itself is never returned under any circumstances.
@@ -106,7 +106,7 @@ Colors are set with the numbers `30`-`37`, and background colors with `40`-`47` 
 
 ### Usage on Bash prompt
 
-Unfortunately the color code itself is _not enough to make it work good_ on the Bash prompt. The problem is that Bash needs to know in advance how many character long the prompt will be. If you add color codes on the prompt bash will misscount the length, and the shell cursor and terminal cursor will missalign, which causes line wrapping issues. Bash has it's own escape for this, just wrap any terminal escape sequence in `\[` `\]`.
+Unfortunately the color code itself is _not enough to make it work good_ on the Bash prompt. The problem is that Bash needs to know in advance how many character long the prompt will be. If you add color codes on the prompt bash will misscount the length, and the shell cursor and terminal cursor will missalign, which causes line wrapping issues. Bash has [it's own escape for this](https://manpages.debian.org/bullseye/bash/bash.1.en.html#:~:text=%5C%5B,end%20a%20sequence%20of%20non%2Dprinting%20characters), just wrap any terminal escape sequence in `\[` `\]`.
 
 > `\[` begin a sequence of non-printing characters, which could be used to embed a terminal control sequence into the prompt
 
