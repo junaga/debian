@@ -8,47 +8,79 @@ then
 	exit 1
 fi
 
+#=== cleanup fs ===
+
+# I manually install packages in /usr/local/
+rm -r /usr/local/
+rm -r /srv/
+rm -r /opt/
+mkdir /usr/local/
+rm -r /var/opt/
+rm -r /var/local/
+
+# I write my code in $HOME/src/
+rm -r /usr/src/
+
+# Linux is for work
+rm -r /usr/games/
+
+# I use https://mail.google.com
+rm -r /var/mail/
+rm -r /var/spool/mail
+
+# # not required in VMs
+# rm -r /lost+found/
+# rm -r /boot/
+# rm -r /media/
+# rm -r /root/
+# rm -r /var/spool/
+
+#=== cleanup /etc ===
+
+# I keep a single file
+rm -r /etc/apt/sources.list.d/
+# There is /lib/terminfo/
+rm -r /etc/terminfo/
+# walls and ladders
+rm -r /etc/sudoers.d/
+
+# Add $HOME/.profile manually
+rm /etc/profile
+rm -r /etc/profile.d/
+rm /etc/bash.bashrc
+rm -r /etc/skel/ # $HOME template
+
+#=== uninstall packages ===
+# I use the "VS Code" editor exclusively
+apt remove --purge -y vim-tiny vim-common xxd
+# Translations and documentation
+apt remove --purge -y debconf-i18n isc-dhcp-common
+# There is no Desktop
+apt remove --purge -y tasksel
+apt-mark minimize-manual -y
+apt-mark manual $(cat ./packages)
+
+#=== install packages ===
+cp -ra ./trusted/. /usr/share/keyrings/
+echo -e "\n" >> /etc/apt/sources.list
+cat sources.list >> /etc/apt/sources.list
+
+apt update
+apt upgrade -y
+apt install -y $(cat ./packages)
+apt autoremove -y
+
+#=== cleanup ===
+rm /etc/bash_completion
+rm /etc/zsh_command_not_found
+
 #=== Bash Shell profile ===
-echo "Where to place shell user profile?"
-read -e -p "user home: " -i $PWD home
+echo "Replace \$HOME/ with ./home/? (press CTRL+C to abort)"
+read -e -p "replace: " -i $(dirname $PWD) home
 
 rm $home/{.profile,.bashrc,.bash_logout}
 cp -ra ./home/. $home
 unset home
-
-#=== configure `apt` ===
-apt-mark auto $(apt-mark showmanual)
-apt-mark manual $(cat ./packages)
-
-cp -ra ./trusted/. /usr/share/keyrings/
-echo -e "\n" >> /etc/apt/sources.list
-cat sources.list >> /etc/apt/sources.list
-apt update
-
-#=== un-/install packages ===
-uninstall="apt remove --purge -y"
-
-# I use the "VS Code" editor exclusively
-$uninstall vim-tiny vim-common # nano sensible-utils
-# I don't write C code
-$uninstall gcc-9-base
-# read docs on https://manpages.debian.org
-$uninstall isc-dhcp-common
-# There is no Desktop
-$uninstall tasksel
-
-apt upgrade -y
-apt install -y $(cat ./packages)
-
-#=== cleanup `/etc` ===
-# We have a shell profile in $HOME
-rm /etc/profile
-rm -r /etc/profile.d/
-rm /etc/bash.bashrc
-
-rm -r /etc/skel # new user $HOME template
-rm -r /etc/sudoers.d/ # walls and ladders
-rm -r /etc/terminfo # don't create new terminfos
 
 #=== That's it ===
 echo That\'s it, you\'re gtg.
