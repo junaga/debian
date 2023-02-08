@@ -30,3 +30,7 @@ mv .bash_history src/debian/home/
 tldr git config
 git config --global user.name junaga
 git config --global user.email hermann-stanew@invita.gmbh
+cd src/debian/
+git push 
+git push 
+# awsome, VS Code just signed me in. by itself. with a popup into my browser. in an OAuth flow. i was already signed into github.com it just took the token XD
