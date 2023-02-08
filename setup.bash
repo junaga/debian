@@ -57,7 +57,7 @@ apt remove --purge -y debconf-i18n isc-dhcp-common
 # There is no Desktop
 apt remove --purge -y tasksel
 
-# reduce the output of `apt-mark showmanual`
+# reduce the output of `$ apt-mark showmanual`
 apt-mark minimize-manual -y
 
 #=== install packages ===

@@ -41,18 +41,17 @@ More reasons on [debian.org/intro/why_debian](https://www.debian.org/intro/why_d
 
 Basically it works, is stable and is found everywhere in the cloud. The possibly best thing about Debian, is that it is _boring_, without any weird features. It's the tool for the job.
 
-## `setup.bash`
+## The `setup.bash` script
 
-After installing Debian on any platform I configure the system.
+After installing Debian on any platform, I configure the system
 
-- cleanup the filesystem of artifacts
+- remove some artifacts in the filesystem
 - install packages with `apt` and `npm` ([install/upgrade.bash](./install/upgrade.bash))
-- replace `$HOME` with [home/](./home/)
+- copy [home/](./home/) to `$HOME/`
 
 ```sh
 cd $HOME
 # Download https://github.com/junaga/debian
-# Using: `git`, `curl`, `wget` or manually
 sudo bash -e debian/setup.bash
 # confirm `$HOME/` replacement
 ```
