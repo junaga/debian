@@ -44,38 +44,42 @@ function unpack {
 }
 
 ##### Package management #####
+
 function install {
 	sudo apt install --error-on=any -y "$@"
 }
+
 function uninstall {
 	sudo apt remove --error-on=any --purge -y "$@"
 	sudo apt autoremove -y
 }
 
 function show {
-	pkgname="$1"
+	local pkg=$1
 	
-	apt show $pkgname
+	apt show $pkg
+	
+	dpkg -s $pkg | grep --color=never "Status: "
+	stat /var/lib/dpkg/info/$pkg.list | grep --color=never Modify
+	
 	echo Binaries:
-	dpkg --listfiles $pkgname | grep \
-		-e /usr/local/sbin/ -e /usr/local/bin/ \
-		-e /usr/sbin/ -e /usr/bin/ \
-		-e /sbin/ -e /bin/
-	echo Bash completions:
-	dpkg --listfiles bash-completion | \
-		grep /usr/share/bash-completion/completions/ | \
-		grep $pkgname
+	dpkg --listfiles $pkg | grep --color=never \
+		-e ^/usr/local/sbin/ -e ^/usr/local/bin/ \
+		-e ^/usr/sbin/ -e ^/usr/bin/ \
+		-e ^/sbin/ -e ^/bin/
+	
+	echo Config:
+	dpkg --listfiles $pkg | grep --color=never \
+		/etc/
 
-	unset pkgname
+	echo Bash completions:
+	dpkg --listfiles $pkg | grep --color=never \
+		/usr/share/bash-completion/completions/
 }
 
-function pkg-bin {
-	if [ "$(type -a "$1" | wc -l)" -gt 1 ];
-	then
-		echo -e "multiple binaries found:\n" && type -a "$1" >&2
-		return 1
-	else
-		echo -e "type $(type "$1") placed by:\n"
-		apt show "$(dpkg --search "$(type -P "$1")" | sed 's/: .*//')"
-	fi
+function search {
+	local command=$1
+	local bin=$(type -P $command)
+	local pkgname=$(dpkg --search $bin | sed 's/: .*//')
+	echo $pkgname
 }
