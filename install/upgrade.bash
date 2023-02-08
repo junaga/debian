@@ -16,8 +16,9 @@ apt update
 apt upgrade -y
 apt install -y $(cat "$dir"/packages)
 apt autoremove -y
+apt update
+apt install -y $(cat "$dir"/packages)
+apt autoremove -y
 
 echo "===== Node (\`npm\`) ====="
 npm install --global tldr
-
-tldr --update
