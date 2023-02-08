@@ -1,12 +1,12 @@
 #!/bin/bash -e
-# WARN: needs to be run from this directory
-# setup a new Debian VM in my preferred way.
 
 if test $(whoami) != root
 then
 	echo "Error: run with \`$ sudo bash -e \$FILE\`" >&2
 	exit 1
 fi
+
+dir="$(dirname "$(readlink -f "$0")")"
 
 #=== cleanup fs ===
 
@@ -37,8 +37,6 @@ rm -r /var/spool/mail
 
 #=== cleanup /etc ===
 
-# I keep a single file
-rm -r /etc/apt/sources.list.d/
 # There is /lib/terminfo/
 rm -r /etc/terminfo/
 # walls and ladders
@@ -51,26 +49,20 @@ rm /etc/bash.bashrc
 rm -r /etc/skel/ # $HOME template
 
 #=== uninstall packages ===
+
 # I use the "VS Code" editor exclusively
 apt remove --purge -y vim-tiny vim-common xxd
 # Translations and documentation
 apt remove --purge -y debconf-i18n isc-dhcp-common
 # There is no Desktop
 apt remove --purge -y tasksel
+
+# reduce the output of `apt-mark showmanual`
 apt-mark minimize-manual -y
-apt-mark manual $(cat ./packages)
 
 #=== install packages ===
-cp -ra ./trusted/. /usr/share/keyrings/
-echo -e "\n" >> /etc/apt/sources.list
-cat sources.list >> /etc/apt/sources.list
 
-apt update
-apt upgrade -y
-apt install -y $(cat ./packages)
-apt autoremove -y
-
-#=== cleanup ===
+bash -e "$dir"/install/upgrade.bash
 rm /etc/bash_completion
 rm /etc/zsh_command_not_found
 
@@ -79,7 +71,7 @@ echo "Replace \$HOME/ with ./home/? (press CTRL+C to abort)"
 read -e -p "replace: " -i $(dirname $PWD) home
 
 rm $home/{.profile,.bashrc,.bash_logout}
-cp -ra ./home/. $home
+cp -ra "$dir"/home/. $home
 unset home
 
 #=== That's it ===
