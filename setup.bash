@@ -66,7 +66,7 @@ bash -e "$dir"/install/upgrade.bash
 rm /etc/bash_completion
 rm /etc/zsh_command_not_found
 
-#=== Bash Shell profile ===
+#=== set $HOME/ ===
 echo "Replace directory with "$dir"/home/? (press CTRL+C to abort)"
 read -e -p "replace: " -i $PWD home
 
@@ -76,8 +76,10 @@ mkdir $tmp
 cp -ra "$dir"/home/ $tmp/new-home/ # in case the script would move itself
 mv $home/ $tmp/old-home/
 mv $tmp/new-home/ $home/
-mv $tmp/old-home/ $home/old-home/
+mv $tmp/old-home/ $home/old/
+
+rm -r $tmp
 
 echo "That's it, you're gtg."
 echo "now: \`$ bash --login\`"
-echo "next: \`$ rm -r old-home\`"
+echo "next: \`$ rm -r old\`"
