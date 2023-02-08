@@ -1,3 +1,0 @@
-# "nodejs" from https://nodejs.org/en/download/
-# reason: I need the newest version
-deb [signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_18.x bookworm main
