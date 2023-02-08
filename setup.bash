@@ -67,14 +67,17 @@ rm /etc/bash_completion
 rm /etc/zsh_command_not_found
 
 #=== Bash Shell profile ===
-echo "Replace \$HOME/ with ./home/? (press CTRL+C to abort)"
-read -e -p "replace: " -i $(dirname $PWD) home
+echo "Replace directory with "$dir"/home/? (press CTRL+C to abort)"
+read -e -p "replace: " -i $PWD home
 
-rm $home/{.profile,.bashrc,.bash_logout}
-cp -ra "$dir"/home/. $home
-unset home
+tmp=/tmp/$RANDOM/
+mkdir $tmp
 
-#=== That's it ===
-echo That\'s it, you\'re gtg.
-echo now: \`$ bash --login\`
-echo next: \`$ cd .. && rm -r my-debian\`
+cp -ra "$dir"/home/ $tmp/new-home/ # in case the script would move itself
+mv $home/ $tmp/old-home/
+mv $tmp/new-home/ $home/
+mv $tmp/old-home/ $home/old-home/
+
+echo "That's it, you're gtg."
+echo "now: \`$ bash --login\`"
+echo "next: \`$ rm -r old-home\`"
