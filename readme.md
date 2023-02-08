@@ -51,7 +51,7 @@ After installing Debian on any platform, I configure the system
 
 ```sh
 cd $HOME
-# Download https://github.com/junaga/debian
+# Clone or download https://github.com/junaga/debian
 sudo bash -e debian/setup.bash
 # confirm `$HOME/` replacement
 ```
