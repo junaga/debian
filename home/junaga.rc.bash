@@ -25,6 +25,7 @@ alias e="code" # edit
 # g is Google
 alias dl="curl -L"
 alias js='node --unhandled-rejections=strict'
+alias py='python3'
 alias md5="md5sum"
 
 function terminal {
