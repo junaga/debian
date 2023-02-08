@@ -2,6 +2,8 @@ bash-completion
 command-not-found
 trash-cli
 
+python3-minimal
+python3-pip
 git
 ffmpeg
 imagemagick
