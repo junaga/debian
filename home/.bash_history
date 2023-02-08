@@ -34,3 +34,7 @@ cd src/debian/
 git push 
 git push 
 # awsome, VS Code just signed me in. by itself. with a popup into my browser. in an OAuth flow. i was already signed into github.com it just took the token XD
+git add home/
+git status
+git commit -m "this feels great"
+git push 
