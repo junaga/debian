@@ -46,11 +46,11 @@ function unpack {
 ##### Package management #####
 
 function install {
-	sudo apt install --error-on=any -y "$@"
+	sudo apt install -y "$@"
 }
 
 function uninstall {
-	sudo apt remove --error-on=any --purge -y "$@"
+	sudo apt remove --purge -y "$@"
 	sudo apt autoremove -y
 }
 
