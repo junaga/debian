@@ -31,3 +31,4 @@ PROMPT_COMMAND="history -a" # write memory to history file on every command ente
 alias ls='ls --color=always'
 alias grep='grep --color=always'
 alias diff='diff --color=always'
+alias less="less --RAW-CONTROL-CHARS"
