@@ -12,6 +12,7 @@ unset bold_blue reset
 
 export PAGER="less" # do more with less
 export EDITOR="code --wait" # VS Code FTW
+source $(code --locate-shell-integration-path bash)
 export BROWSER='echo CTRL+Click URL: '
 
 ##### Aliases #####
