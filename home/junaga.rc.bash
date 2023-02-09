@@ -20,6 +20,7 @@ alias rm="trash-put"
 alias hd="od -tx1 -cb"
 function man { $BROWSER "https://manpages.debian.org/stable//$1..en.html"; }
 alias time="date +%Y-%m-%d-%H-%M-%S"
+alias tree="ls -AR -I "dist" -I ".git" -I "node_modules" -I "venv" -I "__pycache__""
 
 # b is Bing
 alias e="code" # edit
