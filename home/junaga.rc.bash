@@ -25,7 +25,7 @@ alias tree="ls -AR -I "dist" -I ".git" -I "node_modules" -I ".next" -I "venv" -I
 # b is Bing
 alias e="code" # edit
 # g is Google
-alias dl="curl -L"
+alias dl="curl -sL"
 alias js='node --unhandled-rejections=strict'
 alias py='python3'
 alias md5="md5sum"
