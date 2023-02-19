@@ -1,4 +1,3 @@
-##### My prompt #####
 # CTRL+Backspace hotkey deletes a word
 bind "\C-H":backward-kill-word
 
@@ -10,9 +9,18 @@ PS2="    "
 PS4="$ "
 unset bold_blue reset
 
-export PAGER="less" # do more with less
-export EDITOR="code --wait" # VS Code FTW
+# do more with less
+export PAGER="less"
+eval $(lesspipe)
+alias less="less \
+	--IGNORE-CASE \
+	--tabs=2 --RAW-CONTROL-CHARS \
+	--long-prompt"
+
+# VS Code FTW
+export EDITOR="code --wait"
 source $(code --locate-shell-integration-path bash)
+
 export BROWSER='echo CTRL+Click URL: '
 
 ##### Aliases #####
