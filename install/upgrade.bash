@@ -21,4 +21,7 @@ apt install -y $(cat "$dir"/packages)
 apt autoremove -y
 
 echo "===== Node (\`npm\`) ====="
+corepack enable \
+	--install-directory /usr/local/bin/ \
+	yarn pnpm
 npm install --global tldr
