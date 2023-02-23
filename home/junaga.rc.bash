@@ -27,16 +27,18 @@ export BROWSER='echo CTRL+Click URL: '
 alias rm="trash-put"
 alias hd="od -tx1 -cb"
 function man { $BROWSER "https://manpages.debian.org/stable//$1..en.html"; }
-alias time="date +%Y-%m-%d-%H-%M-%S"
 alias tree="ls -AR -I "dist" -I ".git" -I "node_modules" -I ".next" -I "venv" -I "__pycache__""
+alias time="date +%Y-%m-%d-%H-%M-%S"
 
-# b is Bing
 alias e="code" # edit
-# g is Google
+
 alias dl="curl -sL"
 alias js='node --unhandled-rejections=strict'
 alias py='python3'
 alias md5="md5sum"
+alias fmt="npm run fmt"
+alias build="npm run build"
+alias dev="npm run dev &> devserver.log &"
 
 function openai {
 	# https://platform.openai.com/docs/api-reference/introduction
@@ -75,7 +77,7 @@ function unpack {
 	fi
 }
 
-##### Package management #####
+##### Functions #####
 
 function install {
 	sudo apt install -y "$@"
@@ -114,4 +116,32 @@ function search {
 	local bin=$(type -P $command)
 	local pkgname=$(dpkg --search $bin | sed 's/: .*//')
 	echo $pkgname
+}
+
+function openai {
+	# https://platform.openai.com/docs/api-reference/introduction
+
+	local prompt="$1"
+
+	curl -s https://api.openai.com/v1/completions \
+		-H "Authorization: Bearer $OPENAI_API_KEY" \
+		-H "Content-Type: application/json" \
+		-d "{ \"model\": \"text-davinci-003\", \"prompt\": \"$prompt\", \"max_tokens\": 100 }" \
+		| jq --raw-output --monochrome-output ".choices[].text"
+}
+
+function terminal {
+	echo \$TERM: $TERM 
+	echo Device: $(tty)
+	echo Baudrate: $(stty speed)
+	echo Rows/Columns: $(stty size)
+}
+
+function pack {
+	tar -czvf "$(realpath "$1").tar.gz" "$1"
+}
+function unpack {
+	if tar -xzvf "$@"; then
+		rm "$@"
+	fi
 }
