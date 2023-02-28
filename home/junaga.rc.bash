@@ -38,6 +38,18 @@ alias js='node --unhandled-rejections=strict'
 alias py='python3'
 alias md5="md5sum"
 
+function openai {
+	# https://platform.openai.com/docs/api-reference/introduction
+
+	local prompt="$1"
+
+	curl -s https://api.openai.com/v1/completions \
+		-H "Authorization: Bearer $OPENAI_API_KEY" \
+		-H "Content-Type: application/json" \
+		-d "{ \"model\": \"text-davinci-003\", \"prompt\": \"$prompt\", \"max_tokens\": 100 }" \
+		| jq --raw-output --monochrome-output ".choices[].text"
+}
+
 function terminal {
 	echo \$TERM: $TERM 
 	echo Device: $(tty)
