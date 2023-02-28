@@ -8,6 +8,7 @@ git
 ffmpeg
 imagemagick
 curl
+jq
 file
 unzip
 
