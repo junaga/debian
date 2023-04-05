@@ -5,6 +5,7 @@ trash-cli
 python3-minimal
 python3-pip
 git
+git-lfs
 ffmpeg
 imagemagick
 curl
