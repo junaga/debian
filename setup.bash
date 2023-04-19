@@ -14,9 +14,11 @@ dir="$(dirname "$(readlink -f "$0")")"
 rm -r /usr/local/
 rm -r /srv/
 rm -r /opt/
-mkdir /usr/local/
 rm -r /var/opt/
 rm -r /var/local/
+mkdir /usr/local/
+mkdir /usr/local/bin/
+mkdir /usr/local/lib/
 
 # I write my code in $HOME/src/
 rm -r /usr/src/
