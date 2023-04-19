@@ -6,6 +6,7 @@ python3-minimal
 python3-pip
 git
 git-lfs
+gh
 ffmpeg
 imagemagick
 curl
