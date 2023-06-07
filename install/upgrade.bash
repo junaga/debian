@@ -24,4 +24,4 @@ echo "===== Node (\`npm\`) ====="
 corepack enable \
 	--install-directory /usr/local/bin/ \
 	yarn pnpm
-npm install --global tldr
+npm install --global tldr vite lighthouse
