@@ -44,8 +44,10 @@ Additional libraries that are restricted in a certain way.
 
 ```sh
 /usr/include/ # C Header files library
-/usr/share/ # "architecure independent" data library
+/usr/share/ # "architecure independent" data, library
 ```
+
+`usr/share/zoneinfo` is the timezones file.
 
 ## Cache and data (todo)
 
