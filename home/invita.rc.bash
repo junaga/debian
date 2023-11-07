@@ -1,28 +1,31 @@
 echo "Welcome $USER"
 trap 'echo "Goodbye $USER, now on lvl $((SHLVL-1))"' EXIT
 
+# shell variables (KEY=VALUE) are environment variables (export KEY=VALUE)
+set -a
+
 ##### Fix the shell #####
 # don't cache binary locations. search $PATH on every command entered
 set +h
 
-# globbing exists, it should at least work
+# fix globbing
 shopt -s nullglob globstar dotglob
 GLOBIGNORE=.:..
 
 # tab tab tab
-# requires the apt:bash-completion package
+# requires the debian:bash-completion package
 source /usr/share/bash-completion/bash_completion
 
 # think of the noobs
-# requires the apt:command-not-found package
+# requires the debian:command-not-found package
 function command_not_found_handle { /usr/bin/command-not-found "$1"; }
 
 ##### History not mystery #####
 # https://manpages.debian.org/bullseye/bash/bash.1.en.html#HISTORY
-HISTIGNORE="export *" # but keep secrets secret
-HISTSIZE=-1 # keep history of all commands (not just 500) entered
-shopt -s histappend # append to the history file, don't overwrite it
-PROMPT_COMMAND="history -a" # write memory to history file on every command entered
+HISTIGNORE="*=*" # but keep secrets secret
+HISTSIZE=-1 # keep history of all commands entered, not just 500
+PROMPT_COMMAND="history -a" # write memory to file on every command entered
+shopt -s histappend # append to the file, don't overwrite it
 
 ##### Commands #####
 # send ANSI color codes to the terminal
