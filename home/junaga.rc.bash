@@ -50,6 +50,15 @@ function openai {
 		| jq --raw-output --monochrome-output ".choices[].text"
 }
 
+# debian:wireguard-tools dependency
+function tunnel {
+	# server $PORT needs to be on $HOST 0.0.0.0 to work
+	curl https://tunnel.pyjam.as/$PORT > tunnel.conf && wg-quick up ./tunnel.conf
+}
+function tunnel-stop {
+	wg-quick down ./tunnel.conf && rm ./tunnel.conf
+}
+
 function terminal {
 	echo \$TERM: $TERM 
 	echo Device: $(tty)

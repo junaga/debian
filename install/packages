@@ -11,5 +11,6 @@ curl
 jq
 file
 unzip
+wireguard-tools
 
 nodejs
