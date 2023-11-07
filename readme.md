@@ -5,7 +5,7 @@
   - Admin `cmd.exe` -> `wsl --install -d debian`
 - Containers and VMs on the public cloud
 
-## The `setup.bash` script
+## The `main.bash` script
 
 After installing Debian on any platform, I configure the system
 
@@ -14,9 +14,9 @@ After installing Debian on any platform, I configure the system
 - copy [home/](./home/) (my dotfiles) to `$HOME/`
 
 ```sh
-# install Debian, enter the shell
+# install Debian and spawn the shell
 cd $HOME
 # download https://github.com/junaga/debian
-sudo bash -e debian/setup.bash
+sudo bash -e debian/main.bash
 # confirm `$HOME/` replacement
 ```
