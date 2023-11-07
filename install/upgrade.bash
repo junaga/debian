@@ -25,3 +25,14 @@ corepack enable \
 	--install-directory /usr/local/bin/ \
 	yarn pnpm
 npm install --global tldr vite lighthouse
+
+download_github_release() {
+	user_repo="$1"
+	gzip_archive="$2"
+
+	url=$(curl https://api.github.com/repos/"$user_repo"/releases/latest |\
+    jq -r ".assets[] | select(.browser_download_url | test(\"$gzip_archive\")) | .browser_download_url")
+  curl -LO $url
+  tar -xzf $gzip_archive
+  rm $gzip_archive
+}
