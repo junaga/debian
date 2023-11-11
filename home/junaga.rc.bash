@@ -23,6 +23,11 @@ source $(code --locate-shell-integration-path bash)
 
 export BROWSER='echo CTRL+Click URL: '
 
+# enable piping of `gh`
+# https://cli.github.com/manual/gh_help_environment#:~:text=CLICOLOR_FORCE
+export CLICOLOR_FORCE="true"
+export GH_FORCE_TTY="100" # terminal width columns
+
 ##### Aliases #####
 alias rm="trash-put"
 alias hd="od -tx1 -cb"
