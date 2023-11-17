@@ -14,5 +14,6 @@ jq
 file
 unzip
 wireguard-tools
+nyancat
 
 nodejs
