@@ -45,6 +45,7 @@ alias md5="md5sum"
 alias fmt="npm run fmt"
 alias build="npm run build"
 alias dev="npm run dev &> devserver.log &"
+alias python="python3"
 
 function openai {
 	# https://platform.openai.com/docs/api-reference/introduction
