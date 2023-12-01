@@ -1,3 +1,6 @@
+echo "Welcome $USER"
+trap 'echo "Goodbye $USER, now on lvl $((SHLVL-1))"' EXIT
+
 # CTRL+Backspace hotkey deletes a word
 bind "\C-H":backward-kill-word
 
@@ -46,6 +49,14 @@ alias fmt="npm run fmt"
 alias build="npm run build"
 alias dev="npm run dev &> devserver.log &"
 alias python="python3"
+
+##### fix colors
+# show me someone with a b&w CRT monitor
+# nvm: https://www.reddit.com/r/crtgaming/comments/u2nbu4/may_i_present_you_this_tiny_bw_crt_its_only_5/
+alias ls='ls --color=always'
+alias grep='grep --color=always'
+alias diff='diff --color=always'
+alias less="less --RAW-CONTROL-CHARS"
 
 function openai {
 	# https://platform.openai.com/docs/api-reference/introduction
