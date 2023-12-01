@@ -1,2 +1,2 @@
-source ~/invita.rc.bash
-source ~/junaga.rc.bash
+# fix the non `--login` shell in VS Code
+source ~/.profile
