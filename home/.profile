@@ -21,7 +21,7 @@ function command_not_found_handle { /usr/bin/command-not-found "$1"; }
 
 ##### History not mystery #####
 # https://manpages.debian.org/bullseye/bash/bash.1.en.html#HISTORY
-HISTIGNORE="*=*" # but keep secrets secret
+HISTIGNORE="export *=*" # but keep secrets secret
 HISTSIZE=-1 # keep history of all commands entered, not just 500
 PROMPT_COMMAND="history -a" # write memory to file on every command entered
 shopt -s histappend # append to the file, don't overwrite it
