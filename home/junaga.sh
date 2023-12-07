@@ -3,13 +3,13 @@ trap 'echo "Goodbye $USER, now on lvl $((SHLVL-1))"' EXIT
 
 # CTRL+Backspace hotkey deletes a word
 bind "\C-H":backward-kill-word
+GLOBIGNORE=.:..:dist/:node_modules/
+# HISTTIMEFORMAT="%Y-%m-%d-%H-%M-%S"
 
-# See https://github.com/junaga/debian/blob/main/ps1.md
 bold_blue="\[\e[1;34m\]"
 reset="\[\e[0m\]"
 PS1="\A $bold_blue\w$reset\$(__git_ps1 '|%s')\$ "
-PS2="    "
-PS4="$ "
+PS2="  "
 unset bold_blue reset
 
 # do more with less
@@ -24,7 +24,7 @@ alias less="less \
 export EDITOR="code --wait"
 source $(code --locate-shell-integration-path bash)
 
-export BROWSER='echo CTRL+Click URL: '
+export BROWSER='echo CTRL+Click: '
 
 # enable piping of `gh`
 # https://cli.github.com/manual/gh_help_environment#:~:text=CLICOLOR_FORCE
