@@ -354,3 +354,262 @@ e src/snippets/javascript.md
 cd src/snippets/
 git log
 npm --version
+cp gh/debian/home/* ./
+shopt -s dotglob
+cp gh/debian/home/* ./
+cat .profile 
+false
+echo $PROMPT_COMMAND 
+echo "$PROMPT_COMMAND"
+echo "$$PROMPT_COMMAND"
+echo $"$PROMPT_COMMAND"
+echo "$$PROMPT_COMMAND"
+echo "$$$PROMPT_COMMAND"
+echo "$$$$PROMPT_COMMAND"
+echo "$$$$$PROMPT_COMMAND"
+__vsc_prompt_cmd_original
+echo $__vsc_prompt_cmd_original
+e ./.bash_history 
+echo hi
+set -vx
+set -xv
+echo hi
+# hello
+bash --norc
+set -xv
+echo hi
+# hello
+git log
+cd aureus/
+v log
+cd ../gh/debian/
+v log
+cd ~
+ls
+cp gh/debian/home/.profile ./
+ls
+rm bash-options.log 
+rm post pre
+ls
+cd gh/debian/
+git ls
+git log
+git status
+cat home/todo.log >> ~/docs/todo/bash
+cat ~/docs/todo/bash
+e ~/docs/todo/bash
+e ~/docs/todo/bash
+cd ~
+ls
+cp gh/debian/home/.profile ./
+ls
+rm bash-options.log 
+rm post pre
+ls
+cd gh/debian/
+git ls
+git log
+git status
+cat home/todo.log >> ~/docs/todo/bash
+cat ~/docs/todo/bash
+e ~/docs/todo/bash
+e ~/docs/todo/bash
+bash
+set -xv
+echo hi
+# hello
+bash --norc
+set -xv
+echo hi
+# hello
+git log
+cd aureus/
+v log
+cd ../gh/debian/
+v log
+cd ~
+ls
+cp gh/debian/home/.profile ./
+ls
+rm bash-options.log 
+rm post pre
+ls
+cd gh/debian/
+git ls
+git log
+git status
+cat home/todo.log >> ~/docs/todo/bash
+cat ~/docs/todo/bash
+e ~/docs/todo/bash
+e ~/docs/todo/bash
+cd ~
+ls
+cp gh/debian/home/.profile ./
+ls
+rm bash-options.log 
+rm post pre
+ls
+cd gh/debian/
+git ls
+git log
+git status
+cat home/todo.log >> ~/docs/todo/bash
+cat ~/docs/todo/bash
+e ~/docs/todo/bash
+e ~/docs/todo/bash
+cd ~/aureus/
+ls
+e docs/man/env.md 
+e ../docs/todo/bash
+env
+set -a
+env | grep x
+x=22
+env | grep x
+local x=33
+declare x=33
+echo $x
+env | grep x
+declare --help
+e ../docs/todo/bash
+bash --version
+man bash
+time echo hi
+time | echo hi
+bash
+time
+time echo hi
+cd $HOME
+cd aureus/
+time npm install
+whoami
+whoami
+bash --norc
+time
+time echo hi
+cd $HOME
+cd aureus/
+time npm install
+whoami
+whoami
+e ../docs/todo/bash
+type date
+man date
+date +%Y-%m-%d-%H-%M-%S
+date +%Y-%m-%d-%H-%M-%S
+date +%Y-%m-%d-%H-%M-%S
+stty size
+echo $ROWS
+echo $COLUMNS
+echo $COLUMNS
+echo $COLUMNS
+stty size
+code -r ../gh/debian/
+echo hi
+e ~/.bash_history 
+echo hi
+time && time
+cd ~
+ls
+mv docs/todo/bash ./gh/debian/todo.log
+mv ./gh/debian/todo.log docs/todo/bash
+e docs/todo/bash
+mv .bash_history log
+echo hi
+echo hi2
+echo hi3
+bash --login
+bash --login
+echo hi5
+source INSTALL.SH 
+env 
+env | grep STRATUM
+chmod +x .env
+./.env 
+./.env 
+./.env 
+./.env 
+./.env 
+./.env 
+./.env 
+./.env 
+env | grep STRATUM
+echo $STRATUM
+bash --rcfile ./.env -a
+echo $STRATUM
+env | grep STRATUM
+/bin/bash --norc -a .env 
+echo $SHLVL
+/bin/bash --norc -a .env 
+/bin/bash --norc -ia .env 
+/bin/bash --init-file -a .env 
+/bin/bash --rc-file -a .env 
+/bin/bash --init-file -a .env 
+echo $SHLVL
+/bin/bash --init-file .env 
+/bin/bash -a --init-file .env 
+git --version
+node --version
+npm --version
+env
+env | grep STRATUM
+env | grep STRATUM
+source INSTALL.SH 
+env | grep STRATUM
+/bin/bash -o pipefail -eux INSTALL.SH 
+env | grep STRATUM
+./INSTALL.SH 
+./INSTALL.SH 
+./INSTALL.SH 
+./INSTALL.SH 
+./INSTALL.SH 
+./INSTALL.SH 
+./INSTALL.SH 
+./INSTALL.SH 
+v log
+v log
+v fix
+env | grep STRATUM
+enter .env
+env | grep STRATUM
+npm run clean
+enter INSTALL.SH 
+npm run clean
+npm run clean
+npm run clean
+npm run clean
+npm run clean
+rm -r ./node_module/ || true
+rm -r ./node_module/ || true
+rm -r ./node_module/
+v log
+v fix
+env | grep STRATUM
+echo $PATH
+env | grep STRATUM
+echo $PATH
+enter .env
+echo $PATH
+env | grep STRATUM
+echo hi
+echo hi
+echo hi
+v log
+v log
+enter .env
+echo $PATH
+env | grep STRATUM
+enter .env
+env | grep STRATUM
+echo $PATH
+enter INSTALL.SH 
+echo $PATH
+env | grep STRATUM
+./INSTALL.SH 
+v log
+v log
+v rewrite origin/main
+git rebase --abort 
+v log
+v log
+e -d home/.bash_history ~/log
