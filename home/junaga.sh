@@ -1,89 +1,42 @@
+# me: hms, jun, rbt
+
 echo "Welcome $USER"
-trap 'echo "Goodbye $USER, now on lvl $((SHLVL-1))"' EXIT
+trap "echo \"Goodbye $USER. Now on lvl $((SHLVL-1))\"" EXIT
 
-# CTRL+Backspace hotkey deletes a word
-bind "\C-H":backward-kill-word
-GLOBIGNORE=.:..:dist/:node_modules/
-# HISTTIMEFORMAT="%Y-%m-%d-%H-%M-%S"
+export PATH="$PATH:./node_modules/.bin/" # deb:nodejs
+export BROWSER="echo CTRL+Click: " # TODO: set to `chromium`
+export EDITOR="code --wait" # https://code.visualstudio.com/
 
-bold_blue="\[\e[1;34m\]"
-reset="\[\e[0m\]"
-PS1="\A $bold_blue\w$reset\$(__git_ps1 '|%s')\$ "
-PS2="  "
-unset bold_blue reset
+################
+## fix colors ##
 
-# do more with less
-export PAGER="less"
-eval $(lesspipe)
-alias less="less \
-	--IGNORE-CASE \
-	--tabs=2 --RAW-CONTROL-CHARS \
-	--long-prompt"
+alias ls="ls --color=always"
+alias grep="grep --color=always"
+export CLICOLOR_FORCE="true" # https://cli.github.com/manual/gh_help_environment#:~:text=CLICOLOR_FORCE
 
-# VS Code FTW
-export EDITOR="code --wait"
-source $(code --locate-shell-integration-path bash)
-
-export BROWSER='echo CTRL+Click: '
-
-# enable piping of `gh`
-# https://cli.github.com/manual/gh_help_environment#:~:text=CLICOLOR_FORCE
-export CLICOLOR_FORCE="true"
-export GH_FORCE_TTY="100" # terminal width columns
-
-##### Aliases #####
-alias rm="trash-put"
-alias hd="od -tx1 -cb"
-function man { $BROWSER "https://manpages.debian.org/stable//$1..en.html"; }
-alias tree="ls -AR -I "dist" -I ".git" -I "node_modules" -I ".next" -I "venv" -I "__pycache__""
-alias time="date +%Y-%m-%d-%H-%M-%S"
-alias fuck-windows="rm **/*Zone.Identifier"
+################
+## aliases    ##
 
 alias e="code" # edit
+# alias g # google
+# alias v # https://github.com/junaga/v-vcs
 
-alias dl="curl -sL"
-alias js='node --unhandled-rejections=strict'
-alias py='python3'
-alias md5="md5sum"
-alias fmt="npm run fmt"
-alias build="npm run build"
-alias dev="npm run dev &> devserver.log &"
+alias rm="trash-put"
 alias python="python3"
+alias whenisit="date +%Y-%m-%d-%H-%M-%S"
+alias fuckwindows="rm **/*Zone.Identifier"
 
-##### fix colors
-# show me someone with a b&w CRT monitor
-# nvm: https://www.reddit.com/r/crtgaming/comments/u2nbu4/may_i_present_you_this_tiny_bw_crt_its_only_5/
-alias ls='ls --color=always'
-alias grep='grep --color=always'
-alias diff='diff --color=always'
-alias less="less --RAW-CONTROL-CHARS"
-
-function openai {
-	# https://platform.openai.com/docs/api-reference/introduction
-
-	local prompt="$1"
-
-	curl -s https://api.openai.com/v1/completions \
-		-H "Authorization: Bearer $OPENAI_API_KEY" \
-		-H "Content-Type: application/json" \
-		-d "{ \"model\": \"text-davinci-003\", \"prompt\": \"$prompt\", \"max_tokens\": 100 }" \
-		| jq --raw-output --monochrome-output ".choices[].text"
+# x-man-page://
+function man {
+	$BROWSER "https://manpages.debian.org/$1.en"
 }
 
-# debian:wireguard-tools dependency
-function tunnel {
+function tunnel { # deb:wireguard-tools
 	# server $PORT needs to be on $HOST 0.0.0.0 to work
 	curl https://tunnel.pyjam.as/$PORT > tunnel.conf && wg-quick up ./tunnel.conf
 }
-function tunnel-stop {
+function tunnel-stop { # deb:wireguard-tools
 	wg-quick down ./tunnel.conf && rm ./tunnel.conf
-}
-
-function terminal {
-	echo \$TERM: $TERM 
-	echo Device: $(tty)
-	echo Baudrate: $(stty speed)
-	echo Rows/Columns: $(stty size)
 }
 
 function pack {
@@ -95,18 +48,36 @@ function unpack {
 	fi
 }
 
-##### Functions #####
+################
+## Debug      ##
 
-function install {
-	sudo apt install -y "$@"
+function debug_terminal {
+	echo \$TERM: $TERM 
+	echo Device: $(tty)
+	echo Baudrate: $(stty speed)
+	echo Rows Columns: $(stty size)
 }
 
-function uninstall {
-	sudo apt remove --purge -y "$@"
-	sudo apt autoremove -y
+function debug_bash {
+	rm bash-options.log
+
+	echo "$ echo \$-" >> bash-options.log
+	echo $- >> bash-options.log
+	echo "$ echo \$BASHOPTS" >> bash-options.log
+	echo $BASHOPTS >> bash-options.log
+	echo "$ shopt -p" >> bash-options.log
+	shopt -p >> bash-options.log
+	echo "$ declare -p" >> bash-options.log
+	declare -p >> bash-options.log
+	echo "$ set" >> bash-options.log
+	set >> bash-options.log
+
+	set -vx
+	# RTFM the bash manual - :skull: :crying:
+	man bash
 }
 
-function show {
+function debug_apt {
 	local pkg=$1
 	
 	apt show $pkg
@@ -127,39 +98,4 @@ function show {
 	echo Bash completions:
 	dpkg --listfiles $pkg | grep --color=never \
 		/usr/share/bash-completion/completions/
-}
-
-function search {
-	local command=$1
-	local bin=$(type -P $command)
-	local pkgname=$(dpkg --search $bin | sed 's/: .*//')
-	echo $pkgname
-}
-
-function openai {
-	# https://platform.openai.com/docs/api-reference/introduction
-
-	local prompt="$1"
-
-	curl -s https://api.openai.com/v1/completions \
-		-H "Authorization: Bearer $OPENAI_API_KEY" \
-		-H "Content-Type: application/json" \
-		-d "{ \"model\": \"text-davinci-003\", \"prompt\": \"$prompt\", \"max_tokens\": 100 }" \
-		| jq --raw-output --monochrome-output ".choices[].text"
-}
-
-function terminal {
-	echo \$TERM: $TERM 
-	echo Device: $(tty)
-	echo Baudrate: $(stty speed)
-	echo Rows/Columns: $(stty size)
-}
-
-function pack {
-	tar -czvf "$(realpath "$1").tar.gz" "$1"
-}
-function unpack {
-	if tar -xzvf "$@"; then
-		rm "$@"
-	fi
 }

@@ -1,2 +1,3 @@
-# fix the non `--login` shell in VS Code
+# Visual Studio Code
+# fix: non`--login` shell
 source ~/.profile
