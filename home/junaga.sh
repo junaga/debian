@@ -31,6 +31,16 @@ function man {
 	$BROWSER "https://manpages.debian.org/$1.en"
 }
 
+function enter {
+	bash --rcfile <(echo "
+		source \$HOME/.profile
+		set -a
+		for f in $@
+		do source \$f
+		done
+	")
+}
+
 function tunnel { # deb:wireguard-tools
 	# server $PORT needs to be on $HOST 0.0.0.0 to work
 	curl https://tunnel.pyjam.as/$PORT > tunnel.conf && wg-quick up ./tunnel.conf
