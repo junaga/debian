@@ -17,6 +17,7 @@ export CLICOLOR_FORCE="true" # https://cli.github.com/manual/gh_help_environment
 ################
 ## aliases    ##
 
+# alias c # C language
 alias e="code" # edit
 # alias g # google
 # alias v # https://github.com/junaga/v-vcs
