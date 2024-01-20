@@ -23,6 +23,8 @@ alias e="code" # edit
 # alias v # https://github.com/junaga/v-vcs
 
 alias rm="trash-put"
+alias play="ffplay -hide_banner -autoexit"
+alias play-audio="ffplay -hide_banner -autoexit -vn -nodisp"
 alias python="python3"
 alias whenisit="date +%Y-%m-%d-%H-%M-%S"
 alias fuckwindows="rm **/*Zone.Identifier"
