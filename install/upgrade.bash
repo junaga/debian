@@ -9,14 +9,8 @@ fi
 dir="$(dirname "$(readlink -f "$0")")"
 
 echo "===== Debian (\`apt\`) ====="
-cp -r "$dir"/keyrings/ /etc/apt/keyrings/
-cp "$dir"/sources.list /etc/apt/sources.list.d/invita.list
-
 apt update
 apt upgrade -y
-apt install -y $(cat "$dir"/packages)
-apt autoremove -y
-apt update
 apt install -y $(cat "$dir"/packages)
 apt autoremove -y
 
