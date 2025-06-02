@@ -1,47 +1,48 @@
-# Why Debian
+> 'ls' is not recognized as an internal or external command, operable program or batch file.
+>
+> _a common error on Windows_
 
-> The Universal Operating System
+# Why Debian [//debian.org](https://debian.org/)
 
-[Debian](https://www.debian.org/) is the worlds vanilla (meaning default) Linux Software Distribution. `@Fireship` has a [great 10 minute video](https://www.youtube.com/watch?v=ShcR4Zfc6Dw) that explains what a "Linux distro" is.
+The "Universal Operating System" Debian is the worlds vanilla (meaning default) Linux distribution.
+
+@Fireship has a great [10 minute video](https://www.youtube.com/watch?v=ShcR4Zfc6Dw) that explains what a "Linux distro" is.
 
 ## 5 Reasons to use Debian
 
 ### 1. Not Windows
 
-> 'ls' is not recognized as an internal or external command, operable program or batch file.
+It's almost impossible to develop an app in Windows userspace, enable the [Windows Subsystem for Linux](https://github.com/junaga/windows/tree/main/wsl). A two year old MacBook is a good purchase but also not Linux.
 
-It's almost impossible to develop an App when sitting in Windows OS userspace. Get a MacBook, or use a Linux - like Ubuntu.
+- Windows is not "Unix-like" (Linux, macOS, BSD are)
+- Windows is required for gaming but Linux for programming
+- like the web Windows is a "giant mess"
 
-- macOS, most Linux, and all BSD, are Unix-like, Windows is not.
-- kinda like the web, Windows is a _giant mess_.
-- Windows is required for gaming, but Linux is for working.
+### 2. A Server System
 
-#### It's getting better
+Debian the "Universal Operating System" is good for embedded, client, and server computers.
 
-Microsoft is trying to fix this, with [powershell v6+](https://github.com/PowerShell/PowerShell), and the [Windows Subsystem for Linux](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux) (WSL), v2 virtual machine, project.
+You can run a VPS in the public cloud, gameservers like Minecraft, or backend containers. Most servers on the web are Debian based Linux computers.
 
-### 2. Server system
-
-Debian, is the "universal operating system". Meaning embedded, client, and server, OS. You can run VMs in the public cloud, game servers like Minecraft, and backend containers. Most servers on the web are Debian based Linux servers.
-
-There is no "Arch Linux" runner for [any CI server](https://github.com/ligurio/awesome-ci), to build-test-deploy a software. It's for workstations, not for servers.
+There is no Arch Linux runner for [any CI server](https://github.com/ligurio/awesome-ci), to build-test-deploy an app. Arch Linux is for workstations not for servers. Similarly, while NixOS can do everything in theory, most production web servers are either Debian/Ubuntu Linux or BSD systems.
 
 ### 3. Huge but lightweight
 
-- [~65.000 packages](https://packages.debian.org/stable/) make up the distribution
-- ~200 packages using ~0.5GB in new install (with docs and i18n)
-- [system requirements](https://www.debian.org/releases/stable/amd64/ch03s04.en.html) of 4GB storage and 500MB memory
-- runs on ARM, x86, x86-64, [everywhere](https://www.debian.org/ports/)
-- is the upstream of [a lot of linux](https://upload.wikimedia.org/wikipedia/commons/a/ad/2023_Linux_Distributions_Timeline.svg), like Ubuntu, Tails, and Raspberry Pi OS.
+Every traditional computer program is a single `apt install` command away from operation. `docker.io` `nodejs` `sshfs` etc
+
+- distribution of [65000 packages](https://packages.debian.org/stable/)
+- install has 200 packages totalling 0.5GB (with docs and i18n)
+- runs [everywhere](https://www.debian.org/ports/) `ARM` `x86` `x86-64`..
+- 4GB storage and 500MB memory [recommended minimum system requirements](https://www.debian.org/releases/stable/amd64/ch03s04.en.html)
 
 ### 4. Freedom
 
-Free, _as in freedom_, open source software (FOSS), that is [copyleft](https://en.wikipedia.org/wiki/Copyleft) (GPL) licensed.
+Free _as in freedom_ open source software (FOSS), that is [copyleft](https://en.wikipedia.org/wiki/Copyleft) (GPL) licensed. Developed by thousands of volunteers from all over the world, with the exception of `non-free-firmware`, Debian is free for anyone to use, modify, and redistribute. A lot of [Linux distros](https://upload.wikimedia.org/wikipedia/commons/a/ad/2023_Linux_Distributions_Timeline.svg) redistribute Debian, like Ubuntu, Tails, Raspberry Pi OS.
 
-Developed by thousands of volunteers from all over the world, with the exception of `non-free-firmware`, Debian is free for anyone to use, modify, and distribute. Also it costs $0.
+Finally, like all open source software, it costs $0.
 
 ### 5. Stable
 
-With a test-release cycle of 24 months, Debian never has fresh software, but the packages you do get, are secure and stable on their own, and with each other. If you need the latest version of something, for example `nodejs`, just install it manually, and carry the script to install it with you. Yes, forever.
+With a test-release cycle of 24 months, Debian never has fresh software, but the packages you do get, are secure and stable on their own, and with each other. If you do need the latest/beta/testing/unstable version of something, for example `nodejs`, install it manually and document or script the process. Instead of trying to discover your perfect distro, grow your own.
 
-The arguably best thing about Debian, is that it is boring, without any weird features. It's the tool for the job.
+The arguably best thing about Debian, is that it is boring, without any quirks. It's the tool for the job.
