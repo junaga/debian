@@ -1,3 +1,2 @@
-# Visual Studio Code
-# fix: non`--login` shell
+# this file fixes `bash` without `--login` runs (interactive non-login shell invocation)
 source ~/.profile
