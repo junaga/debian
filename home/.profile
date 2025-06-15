@@ -1,35 +1,44 @@
 # https://manpages.debian.org/bookworm/bash/bash.1.en.html
 
-source ~/junaga.sh
+source ~/junaga.bash
 
-# https://packages.debian.org/stable/command-not-found
-function command_not_found_handle { /usr/bin/command-not-found "$1"; }
-# https://packages.debian.org/stable/bash-completion
-source /usr/share/bash-completion/bash_completion
+echo "Welcome $USER"
+trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT
 
-## I am speed
-# set -a # `$ export` variables # TODO: vscode bug
-shopt -s autocd # `$ cd` directories
-bind "\C-H":backward-kill-word # CTRL+Backspace removes words
+# shell prompt
+################
+declare bold_blue="\[\e[1;34m\]"
+declare bold_green="\[\e[1;32m\]"
+declare reset="\[\e[0m\]"
+__container_name_ps1() { test -f "/.dockerenv" && cat /etc/hostname; }
 
-## whenami, whereami, "HH:MM PWD[|GIT_BRANCH]$ "
-bold_blue="\[\e[1;34m\]"; reset="\[\e[0m\]"
-PS1="\A $bold_blue\w$reset\$(__git_ps1 '|%s')\$ "
-PS2="	" # a single tab, U+0009
-PS4="$ " # printed in `-x` mode
-unset bold_blue reset
+# "HH:MM [CONTAINER_NAME]PWD[|GIT_BRANCH]$ "
+declare PS1="\A $bold_green\$(__container_name_ps1)$bold_blue\w$reset\$(__git_ps1 '|%s')\$ "
+declare PS2="	"
 
-## History, not Mystery
-HISTIGNORE="export *" # and Secrets
-HISTCONTROL="erasedups"
-HISTSIZE="-1" # not 500
-HISTFILE="" # save manually
-touch $HOME/log
-PROMPT_COMMAND="history -a $HOME/log; history -r $HOME/log"
+unset bold_blue bold_green reset
 
-## Pro gamer, globbing language
-shopt -s nullglob # fix: expand no match
-shopt -s dotglob # match `.`files
-shopt -s globstar # enable `**`
+# settings
+################
+function command_not_found_handle { command-not-found "$1"; } # command-not-found package
+source /usr/share/bash-completion/bash_completion # bash-completion package
 
-set +h # disable `$PATH` cache
+alias ls="ls --color=always" # colorize the output
+alias grep="grep --color=always" # colorize the output
+
+# set -a # all shell variables are environment variables
+shopt -s autocd # cd directories automatically
+bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
+
+shopt -s nullglob # globbing matches nothing instead of itself
+shopt -s dotglob # globbing matches dotfiles
+shopt -s globstar # enable ** for recursive globbing
+
+# fix bash
+################
+shopt -s histappend # append to ~/.bash_history instead of overwriting it
+declare HISTSIZE="-1" # unlimited bash history size, not 500
+declare HISTFILESIZE="-1" # unlimited ~/.bash_history size, not 500
+
+shopt -s checkwinsize # update $LINES and $COLUMNS after each command
+set +h # disable caching binary locations from $PATH search results
