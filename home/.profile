@@ -1,6 +1,7 @@
 # https://manpages.debian.org/bookworm/bash/bash.1.en.html
 
-source ~/junaga.bash
+source ~/junaga
+source ~/aliases
 
 echo "Welcome $USER"
 trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT
@@ -23,10 +24,7 @@ unset bold_blue bold_green reset
 function command_not_found_handle { command-not-found "$1"; } # command-not-found package
 source /usr/share/bash-completion/bash_completion # bash-completion package
 
-alias ls="ls --color=always" # colorize the output
-alias grep="grep --color=always" # colorize the output
-
-# set -a # all shell variables are environment variables
+set -a # all shell variables are environment variables
 shopt -s autocd # cd directories automatically
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
