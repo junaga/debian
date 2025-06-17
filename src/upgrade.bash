@@ -5,6 +5,7 @@ apt install --yes \
   command-not-found \
   file \
   tree \
+  bsdextrautils \
   unzip \
   jq \
   bind9-dnsutils \
