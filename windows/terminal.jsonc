@@ -1,0 +1,52 @@
+{
+  // Windows Terminal
+  // trailer: https://www.youtube.com/watch?v=8gw0rXPMMPE
+  // source: https://github.com/microsoft/terminal
+  // settings: %LocalAppData%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+
+  "defaultProfile": "{0fdeb1ad-ab72-5321-a117-7c72db6112a5}",
+  "newTabMenu": [{ "type": "remainingProfiles" }],
+  "tabSwitcherMode": "disabled",
+
+  // application window
+  "theme": "system",
+  "windowingBehavior": "useExisting",
+  "centerOnLaunch": true,
+  "confirmCloseAllTabs": false,
+
+  // Unix on VT-Terminals was 80x24
+  "initialCols": 120,
+  "initialRows": 30,
+  "schemes": [],
+
+  "profiles": {
+    "defaults": {
+      "experimental.retroTerminalEffect": true,
+      "cursorShape": "filledBox",
+      "opacity": 80,
+      "experimental.rightClickContextMenu": true
+    },
+    "list": [
+      {
+        "name": "Debian",
+        "source": "Microsoft.WSL",
+        "guid": "{0fdeb1ad-ab72-5321-a117-7c72db6112a5}",
+        "icon": "ms-appx:///ProfileIcons/ubuntu.png"
+      },
+      {
+        "name": "Command Prompt",
+        "commandline": "%SystemRoot%\\System32\\cmd.exe",
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "cursorShape": "underscore"
+      },
+      {
+        "name": "Windows PowerShell",
+        "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "colorScheme": "Campbell Powershell",
+        "cursorShape": "underscore"
+      }
+    ]
+  }
+}
