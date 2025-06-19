@@ -1,12 +1,14 @@
 # Windows Subsystem for Linux [//microsoft.com](https://learn.microsoft.com/windows/wsl/)
 
-The **Windows Subsystem for Linux version 2** `wsl.exe` is a virtual machine that can run any [Linux distribution](https://en.wikipedia.org/wiki/List_of_Linux_distributions). To run `wsl.exe` you need,
+The **Windows Subsystem for Linux version 2** `wsl.exe` is a virtual machine that can run any [Linux distribution](https://en.wikipedia.org/wiki/List_of_Linux_distributions) and all Linux software. To run `wsl.exe` you need,
 
 - a modern [x86-64 CPU](https://en.wikipedia.org/wiki/X86-64) (which has [x86 virtualization](https://en.wikipedia.org/wiki/X86_virtualization))
 - Windows 10, Windows 11, or later
 - installed Windows Updates [ms-settings:windowsupdate](ms-settings:windowsupdate)
 
 _Intel and AMD CPUs manufactured after 2010 have x86 virtualization._
+
+_Enabling x86 virtualization can cause performance issues in Unreal Engine 5 based video games. (nikvals said this, but without a source?)_
 
 ## 1. Enable x86 virtualization
 
@@ -82,6 +84,32 @@ That's it, make sure to RTFM and happy hacking!
 
 - create, read, update and delete unix files
 - install and run any linux program
-- run any server, database, container, etc
-- GitOps, DevOps, SSH, etc
+- run any server, database, container ...
+- move everything into Linux ssh, git, docker ...
 - run windows programs on unix files!
+
+## How does it work?
+
+WSL 2 utilizes a lightweight Hyper-V VM to run a physical Linux kernel. The root filesystem is stored in `%LOCALAPPDATA%\Packages\<Distro>\LocalState\ext4.vhdx`. Kernel updates are distributed via Windows Update.
+
+WSL integrates with Windows for file access, networking, and IPC.
+
+```bash
+# Windows Drives are mounted in Linux
+ls /mnt
+wslpath 'C:\Users\'
+
+# Linux software runs with Windows files
+mv /mnt/c/$USER/Downloads/orange-cat.png ~/
+
+# Linux roots are mounted back into Windows
+explorer.exe '\\wsl.localhost\'
+wslpath -w $HOME
+
+# Windows apps run with Linux files!
+explorer.exe .
+echo $PATH
+
+# Linux<>Windows integration glue and drivers
+ls /usr/lib/wsl/
+```
