@@ -14,7 +14,7 @@ It's almost impossible to develop apps in Windows userspace.
 - kinda like the web, Windows is a _giant mess_
 - Windows is required for gaming, but Linux is for programming
 
-![running `ls` on Windows error](./not-windows.png)
+![running `ls` on Windows error](./error.png)
 
 ### 2. Huge but lightweight
 

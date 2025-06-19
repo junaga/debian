@@ -15,7 +15,7 @@ _As of writing, the latest stable release is Debian GNU/Linux 12 `bookworm`._
 
 ## Installation
 
-On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](https://github.com/junaga/windows/tree/main/wsl).
+On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/README.MD).
 
 ```cmd
 wsl.exe --install debian
