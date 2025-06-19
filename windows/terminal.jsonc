@@ -25,14 +25,14 @@
       "experimental.retroTerminalEffect": true,
       "cursorShape": "filledBox",
       "opacity": 80,
-      "experimental.rightClickContextMenu": true
+      "experimental.rightClickContextMenu": true,
+      "closeOnExit": "always"
     },
     "list": [
       {
         "name": "Debian",
         "source": "Microsoft.WSL",
-        "guid": "{0fdeb1ad-ab72-5321-a117-7c72db6112a5}",
-        "icon": "ms-appx:///ProfileIcons/ubuntu.png"
+        "guid": "{0fdeb1ad-ab72-5321-a117-7c72db6112a5}"
       },
       {
         "name": "Command Prompt",
