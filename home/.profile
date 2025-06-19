@@ -1,7 +1,7 @@
 # https://manpages.debian.org/bookworm/bash/bash.1.en.html
 
-source ~/junaga
-source ~/aliases
+source ~/junaga.bash
+source ~/aliases.bash
 
 echo "Welcome $USER"
 trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT

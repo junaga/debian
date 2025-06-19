@@ -10,9 +10,9 @@ The "Universal Operating System" Debian is the worlds vanilla (meaning default) 
 
 It's almost impossible to develop apps in Windows userspace.
 
-- Windows is not "Unix-like" (Linux, macOS, BSD are)
-- like the Web, Windows is a "giant mess"
-- Windows is required for gaming, but Linux for programming
+- macOS, BSD, and most Linux are Unix systems, Windows is not
+- kinda like the web, Windows is a _giant mess_
+- Windows is required for gaming, but Linux is for programming
 
 ![running `ls` on Windows error](./not-windows.png)
 
