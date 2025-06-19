@@ -19,14 +19,9 @@ On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/REA
 
 ```cmd
 wsl.exe --install debian
-@REM enter username
-@REM enter password
-```
-
-```bash
-uname # Linux
-hostnamectl # Debian GNU/Linux 12 (bookworm)
-getent hosts deb.debian.org # fastlydns.net
+REM enter username
+REM enter password
+REM enter password
 ```
 
 ## Hello World
@@ -40,6 +35,14 @@ code ~/
 cd ~/
 echo "Hello, World!" >> hello.md
 cat hello.md
+
+sudo ping google.com
+# CTRL+C
+
+uname # Linux
+hostnamectl # Debian GNU/Linux 12 (bookworm)
+getent hosts deb.debian.org # fastlydns.net
+whoami
 ```
 
 In `wsl.exe` you can run Windows programs on Linux files!
@@ -62,7 +65,8 @@ rm ~/.bash_logout
 source ~/junaga.bash
 bash ./src/config.bash
 
-exit # reload shell
+exit
+# enter bash
 ```
 
 (Optional) Move `~/` somewhere else
@@ -73,5 +77,6 @@ sudo chown -R $USER:$USER /usr/local/
 cp -r /home/$USER/. /usr/local/.
 sudo rm -r /home/
 
-exit # reload shell
+exit
+# enter bash
 ```
