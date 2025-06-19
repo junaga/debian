@@ -1,5 +1,5 @@
 rm -r ~/.cache/
-rm -r ~/.npm/
+rm -r ~/.npm/_cacache
 rm -r ~/.dotnet/
 rm -r ~/.vscode-server
 

@@ -25,6 +25,7 @@ apt install --yes \
   npm \
   docker.io \
   \
+  neofetch \
   nyancat \
   gh
 
@@ -35,6 +36,7 @@ npm install --global --no-fund \
   ts-node \
   typescript \
   prettier \
+  npkill \
   \
 	yarn \
   pnpm \
