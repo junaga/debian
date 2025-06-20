@@ -1,12 +1,17 @@
 apt update
-apt autoremove --yes
 apt purge --yes \
+  tasksel \
+  tasksel-data \
+  zutty \
+  w3m \
   vim-tiny \
   vim-common \
   less \
-  tasksel \
-  tasksel-data \
   whiptail
+  # logrotate \
+  # logsave
+
+apt autoremove --yes
 
 #=== Translations and Documentation ===
 

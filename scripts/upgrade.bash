@@ -1,6 +1,8 @@
 apt update
 apt upgrade --yes
-apt install --yes \
+
+DEBIAN_FRONTEND=noninteractive \
+apt install --no-install-recommends --yes \
   bash-completion \
   command-not-found \
   file \
@@ -10,24 +12,30 @@ apt install --yes \
   jq \
   bind9-dnsutils \
   wget \
-  htop \
-  btop \
+  openssh-client \
+  openssh-server \
   sshfs \
+  git \
+  git-lfs \
   \
   curl \
   ffmpeg \
   imagemagick \
-  git \
-  git-lfs \
   python3 \
   python3-pip \
   nodejs \
   npm \
   docker.io \
+  gh \
   \
+  htop \
+  btop \
+  ncdu \
   neofetch \
+  \
+  cowsay \
   nyancat \
-  gh
+  cmatrix
 
 apt update
 
