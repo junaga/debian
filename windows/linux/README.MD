@@ -10,6 +10,10 @@ _Intel and AMD CPUs manufactured after 2010 have x86 virtualization._
 
 _Enabling x86 virtualization can cause performance issues in Unreal Engine 5 based video games. (nikvals said this, but without a source?)_
 
+_You need to move your files into Linux, else there will be performance issues._
+
+![Move programming files from Windows into WSL Linux](./warning.png)
+
 ## 1. Enable x86 virtualization
 
 Make sure that x86 virtualization is enabled in your computer’s firmware (BIOS or UEFI) settings. This process is different depending on CPU, motherboard, and firmware. I highly recommend to do this with [chat.com](https://chat.com/) for your unique PC.
@@ -90,7 +94,7 @@ That's it, make sure to RTFM and happy hacking!
 
 ## How does it work?
 
-WSL 2 utilizes a lightweight Hyper-V VM to run a physical Linux kernel. The root filesystem is stored in `%LOCALAPPDATA%\Packages\<Distro>\LocalState\ext4.vhdx`. Kernel updates are distributed via Windows Update.
+WSL 2 utilizes a lightweight Hyper-V VM to run a physical Linux kernel. The root filesystem is stored in `%LOCALAPPDATA%\Packages\<Distro>\LocalState\ext4.vhdx`. Linux kernel updates are distributed via Windows Update.
 
 WSL integrates with Windows for file access, networking, and IPC.
 

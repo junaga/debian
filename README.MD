@@ -12,11 +12,9 @@ I use the Debian operating system almost everywhere, [with](https://www.reddit.c
 - container, VPS, dedicated server
 - `x86` Laptop and Desktop
 
-_As of writing, the latest stable release is Debian GNU/Linux 12 `bookworm`._
-
 ## Installation
 
-On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/README.MD).
+On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/README.MD). As of writing, the latest stable release is Debian GNU/Linux 12 `bookworm`.
 
 ```cmd
 wsl.exe --install debian
