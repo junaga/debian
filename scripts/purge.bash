@@ -16,6 +16,7 @@ apt autoremove --yes
 #=== Translations and Documentation ===
 
 update-locale LANG=C.UTF-8
+timedatectl set-timezone UTC
 
 apt purge --yes \
   debconf-i18n \
