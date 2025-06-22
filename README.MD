@@ -14,7 +14,7 @@ I use the Debian operating system almost everywhere, [with](https://www.reddit.c
 
 ## Installation
 
-On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/README.MD). As of writing, the latest stable release is Debian GNU/Linux 12 `bookworm`.
+On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/README.MD). WSL installs the latest version: `stable`, as of writing that's Debian GNU/Linux 12: `bookworm`.
 
 ```cmd
 wsl.exe --install debian
@@ -55,14 +55,14 @@ explorer.exe .
 Install packages and copy dotfiles.
 
 ```bash
-sudo bash ./src/upgrade.bash
+sudo bash ./src/upgrade.sh
 ```
 
 ```bash
-cp -r ./home/. ~/.
 rm ~/.bash_logout
-source ~/junaga.bash
-bash ./src/config.bash
+cp -r ./home/. ~/.
+source ~/junaga.sh
+bash ./src/config.sh
 
 exit
 # enter bash
