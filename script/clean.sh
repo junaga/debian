@@ -1,7 +1,7 @@
 rm -r ~/.cache/
 rm -fr ~/.npm/_cacache
-rm -r ~/.dotnet/
 rm -fr ~/.vscode-server
+rm -r ~/.dotnet/
 
 rm ~/.sudo_as_admin_successful
 rm ~/.wget-hsts
