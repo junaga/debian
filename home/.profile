@@ -13,8 +13,9 @@ declare bold_green="\[\e[1;32m\]"
 declare reset="\[\e[0m\]"
 __container_name_ps1() { test -f "/.dockerenv" && cat /etc/hostname; }
 
+# show the full path and optionally git branch, don't show the username
 # "HH:MM [CONTAINER_NAME]PWD[|GIT_BRANCH]$ "
-declare PS1="\A $bold_green\$(__container_name_ps1)$bold_blue\w$reset\$(__git_ps1 '|%s')\$ "
+declare PS1="\A $bold_green\$(__container_name_ps1)$bold_blue\$PWD$reset\$(__git_ps1 '|%s') "
 declare PS2="	"
 
 unset bold_blue bold_green reset
@@ -24,9 +25,9 @@ unset bold_blue bold_green reset
 function command_not_found_handle { command-not-found "$1"; } # command-not-found package
 source /usr/share/bash-completion/bash_completion # bash-completion package
 
-set -a # all shell variables are environment variables
 shopt -s autocd # cd directories automatically
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
+# set -a # all shell variables are environment variables
 
 shopt -s nullglob # globbing matches nothing instead of itself
 shopt -s dotglob # globbing matches dotfiles
