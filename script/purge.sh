@@ -34,8 +34,9 @@ rm -r /usr/share/bug/
 #=== Empty Directories ===
 
 rm -r /root/
-rm -r /opt/
 rm -r /srv/
+rm -r /opt/
+rm -r /var/opt/
 rm -r /usr/src/
 rm -r /usr/games/
 
@@ -51,6 +52,7 @@ rm -r /usr/local/include/
 rm -r /usr/local/share/
 rm -r /usr/local/sbin/
 rm -r /usr/local/etc/
+rm -r /var/local/
 
 #=== Display Names for UIDs ===
 
