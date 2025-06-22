@@ -13,7 +13,7 @@ declare bold_green="\[\e[1;32m\]"
 declare reset="\[\e[0m\]"
 __container_name_ps1() { test -f "/.dockerenv" && cat /etc/hostname; }
 
-# show the full path and optionally git branch, don't show the username
+# show full path and optionally git branch, don't show username and hostname
 # "HH:MM [CONTAINER_NAME]PWD[|GIT_BRANCH]$ "
 declare PS1="\A $bold_green\$(__container_name_ps1)$bold_blue\$PWD$reset\$(__git_ps1 '|%s') "
 declare PS2="	"

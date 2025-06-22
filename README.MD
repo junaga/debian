@@ -55,14 +55,14 @@ explorer.exe .
 Install packages and copy dotfiles.
 
 ```bash
-sudo bash ./src/upgrade.sh
+sudo bash ./script/upgrade.sh
 ```
 
 ```bash
 rm ~/.bash_logout
 cp -r ./home/. ~/.
 source ~/junaga.sh
-bash ./src/config.sh
+bash ./script/config.sh
 
 exit
 # enter bash
