@@ -1,8 +1,6 @@
 apt update
 apt upgrade --yes
-
-DEBIAN_FRONTEND=noninteractive \
-apt install --no-install-recommends --yes \
+DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes \
   bash-completion \
   command-not-found \
   file \
@@ -37,6 +35,7 @@ apt install --no-install-recommends --yes \
   nyancat \
   cmatrix
 
+# "command-not-found" initialization (it needs a cache about the packages available in apt. command-not-found uses the latest cache to suggest what to install)
 apt update
 
 npm install --global --no-fund \
@@ -49,3 +48,8 @@ npm install --global --no-fund \
 	yarn \
   pnpm \
   bun
+
+# get the latest version (not from apt)
+curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+chmod +x /usr/local/bin/yt-dlp
+yt-dlp --version
