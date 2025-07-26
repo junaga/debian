@@ -4,7 +4,7 @@
 - [github.com/pbatard/rufus](https://github.com/pbatard/rufus)
 - [linuxatemyram.com](https://www.linuxatemyram.com/)
 
-# Debian 12 [//debian.org](https://debian.org/)
+# Debian `12` [//debian.org](https://debian.org/)
 
 I use the Debian operating system almost everywhere, [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](<https://en.wikipedia.org/wiki/Terminal_emulator>) a graphical interface,
 
@@ -14,14 +14,9 @@ I use the Debian operating system almost everywhere, [with](https://www.reddit.c
 
 ## Installation
 
-On Windows 10 or 11 [`wsl.exe` install `debian` or `ubuntu`](./windows/linux/README.MD). WSL installs the latest version: `stable`, as of writing that's Debian GNU/Linux 12: `bookworm`.
+On Windows 10 or 11 [`wsl.exe --install`](./windows/linux/README.MD) `debian`.
 
-```cmd
-wsl.exe --install debian
-REM enter username
-REM enter password
-REM enter password
-```
+_WSL installs the latest version: `stable`, as of writing that's Debian GNU/Linux 12 `bookworm`._
 
 ## Hello World
 
@@ -34,19 +29,17 @@ code ~/
 cd ~/
 echo "Hello, World!" >> hello.md
 cat hello.md
+rm hello.md
 
 sudo ping google.com
 # CTRL+C
 
 uname # Linux
-hostnamectl # Debian GNU/Linux 12 (bookworm)
-getent hosts deb.debian.org # fastlydns.net
+hostnamectl # Debian GNU/Linux 12
+getent hosts deb.debian.org # fastly (the CDN for the packages)
 whoami
-```
 
-In `wsl.exe` you can run Windows programs on Linux files!
-
-```bash
+# In `wsl.exe` you can run Windows programs on Linux files!
 explorer.exe .
 ```
 
