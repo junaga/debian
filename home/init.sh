@@ -1,9 +1,11 @@
-open() { xdg-open "$@"; }
-py() { python3 "$@"; }
-js() { node --unhandled-rejections=strict "$@"; }
-
 # aliases
 ##########################
+python() { python3 "$@"; }
+open() { $BROWSER "$@"; }
+edit() { $EDITOR "$@"; }
+play() { ffplay -hide_banner -autoexit "$@"; }
+audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
+
 ls() { env ls --color=always --group-directories-first "$@"; }
 grep() { env grep --color=always "$@"; }
 date() { env date +%Y-%m-%d-%H-%M-%S "$@"; }
@@ -12,8 +14,7 @@ man() { $BROWSER "https://manpages.debian.org/bookworm/$1.en"; }
 
 # working with files
 ##########################
-e() { code - "$@"; }
-get() { curl -sL "$@"; }
+get() { curl -sSfL "$@"; }
 pack() { tar -czvf $(realpath "$1").tar.gz "$1"; }
 unpack() { tar -xzvf "$1" && rm "$1"; }
 
@@ -25,14 +26,11 @@ fuckfiles() { find "$1" -type f -exec chmod 644 {} +; }
 # fix wsl.exe artifacts
 fuckwindows() { find "$1" -type f -name "*Zone.Identifier" -delete; }
 
-# play media files
-audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
-video() { ffplay -hide_banner -autoexit "$@"; }
-
 # system administration
 ##########################
 inst() { sudo apt update && sudo DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes "$@"; }
 uninst() { sudo apt remove --purge --yes "$@"; sudo apt autoremove --yes; }
+binaries() { dpkg -L "$1" | grep -E "^($(echo "$PATH" | tr ":" "|"))/"; }
 
 terminal() {
 	echo TERM: $TERM 

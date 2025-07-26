@@ -45,11 +45,13 @@ explorer.exe .
 
 ## Configuration
 
-Install packages and copy dotfiles.
+Install packages
 
 ```bash
 sudo bash ./script/upgrade.sh
 ```
+
+Copy dotfiles
 
 ```bash
 rm ~/.bash_logout
@@ -61,10 +63,10 @@ exit
 # enter bash
 ```
 
-(Optional) Move `~/` somewhere else
+(Optional) Move user home
 
 ```bash
-sudo sed -i "s/\/home\/$USER/\/usr\/local/" /etc/passwd
+sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
 sudo chown -R $USER:$USER /usr/local/
 cp -r /home/$USER/. /usr/local/.
 sudo rm -r /home/
