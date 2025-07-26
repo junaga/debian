@@ -1,7 +1,7 @@
 # `ALSA` to `PulseAudio` bridge
 
-# The `PulseAudio` library is the modern standard for audio on Linux.
-# but many older commands still expect the traditional `ALSA` library standard.
+# The `PulseAudio` library is the modern standard for audio on Linux,
+# but some older programs still expect the traditional `ALSA` library standard.
 # This script installs `ALSA` and configures it to proxy into `PulseAudio`.
 # This allows both modern and legacy, audio and microphone applications, to work seamlessly.
 
@@ -9,7 +9,6 @@
 #   /mnt/wslg/runtime-dir/PulseServer
 #   /mnt/wslg/runtime-dir/PulseAudioRDPSink
 #   /mnt/wslg/runtime-dir/PulseAudioRDPSource
-
 
 # install ALSA and ALSA-to-PulseAudio bridge
 sudo apt install -y libasound2 libasound2-plugins
