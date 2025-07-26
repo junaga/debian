@@ -37,42 +37,35 @@ rm -r /root/
 rm -r /srv/
 rm -r /opt/
 rm -r /var/opt/
+rm -r /var/local/
 rm -r /usr/src/
 rm -r /usr/games/
 
 # only in vm
-# rm -r /boot/
-# rm -r /media/
-# rm -r /lost+found/
+# rm -r /boot/ /media/ /lost+found/
 
-rm -r /usr/local/src/
-rm -r /usr/local/games/
-rm -r /usr/local/man
-rm -r /usr/local/include/
-rm -r /usr/local/share/
 rm -r /usr/local/sbin/
 rm -r /usr/local/etc/
-rm -r /var/local/
+rm -r /usr/local/include/
+rm -r /usr/local/share/
+rm -r /usr/local/man
+rm -r /usr/local/games/
 
-#=== Display Names for UIDs ===
+#=== Compartmentalization with users ===
 
-# legacy unix
-deluser daemon
-deluser bin
-deluser sys
-deluser sync
-deluser games
-deluser man
-deluser lp
-
-# outdated network protocol servers
-deluser mail
-deluser news
-deluser uucp
-deluser proxy
-
-# applications
-deluser www-data
 deluser backup
 deluser list
+deluser games
+
+# obsolete servers
+deluser news
+deluser uucp
 deluser irc
+deluser proxy
+
+# legacy unix (became either root or systemd)
+deluser man
+deluser bin
+deluser sys
+deluser daemon
+deluser sync
