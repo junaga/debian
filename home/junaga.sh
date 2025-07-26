@@ -1,6 +1,6 @@
-export PAGER="/bin/more"
-export SHELL="/bin/bash"
-export BROWSER="explorer.exe" # brave-browser-stable
-export EDITOR="code --wait -" # https://code.visualstudio.com/
+PAGER="/bin/more"
+SHELL="/bin/bash"
+BROWSER="explorer.exe" # brave-browser-stable
+EDITOR="code --wait -" # https://code.visualstudio.com/
 
-export EMAIL="hermann-stanew@invita.gmbh"
+EMAIL="hermann-stanew@invita.gmbh"
