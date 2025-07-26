@@ -4,28 +4,29 @@ DEBIAN_FRONTEND=noninteractive apt install --no-install-recommends --yes \
   bash-completion \
   command-not-found \
   file \
-  tree \
-  bsdextrautils \
-  unzip \
   jq \
+  unzip \
+  bsdextrautils \
+  pulseaudio-utils \
   bind9-dnsutils \
   wget \
   openssh-client \
   openssh-server \
   sshfs \
-  git \
-  git-lfs \
   \
   curl \
   ffmpeg \
   imagemagick \
+  git \
+  git-lfs \
+  gh \
+  docker.io \
   python3 \
   python3-pip \
   nodejs \
   npm \
-  docker.io \
-  gh \
   \
+  tree \
   htop \
   btop \
   ncdu \
