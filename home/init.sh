@@ -3,6 +3,7 @@
 python() { python3 "$@"; }
 open() { $BROWSER "$@"; }
 edit() { $EDITOR "$@"; }
+copy() { xclip -selection clipboard "$@"; }
 play() { ffplay -hide_banner -autoexit "$@"; }
 audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
 

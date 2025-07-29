@@ -12,6 +12,7 @@ DEBIAN_FRONTEND=noninteractive \
     openssh-client \
     openssh-server \
     sshfs \
+    xclip \
     \
     bash-completion \
     command-not-found \
