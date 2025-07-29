@@ -14,7 +14,7 @@ It's almost impossible to develop apps in Windows userspace.
 - kinda like the web, Windows is a _giant mess_
 - Windows is required for gaming, but Linux is for programming
 
-![running `ls` on Windows error](./error.png)
+![running `ls` on Windows error](./why-error.png)
 
 ### 2. Huge but lightweight
 
@@ -46,4 +46,4 @@ Like all open source software, it costs $0
 
 Debian is **free as in freedom** open source software (FOSS), that is [copyleft](https://en.wikipedia.org/wiki/Copyleft) (GPL) licensed. Developed by thousands of volunteers from all over the world, with the exception of `non-free-firmware`, Debian is free for anyone, to use, modify, and redistribute. A lot of [Linux distros](https://en.wikipedia.org/wiki/List_of_Linux_distributions) redistribute Debian, like Ubuntu, Tails, Raspberry Pi OS.
 
-![hundreds of Debian forks ](./family.png)
+![hundreds of Debian forks ](./why-family.png)
