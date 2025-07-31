@@ -56,8 +56,9 @@ Copy dotfiles
 ```bash
 rm ~/.bash_logout
 cp -r ./home/. ~/.
+
 source ~/junaga.sh
-bash ./script/config.sh
+bash ./script/git4hub.sh
 
 exit
 # enter bash
