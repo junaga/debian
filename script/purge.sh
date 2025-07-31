@@ -13,6 +13,21 @@ apt purge --yes \
 
 apt autoremove --yes
 
+#=== Cache and Artifacts ===
+
+rm -r ~/.cache/
+rm -fr ~/.npm/_cacache/
+rm -fr ~/.vscode-server/
+rm -r ~/.dotnet/
+rm -r ~/.w3m/
+
+rm ~/.sudo_as_admin_successful
+rm ~/.wget-hsts
+
+# rm ~/.bash_history
+# rm ~/.python_history
+# rm ~/.node_repl_history
+
 #=== Translations and Documentation ===
 
 update-locale LANG=C.UTF-8
@@ -32,6 +47,8 @@ rm -r /usr/share/common-licenses/
 rm -r /usr/share/bug/
 
 #=== Empty Directories ===
+
+find ~/ -type d -empty -delete
 
 rm -r /root/
 rm -r /srv/

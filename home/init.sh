@@ -20,7 +20,7 @@ pack() { tar -czvf $(realpath "$1").tar.gz "$1"; }
 unpack() { tar -xzvf "$1" && rm "$1"; }
 
 # fix file permissions
-colonize() { chown -R $USER:$USER "$1"; }
+colonize() { sudo chown -R $USER:$USER "$1"; }
 fuckdirs() { find "$1" -type d -exec chmod 755 {} +; }
 fuckfiles() { find "$1" -type f -exec chmod 644 {} +; }
 
