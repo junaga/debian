@@ -5,27 +5,23 @@ trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT
 
 # fix bash
 ################
-shopt -s histappend # append to ~/.bash_history instead of overwriting it
 declare HISTSIZE="-1" # unlimited bash history size, not 500
 declare HISTFILESIZE="-1" # unlimited ~/.bash_history size, not 500
+shopt -s histappend # append to ~/.bash_history instead of overwriting it
+shopt -s checkwinsize # update variables $LINES and $COLUMNS after each command
+set +h # disable caching $PATH lookups (new installed binaries work without shell restart)
 
-shopt -s checkwinsize # update $LINES and $COLUMNS after each command
-set +h # disable caching binary locations from $PATH search results
-
-shopt -s nullglob # globbing matches nothing instead of itself
-shopt -s dotglob # globbing matches dotfiles
+shopt -s nullglob # globbing matches nothing (dont preserve "*.txt" arg if no txt files exist)
+shopt -s dotglob # globbing matches dotfiles ("*cache" matches .cache)
 shopt -s globstar # enable ** for recursive globbing
-
-# settings
-################
-function command_not_found_handle { command-not-found "$1"; } # command-not-found package
-source /usr/share/bash-completion/bash_completion # bash-completion package
-
-# set -a # all shell variables become environment variables
 shopt -s autocd # cd directories automatically
+# set -a # all shell variables become environment variables
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
-# shell prompt
+source /usr/share/bash-completion/bash_completion # bash-completion package
+function command_not_found_handle { command-not-found "$1"; } # command-not-found package
+
+# bash prompt
 ################
 declare bold_blue="\[\e[1;34m\]"
 declare bold_green="\[\e[1;32m\]"
@@ -41,7 +37,6 @@ unset bold_blue bold_green reset
 
 # variables and functions
 ##########################
-# /etc/profile
-source ~/junaga.sh
 source ~/init.sh
+source ~/junaga.sh
 set -a
