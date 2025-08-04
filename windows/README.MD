@@ -1,0 +1,3 @@
+- Password consistency is critical. Back up after you’ve logged in with the password you intend to use.
+- Microsoft-account logins behave like local accounts for DPAPI once the password hash is cached locally.
+- HKCU hives are cross-version portable—you can go from Win7→Win10 or Win10→Win11 without registry-format trouble.
