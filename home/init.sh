@@ -6,11 +6,13 @@ edit() { $EDITOR "$@"; }
 copy() { xclip -selection clipboard "$@"; }
 play() { ffplay -hide_banner -autoexit "$@"; }
 audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
+dns6chat() { dig @ch.at TXT +short "$@"; }
 
 ls() { env ls --color=always --group-directories-first "$@"; }
 grep() { env grep --color=always "$@"; }
 date() { env date +%Y-%m-%d-%H-%M-%S "$@"; }
 man() { $BROWSER "https://manpages.debian.org/bookworm/$1.en"; }
+ssh() { SSHPASS="$SSH_PASSWORD" sshpass -e env ssh -o StrictHostKeyChecking=accept-new "$SSH_USER"@"$SSH_HOSTNAME" "$@"; }
 # rm() { trash-put "$@"; }
 
 # working with files
