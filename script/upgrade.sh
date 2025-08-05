@@ -13,6 +13,7 @@ apt install --no-install-recommends --yes \
   wget \
   openssh-client \
   openssh-server \
+  sshpass \
   sshfs \
   \
   curl \
