@@ -19,6 +19,7 @@ apt install --no-install-recommends --yes \
   curl \
   imagemagick \
   ffmpeg \
+  default-jre \
   python3 \
   pipx \
   nodejs \
@@ -63,8 +64,18 @@ npm install --global --loglevel error --no-fund \
   pnpm \
   bun
 
-# 4 source
+# 4
 # ================
-curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp > /usr/local/bin/yt-dlp
-chmod +x /usr/local/bin/yt-dlp
+LIB="/usr/local/lib"
+BIN="/usr/local/bin"
+
+curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp > $BIN/yt-dlp
+chmod +x $BIN/yt-dlp
 yt-dlp --version
+
+curl -L https://software.verapdf.org/releases/verapdf-installer.zip > $LIB/verapdf.zip
+unzip -q $LIB/verapdf.zip -d $LIB; rm $LIB/verapdf.zip
+java -DINSTALL_PATH=$LIB/verapdf -jar $LIB/verapdf-*/verapdf-izpack-installer-*.jar -auto; rm -fr $LIB/verapdf-*
+ln -sf $LIB/verapdf/verapdf      $BIN/verapdf
+ln -sf $LIB/verapdf/verapdf-gui  $BIN/verapdf-gui
+verapdf --version
