@@ -45,16 +45,20 @@ apt update
 
 # 2 python pip
 # ================
-PIPX_HOME="/usr/local/lib" \
-PIPX_BIN_DIR="/usr/local/bin" \
-PIPX_MAN_DIR="/usr/local/share/man" \
-pipx install \
-  terminaltexteffects
+pipx_install() {
+  PIPX_HOME="/usr/local/lib" \
+  PIPX_BIN_DIR="/usr/local/bin" \
+  PIPX_MAN_DIR="/usr/local/share/man" \
+    pipx install "$@";
+}
+pipx_install terminaltexteffects
+pipx_install sherlock-project
+pipx_install mini-swe-agent
 
 # 3 javascript npm
 # ================
 npm install --global --loglevel error --no-fund \
-  vite \
+  vite@4 \
   ts-node \
   typescript \
   prettier \
@@ -74,7 +78,7 @@ chmod +x $BIN/yt-dlp
 yt-dlp --version
 
 curl -L https://software.verapdf.org/releases/verapdf-installer.zip > $LIB/verapdf.zip
-unzip -q $LIB/verapdf.zip -d $LIB; rm $LIB/verapdf.zip
+unzip -q -d $LIB $LIB/verapdf.zip; rm $LIB/verapdf.zip
 java -DINSTALL_PATH=$LIB/verapdf -jar $LIB/verapdf-*/verapdf-izpack-installer-*.jar -auto; rm -fr $LIB/verapdf-*
 ln -sf $LIB/verapdf/verapdf      $BIN/verapdf
 ln -sf $LIB/verapdf/verapdf-gui  $BIN/verapdf-gui
