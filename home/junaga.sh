@@ -1,6 +1,8 @@
+EMAIL="hermann-stanew@invita.gmbh"
+
 PAGER="/bin/more"
 SHELL="/bin/bash"
 BROWSER="explorer.exe" # brave-browser-stable
-EDITOR="code --wait -" # https://code.visualstudio.com/
+EDITOR="cursor --wait -" # https://code.visualstudio.com/
 
-EMAIL="hermann-stanew@invita.gmbh"
+DEBIAN_FRONTEND=noninteractive
