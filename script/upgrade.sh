@@ -4,8 +4,10 @@ apt update
 apt upgrade --yes
 DEBIAN_FRONTEND=noninteractive \
 apt install --no-install-recommends --yes \
+  gettext \
   file \
   tree \
+  screen \
   bsdextrautils \
   jq \
   unzip \
