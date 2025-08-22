@@ -8,6 +8,7 @@ play() { ffplay -hide_banner -autoexit "$@"; }
 audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
 dns6chat() { dig @ch.at TXT +short "$@"; }
 
+micro() { env micro -colorscheme simple "$@"; }
 ls() { env ls --color=always --group-directories-first "$@"; }
 grep() { env grep --color=always "$@"; }
 date() { env date +%Y-%m-%d-%H-%M-%S "$@"; }

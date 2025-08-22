@@ -30,6 +30,7 @@ apt install --no-install-recommends --yes \
   gh \
   docker.io \
   \
+  micro \
   xclip \
   bash-completion \
   command-not-found \

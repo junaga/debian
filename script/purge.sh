@@ -6,6 +6,7 @@ apt purge --yes \
   w3m \
   vim-tiny \
   vim-common \
+  nano \
   less \
   whiptail
   # logrotate \
