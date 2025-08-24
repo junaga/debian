@@ -88,5 +88,4 @@ deluser proxy
 deluser man
 deluser bin
 deluser sys
-deluser daemon
 deluser sync
