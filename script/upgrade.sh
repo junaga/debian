@@ -76,10 +76,12 @@ npm install --global --loglevel error --no-fund \
 LIB="/usr/local/lib"
 BIN="/usr/local/bin"
 
+# python3 zipimport binary
 curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp > $BIN/yt-dlp
 chmod +x $BIN/yt-dlp
 yt-dlp --version
 
+# java IzPack installer
 curl -L https://software.verapdf.org/releases/verapdf-installer.zip > $LIB/verapdf.zip
 unzip -q -d $LIB $LIB/verapdf.zip; rm $LIB/verapdf.zip
 java -DINSTALL_PATH=$LIB/verapdf -jar $LIB/verapdf-*/verapdf-izpack-installer-*.jar -auto; rm -fr $LIB/verapdf-*

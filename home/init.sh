@@ -12,7 +12,7 @@ micro() { env micro -colorscheme simple "$@"; }
 ls() { env ls --color=always --group-directories-first "$@"; }
 grep() { env grep --color=always "$@"; }
 date() { env date +%Y-%m-%d-%H-%M-%S "$@"; }
-man() { $BROWSER "https://manpages.debian.org/bookworm/$1.en"; }
+man() { $BROWSER "https://manpages.debian.org/$1.en"; }
 ssh() { SSHPASS="$SSH_PASSWORD" sshpass -e env ssh -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOSTNAME "$@"; }
 sshfs() { echo -n "$SSH_PASSWORD" | env sshfs -o password_stdin -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOSTNAME:$SSH_DIRECTORY "$@"; }
 # rm() { trash-put "$@"; }
