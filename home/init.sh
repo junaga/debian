@@ -8,14 +8,14 @@ play() { ffplay -hide_banner -autoexit "$@"; }
 audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
 dns6chat() { dig @ch.at TXT +short "$@"; }
 
-micro() { env micro -colorscheme simple "$@"; }
+rm() { env rm -Ir "$@"; }
 ls() { env ls --color=always --group-directories-first "$@"; }
 grep() { env grep --color=always "$@"; }
+micro() { env micro -colorscheme simple "$@"; }
 date() { env date +%Y-%m-%d-%H-%M-%S "$@"; }
 man() { $BROWSER "https://manpages.debian.org/$1.en"; }
 ssh() { SSHPASS="$SSH_PASSWORD" sshpass -e env ssh -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOSTNAME "$@"; }
 sshfs() { echo -n "$SSH_PASSWORD" | env sshfs -o password_stdin -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOSTNAME:$SSH_DIRECTORY "$@"; }
-# rm() { trash-put "$@"; }
 
 # working with files
 ##########################

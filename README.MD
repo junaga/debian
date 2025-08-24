@@ -34,7 +34,7 @@ rm hello.md
 ping google.com
 # CTRL+C
 
-getent hosts deb.debian.org # fastly (CDN hosting the packages)
+getent hosts deb.debian.org # fastlydns.net (CDN hosting the packages)
 hostnamectl # Debian GNU/Linux 13
 uname --machine # x86_64 or aarch64
 whoami
@@ -57,21 +57,20 @@ Copy dotfiles
 rm ~/.bash_logout
 cp -r ./home/. ~/.
 
-source ~/junaga.sh
+set -a
+. ~/junaga.sh
 bash ./script/git4hub.sh
 
-exit
-# enter bash
+exit # and enter
 ```
 
 (Optional) Move user home
 
 ```bash
-sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
+cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
-cp -r /home/$USER/. /usr/local/.
-sudo rm -r /home/
+sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
 
-exit
-# enter bash
+sudo rm -r $HOME
+exit # and enter
 ```

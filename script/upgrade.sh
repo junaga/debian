@@ -37,8 +37,6 @@ apt install --no-install-recommends --yes \
   htop \
   btop \
   ncdu \
-  neofetch \
-  cowsay \
   nyancat
 
 # "command-not-found" initialization
