@@ -1,4 +1,4 @@
-# https://manpages.debian.org/bookworm/bash/bash.1.en.html
+# https://manpages.debian.org/trixie/bash/bash.1.en.html
 
 echo "Welcome $USER"
 trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT
