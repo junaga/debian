@@ -12,12 +12,6 @@ I use the Debian operating system almost everywhere, [with](https://www.reddit.c
 - container, VPS, dedicated server
 - `x86-64` Laptop and Desktop
 
-## Installation
-
-On Windows 10 or 11 [`wsl.exe --install`](./windows/linux/README.MD) `debian`.
-
-_WSL installs the latest version: `stable`, as of writing that's Debian GNU/Linux 13 `trixie`._
-
 ## Hello World
 
 With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure `~/`.
@@ -26,21 +20,32 @@ With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manuall
 ls -a ~/
 code ~/
 
-cd ~/
+cd /tmp
 echo "Hello, World!" >> hello.md
 cat hello.md
 rm hello.md
+
+# In `wsl.exe` you can run Windows programs on Linux files!
+explorer.exe .
 
 ping google.com
 # CTRL+C
 
 getent hosts deb.debian.org # fastlydns.net (CDN hosting the packages)
-hostnamectl # Debian GNU/Linux 13
 uname --machine # x86_64 or aarch64
-whoami
+```
 
-# In `wsl.exe` you can run Windows programs on Linux files!
-explorer.exe .
+## Installation
+
+On Windows 10 or 11 [`wsl.exe --install`](./windows/linux/README.MD) `debian`.
+
+_WSL installs the latest version: `stable`, as of writing that's Debian GNU/Linux 13 `trixie`._
+
+```bash
+uname # Linux
+hostnamectl | grep trixie # Debian GNU/Linux 13
+cd ~/
+git clone https://github.com/junaga/debian src/
 ```
 
 ## Configuration
@@ -48,20 +53,24 @@ explorer.exe .
 Install packages
 
 ```bash
-sudo bash ./script/upgrade.sh
+sudo bash src/script/upgrade.sh
 ```
 
 Copy dotfiles
 
 ```bash
-rm ~/.bash_logout
-cp -r ./home/. ~/.
-
-set -a
-. ~/junaga.sh
-bash ./script/git4hub.sh
+ls
+rm .bash_logout
+cp -r src/home/. .
+edit env.sh
 
 exit # and enter
+```
+
+(Optional) Git sex GitHub
+
+```bash
+bash src/script/git6hub.sh
 ```
 
 (Optional) Move user home
@@ -71,6 +80,20 @@ cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
 sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
 
-sudo rm -r $HOME
 exit # and enter
+```
+
+(Optional) Clean filesystem
+
+```bash
+sudo bash src/script/purge.sh
+sudo rm -r /home/
+sudo rm -r /root/
+
+# only in virtual machines
+sudo rm -r /media/
+sudo rm -r /mnt/
+
+# only in containers
+sudo rm -r /boot/
 ```

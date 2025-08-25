@@ -38,5 +38,5 @@ unset bold_blue bold_green reset
 # variables and functions
 ##########################
 source ~/init.sh
-source ~/junaga.sh
 set -a
+source ~/env.sh
