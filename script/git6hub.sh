@@ -1,7 +1,4 @@
-# `Git` -> `GitHub` quick setup
-
-# Sets global Git name and email, switches default branch to `main`,
-# then runs an interactive GitHub CLI login over HTTPS.
+# `git` and `gh` quick setup
 
 git config --global user.name $USER
 git config --global user.email $EMAIL

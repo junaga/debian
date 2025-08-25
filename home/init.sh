@@ -1,21 +1,19 @@
-# aliases
-##########################
-python() { python3 "$@"; }
 open() { $BROWSER "$@"; }
 edit() { $EDITOR "$@"; }
 copy() { xclip -selection clipboard "$@"; }
 play() { ffplay -hide_banner -autoexit "$@"; }
 audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
-dns6chat() { dig @ch.at TXT +short "$@"; }
+python() { python3 "$@"; }
+chat6dns() { dig @ch.at TXT +short "$@"; }
 
 rm() { env rm -Ir "$@"; }
 ls() { env ls --color=always --group-directories-first "$@"; }
 grep() { env grep --color=always "$@"; }
-micro() { env micro -colorscheme simple "$@"; }
+micro() { env micro -colorscheme simple --config-dir /tmp "$@"; }
 date() { env date +%Y-%m-%d-%H-%M-%S "$@"; }
 man() { $BROWSER "https://manpages.debian.org/$1.en"; }
-ssh() { SSHPASS="$SSH_PASSWORD" sshpass -e env ssh -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOSTNAME "$@"; }
-sshfs() { echo -n "$SSH_PASSWORD" | env sshfs -o password_stdin -o StrictHostKeyChecking=accept-new $SSH_USER@$SSH_HOSTNAME:$SSH_DIRECTORY "$@"; }
+ssh() { SSHPASS="$SSH_PASSWORD" sshpass -e env ssh $SSH_USER@$SSH_HOSTNAME "$@"; }
+sshfs() { echo -n "$SSH_PASSWORD" | env sshfs -o password_stdin $SSH_USER@$SSH_HOSTNAME:$SSH_DIRECTORY "$@"; }
 
 # working with files
 ##########################
