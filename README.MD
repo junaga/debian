@@ -62,7 +62,7 @@ Copy dotfiles
 ls
 rm .bash_logout
 cp -r src/home/. .
-edit env.sh
+edit .env # code, cursor, vim, micro
 
 exit # and enter
 ```

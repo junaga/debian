@@ -1,4 +1,4 @@
-# https://manpages.debian.org/trixie/bash/bash.1.en.html
+# https://manpages.debian.org/bash.en
 
 echo "Welcome $USER"
 trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT
@@ -35,8 +35,8 @@ declare PS2="	"
 
 unset bold_blue bold_green reset
 
-# variables and functions
+# functions and variables
 ##########################
-source ~/init.sh
+source ~/.aliases
 set -a
-source ~/env.sh
+source ~/.env
