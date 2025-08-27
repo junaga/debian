@@ -20,6 +20,7 @@ sshfs() { echo -n "$SSH_PASSWORD" | env sshfs -o password_stdin $SSH_USER@$SSH_H
 get() { curl -sSfL "$@"; }
 pack() { tar -czvf $(realpath "$1").tar.gz "$1"; }
 unpack() { tar -xzvf "$1" && rm "$1"; }
+fmt() { prettier --write --no-semi --trailing-comma none --quote-props consistent "$@"; }
 
 # fix file permissions
 colonize() { sudo chown -R $USER:$USER "$1"; }
