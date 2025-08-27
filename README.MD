@@ -86,9 +86,9 @@ exit # and enter
 (Optional) Clean filesystem
 
 ```bash
-sudo bash src/script/purge.sh
 sudo rm -r /home/
 sudo rm -r /root/
+sudo bash src/script/purge.sh
 
 # only in virtual machines
 sudo rm -r /media/

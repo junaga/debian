@@ -3,17 +3,55 @@
 
 # Linux Filesystem
 
-Because the Linux BSD Unix filesystem hirachy is complicated, developers sometimes put everything in `$HOME`, which is fine.
+Because the Linux-BSD-Unix-filesystem-hirachy is complicated, developers sometimes put everything in `$HOME`, which is fine.
 
-In 1970 only executable `bin` binary files, linkable `lib` library files, and compilable `src` source files existed, everything else was text. Today a lot of other non-text file formats or "binary files" exist, like `.png`, `.jpeg`, `.mp3` or `.mp4`. That's also why executables on Unix don't have a file extension, like `.exe` on Windows, the only format a binary file could possibly have was CPU exectuable.
+- concern: user > system > kernel
+- dependency: binary > config > library
+- durability: cache < variable < static
+
+## Data
+
+Default `$HOME` is `/home/$USER` or `/root/`
 
 ```sh
-/etc/             # configuration
-/mnt/             # drives
-/boot/            # kernel
+$HOME             # config and data
+/etc/             # system config
+/var/             # system variable data
+/usr/local/share/ # system static data
 ```
 
-User installed Software
+### Cache
+
+Temporary runtime data deleted on reboot
+
+```sh
+/tmp/             # cache
+/run/             # system cache
+```
+
+### Hardware
+
+Interfaces for kernel space<>user space messages and commands
+
+```sh
+/dev/
+/proc/
+/sys/
+```
+
+Mounted filesystems; local or remote; from disk, image, or virtual.
+
+```sh
+/mnt/             # mount point(s)
+```
+
+## Executables
+
+Executables on Unix(-like) systems don't have file extensions, like `.exe` on Windows, because back then, all binary files were CPU executable files, all of them! GPUs did not exist either.
+
+In 1971 almost everything was text! Only executable `bin` binary files, linkable `lib` library files, and compilable `src` source code text files existed. Today, a lot of other non-text file formats or "binary files" exist, like `.png`, `.jpeg`, `.mp3`, `.mp4`, but the directory for executables is still named `bin/`.
+
+### User installed Software
 
 ```sh
 /usr/local/bin/   # executables
@@ -21,16 +59,15 @@ User installed Software
 /usr/local/lib/   # library
 ```
 
-Distribution installed Packages
+### Distribution installed Packages
 
 ```sh
-/usr/bin/         # executables
-/usr/sbin/        # admin executables
-/usr/lib/         # library
-/usr/share/       # data library
+/usr/bin/
+/usr/sbin/
+/usr/lib/
 ```
 
-Unix Tools and C library
+### Unix Tools and C library
 
 ```sh
 /bin/
@@ -38,24 +75,10 @@ Unix Tools and C library
 /lib/
 ```
 
-Data
+### Linux Kernel
+
+The hardware driver
 
 ```sh
-$HOME             # user data
-/var/             # system data
-```
-
-Volatile data
-
-```sh
-/tmp/             # runtime data
-/run/             # system runtime data
-```
-
-Kernel and Hardware
-
-```sh
-/sys/
-/proc/
-/dev/
+/boot/            # kernel space executables
 ```
