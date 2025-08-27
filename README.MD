@@ -1,22 +1,20 @@
-- [chat.com](https://chat.com/)
 - [github.com/microsoft/WSL](https://github.com/microsoft/WSL)
 - [github.com/apple/container](https://github.com/apple/container)
 - [github.com/pbatard/rufus](https://github.com/pbatard/rufus)
-- [linuxatemyram.com](https://www.linuxatemyram.com/)
 
 # Debian `13` [//debian.org](https://debian.org/)
 
 I use the Debian operating system almost everywhere, [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](<https://en.wikipedia.org/wiki/Terminal_emulator>) a graphical interface,
 
 - on Windows
-- container, VPS, dedicated server
+- container, VPS, dedicated host
 - `x86-64` Laptop and Desktop
 
 ## Hello World
 
 With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure `~/`.
 
-```bash
+```sh
 ls -a ~/
 code ~/
 
@@ -32,33 +30,51 @@ ping google.com
 # CTRL+C
 
 getent hosts deb.debian.org # fastlydns.net (CDN hosting the packages)
-uname --machine # x86_64 or aarch64
+uname --machine # x86_64 or aarch64 (CPU architecture)
 ```
 
 ## Installation
 
-On Windows 10 or 11 [`wsl.exe --install`](./windows/linux/README.MD) `debian`.
+1. On **Windows 10 or 11** you can [`wsl.exe --install`](./win/linux/README.MD) `debian`.
 
-_WSL installs the latest version: `stable`, as of writing that's Debian GNU/Linux 13 `trixie`._
+2. When buying or managing a **host, server, container** in the **public cloud**, just select "Debian 13" in the dropdown during setup.
 
-```bash
+3. **Hardware installations** are difficult, for PC hardware i recommend [github.com/pbatard/rufus](https://github.com/pbatard/rufus).
+
+```sh
 uname # Linux
 hostnamectl | grep trixie # Debian GNU/Linux 13
+```
+
+## Download
+
+Download the `.zip` repository manually; or with `wget`, `curl`, `git clone`; or `apt` itself, if nothing else is installed.
+
+```sh
+WHO="junaga"
+WHAT="debian"
+WHEN="main"
+LINK="https://codeload.github.com/$WHO/$WHAT/tar.gz/refs/heads/$WHEN"
 cd ~/
-git clone https://github.com/junaga/debian src/
+
+/usr/lib/apt/apt-helper download-file $LINK tar.gz
+tar -xz -f tar.gz
+rm tar.gz
+
+mv $WHAT-$WHEN/ src/
 ```
 
 ## Configuration
 
 Install packages
 
-```bash
+```sh
 sudo bash src/script/upgrade.sh
 ```
 
 Copy dotfiles
 
-```bash
+```sh
 ls
 rm .bash_logout
 cp -r src/home/. .
@@ -69,13 +85,13 @@ exit # and enter
 
 (Optional) Git sex GitHub
 
-```bash
+```sh
 bash src/script/git6hub.sh
 ```
 
 (Optional) Move user home
 
-```bash
+```sh
 cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
 sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
@@ -85,7 +101,7 @@ exit # and enter
 
 (Optional) Clean filesystem
 
-```bash
+```sh
 sudo rm -r /home/
 sudo rm -r /root/
 sudo bash src/script/purge.sh
