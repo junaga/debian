@@ -1,0 +1,13 @@
+*.log
+dist/
+tmp/
+.env
+
+# windows, macos
+desktop.ini
+*Zone.Identifier
+.DS_Store
+__MACOSX
+
+# nodejs
+node_modules/
