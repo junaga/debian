@@ -64,6 +64,7 @@ npm install --global --loglevel error --no-fund \
   typescript \
   prettier \
   npkill \
+  playwright \
   \
   yarn \
   pnpm \
@@ -73,6 +74,10 @@ npm install --global --loglevel error --no-fund \
 # ================
 LIB="/usr/local/lib"
 BIN="/usr/local/bin"
+
+mkdir $LIB/playwright
+PLAYWRIGHT_BROWSERS_PATH=$LIB/playwright \
+  playwright install --with-deps
 
 # python3 zipimport binary
 curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp > $BIN/yt-dlp
