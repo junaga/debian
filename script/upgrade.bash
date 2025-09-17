@@ -59,6 +59,8 @@ pipx_install mini-swe-agent
 # 3 javascript npm
 # ================
 npm install --global --loglevel error --no-fund \
+  @openai/codex \
+  \
   vite@4 \
   ts-node \
   typescript \
