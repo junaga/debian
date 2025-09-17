@@ -69,7 +69,7 @@ mv $WHAT-$WHEN/ src/
 Install packages
 
 ```sh
-sudo bash src/script/upgrade.sh
+sudo bash src/script/upgrade.bash
 ```
 
 Copy dotfiles
@@ -86,7 +86,7 @@ exit # and enter
 (Optional) Git sex GitHub
 
 ```sh
-bash src/script/git6hub.sh
+bash src/script/git6hub.bash
 ```
 
 (Optional) Move user home
@@ -104,7 +104,7 @@ exit # and enter
 ```sh
 sudo rm -r /home/
 sudo rm -r /root/
-sudo bash src/script/purge.sh
+sudo bash src/script/purge.bash
 
 # only in virtual machines
 sudo rm -r /media/
