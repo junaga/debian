@@ -1,7 +1,7 @@
 *.log
-dist/
 tmp/
 .env
+dist/
 
 # windows, macos
 desktop.ini
@@ -9,5 +9,5 @@ desktop.ini
 .DS_Store
 __MACOSX
 
-# nodejs
+# javascript
 node_modules/
