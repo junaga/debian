@@ -1,13 +1,13 @@
-*.log
+*.log*
 tmp/
-.env
 dist/
+.env
 
 # windows, macos
 desktop.ini
 *Zone.Identifier
 .DS_Store
-__MACOSX
+__MACOSX/
 
 # javascript
 node_modules/
