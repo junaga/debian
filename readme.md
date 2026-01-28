@@ -49,13 +49,13 @@ exit # and enter
 ### packages
 
 ```sh
-sudo bash debian/script/upgrade.bash
+sudo bash debian/script/upgrade.sh
 ```
 
 ### git sex GitHub
 
 ```sh
-bash debian/script/git6hub.bash
+bash debian/script/git6hub.sh
 ```
 
 ### move home (optional)
@@ -63,22 +63,22 @@ bash debian/script/git6hub.bash
 ```sh
 cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
-sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
+sudo sed -i s|$HOME|/usr/local| /etc/passwd
 exit # and enter
 ```
 
 ### clean filesystem (optional)
 
 ```sh
+rm .bash_logout
 sudo rm -r /home/
 sudo rm -r /root/
-sudo bash src/script/purge.bash
-rm .bash_logout
+sudo bash src/script/purge.sh
 
-# only in virtual machines
+# only in virtual machine
 sudo rm -r /media/
 sudo rm -r /mnt/
 
-# only in containers
+# only in container
 sudo rm -r /boot/
 ```

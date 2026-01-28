@@ -2,7 +2,6 @@
 # ================
 apt update
 apt upgrade --yes
-DEBIAN_FRONTEND=noninteractive \
 apt install --no-install-recommends --yes \
   gettext \
   file \
@@ -18,6 +17,14 @@ apt install --no-install-recommends --yes \
   sshpass \
   sshfs \
   \
+  bash-completion \
+  command-not-found \
+  micro \
+  btop \
+  ncdu \
+  nyancat \
+  \
+  ca-certificates \
   curl \
   imagemagick \
   ffmpeg \
@@ -28,16 +35,7 @@ apt install --no-install-recommends --yes \
   npm \
   git \
   gh \
-  docker.io \
-  \
-  micro \
-  xclip \
-  bash-completion \
-  command-not-found \
-  htop \
-  btop \
-  ncdu \
-  nyancat
+  docker.io
 
 # "command-not-found" initialization
 # it uses the index of packages in apt (apt-cache),
@@ -52,34 +50,22 @@ pipx_install() {
   PIPX_MAN_DIR="/usr/local/share/man" \
     pipx install "$@";
 }
-pipx_install terminaltexteffects
+
 pipx_install sherlock-project
-pipx_install mini-swe-agent
+# pipx_install terminaltexteffects
 
 # 3 javascript npm
 # ================
 npm install --global --loglevel error --no-fund \
   @openai/codex \
-  \
   vite@4 \
-  ts-node \
-  typescript \
   prettier \
-  npkill \
-  playwright \
-  \
-  yarn \
-  pnpm \
-  bun
+  npkill
 
-# 4
+# 4 others
 # ================
 LIB="/usr/local/lib"
 BIN="/usr/local/bin"
-
-mkdir $LIB/playwright
-PLAYWRIGHT_BROWSERS_PATH=$LIB/playwright \
-  playwright install --with-deps
 
 # python3 zipimport binary
 curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp > $BIN/yt-dlp

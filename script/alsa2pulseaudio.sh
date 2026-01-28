@@ -14,7 +14,7 @@
 #   /mnt/wslg/runtime-dir/PulseAudioRDPSource
 
 # install ALSA and ALSA to PulseAudio bridge
-sudo apt install -y libasound2 libasound2-plugins
+sudo apt install --no-install-recommends --yes libasound2 libasound2-plugins
 
 # configure proxy into PulseAudio
 cat > ~/.asoundrc <<ESC
