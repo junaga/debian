@@ -3,42 +3,40 @@
 echo "Welcome $USER"
 trap "echo \"Goodbye $USER leaving level $SHLVL\"" EXIT
 
-# fix bash
+# bash fixed
 ################
-declare HISTSIZE="-1" # unlimited bash history size, not 500
-declare HISTFILESIZE="-1" # unlimited ~/.bash_history size, not 500
-shopt -s histappend # append to ~/.bash_history instead of overwriting it
-shopt -s checkwinsize # update variables $LINES and $COLUMNS after each command
-set +h # disable caching $PATH lookups (new installed binaries work without shell restart)
+shopt -s histappend # dont overwrite, append ~/.bash_history
+declare HISTFILESIZE="-1" # not 500, unlimited ~/.bash_history
+declare HISTSIZE="-1" # not 500, unlimited bash history
+shopt -s checkwinsize # update $LINES and $COLUMNS every time
+set +h # lookup $PATH every time
 
-shopt -s nullglob # globbing matches nothing (dont preserve "*.txt" arg if no txt files exist)
-shopt -s dotglob # globbing matches dotfiles ("*cache" matches .cache)
-shopt -s globstar # enable ** for recursive globbing
+shopt -s nullglob # fix globing
+shopt -s dotglob # allow globs on dotfiles
+shopt -s globstar # allow recursive glob "**"
 shopt -s autocd # cd directories automatically
-# set -a # all shell variables become environment variables
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
-# # bash-completion and command_not_found apt packages
+# # bash-completion command-not-found
 # source /usr/share/bash-completion/bash_completion
 # function command_not_found_handle { command-not-found "$1"; }
 
-# bash prompt
+# bash CLI (shell prompt)
+# shows: container, directory, branch. not username, not hostname
 ################
 declare bold_blue="\[\e[1;34m\]"
 declare bold_green="\[\e[1;32m\]"
 declare reset="\[\e[0m\]"
 __container_name_ps1() { test -f "/.dockerenv" && cat /etc/hostname; }
-
-# show path and optionally git branch, don't show username and hostname
-# "HH:MM [CONTAINER_NAME]PWD[|GIT_BRANCH]$ "
+# "HH:MM [CONTAINER]DIRECTORY[|BRANCH]$ "
 declare PS1="\A $bold_green\$(__container_name_ps1)$bold_blue\w$reset\$(__git_ps1 '|%s')$ "
 declare PS2="	"
-
 unset bold_blue bold_green reset
 
-# functions and variables
+# bash functions and variables
 ##########################
 source ~/.aliases
-set -a
-source ~/.env
+
+set -a # shell variables == environment variables
 DEBIAN_FRONTEND="noninteractive"
+source ~/.env
