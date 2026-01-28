@@ -6,105 +6,74 @@
 
 I use the Debian operating system almost everywhere, [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](<https://en.wikipedia.org/wiki/Terminal_emulator>) a graphical interface,
 
-- on Windows
-- container, VPS, dedicated host
-- `x86-64` Laptop and Desktop
-
-## Hello World
-
-With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure `~/`.
-
-```sh
-ls -a ~/
-code ~/
-
-cd /tmp
-echo "Hello, World!" >> hello.md
-cat hello.md
-rm hello.md
-
-# In `wsl.exe` you can run Windows programs on Linux files!
-explorer.exe .
-
-ping google.com
-# CTRL+C
-
-getent hosts deb.debian.org # fastlydns.net (CDN hosting the packages)
-uname --machine # x86_64 or aarch64 (CPU architecture)
-```
+- with Windows
+- in the public cloud
+- on `x86-64` devices (IBM PC)
 
 ## Installation
 
-1. On **Windows 10 or 11** you can [`wsl.exe --install`](./win/linux/README.MD) `debian`.
+1. On **Windows 10 or 11** [`wsl.exe --install`](./win/linux/README.MD) `debian`.
 
-2. When buying or managing a **host, server, container** in the **public cloud**, just select "Debian 13" in the dropdown during setup.
+2. When buying or renting a **host, server, container** select "Debian 13" during setup, usually from a dropdown.
 
-3. **Hardware installations** are difficult, for PC hardware i recommend [github.com/pbatard/rufus](https://github.com/pbatard/rufus).
-
-```sh
-uname # Linux
-hostnamectl | grep trixie # Debian GNU/Linux 13
-```
-
-## Download
-
-Download the `.zip` repository manually; or with `wget`, `curl`, `git clone`; or `apt` itself, if nothing else is installed.
+3. Laptop and Desktop installations are difficult. I used [github.com/pbatard/rufus](https://github.com/pbatard/rufus).
 
 ```sh
-WHO="junaga"
-WHAT="debian"
-WHEN="main"
-LINK="https://codeload.github.com/$WHO/$WHAT/tar.gz/refs/heads/$WHEN"
-cd ~/
-
-/usr/lib/apt/apt-helper download-file $LINK tar.gz
-tar -xz -f tar.gz
-rm tar.gz
-
-mv $WHAT-$WHEN/ src/
+uname
+hostnamectl
 ```
 
 ## Configuration
 
-Install packages
+With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can configure manually (`code ~/`).
+
+Copy the files manually, or download with `git clone`, `curl`, `wget`.
+
+`C` for copy, `V` for paste, `X` for cut, `Z` for undo, was invented by Apple in 1983.
+
+| System                                 | **Copy**       | **Paste**      |
+| -------------------------------------- | -------------- | -------------- |
+| **macOS**                              | `CMD+C`        | `CMD+V`        |
+| **Windows & Linux**                    | `CTRL+Insert`  | `Shift+Insert` |
+| **Windows & Linux: Desktop**           | `CTRL+C`       | `CTRL+V`       |
+| **Windows & Linux: Terminal Emulator** | `CTRL+Shift+C` | `CTRL+Shift+V` |
+
+### dotfiles
 
 ```sh
-sudo bash src/script/upgrade.bash
-```
-
-Copy dotfiles
-
-```sh
-ls
-rm .bash_logout
-cp -r src/home/. .
-edit .env # code, cursor, vim, micro
-
+cp -r debian/home/. .
+micro .env # code, micro, nano, vim
 exit # and enter
 ```
 
-(Optional) Git sex GitHub
+### packages
 
 ```sh
-bash src/script/git6hub.bash
+sudo bash debian/script/upgrade.bash
 ```
 
-(Optional) Move user home
+### git sex GitHub
+
+```sh
+bash debian/script/git6hub.bash
+```
+
+### move home (optional)
 
 ```sh
 cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
 sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
-
 exit # and enter
 ```
 
-(Optional) Clean filesystem
+### clean filesystem (optional)
 
 ```sh
 sudo rm -r /home/
 sudo rm -r /root/
 sudo bash src/script/purge.bash
+rm .bash_logout
 
 # only in virtual machines
 sudo rm -r /media/
