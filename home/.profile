@@ -18,8 +18,12 @@ shopt -s autocd # cd directories automatically
 # set -a # all shell variables become environment variables
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
-source /usr/share/bash-completion/bash_completion # bash-completion package
-function command_not_found_handle { command-not-found "$1"; } # command-not-found package
+DEBIAN_FRONTEND=noninteractive
+
+# # bash-completion package
+# source /usr/share/bash-completion/bash_completion
+# # command-not-found package
+# function command_not_found_handle { command-not-found "$1"; }
 
 # bash prompt
 ################
