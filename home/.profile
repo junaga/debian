@@ -17,10 +17,6 @@ shopt -s globstar # allow recursive glob "**"
 shopt -s autocd # cd directories automatically
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
-# # bash-completion command-not-found
-# source /usr/share/bash-completion/bash_completion
-# function command_not_found_handle { command-not-found "$1"; }
-
 # bash CLI (shell prompt)
 # shows: container, directory, branch. not username, not hostname
 ################
@@ -36,7 +32,5 @@ unset bold_blue bold_green reset
 # bash functions and variables
 ##########################
 source ~/.aliases
-
 set -a # shell variables == environment variables
-DEBIAN_FRONTEND="noninteractive"
 source ~/.env

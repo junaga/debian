@@ -1,12 +1,15 @@
 # 1 debian apt
 # ================
 apt update
+DEBIAN_FRONTEND=noninteractive \
 apt upgrade --yes
+DEBIAN_FRONTEND=noninteractive \
 apt install --no-install-recommends --yes \
   gettext \
   file \
   tree \
   screen \
+  sudo \
   bsdextrautils \
   jq \
   unzip \
@@ -34,7 +37,6 @@ apt install --no-install-recommends --yes \
   nodejs \
   npm \
   git \
-  gh \
   docker.io
 
 # "command-not-found" initialization

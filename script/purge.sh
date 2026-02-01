@@ -1,11 +1,3 @@
-find ./ -type d -empty -delete
-
-rm -r /lost+found/
-rm -r /usr/games/
-rm -r /usr/src/
-rm -r /opt/
-rm -r /srv/
-
 apt update
 apt autoremove --purge --yes \
   w3m \
@@ -16,6 +8,30 @@ apt autoremove --purge --yes \
   whiptail \
   tasksel \
   tasksel-data
+
+find ./ -type d -empty -delete
+
+rm -r /lost+found/
+rm -r /usr/games/
+rm -r /usr/src/
+rm -r /opt/
+rm -r /srv/
+
+#=== Translations and Documentation ===
+
+apt autoremove --purge --yes \
+  debconf-i18n \
+  man-db \
+  info
+
+rm -r /usr/share/locale/
+rm -r /usr/share/dict/
+rm -r /usr/share/man/
+rm -r /usr/share/doc/
+rm -r /usr/share/doc-base/
+rm -r /usr/share/common-licenses/
+rm -r /usr/share/bug/
+unlink /usr/local/man
 
 #=== Artifacts and Caches ===
 
@@ -32,19 +48,3 @@ rm .java/fonts/
 # rm .bash_history
 # rm .python_history
 # rm .node_repl_history
-
-#=== Translations and Documentation ===
-
-rm -r /usr/share/locale/
-rm -r /usr/share/dict/
-rm -r /usr/share/man/
-rm -r /usr/share/doc/
-rm -r /usr/share/doc-base/
-rm -r /usr/share/common-licenses/
-rm -r /usr/share/bug/
-unlink /usr/local/man
-
-apt autoremove --purge --yes \
-  debconf-i18n \
-  man-db \
-  info

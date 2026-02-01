@@ -38,18 +38,18 @@ Copy the files manually, or download with `git clone`, `curl`, `wget`.
 | **Windows & Linux: Desktop**           | `CTRL+C`       | `CTRL+V`       |
 | **Windows & Linux: Terminal Emulator** | `CTRL+Shift+C` | `CTRL+Shift+V` |
 
-### dotfiles
-
-```sh
-cp -r debian/home/. .
-micro .env # code, micro, nano, vim
-exit # and enter
-```
-
 ### packages
 
 ```sh
 sudo bash debian/script/upgrade.sh
+```
+
+### dotfiles
+
+```sh
+cp -r debian/home/. .
+# edit .env
+exit # and enter
 ```
 
 ### git sex GitHub
@@ -63,7 +63,7 @@ bash debian/script/git6hub.sh
 ```sh
 cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
-sudo sed -i s|$HOME|/usr/local| /etc/passwd
+sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
 exit # and enter
 ```
 
