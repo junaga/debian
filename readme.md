@@ -59,13 +59,14 @@ exit # and enter
 ### (optional) move home
 
 ```sh
-sudo bash debian/script/autoremove.sh
-
 sudo chown -R $USER:$USER /usr/local/
 cp -r /home/$USER/. /usr/local/.
 sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
 exit # and enter
 sudo rm -fr /home/
+
+cd ~/
+sudo bash debian/script/autoremove.sh
 
 sudo sed -i "s|/root|/tmp|" /etc/passwd
 sudo rm -fr /root/
