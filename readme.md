@@ -2,7 +2,7 @@
 - [github.com/apple/container](https://github.com/apple/container)
 - [github.com/pbatard/rufus](https://github.com/pbatard/rufus)
 
-# Debian `13` [//debian.org](https://debian.org/)
+# Debian `14` [//debian.org](https://debian.org/)
 
 I use the Debian operating system almost everywhere, [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](<https://en.wikipedia.org/wiki/Terminal_emulator>) a graphical interface,
 
@@ -59,9 +59,14 @@ exit # and enter
 ### (optional) move home
 
 ```sh
+sudo bash debian/script/autoremove.sh
+
 sudo chown -R $USER:$USER /usr/local/
 cp -r /home/$USER/. /usr/local/.
 sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
 exit # and enter
-echo ~ # >/usr/local
+sudo rm -fr /home/
+
+sudo sed -i "s|/root|/tmp|" /etc/passwd
+sudo rm -fr /root/
 ```
