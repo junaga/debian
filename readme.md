@@ -8,35 +8,37 @@ I use the Debian operating system almost everywhere, [with](https://www.reddit.c
 
 - with Windows
 - in the public cloud
-- on `x86-64` devices (IBM PC)
+- on `x86-64` devices _64-Bit-Wintel-IBM-PC_
 
 ## Installation
 
 1. On **Windows 10 or 11** [`wsl.exe --install`](./win/linux/README.MD) `debian`.
 
-2. When buying or renting a **host, server, container** select "Debian 13" during setup, usually from a dropdown.
+2. Rent, Subscribe, Deploy; **host, server, container**; pick "Debian".
 
-3. Laptop and Desktop installations are difficult. I used [github.com/pbatard/rufus](https://github.com/pbatard/rufus).
+3. Laptop and Desktop install -> just ask ChatGPT.
 
 ```sh
-uname
-hostnamectl
+uname # >Linux
+hostnamectl # >Debian
 ```
+
+## Initialization
+
+Copy & Paste code manually, or download files with `git clone`, `curl`, `wget`.
+
+In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. Windows _19-_95 added similar keys. The original IBM PC clipboard keys remain supported on Windows.
+
+| System                                 | **Copy**       | **Paste**      | **Cut**        |
+| -------------------------------------- | -------------- | -------------- | -------------- |
+| **macOS**                              | `CMD+C`        | `CMD+V`        | `CMD+X`        |
+| **Windows & Linux**                    | `CTRL+Insert`  | `Shift+Insert` | `Shift+Delete` |
+| **Windows & Linux: Desktop**           | `CTRL+C`       | `CTRL+V`       | `CTRL+X`       |
+| **Windows & Linux: Terminal Emulator** | `CTRL+Shift+C` | `CTRL+Shift+V` |                |
 
 ## Configuration
 
-With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can configure manually (`code ~/`).
-
-Copy the files manually, or download with `git clone`, `curl`, `wget`.
-
-`C` for copy, `V` for paste, `X` for cut, `Z` for undo, was invented by Apple in 1983.
-
-| System                                 | **Copy**       | **Paste**      |
-| -------------------------------------- | -------------- | -------------- |
-| **macOS**                              | `CMD+C`        | `CMD+V`        |
-| **Windows & Linux**                    | `CTRL+Insert`  | `Shift+Insert` |
-| **Windows & Linux: Desktop**           | `CTRL+C`       | `CTRL+V`       |
-| **Windows & Linux: Terminal Emulator** | `CTRL+Shift+C` | `CTRL+Shift+V` |
+Do anything you like, no really. ask ChatGPT or other Debian users for help. here is what I usually do.
 
 ### packages
 
@@ -46,39 +48,20 @@ sudo bash debian/script/upgrade.sh
 
 ### dotfiles
 
+With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure dotfiles (`code ~/`).
+
 ```sh
-cp -r debian/home/. .
-# edit .env
+cp -r debian/home/. ~/.
+code ~/.env # or micro, nano, vim,
 exit # and enter
 ```
 
-### git sex GitHub
+### (optional) move home
 
 ```sh
-bash debian/script/git6hub.sh
-```
-
-### move home (optional)
-
-```sh
-cp -r $HOME/. /usr/local/.
 sudo chown -R $USER:$USER /usr/local/
-sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
+cp -r /home/$USER/. /usr/local/.
+sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
 exit # and enter
-```
-
-### clean filesystem (optional)
-
-```sh
-rm .bash_logout
-sudo rm -r /home/
-sudo rm -r /root/
-sudo bash src/script/purge.sh
-
-# only in virtual machine
-sudo rm -r /media/
-sudo rm -r /mnt/
-
-# only in container
-sudo rm -r /boot/
+echo ~ # >/usr/local
 ```
