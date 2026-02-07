@@ -1,14 +1,15 @@
 #=== Artifacts ===
 
-find ~/ -type d -empty -delete
+find ./ -type d -empty -delete
 
-rm ~/.bash_logout
-rm ~/.sudo_as_admin_successful
-rm ~/.wget-hsts
+rm .bash_logout
+rm .profile
+rm .sudo_as_admin_successful
+rm .wget-hsts
 
-# rm ~/.bash_history
-# rm ~/.python_history
-# rm ~/.node_repl_history
+# rm .bash_history
+# rm .python_history
+# rm .node_repl_history
 
 apt update;
 apt autoremove --purge --yes\
