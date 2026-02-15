@@ -1,34 +1,31 @@
 # this script needs /bin and /sbin, login as root!
 
-# faster PC boot
+# faster PC boot (skip UEFI and GRUB sleep)
 efibootmgr --timeout 0
 sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=0|" /etc/default/grub
 rm -r /etc/default/grub.d/
 update-grub
 
-# memory swap file
+# memory swap file (16 GB reserve memory)
 fallocate -l 16G /var/swap
 chmod 600 /var/swap
 mkswap /var/swap
 echo "/var/swap none swap sw 0 0" >> /etc/fstab
+
 
 # Audio and Bluetooth
 apt install\
   pipewire-audio\
   bluetooth\
   --yes;
-	# bluetoothctl
-	# >power on
-	# >agent on
-	# >default-agent
-	# >scan on
-	# >pair XX:XX:XX:XX:XX:XX
-	# >trust XX:XX:XX:XX:XX:XX
-	# >connect XX:XX:XX:XX:XX:XX
-	# >quit
-	# wpctl status
-	# wpctl set-default 72   # bluez_input...  [Audio/Source]
-	# wpctl set-default 75   # bluez_output... [Audio/Sink]
+
+# todo: automate this
+# bluetoothctl pair 3C:B0:ED:A7:96:8D
+# bluetoothctl trust 3C:B0:ED:A7:96:8D
+# bluetoothctl connect 3C:B0:ED:A7:96:8D
+# wpctl status
+# wpctl set-default 72   # bluez_input...  [Audio/Source]
+# wpctl set-default 75   # bluez_output... [Audio/Sink]
 
 # NVIDIA
 # Make sure contrib and non-free Debian packages are enabled in apt.
@@ -55,7 +52,6 @@ apt install\
   	hyprland-qtutils\
   hyprland-backgrounds\
   --yes;
-# polkit-kde-agent-1
 
 # Wayland Screenshots
 apt install\
@@ -81,4 +77,4 @@ apt install\
 curl -L https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > ./google-chrome.deb
 apt install ./google-chrome.deb -y
 rm ./google-chrome.deb
-# $HOME/dl/ for downloads
+# I use $HOME/dl/ for downloads
