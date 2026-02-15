@@ -34,8 +34,9 @@ declare _green="\[\e[1;32m\]"
 declare PS1="\A $_green\$(_container)$_blue\w$_reset\$(_branch)$ "
 declare PS2="	"
 
-# bash functions and variables
+# variables
 ##########################
 source ~/.aliases
-set -a # shell variables == environment variables
+set -a
 source ~/.env
+set +a

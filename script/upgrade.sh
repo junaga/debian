@@ -3,7 +3,8 @@
 DEBIAN_FRONTEND=noninteractive;
 apt update;
 apt upgrade --yes;
-apt install --no-install-recommends --yes\
+apt install\
+  --no-install-recommends\
   gettext\
   file\
   tree\
@@ -36,7 +37,8 @@ apt install --no-install-recommends --yes\
   nodejs\
   npm\
   git\
-  podman-docker;
+  podman-docker\
+  --yes;
 
 # "command-not-found" initialization
 # it uses the index of packages in apt (apt-cache),
