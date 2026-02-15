@@ -6,17 +6,15 @@
 
 I use the Debian operating system almost everywhere, [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](<https://en.wikipedia.org/wiki/Terminal_emulator>) a graphical interface,
 
-- with Windows
-- in the public cloud
+- with public cloud providers
+- in Microsoft Windows
 - on `x86-64` devices _64-Bit-Wintel-IBM-PC_
 
 ## Installation
 
-1. On **Windows 10 or 11** [`wsl.exe --install`](./win/linux/README.MD) `debian`.
-
-2. Rent, Subscribe, Deploy; **host, server, container**; pick "Debian".
-
-3. Laptop and Desktop install -> just ask ChatGPT.
+1. **Host, Server, Container**: Rent, Subscribe, Deploy: "Debian"
+2. **Windows 10 or 11**: [`wsl.exe --install`](./win/linux/README.MD) `debian`
+3. **Laptop or Desktop**: i use [rufus](https://github.com/pbatard/rufus). it's hard ask ChatGPT for help
 
 ```sh
 uname # >Linux
@@ -27,7 +25,7 @@ hostnamectl # >Debian
 
 Copy & Paste code manually, or download files with `git clone`, `curl`, `wget`.
 
-In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. Windows _19-_95 added similar keys. The original IBM PC clipboard keys remain supported on Windows.
+In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. Windows _19-_ 95 added similar keys. The original IBM PC clipboard keys remain supported on Windows.
 
 | System                                 | **Copy**       | **Paste**      | **Cut**        |
 | -------------------------------------- | -------------- | -------------- | -------------- |
@@ -38,7 +36,7 @@ In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. W
 
 ## Configuration
 
-Do anything you like, no really. ask ChatGPT or other Debian users for help. here is what I usually do.
+do anything you like, no really. ask ChatGPT for help. here is what I usually do.
 
 ### packages
 
@@ -48,7 +46,7 @@ sudo bash debian/script/upgrade.sh
 
 ### dotfiles
 
-With an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure dotfiles (`code ~/`).
+with an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure dotfiles (`code ~/`).
 
 ```sh
 cp -r debian/home/. ~/.
@@ -56,13 +54,12 @@ code ~/.env # or micro, nano, vim,
 exit # and enter
 ```
 
-### NVIDIA, [hypr.land](https://hypr.land) and Google Chrome
+### NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
-Install clean Debian (CLI only) on PC. Next, get NVIDIA
+![Hyprland Desktop Screenshot](./hypr.webp)
 
-1. disable "Secure Boot" in UEFI.
-2. enable `contrib` and `non-free` in Debian and Debian`-update`.
-3. install, then boot kernel with drivers.
+1. Install minimal Debian (CLI only).
+2. disable "Secure Boot" in UEFI for DKMS for NVIDIA
 
 ```sh
 sudo apt modernize-sources --yes
@@ -75,13 +72,13 @@ sudo reboot 0
 ```
 
 ```sh
-# run desktop
+# run
 dbus-run-session Hyprland --config ~/.hypr
 
-# update system, desktop, browser
+# up system, desktop, browser
 sudo apt upgrade --yes
 
-# list GPU processes
+# ls GPU processes
 nvidia-smi
 ```
 
