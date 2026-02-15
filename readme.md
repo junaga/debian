@@ -56,18 +56,46 @@ code ~/.env # or micro, nano, vim,
 exit # and enter
 ```
 
-### (optional) move home
+### NVIDIA, [hypr.land](https://hypr.land) and Google Chrome
+
+Install clean Debian (CLI only) on PC. Next, get NVIDIA
+
+1. disable "Secure Boot" in UEFI.
+2. enable `contrib` and `non-free` in Debian and Debian`-update`.
+3. install, then boot kernel with drivers.
+
+```sh
+sudo apt modernize-sources --yes
+sudo $EDITOR /etc/apt/sources.list.d/debian.sources
+# edit: Components: main contrib non-free non-free-firmware
+sudo apt update
+
+sudo bash debian/script/install.sh
+sudo reboot 0
+```
+
+```sh
+# run desktop
+dbus-run-session Hyprland --config ~/.hypr
+
+# update system, desktop, browser
+sudo apt upgrade --yes
+
+# list GPU processes
+nvidia-smi
+```
+
+### move home directory
 
 ```sh
 sudo chown -R $USER:$USER /usr/local/
 cp -r /home/$USER/. /usr/local/.
+
 sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
+sudo sed -i "s|/root|/tmp|" /etc/passwd
 exit # and enter
-sudo rm -fr /home/
+sudo rm -fr /home/ /root/
 
 cd ~/
 sudo bash debian/script/autoremove.sh
-
-sudo sed -i "s|/root|/tmp|" /etc/passwd
-sudo rm -fr /root/
 ```
