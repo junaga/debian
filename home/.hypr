@@ -13,7 +13,7 @@ $browser = google-chrome-stable \
   # Fix YouTube Wayland+NVIDIA crash (dmabuf/GMB video frames)
   # this runs videos on CPU which eats laptop battery (we dont care)
 $discord = discord \
-  --enable-features=UseOzonePlatform,WaylandWindowDecorations \
+  --enable-features=WaylandWindowDecorations \
   --ozone-platform=wayland
 
 $screenshot = grim -g "$(slurp -d)" - | wl-copy
