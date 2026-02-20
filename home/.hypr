@@ -3,18 +3,25 @@
 ### APPS ###
 ############
 
+
 $terminal = kitty
 $browser = google-chrome-stable \
   --ozone-platform=wayland \
   --enable-features=WaylandWindowDecorations \
-  --disable-gpu-memory-buffer-video-frames \
-  --enable-logging --v=1
+  --enable-logging --v=1 \
+  --disable-gpu-memory-buffer-video-frames
+  # Fix YouTube Wayland+NVIDIA crash (dmabuf/GMB video frames)
+  # this runs videos on CPU which eats laptop battery (we dont care)
+$discord = discord \
+  --enable-features=UseOzonePlatform,WaylandWindowDecorations \
+  --ozone-platform=wayland
 
 $screenshot = grim -g "$(slurp -d)" - | wl-copy
 $mute = echo
 
 exec-once = $browser
 exec-once = $terminal
+exec-once = $discord
 
 
 ### KEYS ###
@@ -209,3 +216,6 @@ windowrule = suppressevent maximize, class:.*
 
 # Fix some dragging issues with XWayland
 windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
+
+# Discord can flicker with animations on some Wayland/GPU setups
+windowrulev2 = noanim, class:^(discord)$
