@@ -51,6 +51,7 @@ apt install\
   hyprland\
   	hyprland-qtutils\
   hyprland-backgrounds\
+  systemd-timesyncd\
   --yes;
 
 # Wayland Screenshots
@@ -74,7 +75,9 @@ apt install\
 
 
 # Google Chrome
-curl -L https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > ./google-chrome.deb
-apt install ./google-chrome.deb -y
-rm ./google-chrome.deb
-# I use $HOME/dl/ for downloads
+curl -L "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" > /tmp/google-chrome.deb
+apt install /tmp/google-chrome.deb -y
+
+# Cursor
+curl -L "https://api2.cursor.sh/updates/download/golden/linux-x64-deb/cursor/2.5" > /tmp/cursor.deb
+sudo apt install -y /tmp/cursor.deb libsecret-1-0 gnome-keyring

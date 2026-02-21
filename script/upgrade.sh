@@ -38,6 +38,8 @@ apt install\
   npm\
   git\
   podman-docker\
+    uidmap\
+    slirp4netns\
   --yes;
 
 # "command-not-found" initialization
@@ -63,7 +65,8 @@ npm install --global --no-fund --loglevel error\
   @openai/codex\
   vite@4\
   prettier\
-  npkill;
+  npkill\
+  openclaw;
 
 # 4 custom install
 # ================

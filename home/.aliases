@@ -5,6 +5,10 @@ play() { ffplay -hide_banner -autoexit "$@"; }
 audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
 python() { python3 "$@"; }
 chat6dns() { dig @ch.at TXT +short "$@"; }
+chat() {
+	local NAME=$(basename $(pwd));
+	openclaw agent --session-id $NAME --message "$1";
+}
 
 rm() { env rm -Ir "$@"; }
 ls() { env ls --color=always --group-directories-first "$@"; }
