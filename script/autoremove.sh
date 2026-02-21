@@ -26,6 +26,7 @@ apt autoremove --purge --yes\
 
 apt autoremove --purge --yes\
   debconf-i18n\
+  manpages\
   man-db\
   info;
 
