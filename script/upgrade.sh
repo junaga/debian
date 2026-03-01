@@ -47,6 +47,11 @@ apt install\
 # command-not-found needs the latest cache; to suggest what to install.
 apt update;
 
+# enable rootless docker 
+# Add subuid/subgid ranges for your login user
+usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "$USER"
+podman system migrate
+
 # 2 Python pip
 # ================
 pip_install() {

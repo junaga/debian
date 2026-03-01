@@ -6,8 +6,9 @@ audio() { ffplay -hide_banner -autoexit -vn -nodisp "$@"; }
 python() { python3 "$@"; }
 chat6dns() { dig @ch.at TXT +short "$@"; }
 chat() {
-	local NAME=$(basename $(pwd));
-	openclaw agent --session-id $NAME --message "$1";
+	local NAME=$(basename $PWD);
+	REPLY=$(openclaw agent --session-id $NAME --message "$*" --json)
+	jq -r '.result.payloads[]? | .text? // empty' <<<"$REPLY"
 }
 
 rm() { env rm -Ir "$@"; }
