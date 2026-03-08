@@ -1,8 +1,9 @@
+# https://manpages.debian.org/bash.en
+
 echo "Welcome $USER"
-trap "echo \"Goodbye $USER, left level $SHLVL\"" EXIT
+trap "echo \"level $((SHLVL - 1)) entered\"" EXIT
 
 # bash fixed
-# https://manpages.debian.org/bash.en
 ################
 shopt -s histappend # dont overwrite, append ~/.bash_history
 declare HISTFILESIZE="-1" # not 500, unlimited ~/.bash_history
@@ -17,8 +18,7 @@ shopt -s globstar # allow recursive globs "**"
 shopt -s autocd # cd directories automatically
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
-# bash CLI (shell prompt)
-# "time container directory branch"
+# bash CLI
 ################
 function _container_test { test -f "/run/.containerenv" || test -f "/.dockerenv"; }
 function _container_name { _container_test && cat /etc/hostname; }
@@ -30,13 +30,25 @@ declare _reset="\[\e[0m\]"
 declare _blue="\[\e[1;34m\]"
 declare _green="\[\e[1;32m\]"
 
+# "time container directory branch"
 #           "HH:MM     [container|]        directory[|branch]  $ "
 declare PS1="\A $_green\$(_container)$_blue\w$_reset\$(_branch)$ "
 declare PS2="	"
 
-# variables
+# shell initialization
 ##########################
-source ~/.aliases
-set -a
-source ~/.env
-set +a
+function man { echo "https://manpages.debian.org/$1.en"; }
+function time { date +%Y-%m-%d-%H-%M-%S; }
+function ssh { TERM=xterm-256color env ssh -i ~/.key -o StrictHostKeyChecking=no "$@"; }
+function claw { openclaw "$@"; }
+
+# environment variables
+# set -a
+# . ~/.env
+# set +a
+
+# # fix file permissions and wsl.exe artifacts
+# colonize() { sudo chown -R $USER:$USER "$1"; }
+# fuckdirs() { find "$1" -type d -exec chmod 755 {} +; }
+# fuckfiles() { find "$1" -type f -exec chmod 644 {} +; }
+# fuckwindows() { find "$1" -type f -name "*Zone.Identifier" -delete; }
