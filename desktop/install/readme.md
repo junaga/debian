@@ -1,3 +1,5 @@
+This tutorial is for Windows 11, but it works the same with `debian.iso` files
+
 # Create bootable USB Drive
 
 We use [Rufus](https://github.com/pbatard/rufus#readme), a desktop app, to create a "Windows 11 Setup" bootable USB Drive and configure the Windows NT kernelspace - the Windows Registry, of the system to be installed, to bypass the default restrictions. The Rufus configuration removes these requirements.
@@ -16,7 +18,7 @@ You need the following
 
 We use `rufus.exe` to format an USB Drive, copy a _Windows 11 `.iso`_ to it, and configure it to ignore the Microsoft imposed restrictions. Doing so wipes the USB Drive entirely, **all data will be lost**.
 
-![Rufus windows user experience settings](./customization.png)
+![Rufus windows user experience settings](./rufus.png)
 
 ## [Download Rufus](https://github.com/pbatard/rufus/releases)
 
@@ -43,9 +45,7 @@ I got `Win11_22H2_English_x64v1.iso` (2022 Second half of year, English US, 64-B
 
 Check the [Rufus wiki](https://github.com/pbatard/rufus/wiki/FAQ) if you have any problems or questions.
 
-## Logs
-
-[full log of my run](./my-run.log)
+## Logs [./rufus.log](./rufus.log)
 
 The USB Drive chosen and `.iso` to copy
 
