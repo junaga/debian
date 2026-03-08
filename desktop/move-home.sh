@@ -5,12 +5,10 @@ find /usr/local/ -type d -empty -delete
 
 # copy home directory
 chown -R $USER:$USER /usr/local/
-cp -r /home/$USER/. /usr/local/.
+cp -r $HOME/. /usr/local/.
 
 # update system config
-sed -i "s|/home/$USER|/usr/local|" /etc/passwd
-sed -i "s|/root|/tmp|" /etc/passwd
+sed -i "s|$HOME|/usr/local|" /etc/passwd
 
-# delete home directories
-rm -fr /home/
-rm -fr /root/
+# delete old home
+rm -fr $HOME/
