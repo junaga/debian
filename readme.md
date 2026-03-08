@@ -1,98 +1,86 @@
-- [github.com/microsoft/WSL](https://github.com/microsoft/WSL)
-- [github.com/apple/container](https://github.com/apple/container)
-- [github.com/pbatard/rufus](https://github.com/pbatard/rufus)
+```sh
+uname # Linux
+hostnamectl # Debian
+```
 
-# Debian `14` [//debian.org](https://debian.org/)
+# Debian [//debian.org](https://debian.org/)
 
-I use the Debian operating system almost everywhere, [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](<https://en.wikipedia.org/wiki/Terminal_emulator>) a graphical interface,
-
-- with public cloud providers
-- in Microsoft Windows
-- on `x86-64` devices _64-Bit-Wintel-IBM-PC_
+I use the Debian operating system almost everywhere; both [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](https://en.wikipedia.org/wiki/Terminal_emulator) GUI.
 
 ## Installation
 
-1. **Host, Server, Container**: Rent, Subscribe, Deploy: "Debian"
-2. **Windows 10 or 11**: [`wsl.exe --install`](./win/linux/README.MD) `debian`
-3. **Laptop or Desktop**: i use [rufus](https://github.com/pbatard/rufus). it's hard ask ChatGPT for help
+### Windows
+
+On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./windows/README.MD).
 
 ```sh
-uname # >Linux
-hostnamectl # >Debian
+wsl.exe --install debian
 ```
+
+### Cloud
+
+Sign up [anywhere in the cloud](https://getdeploying.com/reference/compute-prices) with a debit;credit card, then rent;subscribe;provision a host;server;container with any `Debian` release. Right now, I rent on [console.hetzner.com](https://console.hetzner.com/); VPS with 2 vCPUs; ID required for sign up.
+
+### Hardware
+
+For Desktop;Laptop;`x86-64` devices _64-Bit-Wintel-IBM-PC_ you can [create a bootable USB drive](./desktop/install/readme.md). Boot UEFI, then boot the USB, then install a system to your M.2;SSD;HDD drive, then boot that drive. You can also boot from microSD, network, or memory. Just ask ChatGPT for help.
 
 ## Initialization
 
-Copy & Paste code manually, or download files with `git clone`, `curl`, `wget`.
+Copy & Paste; or download files with `git clone`, `curl`, `wget`.
 
-In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. Windows _19-_ 95 added similar keys. The original IBM PC clipboard keys remain supported on Windows.
+|                                   | **Copy**       | **Paste**      | **Cut**        |
+| --------------------------------- | -------------- | -------------- | -------------- |
+| **macOS**                         | `CMD+C`        | `CMD+V`        | `CMD+X`        |
+| **Windows & Linux**               | `CTRL+Insert`  | `Shift+Insert` | `Shift+Delete` |
+| **Windows & Linux: Desktop**      | `CTRL+C`       | `CTRL+V`       | `CTRL+X`       |
+| **Windows & Linux: Terminal App** | `CTRL+Shift+C` | `CTRL+Shift+V` |                |
 
-| System                                 | **Copy**       | **Paste**      | **Cut**        |
-| -------------------------------------- | -------------- | -------------- | -------------- |
-| **macOS**                              | `CMD+C`        | `CMD+V`        | `CMD+X`        |
-| **Windows & Linux**                    | `CTRL+Insert`  | `Shift+Insert` | `Shift+Delete` |
-| **Windows & Linux: Desktop**           | `CTRL+C`       | `CTRL+V`       | `CTRL+X`       |
-| **Windows & Linux: Terminal Emulator** | `CTRL+Shift+C` | `CTRL+Shift+V` |                |
+In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. Windows _19-_ 95 added similar keys; but The IBM PC keys still work. Without a Desktop `CTRL+C` sends byte `3` which is `"End of Text"` in [ASCII and Unicode](https://en.wikipedia.org/wiki/C0_and_C1_control_codes).
 
 ## Configuration
 
-do anything you like, no really. ask ChatGPT for help. here is what I usually do.
-
-### packages
+Install packages and connect [ChatGPT](https://chatgpt.com/)
 
 ```sh
-sudo bash debian/script/upgrade.sh
+sudo bash ./node/upgrade.sh
+openclaw onboard\
+    --flow quickstart\
+    --workspace $HOME\
+    --auth-choice openai-codex;
 ```
 
-### dotfiles
-
-with an `$EDITOR` like [VS Code](https://code.visualstudio.com/) you can manually configure dotfiles (`code ~/`).
+Configure dotfiles using [VS Code](https://code.visualstudio.com/)
 
 ```sh
-cp -r debian/home/. ~/.
-code ~/.env # or micro, nano, vim,
+cp ./node/.bashrc ~/.bashrc
+code ~/ # or cursor, notepad.exe, micro, nano, vim
+rm ~/.bash_logout
+
 exit # and enter
+```
+
+Generate an SSH private and public key
+
+```sh
+NAME="hermann@stanew.name"
+ssh-keygen -N "" -f ~/.key -C $NAME
+cat ~/.key.pub
 ```
 
 ### NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
-![Hyprland Desktop Screenshot](./hypr.webp)
-
-1. Install minimal Debian (CLI only).
-2. disable "Secure Boot" in UEFI for DKMS for NVIDIA
+Make sure you manually disable `Secure Boot` in `UEFI`; Because `apt:nvidia-driver` is not installed, it's compiled with `apt:dkms`. Installing `apt:nvidia-driver` installs the source code, then it compiles, then installs the actual driver software. But the newly compiled software has no cryptographic release signature, which is required for `Secure Boot`.
 
 ```sh
-sudo apt modernize-sources --yes
-sudo $EDITOR /etc/apt/sources.list.d/debian.sources
-# edit: Components: main contrib non-free non-free-firmware
-sudo apt update
-
-sudo bash debian/script/install.sh
+sudo bash ./node/upgrade.sh
+sudo bash ./desktop/upgrade.sh
+cp ./desktop/.hypr ~/.hypr
 sudo reboot 0
 ```
 
 ```sh
-# run
 dbus-run-session Hyprland --config ~/.hypr
-
-# up system, desktop, browser
-sudo apt upgrade --yes
-
-# ls GPU processes
-nvidia-smi
 ```
 
-### move home directory
-
-```sh
-sudo chown -R $USER:$USER /usr/local/
-cp -r /home/$USER/. /usr/local/.
-
-sudo sed -i "s|/home/$USER|/usr/local|" /etc/passwd
-sudo sed -i "s|/root|/tmp|" /etc/passwd
-exit # and enter
-sudo rm -fr /home/ /root/
-
-cd ~/
-sudo bash debian/script/autoremove.sh
-```
+![Hyprland Desktop Screenshot](./hypr.webp)
