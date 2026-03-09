@@ -11,7 +11,7 @@ I use the Debian operating system almost everywhere; both [with](https://www.red
 
 ### Windows
 
-On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./windows/README.MD).
+On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./windows/readme.md).
 
 ```sh
 wsl.exe --install debian
@@ -45,6 +45,7 @@ Install packages and connect [ChatGPT](https://chatgpt.com/)
 ```sh
 sudo bash ./node/upgrade.sh
 openclaw onboard\
+    --accept-risk\
     --flow quickstart\
     --workspace $HOME\
     --auth-choice openai-codex;
