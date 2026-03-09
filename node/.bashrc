@@ -38,7 +38,7 @@ declare PS2="	"
 # shell initialization
 ##########################
 function man { echo "https://manpages.debian.org/$1.en"; }
-function ls { env ls --color="auto" "$@"; }
+function ls { env ls --color="auto" --group-directories-first "$@"; }
 function time { date +%Y-%m-%d-%H-%M-%S; }
 function ssh { TERM=xterm-256color env ssh -i ~/.key -o StrictHostKeyChecking=no "$@"; }
 function claw { openclaw "$@"; }
