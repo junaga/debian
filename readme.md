@@ -65,8 +65,8 @@ Generate an SSH private and public key
 
 ```sh
 NAME="hermann@stanew.name"
-ssh-keygen -N "" -f ~/.key -C $NAME
-cat ~/.key.pub
+ssh-keygen -N "" -C $NAME
+cat ~/.ssh/id_ed25519.pub
 ```
 
 ### NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
