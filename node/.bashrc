@@ -38,17 +38,22 @@ declare PS2="	"
 
 # shell initialization
 ##########################
-function man { echo "https://manpages.debian.org/$1.en"; }
 function ls { env ls --color="auto" --group-directories-first "$@"; }
+function man { echo "https://manpages.debian.org/$1.en"; }
 function time { date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp "$@"; }
-function ssh { TERM=xterm-256color ssh -o StrictHostKeyChecking=no "$@"; }
 function claw { openclaw "$@"; }
 
+function enter { TERM=xterm-256color ssh -o StrictHostKeyChecking=no "$2@$1"; }
+function upload { scp -r ./ "$2@$1:$3"; }
+function download { scp -r "$2@$1:$3" ./; }
+
 # environment variables
-# set -a
-# . ~/.env
-# set +a
+test -f ~/.env && {	
+	set -a
+	. ~/.env
+	set +a
+}
 
 # # fix file permissions and wsl.exe artifacts
 # colonize() { sudo chown -R $USER:$USER "$1"; }
