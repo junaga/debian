@@ -41,7 +41,7 @@ function man { echo "https://manpages.debian.org/$1.en"; }
 function ls { env ls --color="auto" --group-directories-first "$@"; }
 function time { date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp "$@"; }
-function ssh { TERM=xterm-256color env ssh -i ~/.key -o StrictHostKeyChecking=no "$@"; }
+function ssh { TERM=xterm-256color env ssh -o StrictHostKeyChecking=no "$@"; }
 function claw { openclaw "$@"; }
 
 # environment variables
