@@ -1,5 +1,6 @@
 # https://manpages.debian.org/bash.en
 
+test "$PS1" || return
 echo "Welcome $USER"
 trap "echo \"level $((SHLVL - 1)) entered\"" EXIT
 
@@ -41,7 +42,7 @@ function man { echo "https://manpages.debian.org/$1.en"; }
 function ls { env ls --color="auto" --group-directories-first "$@"; }
 function time { date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp "$@"; }
-function ssh { TERM=xterm-256color env ssh -o StrictHostKeyChecking=no "$@"; }
+function ssh { TERM=xterm-256color ssh -o StrictHostKeyChecking=no "$@"; }
 function claw { openclaw "$@"; }
 
 # environment variables
