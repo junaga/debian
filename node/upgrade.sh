@@ -32,6 +32,14 @@ apt install --yes\
   npm\
   git;
 
+# JavaScript CLI Dependencies
+npm install\
+  --global\
+  --no-fund\
+  \
+  tsx\
+  vite;
+
 # AI Assistant
 npm install\
   --global\
