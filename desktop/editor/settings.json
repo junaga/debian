@@ -1,0 +1,15 @@
+// VS Code User Settings (JSON)
+
+{
+  // OK
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "explorer.confirmDragAndDrop": false,
+
+  // Config
+  "editor.tabSize": 2,
+
+  // Extensions
+  "workbench.iconTheme": "material-icon-theme",
+}

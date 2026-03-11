@@ -1,0 +1,12 @@
+// VS Code Keyboard Shortcuts (JSON)
+
+[
+  {
+    "key": "ctrl+tab",
+    "command": "workbench.action.nextEditorInGroup"
+  },
+  {
+    "key": "ctrl+shift+tab",
+    "command": "workbench.action.previousEditorInGroup"
+  }
+]
