@@ -44,16 +44,16 @@ apt install --yes\
   hyprland-backgrounds\
   systemd-timesyncd;
 
-# Wayland Screenshots
+# Desktop Utilities
 apt install --yes\
+  wl-clipboard\
+    xclip\
   grim\
-    slurp\
-  wl-clipboard;
+    slurp;
 
-# Wayland Terminal emulator
+# Wayland Terminal Emulator
 apt install --yes\
   kitty\
-  	wl-clipboard\
   fonts-noto\
   	fonts-noto-extra\
   	fonts-noto-cjk\
