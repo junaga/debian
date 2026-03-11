@@ -60,10 +60,12 @@ apt install --yes\
   	fonts-noto-cjk-extra\
   fonts-noto-color-emoji;
 
-# Google Chrome
-curl -L "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" > /tmp/google-chrome.deb
-apt install /tmp/google-chrome.deb -y
+export DEBIAN_FRONTEND="noninteractive"
 
-# Cursor
-curl -L "https://api2.cursor.sh/updates/download/golden/linux-x64-deb/cursor/2.5" > /tmp/cursor.deb
-sudo apt install -y libsecret-1-0 gnome-keyring /tmp/cursor.deb
+CHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+curl -L $CHROME > /tmp/chrome.deb
+apt install /tmp/chrome.deb --yes
+
+VSCODE="https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+curl -L $VSCODE > /tmp/vscode.deb
+apt install /tmp/vscode.deb --yes
