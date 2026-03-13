@@ -21,19 +21,28 @@ bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
 # bash CLI
 ################
-function _container_test { test -f "/run/.containerenv" || test -f "/.dockerenv"; }
-function _container_name { _container_test && cat /etc/hostname; }
-function _branch_name { git branch --show-current 2>/dev/null; }
-function _container { name=$(_container_name); echo -n ${name:+$name|}; }
-function _branch { name=$(_branch_name); echo -n ${name:+|$name}; }
+declare BLACK="\[\e[1;30m\]"
+declare RED="\[\e[1;31m\]"
+declare GREEN="\[\e[1;32m\]"
+declare YELLOW="\[\e[1;33m\]"
+declare BLUE="\[\e[1;34m\]"
+declare MAGENTA="\[\e[1;35m\]"
+declare CYAN="\[\e[1;36m\]"
+declare WHITE="\[\e[1;37m\]"
+declare RESET="\[\e[0m\]"
 
-declare _reset="\[\e[0m\]"
-declare _blue="\[\e[1;34m\]"
-declare _green="\[\e[1;32m\]"
+function host {
+	DEFAULT="home"
+	test $HOSTNAME != $DEFAULT && echo "$HOSTNAME "
+}
 
-# "time container directory branch"
-#           "HH:MM     [container|]        directory[|branch]  $ "
-declare PS1="\A $_green\$(_container)$_blue\w$_reset\$(_branch)$ "
+function branch {
+	BRANCH=$(git branch --show-current 2>/dev/null)
+	test $BRANCH && echo "|$BRANCH"
+}
+
+# "time host directory branch"
+declare PS1="\A $GREEN\$(host)$BLUE\w$WHITE\$(branch)$ "
 declare PS2="	"
 
 # shell initialization
@@ -54,9 +63,3 @@ test -f ~/.env && {
 	. ~/.env
 	set +a
 }
-
-# # fix file permissions and wsl.exe artifacts
-# colonize() { sudo chown -R $USER:$USER "$1"; }
-# fuckdirs() { find "$1" -type d -exec chmod 755 {} +; }
-# fuckfiles() { find "$1" -type f -exec chmod 644 {} +; }
-# fuckwindows() { find "$1" -type f -name "*Zone.Identifier" -delete; }
