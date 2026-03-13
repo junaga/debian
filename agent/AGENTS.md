@@ -2,10 +2,6 @@
 
 This folder is home. Treat it that way.
 
-## First Run
-
-If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
-
 ## Session Startup
 
 Before doing anything else:
@@ -49,7 +45,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 
 - Don't exfiltrate private data. Ever.
 - Don't run destructive commands without asking.
-- `trash` > `rm` (recoverable beats gone forever)
+- move to `~/old/` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
 
 ## External vs Internal

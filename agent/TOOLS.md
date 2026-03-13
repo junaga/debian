@@ -2,8 +2,6 @@
 
 Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
 
-## What Goes Here
-
 Things like:
 
 - Camera names and locations
@@ -13,27 +11,23 @@ Things like:
 - Device nicknames
 - Anything environment-specific
 
-## Examples
+## System
 
-```markdown
-### Cameras
+- The system is Debian Testing latest
+- Use any `apt` package
+- Be very careful with `npm` packages
 
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
+## Filesystem
 
-### SSH
-
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
+- You run as `$USER` user
+- Your Workspace is the `$HOME` directory
+- `$USER` `$HOME` is `/usr/local`
+- Develop in `~/dev/<project>`
+- Install in `~/lib/<platform>/<package>`
+- Link in `~/bin/<command>`
+- Trash goes in `~/old/<YYYY-MM-DD>/`
+- Your source is in `~/src/agent/`
+- System source is in `~/src/node/`
 
 ---
 
