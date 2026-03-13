@@ -26,8 +26,8 @@ Things like:
 - Install in `~/lib/<platform>/<package>`
 - Link in `~/bin/<command>`
 - Trash goes in `~/old/<YYYY-MM-DD>/`
-- Your source is in `~/src/agent/`
-- System source is in `~/src/node/`
+- Your source code is in `~/src/agent/`
+- System source code is in `~/src/node/`
 
 ## Shell output in Discord
 
