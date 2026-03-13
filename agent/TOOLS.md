@@ -29,6 +29,14 @@ Things like:
 - Your source is in `~/src/agent/`
 - System source is in `~/src/node/`
 
+## Shell output in Discord
+
+1. use a status orb and a space
+  - success: 🟢
+  - failure: 🔴
+2. print the working directory; with `$HOME` shortened to `~`
+3. print the command
+
 ---
 
 Add whatever helps you do your job. This is your cheat sheet.
