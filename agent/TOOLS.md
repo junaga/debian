@@ -2,8 +2,6 @@ _Use this for environment facts only: machine, paths, packages, names and creden
 
 # Local Environment Notes
 
-## System
-
 - The system is Debian Testing latest
 - Install and run `apt` packages anytime
 - Be very careful with `npm` packages
