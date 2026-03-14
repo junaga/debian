@@ -42,7 +42,7 @@ function branch {
 }
 
 # "time host directory branch"
-declare PS1="\A $GREEN\$(host)$BLUE\w$WHITE\$(branch)$ "
+declare PS1="\A $GREEN\$(host)$BLUE\w$WHITE\$(branch)$$RESET "
 declare PS2="	"
 
 # shell initialization
