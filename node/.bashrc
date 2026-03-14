@@ -33,7 +33,7 @@ declare RESET="\[\e[0m\]"
 
 function host {
 	DEFAULT="home"
-	test $HOSTNAME != $DEFAULT && echo "$HOSTNAME "
+	test $HOSTNAME != $DEFAULT && echo "$HOSTNAME"
 }
 
 function branch {
@@ -48,10 +48,10 @@ declare PS2="	"
 # shell initialization
 ##########################
 function ls { env ls --color="auto" --group-directories-first "$@"; }
-function man { echo "https://manpages.debian.org/$1.en"; }
-function time { date +%Y-%m-%d-%H-%M-%S; }
+function date { env date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp "$@"; }
-function claw { openclaw "$@"; }
+function man { echo "https://manpages.debian.org/$1.en"; }
+function chat { openclaw tui --session "$1"; }
 
 function enter { TERM=xterm-256color ssh -o StrictHostKeyChecking=no "$2@$1"; }
 function upload { scp -r ./ "$2@$1:$3"; }
