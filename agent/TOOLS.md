@@ -1,33 +1,23 @@
-# TOOLS.md - Local Notes
+_Use this for environment facts only: machine, paths, packages, names and credentials, and similar operational notes. Add whatever helps you do your job. This is your cheat sheet._
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
-
-Things like:
-
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
+# Local Environment Notes
 
 ## System
 
 - The system is Debian Testing latest
-- Use any `apt` package
+- Install and run `apt` packages anytime
 - Be very careful with `npm` packages
 
 ## Filesystem
 
 - You run as `$USER` user
-- Your Workspace is the `$HOME` directory
 - `$USER` `$HOME` is `/usr/local`
+- Your Workspace is the `$HOME` directory
+- Your System and Agent source code is in `$HOME/src/`
 - Develop in `~/dev/<project>`
-- Install in `~/lib/<platform>/<package>`
+- Install in `~/lib/<registry>/<package>`
 - Link in `~/bin/<command>`
 - Trash goes in `~/old/<YYYY-MM-DD>/`
-- Your source code is in `~/src/agent/`
-- System source code is in `~/src/node/`
 
 ## Shell output in Discord
 
@@ -36,7 +26,3 @@ Things like:
   - failure: 🔴
 2. print the working directory; with `$HOME` shortened to `~`
 3. print the command
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.
