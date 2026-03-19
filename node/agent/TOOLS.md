@@ -11,8 +11,8 @@ _Use this for environment facts only: machine, paths, packages, names and creden
 - You run as `$USER` user
 - `$USER` `$HOME` is `/usr/local`
 - Your Workspace is the `$HOME` directory
-- Your System and Agent source code is in `$HOME/src/`
-- Develop in `~/dev/<project>`
+- Your System and Agent source code is in `~/dev/src/node/`
+- Develop in `~/dev/<platform>/<project>`
 - Install in `~/lib/<registry>/<package>`
 - Link in `~/bin/<command>`
 - Trash goes in `~/old/<YYYY-MM-DD>/`
