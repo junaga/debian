@@ -26,11 +26,13 @@ apt full-upgrade --yes
 
 # System Dependencies
 apt install --yes\
+  ca-certificates\
   curl\
   ffmpeg\
+  git\
+  gnupg\
   nodejs\
-  npm\
-  git;
+  npm;
 
 # JavaScript CLI Dependencies
 npm install\
@@ -46,6 +48,10 @@ npm install\
   --no-fund\
   \
   openclaw;
+
+# Google Cloud CLI
+curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=$HOME/lib
+ln -sf $HOME/lib/google-cloud-sdk/bin/gcloud $HOME/bin/gcloud
 
 # Editors and Monitors
 apt install --yes\
