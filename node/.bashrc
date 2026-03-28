@@ -51,11 +51,7 @@ function ls { env ls --color="auto" --group-directories-first "$@"; }
 function date { env date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
 function man { echo "https://manpages.debian.org/$1.en"; }
-function chat { openclaw tui --session "$1"; }
-
-function enter { TERM=xterm-256color ssh -o StrictHostKeyChecking=no "$2@$1"; }
-function upload { scp -r ./ "$2@$1:$3"; }
-function download { scp -r "$2@$1:$3" ./; }
+function chat { openclaw tui --session $PWD; }
 
 # environment variables
 test -f ~/.env && {	
