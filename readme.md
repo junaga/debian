@@ -44,11 +44,7 @@ Install packages and connect [ChatGPT](https://chatgpt.com/)
 
 ```sh
 sudo bash ./node/upgrade.sh
-openclaw onboard\
-    --accept-risk\
-    --flow quickstart\
-    --workspace $HOME\
-    --auth-choice openai-codex;
+bash ./node/agent.sh
 ```
 
 Configure dotfiles using [VS Code](https://code.visualstudio.com/)
