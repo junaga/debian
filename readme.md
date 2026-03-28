@@ -5,11 +5,11 @@ hostnamectl # Debian
 
 # Debian [//debian.org](https://debian.org/)
 
-I use the Debian operating system almost everywhere; both [with](https://www.reddit.com/r/unixporn/top/?t=year) and [without](https://en.wikipedia.org/wiki/Terminal_emulator) GUI.
+We use the Debian operating system almost everywhere. [With](https://www.reddit.com/r/unixporn/top/?t=year) and [without](https://en.wikipedia.org/wiki/Terminal_emulator) GUIs.
 
 ## Installation
 
-### Windows
+### Windows - _Recommended_
 
 On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./windows/readme.md).
 
@@ -19,9 +19,9 @@ wsl.exe --install debian
 
 ### Cloud
 
-Sign up [anywhere in the cloud](https://getdeploying.com/reference/compute-prices) with a debit;credit card, then rent;subscribe;provision a host;server;container with any `Debian` release. Right now, I rent on [console.hetzner.com](https://console.hetzner.com/); VPS with 2 vCPUs; ID required for sign up.
+Sign up [anywhere in the cloud](https://getdeploying.com/reference/compute-prices) with a debit;credit card, then rent;subscribe;provision a host;server;container with any `Debian` release. I rent on [console.hetzner.com](https://console.hetzner.com/); Server with 2 vCPUs with block storage. ID required for sign up. A server is just a computer without monitor or keyboard. Use SSH for Terminal and FTP connections.
 
-### Hardware
+### Hardware - _Complicated_
 
 For Desktop;Laptop;`x86-64` devices _64-Bit-Wintel-IBM-PC_ you can [create a bootable USB drive](./desktop/install/readme.md). Boot UEFI, then boot the USB, then install a system to your M.2;SSD;HDD drive, then boot that drive. You can also boot from microSD, network, or memory. Just ask ChatGPT for help.
 
