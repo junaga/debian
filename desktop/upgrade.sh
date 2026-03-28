@@ -71,3 +71,5 @@ function installURL {
 installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 installURL "https://discord.com/api/download?platform=linux&format=deb"
 installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+
+npm install --global --no-fund webtorrent-cli
