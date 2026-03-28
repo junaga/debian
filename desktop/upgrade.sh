@@ -71,5 +71,7 @@ function installURL {
 installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 installURL "https://discord.com/api/download?platform=linux&format=deb"
 installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+installURL "https://github.com/ytmdesktop/ytmdesktop/releases/latest/download/youtube-music-desktop-app_amd64.deb"
+installURL "https://github.com/ytmdesktop/ytmdesktop/releases/download/v2.0.0/youtube-music-desktop-app_2.0.0_amd64.deb"
 
 npm install --global --no-fund webtorrent-cli
