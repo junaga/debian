@@ -34,7 +34,7 @@ cp -r $HOME/. /usr/local/.
 rm -fr $HOME/
 
 # update config
-sudo usermod -d /usr/local $USER
+sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
 
 # new home in $HOME
 mkdir -p /usr/local/dev
