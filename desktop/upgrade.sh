@@ -62,10 +62,12 @@ apt install --yes\
 
 export DEBIAN_FRONTEND="noninteractive"
 
-CHROME="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-curl -L $CHROME > /tmp/chrome.deb
-apt install /tmp/chrome.deb --yes
+function installURL {
+	local FILE=/tmp/$RANDOM.deb
+	curl -fL "$1" > $FILE
+	apt install --yes $FILE
+}
 
-VSCODE="https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
-curl -L $VSCODE > /tmp/vscode.deb
-apt install /tmp/vscode.deb --yes
+installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+installURL "https://discord.com/api/download?platform=linux&format=deb"
+installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
