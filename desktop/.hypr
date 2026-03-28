@@ -13,8 +13,8 @@ $browser = google-chrome-stable \
   # this runs videos on CPU which eats laptop battery (we dont care)
 
 $discord = discord \
-  --enable-features=WaylandWindowDecorations \
-  --ozone-platform=wayland
+  --ozone-platform=wayland \
+  --enable-features=WaylandWindowDecorations
 
 $terminal = kitty
 $screenshot = grim -g "$(slurp -d)" - | wl-copy
