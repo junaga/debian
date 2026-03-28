@@ -4,6 +4,8 @@ test "$PS1" || return
 echo "Welcome $USER"
 trap "echo \"level $((SHLVL - 1)) entered\"" EXIT
 
+umask 0002
+
 # bash fixed
 ################
 shopt -s histappend # dont overwrite, append ~/.bash_history
