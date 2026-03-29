@@ -6,7 +6,8 @@ openclaw onboard\
     --accept-risk\
     --flow quickstart\
     --workspace $PWD\
-    --auth-choice $PROVIDER;
+    --auth-choice $PROVIDER\
+    --skip-ui;
 
 # allow `$ apt install` from tui, web, discord ...
 openclaw config set tools.elevated.enabled true
