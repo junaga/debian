@@ -16,6 +16,7 @@
 # then move the idea of "a home" into a new directory.
 #
 # The new system looks something like this
+#
 # | path           | dependency         |
 # | -------------- | ------------------ |
 # | /              | Linux              |
