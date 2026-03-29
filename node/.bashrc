@@ -55,6 +55,8 @@ function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@";
 function man { echo "https://manpages.debian.org/$1.en"; }
 function chat { openclaw tui --session $PWD; }
 
+function fix_ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
+
 # environment variables
 test -f ~/.env && {	
 	set -a
