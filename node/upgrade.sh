@@ -56,15 +56,16 @@ mkdir -p $HOME/lib/ $HOME/bin/
 curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=$HOME/lib
 ln -sf $HOME/lib/google-cloud-sdk/bin/gcloud $HOME/bin/gcloud
 
-# Editors and Monitors
+# Parsers and Editors
 apt install --yes\
-  bash-completion\
+  ripgrep\
   crudini\
   jq\
   pup\
-  micro\
   \
+  bash-completion\
+  micro\
   btop\
-  lshw\
   ncdu\
+  lshw\
   nyancat;
