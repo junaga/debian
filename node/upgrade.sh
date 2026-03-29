@@ -58,6 +58,7 @@ ln -sf $HOME/lib/google-cloud-sdk/bin/gcloud $HOME/bin/gcloud
 
 # Parsers and Editors
 apt install --yes\
+  rsync\
   ripgrep\
   crudini\
   jq\
