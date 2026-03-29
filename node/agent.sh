@@ -1,11 +1,13 @@
-# ChatGPT Codex OAuth
-PROVIDER="openai-codex"
+PROVIDER="openai-codex" # ChatGPT Codex OAuth
+WORKSPACE="~/dev/"
+
+mkdir -p $WORKSPACE
 
 # Install gateway and login provider
 openclaw onboard\
     --accept-risk\
     --flow quickstart\
-    --workspace $PWD\
+    --workspace $WORKSPACE\
     --auth-choice $PROVIDER\
     --skip-ui;
 
