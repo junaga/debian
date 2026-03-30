@@ -53,7 +53,7 @@ function ls { env ls --color="auto" --group-directories-first "$@"; }
 function date { env date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
 function man { echo "https://manpages.debian.org/$1.en"; }
-function scp { rsync -azP --filter=":- .gitignore" --exclude=".git/" "$@"; }
+function scp { rsync -azP --filter=":- .gitignore" "$@"; }
 function chat { openclaw tui --session $PWD; }
 
 # environment variables
