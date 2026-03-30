@@ -56,6 +56,8 @@ function man { echo "https://manpages.debian.org/$1.en"; }
 function scp { rsync -azP --filter=":- .gitignore" "$@"; }
 function chat { openclaw tui --session $PWD; }
 
+function fix_ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
+
 # environment variables
 test -f ~/.env && {	
 	set -a
