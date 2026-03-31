@@ -54,9 +54,10 @@ function date { env date +%Y-%m-%d-%H-%M-%S; }
 function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
 function man { echo "https://manpages.debian.org/$1.en"; }
 function scp { rsync -azP --filter=":- .gitignore" "$@"; }
-function chat { openclaw tui --session $PWD; }
 
 function fix_ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
+function chat { openclaw tui --session $PWD; }
+function web { openclaw browser --browser-profile home "$@"; }
 
 # environment variables
 test -f ~/.env && {	
