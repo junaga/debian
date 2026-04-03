@@ -26,23 +26,16 @@ apt full-upgrade --yes
 
 # System Dependencies
 apt install --yes\
-  podman-docker\
-  npm\
-    nodejs\
-  git\
-  ssh\
   curl\
     ca-certificates\
   ffmpeg\
+  ssh\
+    kitty-terminfo\
+  git\
+  npm\
+    nodejs\
+  podman-docker\
   chromium;
-
-# JavaScript CLI Dependencies
-npm install\
-  --global\
-  --no-fund\
-  \
-  tsx\
-  vite;
 
 # Google Cloud CLI
 mkdir -p $HOME/lib/ $HOME/bin/
