@@ -40,18 +40,31 @@ In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. W
 
 ## Configuration
 
+Configure Shell and generate new SSH keypair
+
+```sh
+cp -r ./node/home/. ~/.
+
+bash
+
+LABEL="junaga"
+ssh-keygen -C $LABEL -N ""
+cat ~/.ssh/id_ed25519.pub
+# register the public key
+
+ssh brigade
+```
+
 Install packages and connect [ChatGPT](https://chatgpt.com/)
 
 ```sh
 sudo bash ./node/upgrade.sh
-
-bash ./node/agent.sh
-cp ./node/agent/* ~/dev/
+bash ./agent/install.sh ~/bot/
 
 openclaw tui
 ```
 
-Using an Editor like [VS Code](https://code.visualstudio.com/)
+Use an Editor like [VS Code](https://code.visualstudio.com/)
 
 ```sh
 code ~/.bash_history # or notepad.exe, cursor, micro, nano, vim
@@ -60,23 +73,6 @@ bash ./desktop/editor/extensions.sh
 # copy ./desktop/editor/settings.json
 # copy ./desktop/editor/keybinds.json
 ```
-
-Configure Shell and generate SSH keys
-
-```sh
-cp ./node/.bashrc ~/.bashrc
-rm ~/.bash_logout
-bash
-
-NAME="hermann@stanew.name"
-ssh-keygen -N "" -C $NAME
-cat ~/.ssh/id_ed25519.pub # public key
-cp ./desktop/.ssh ~/.ssh/config
-
-ssh main
-```
-
-_Paste the public key into any account or cloud resource. Shell, Git, FTP ... connections run SSH which reads the private key._
 
 ### NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
