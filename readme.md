@@ -49,7 +49,7 @@ bash ./agent/install.sh ~/bot/
 openclaw tui
 ```
 
-Configure Shell and generate new SSH keys
+Configure Shell and generate new SSH keypair
 
 ```sh
 cp -r ./node/home/. ~/.
