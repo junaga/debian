@@ -2,6 +2,8 @@ DIR="$(dirname $0)"
 WORK="$1"
 PROVIDER="openai-codex" # ChatGPT Codex OAuth
 
+npm install --global openclaw
+
 mkdir -p $WORK
 cp -r $DIR/home/. $WORK/.
 
