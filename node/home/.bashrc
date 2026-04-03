@@ -1,8 +1,7 @@
 # https://manpages.debian.org/bash.en
 
 test "$PS1" || return
-echo "Welcome $USER"
-trap "echo \"level $((SHLVL - 1)) entered\"" EXIT
+echo "Hello, $USER!"
 
 umask 0002
 
@@ -33,18 +32,13 @@ declare CYAN="\[\e[1;36m\]"
 declare WHITE="\[\e[1;37m\]"
 declare RESET="\[\e[0m\]"
 
-function host {
-	DEFAULT="home"
-	test $HOSTNAME != $DEFAULT && echo "$HOSTNAME"
-}
-
 function branch {
 	BRANCH=$(git branch --show-current 2>/dev/null)
 	test $BRANCH && echo "|$BRANCH"
 }
 
-# "time host directory branch"
-declare PS1="\A $GREEN\$(host)$BLUE\w$WHITE\$(branch)$RESET\$ "
+# "host directory branch"
+declare PS1="$WHITE\H:$BLUE\$PWD$CYAN\$(branch)$WHITE\$$RESET "
 declare PS2="	"
 
 # shell initialization
