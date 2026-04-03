@@ -30,6 +30,8 @@ apt install --yes\
   npm\
     nodejs\
   git\
+  wireguard\
+    resolvconf\
   ssh\
   curl\
     ca-certificates\
@@ -70,3 +72,5 @@ apt install --yes\
   ncdu\
   lshw\
   nyancat;
+
+# https://account.protonvpn.com/downloads#wireguard-configuration
