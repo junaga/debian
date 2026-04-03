@@ -1,13 +1,15 @@
+DIR="$(dirname $0)"
+WORK="$1"
 PROVIDER="openai-codex" # ChatGPT Codex OAuth
-WORKSPACE="~/dev/"
 
-mkdir -p $WORKSPACE
+mkdir -p $WORK
+cp -r $DIR/home/. $WORK/.
 
 # Install gateway and login provider
 openclaw onboard\
     --accept-risk\
     --flow quickstart\
-    --workspace $WORKSPACE\
+    --workspace $WORK\
     --auth-choice $PROVIDER\
     --skip-ui;
 
@@ -15,7 +17,10 @@ openclaw onboard\
 openclaw config set tools.elevated.enabled true
 openclaw config set tools.elevated.allowFrom.'*' '["*"]'
 
-# hide the welcome text in TUI
+# enable browser and other tools
+openclaw config set tools.profile full
+
+# stop printing the welcome text in TUI
 openclaw config set cli.banner.taglineMode off
 
 openclaw gateway restart
