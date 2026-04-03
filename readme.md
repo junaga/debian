@@ -40,15 +40,6 @@ In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. W
 
 ## Configuration
 
-Install packages and connect [ChatGPT](https://chatgpt.com/)
-
-```sh
-sudo bash ./node/upgrade.sh
-bash ./agent/install.sh ~/bot/
-
-openclaw tui
-```
-
 Configure Shell and generate new SSH keypair
 
 ```sh
@@ -56,11 +47,21 @@ cp -r ./node/home/. ~/.
 
 bash
 
-LABEL="hermann@stanew.name"
+LABEL="junaga"
 ssh-keygen -C $LABEL -N ""
-cat ~/.ssh/id_ed25519.pub # public key
+cat ~/.ssh/id_ed25519.pub
+# register the public key
 
 ssh brigade
+```
+
+Install packages and connect [ChatGPT](https://chatgpt.com/)
+
+```sh
+sudo bash ./node/upgrade.sh
+bash ./agent/install.sh ~/bot/
+
+openclaw tui
 ```
 
 Use an Editor like [VS Code](https://code.visualstudio.com/)
