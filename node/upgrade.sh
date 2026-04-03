@@ -56,3 +56,7 @@ apt install --yes\
   ncdu\
   lshw\
   nyancat;
+
+# Proton VPN for $1 a month
+# https://account.protonvpn.com/downloads#wireguard-configuration
+apt install --yes wireguard resolvconf
