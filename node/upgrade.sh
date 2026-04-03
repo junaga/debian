@@ -44,13 +44,6 @@ npm install\
   tsx\
   vite;
 
-# AI Assistant
-npm install\
-  --global\
-  --no-fund\
-  \
-  openclaw;
-
 # Google Cloud CLI
 mkdir -p $HOME/lib/ $HOME/bin/
 curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=$HOME/lib

@@ -50,10 +50,10 @@ declare PS2="	"
 # shell initialization
 ##########################
 function ls { env ls --color="auto" --group-directories-first "$@"; }
-function date { env date +%Y-%m-%d-%H-%M-%S; }
-function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
 function man { echo "https://manpages.debian.org/$1.en"; }
 function scp { rsync -azP --filter=":- .gitignore" "$@"; }
+function date { env date +%Y-%m-%d-%H-%M-%S; }
+function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
 
 function fix_ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
 function chat { openclaw tui --session $PWD; }
