@@ -2,7 +2,7 @@ DIR="$(dirname $0)"
 WORK="$1"
 PROVIDER="openai-codex" # ChatGPT Codex OAuth
 
-npm install --global openclaw
+npm install --global openclaw dev-browser
 
 mkdir -p $WORK
 cp -r $DIR/home/. $WORK/.
@@ -19,10 +19,10 @@ openclaw onboard\
 openclaw config set tools.elevated.enabled true
 openclaw config set tools.elevated.allowFrom.'*' '["*"]'
 
-# enable browser and other tools
-openclaw config set tools.profile full
-
 # stop printing the welcome text in TUI
 openclaw config set cli.banner.taglineMode off
 
 openclaw gateway restart
+
+# install browser CLI for the agent
+dev-browser install
