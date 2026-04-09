@@ -21,4 +21,4 @@ ssh -N -R localhost:$PORT:localhost:$PORT $VPS & disown
 # now tell the agent to run
 #   dev-browser --help
 # and connect with
-#   dev-browser --connect http://localhost:$PORT
+#   dev-browser --connect http://localhost:9222
