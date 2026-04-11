@@ -32,6 +32,7 @@ apt install --yes\
   ssh\
     kitty-terminfo\
   git\
+  sqlite3\
   npm\
     nodejs\
   podman-docker\
