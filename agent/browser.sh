@@ -6,10 +6,13 @@ PORT="9222"
 TAB="https://tiktok.com"
 
 # start Chrome with CDP
+# media is faked/muted to avoid using real mic/speakers
 google-chrome \
   --remote-debugging-address=localhost \
-  --remote-debugging-port=$PORT \
-  --user-data-dir=$HOME/.openclaw-chrome \
+  --remote-debugging-port="$PORT" \
+  --user-data-dir="$HOME/.openclaw-chrome" \
+  --use-fake-device-for-media-stream \
+  --mute-audio \
   & disown
 
 # # Hello, World!
