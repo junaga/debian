@@ -38,15 +38,15 @@ bind = $win, f, pseudo,             # fullscreen
 bind = $win, m, exec, $mute         # mute
 bind = $win, p, exec, $screenshot   # print
 
-bind = $win shift, w, exit
 bind = $win ctrl shift, w, exec, /sbin/shutdown 0
+bind = $win shift, w, exit
 
 bindm = $win, $click, movewindow
 bindm = $win, $right_click, resizewindow
-bind = $win, tab, movefocus, r         # next tab
-bind = $win shift, tab, movefocus, l   # prev tab
-bind = $win, page_up, movefocus, u     #   up tab
-bind = $win, page_down, movefocus, d   # down tab
+bind = $win, up, movefocus, u
+bind = $win, down, movefocus, d
+bind = $win, left, movefocus, l
+bind = $win, right, movefocus, r
 
 # togglefloating,
 # togglesplit,
