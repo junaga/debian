@@ -15,6 +15,7 @@ echo "/var/swap none swap sw 0 0" >> /etc/fstab
 # Audio and Bluetooth
 apt install --yes\
   pipewire-audio\
+    easyeffects\
   bluetooth;
 
 # todo: automate this
