@@ -1,27 +1,31 @@
-# run this on the Home desktop
-# then listen $PORT on the $HOST server
+# run this on your desktop system
+# then listen to $PORT on the server system
 
-PROFILE="Default"
-HOST="46.224.172.45" # SOS Brigade
-# PORT="2048" # spider
-PORT="2049" # junaga
-# PORT="2050"
+DATA="$HOME/google-chrome-openclaw"
+PROFILE="${1:-Default}" # "Default" profile
+USER_HOST="root@46.224.172.45" # SOS Brigade
+PORT="${2:-9222}" # Chrome DevTools Protocol
 
-# start Chrome with CDP
-# media is faked/muted to avoid using real mic/speakers
 google-chrome \
-  --profile-directory="Default" \
-  --remote-debugging-address=localhost \
-  --remote-debugging-port=$PORT \
-  --use-fake-device-for-media-stream \
+  --user-data-dir="$DATA" \
+  --profile-directory="$PROFILE" \
+  \
   --mute-audio \
+  --use-fake-device-for-media-stream \
+  --no-default-browser-check \
+  --no-first-run \
+  \
+  --remote-debugging-address="localhost" \
+  --remote-debugging-port=$PORT \
   & disown
 
+sleep 1
+
 # Hello, CDP!
-# curl http://localhost:$PORT/json/version
+curl http://localhost:$PORT/json/version
 
 # Cursed Technique port tunnel
-ssh -N -R localhost:$PORT:localhost:$PORT $HOST & disown
+ssh -N -R localhost:$PORT:localhost:$PORT $USER_HOST & disown
 
 # on the server:
 # dev-browser --connect http://localhost:9222
