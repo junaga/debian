@@ -59,7 +59,7 @@ Install packages and connect [ChatGPT](https://chatgpt.com/)
 
 ```sh
 sudo bash ./node/upgrade.sh
-bash ./agent/install.sh ~/bot/
+bash ./openclaw/install.sh ~/bot/
 
 openclaw tui
 ```
