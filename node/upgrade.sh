@@ -36,7 +36,8 @@ apt install --yes\
   npm\
     nodejs\
   podman-docker\
-  chromium;
+  chromium\
+  caddy;
 
 # Google Cloud CLI
 mkdir -p $HOME/lib/ $HOME/bin/
