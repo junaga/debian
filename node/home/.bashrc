@@ -38,7 +38,7 @@ function branch {
 }
 
 # "host directory branch"
-declare PS1="$WHITE\H:$BLUE\$PWD$CYAN\$(branch)$WHITE\$$RESET "
+declare PS1="$WHITE\H:$BLUE\$PWD$CYAN\$(branch)$RESET "
 declare PS2="	"
 
 # shell initialization
