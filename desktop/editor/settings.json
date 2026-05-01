@@ -13,5 +13,6 @@
   // Extensions
   "workbench.iconTheme": "material-icon-theme",
   "vscord.status.details.text.editing": "",
-  "vscord.status.state.text.editing": "{relative_file_path}"
+  "vscord.status.state.text.editing": "{relative_file_path}",
+  "vscord.status.idle.check": false
 }
