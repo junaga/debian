@@ -1,27 +1,31 @@
-# run this on the Home desktop
-# then listen $PORT on the $VPS
+# run this on your desktop system
+# then listen to $PORT on the server system
 
-VPS="brigade"
-PORT="9222"
-TAB="https://tiktok.com"
+DATA="$HOME/google-chrome-openclaw"
+PROFILE="${1:-Default}" # "Default" profile
+USER_HOST="root@46.224.172.45" # SOS Brigade
+PORT="${2:-9222}" # Chrome DevTools Protocol
 
-# start Chrome with CDP
-# media is faked/muted to avoid using real mic/speakers
 google-chrome \
-  --remote-debugging-address=localhost \
-  --remote-debugging-port="$PORT" \
-  --user-data-dir="$HOME/.openclaw-chrome" \
-  --use-fake-device-for-media-stream \
+  --user-data-dir="$DATA" \
+  --profile-directory="$PROFILE" \
+  \
   --mute-audio \
+  --use-fake-device-for-media-stream \
+  --no-default-browser-check \
+  --no-first-run \
+  \
+  --remote-debugging-address="localhost" \
+  --remote-debugging-port=$PORT \
   & disown
 
-# # Hello, World!
-# curl http://localhost:$PORT/json/version
+sleep 1
+
+# Hello, CDP!
+curl http://localhost:$PORT/json/version
 
 # Cursed Technique port tunnel
-ssh -N -R localhost:$PORT:localhost:$PORT $VPS & disown
+ssh -N -R localhost:$PORT:localhost:$PORT $USER_HOST & disown
 
-# now tell the agent to run
-#   dev-browser --help
-# and connect with
-#   dev-browser --connect http://localhost:9222
+# on the server:
+# dev-browser --connect http://localhost:9222
