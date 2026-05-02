@@ -1,0 +1,8 @@
+[user]
+	name = codex
+	email = codex@localhost
+
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main
