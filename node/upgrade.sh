@@ -1,21 +1,22 @@
+# Update the version of the Debian config file
+apt modernize-sources --yes
+
+#====================================
+
+CONFIG="/etc/apt/sources.list.d/debian.sources"
+VERSION="testing"
 # Debian Unstable is for dev testing
 # Debian Testing is for main features
 # Debian Stable is for release freezing
 # Debian Oldstable is for legacy support
 
-DEBIAN="testing"
+# Set Debian version
+OLD_VERSION="$(lsb_release -cs)"
+sed -i "s/$OLD_VERSION/$VERSION/g" $CONFIG
+sed -i "s/$VERSION-updates//" $CONFIG
+sed -i "s/$VERSION-backports//" $CONFIG
 
-# Update Debian config file version
-apt modernize-sources --yes
-CONFIG="/etc/apt/sources.list.d/debian.sources"
-
-# Update Debian version
-RELEASE="$(lsb_release -cs)"
-sed -i "s/$RELEASE/$DEBIAN/g" $CONFIG
-sed -i "s/$DEBIAN-updates//" $CONFIG
-sed -i "s/$DEBIAN-backports//" $CONFIG
-
-# Allow non open source packages
+# Enable non open source packages
 POLICY="main contrib non-free non-free-firmware"
 sed -i "s/^Components:.*/Components: $POLICY/g" $CONFIG
 
@@ -23,6 +24,8 @@ sed -i "s/^Components:.*/Components: $POLICY/g" $CONFIG
 export DEBIAN_FRONTEND="noninteractive"
 apt update --allow-releaseinfo-change
 apt full-upgrade --yes
+
+#====================================
 
 # System Dependencies
 apt install --yes\
@@ -39,12 +42,10 @@ apt install --yes\
   chromium\
   caddy;
 
-# Google Cloud CLI
-mkdir -p $HOME/lib/ $HOME/bin/
-curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=$HOME/lib
-ln -sf $HOME/lib/google-cloud-sdk/bin/gcloud $HOME/bin/gcloud
+# OpenAI Codex CLI
+npm install --global @openai/codex
 
-# Parsers and Editors
+# common parser CLIs and editor TUIs
 apt install --yes\
   rsync\
   ripgrep\
@@ -58,6 +59,11 @@ apt install --yes\
   ncdu\
   lshw\
   nyancat;
+
+# Google Cloud CLI
+mkdir -p $HOME/lib/ $HOME/bin/
+curl -sSL https://sdk.cloud.google.com | bash -s -- --disable-prompts --install-dir=$HOME/lib
+ln -sf $HOME/lib/google-cloud-sdk/bin/gcloud $HOME/bin/gcloud
 
 # Proton VPN for $1 a month
 # https://account.protonvpn.com/downloads#wireguard-configuration

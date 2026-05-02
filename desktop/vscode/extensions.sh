@@ -1,5 +1,3 @@
-# VS Code Extensions
-
 alias inst="code --install-extension"
 
 inst ms-vscode-remote.remote-ssh # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh

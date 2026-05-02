@@ -1,11 +1,11 @@
+# Debian [//debian.org](https://debian.org/)
+
+We use the Debian operating system almost everywhere. [With](https://www.reddit.com/r/unixporn/top/?t=year) and [without](https://en.wikipedia.org/wiki/Terminal_emulator) GUIs.
+
 ```sh
 uname # Linux
 hostnamectl # Debian
 ```
-
-# Debian [//debian.org](https://debian.org/)
-
-We use the Debian operating system almost everywhere. [With](https://www.reddit.com/r/unixporn/top/?t=year) and [without](https://en.wikipedia.org/wiki/Terminal_emulator) GUIs.
 
 ## Installation
 
@@ -19,59 +19,86 @@ wsl.exe --install debian
 
 ### Cloud
 
-Sign up [anywhere in the cloud](https://getdeploying.com/reference/compute-prices) with a debit;credit card, then rent;subscribe;provision a host;server;container with any `Debian` release. I rent on [console.hetzner.com](https://console.hetzner.com/); Server with 2 vCPUs with block storage. ID required for sign up. A server is just a computer without monitor or keyboard. Use SSH for Terminal and FTP connections.
+Sign up [anywhere in the cloud](https://getdeploying.com/reference/compute-prices) with a debit;credit card, then rent;subscribe;provision a host;server;container with any `Debian` release and whitelist your SSH public key. I rent on [console.hetzner.com](https://console.hetzner.com/): Server with 2 vCPUs with block storage. ID required for sign up.
 
-### Hardware - _Complicated_
+### Hardware - _don't do this_
 
-For Desktop;Laptop;`x86-64` devices _64-Bit-Wintel-IBM-PC_ you can [create a bootable USB drive](./desktop/install/readme.md). Boot UEFI, then boot the USB, then install a system to your M.2;SSD;HDD drive, then boot that drive. You can also boot from microSD, network, or memory. Just ask ChatGPT for help.
+For Desktop;Laptop;`x86-64` devices _64-Bit-Wintel-IBM-PC_ you can [create a bootable USB drive](./desktop/install/readme.md). Boot UEFI, then boot the USB, then install a system to your M.2;SSD;HDD drive, then boot that drive. You can also boot from microSD, network, or memory. Ask ChatGPT for help AND call me on discord for advice.
 
 ## Initialization
 
-Copy & Paste; or download files with `git clone`, `curl`, `wget`.
+Copy & Paste! or download files with `git clone`, `curl`, `wget`.
 
-|                                   | **Copy**       | **Paste**      | **Cut**        |
-| --------------------------------- | -------------- | -------------- | -------------- |
-| **macOS**                         | `CMD+C`        | `CMD+V`        | `CMD+X`        |
-| **Windows & Linux**               | `CTRL+Insert`  | `Shift+Insert` | `Shift+Delete` |
-| **Windows & Linux: Desktop**      | `CTRL+C`       | `CTRL+V`       | `CTRL+X`       |
-| **Windows & Linux: Terminal App** | `CTRL+Shift+C` | `CTRL+Shift+V` |                |
+### History of Copy & Paste
 
-In 1983 Apple invented `C` for copy, `V` for paste, `X` for cut, `Z` for undo. Windows _19-_ 95 added similar keys; but The IBM PC keys still work. Without a Desktop `CTRL+C` sends byte `3` which is `"End of Text"` in [ASCII and Unicode](https://en.wikipedia.org/wiki/C0_and_C1_control_codes).
+| **System**         | **Copy**       | **Paste**      | **Cut**        | **year** |
+| ------------------ | -------------- | -------------- | -------------- | -------- |
+| **macOS**          | `CMD+C`        | `CMD+V`        | `CMD+X`        | 1983     |
+| **IBM PC**         | `CTRL+Insert`  | `Shift+Insert` | `Shift+Delete` | 1981     |
+| **Windows**        | `CTRL+C`       | `CTRL+V`       | `CTRL+X`       | 1995     |
+| **Linux Terminal** | `CTRL+Shift+C` | `CTRL+Shift+V` |                | 2010     |
+
+In 1983 Apple pioneered: `C` copy `V` paste `X` cut `Z` undo. Similar keys were added by Windows _19_-95, supplementing the IBM PC keys. In 2020 the [Windows Terminal](https://www.youtube.com/watch?v=8gw0rXPMMPE) `wt.exe` added Linux Terminals keys. `wt.exe` and `wsl.exe` are Linux desktop culture incorporated into Microsoft.
+
+Outside Windows `explorer.exe` the key `CTRL+C` sends byte `3` which is `"End of Text"` in [ASCII and Unicode](https://en.wikipedia.org/wiki/C0_and_C1_control_codes).
 
 ## Configuration
 
-Configure Shell and generate new SSH keypair
-
-```sh
-cp -r ./node/home/. ~/.
-
-bash
-
-LABEL="junaga"
-ssh-keygen -C $LABEL -N ""
-cat ~/.ssh/id_ed25519.pub
-# register the public key
-
-ssh brigade
-```
-
-Install packages and connect [ChatGPT](https://chatgpt.com/)
+Install packages and connect [ChatGPT](https://chatgpt.com/); _use `--device-auth` for headless env_
 
 ```sh
 sudo bash ./node/upgrade.sh
-bash ./openclaw/install.sh ~/bot/
+codex login
 
-openclaw tui
+codex "code a \"Hello, World\" API in JavaScript"
 ```
 
-Use an Editor like [VS Code](https://code.visualstudio.com/)
+Configure Shell and generate an SSH keypair
 
 ```sh
-code ~/.bash_history # or notepad.exe, cursor, micro, nano, vim
+cp -r ./node/home/. ~/.
+bash
 
+ssh-keygen -N "" -C "junaga"
+cat ~/.ssh/id_ed25519.pub
+# copy the public key
+```
+
+Use [VS Code](https://code.visualstudio.com/)
+
+```sh
+# 1. Download and Install VS Code
+
+# 2. Install extensions
 bash ./desktop/editor/extensions.sh
-# copy ./desktop/editor/settings.json
-# copy ./desktop/editor/keybinds.json
+
+# 3. Configure an SSH Host
+code ~/.bash_history
+code ~/.ssh/config
+
+# 4. Open a remote directory or file
+remote brigade ~/dev/
+```
+
+_History of Editors: CLI, TUI, GUI_
+
+```sh
+# ed $FILE             # 1969
+# vi $FILE             # 1976
+# emacs $FILE          # 1976
+# notepad.exe $FILE    # 1983
+# emacs $FILE          # 1985
+# pico $FILE           # 1989
+# vim $FILE            # 1991
+# nano $FILE           # 1999
+# notepad++.exe $FILE  # 2003
+# mate $FILE           # 2004
+# subl $FILE           # 2008
+# atom $FILE           # 2014
+code $FILE           # 2015
+# nvim $FILE           # 2015
+micro $FILE          # 2016
+# cursor $FILE         # 2023
 ```
 
 ### NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
