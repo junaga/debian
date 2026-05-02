@@ -6,6 +6,7 @@
   "git.confirmSync": false,
   "git.autofetch": true,
   "explorer.confirmDragAndDrop": false,
+  "window.confirmSaveUntitledWorkspace": false,
 
   // Config
   "editor.tabSize": 2,
