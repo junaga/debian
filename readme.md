@@ -44,40 +44,43 @@ Outside Windows `explorer.exe` the key `CTRL+C` sends byte `3` which is `"End of
 
 ## Configuration
 
-Install packages and connect [ChatGPT](https://chatgpt.com/); _use `--device-auth` for headless env_
+Install packages and login into OpenAI [Codex](https://openai.com/codex).
 
 ```sh
 sudo bash ./node/upgrade.sh
-codex login
+codex login # --device-auth
 
 codex "code a \"Hello, World\" API in JavaScript"
 ```
 
-Configure Shell and generate an SSH keypair
+Configure SSH and install Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-cp -r ./node/home/. ~/.
-bash
+REMOTE="root@46.224.172.45"
 
+# 1. Generate public/private keypair
 ssh-keygen -N "" -C "junaga"
+
+# 2. Copy public key
 cat ~/.ssh/id_ed25519.pub
-# copy the public key
-```
 
-Use [VS Code](https://code.visualstudio.com/)
+# 3. Register public key on remote
 
-```sh
+# 4. Connect remote shell
+ssh $REMOTE
+
+
 # 1. Download and Install VS Code
 
 # 2. Install extensions
-bash ./desktop/editor/extensions.sh
+bash ./desktop/vscode/extensions.sh
 
-# 3. Configure an SSH Host
-code ~/.bash_history
-code ~/.ssh/config
+# 3. Quick remote code/files/FTP alias
+echo "alias rcode=\"code --remote ssh-remote+$REMOTE\"" >> ~/.bashrc
+bash
 
-# 4. Open a remote directory or file
-remote brigade ~/dev/
+# 4. Edit remote directory or file
+rcode ~/dev/
 ```
 
 _History of Editors: CLI, TUI, GUI_

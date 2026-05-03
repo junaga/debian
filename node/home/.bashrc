@@ -47,8 +47,8 @@ function ls { env ls --color="auto" --group-directories-first "$@"; }
 function date { env date +%Y-%m-%d-%H-%M-%S; }
 function man { echo "https://manpages.debian.org/$1.en"; }
 function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
-function scp { rsync -azP --filter=":- .gitignore" "$@"; }
-function remote { code --remote ssh-remote+$1 $2; }
+function rcp { rsync -azP --filter=":- .gitignore" "$@"; }
+function rcode { code --remote ssh-remote+$1 $2; }
 function chat { codex --dangerously-bypass-approvals-and-sandbox "$@"; }
 
 function ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
