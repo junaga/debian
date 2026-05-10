@@ -1,0 +1,7 @@
+check_for_update_on_startup = false
+projects = { "/usr/local" = { trust_level = "trusted" } }
+features = { goals = true }
+
+model_reasoning_effort = "low"
+
+tui_status_line = "{workdir}{git_dirty} {model} {reasoning}"
