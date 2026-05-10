@@ -1,7 +1,13 @@
 check_for_update_on_startup = false
-projects = { "/usr/local" = { trust_level = "trusted" } }
 features = { goals = true }
 
 model_reasoning_effort = "low"
 
-tui_status_line = "{workdir}{git_dirty} {model} {reasoning}"
+[tui]
+status_line = ["current-dir", "git-branch", "model-with-reasoning"]
+model_availability_nux = { "gpt-5.5" = 4 }
+
+[projects."/usr/local"]
+trust_level = "trusted"
+[projects."/usr/local/dev"]
+trust_level = "trusted"
