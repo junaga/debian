@@ -31,6 +31,7 @@ apt full-upgrade --yes
 apt install --yes\
   curl\
     ca-certificates\
+    openssl\
   ffmpeg\
   ssh\
     kitty-terminfo\
