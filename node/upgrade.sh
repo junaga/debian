@@ -24,6 +24,8 @@ sed -i "s/^Components:.*/Components: $POLICY/g" $CONFIG
 export DEBIAN_FRONTEND="noninteractive"
 apt update --allow-releaseinfo-change
 apt full-upgrade --yes
+apt autoremove --purge --yes
+apt clean
 
 #====================================
 
