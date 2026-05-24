@@ -33,6 +33,7 @@ apt clean
 apt install --yes\
   curl\
     ca-certificates\
+    openssl\
   ffmpeg\
   ssh\
     kitty-terminfo\
