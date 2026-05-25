@@ -10,7 +10,7 @@ The **Windows Subsystem for Linux version 2** `wsl.exe` is a virtual machine tha
 
 _You need to move your project files **inside Linux**, else Linux software will run slowly; because every file operation has to travel between two systems running at the same time._
 
-![Move programming files from Windows into WSL Linux](./lib/warning.png)
+![Move programming files from Windows into WSL Linux](./.media/warning.png)
 
 _Enabling x86 virtualization for Windows 10 can cause performance issues in Unreal Engine 5 based video games. (discord.com @niklavs said this)_
 
@@ -22,11 +22,11 @@ _Some motherboards still label `UEFI` as `BIOS`. Windows 11 doesn't even support
 
 ### `UEFI` ASUS motherboard AMD CPU
 
-![Enable Virtualzation for AMD on Asus](./lib/uefi-asus-v12n-amd.png)
+![Enable Virtualzation for AMD on Asus](./.media/uefi-asus-v12n-amd.png)
 
 ### `UEFI` ASUS motherboard Intel CPU
 
-![Enable Virtualzation for Intel on Asus](./lib/uefi-asus-v12n-intel.png)
+![Enable Virtualzation for Intel on Asus](./.media/uefi-asus-v12n-intel.png)
 
 ### Debug
 
@@ -44,7 +44,7 @@ REM > Virtualization-based security: Status: Running Base Virtualization Support
 2. Check **Virtual Machine Platform** and **Windows Subsystem for Linux**
 3. Click OK and reboot
 
-![Enable Windows Optional features](./lib/optional-features.png)
+![Enable Windows Optional features](./.media/optional-features.png)
 
 ### Debug
 
@@ -63,7 +63,7 @@ _Very rarely it can happen that a Windows update disables a Windows feature, the
 
 Welcome to the [Terminal](https://www.youtube.com/watch?v=8gw0rXPMMPE);
 
-![open-the-terminal](./lib/open-terminal.png)
+![open-the-terminal](./.media/open-terminal.png)
 
 Install Linux.
 
