@@ -33,6 +33,7 @@ declare PS2="	"
 # shell initialization
 ##########################
 export EDITOR="micro"
+export PAGER="less -FRX"
 
 function man { echo "https://manpages.debian.org/$1.en"; }
 alias ls="ls --color --group-directories-first"
