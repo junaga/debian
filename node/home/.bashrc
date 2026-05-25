@@ -41,4 +41,3 @@ alias date="date +%Y-%m-%d-%H-%M-%S"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote ssh-remote+$1 $2; }
 alias chat="codex --dangerously-bypass-approvals-and-sandbox"
-export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/openssh_agent"
