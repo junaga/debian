@@ -8,8 +8,7 @@ Before=rescue.service
 ConditionPathExists=/dev/tty0
 
 [Service]
-EnvironmentFile=/etc/default/autologin
-ExecStart=-/usr/bin/login -f ${AUTOLOGIN_USER}
+ExecStart=-/usr/bin/login -f 1000
 Type=idle
 Restart=always
 RestartSec=0
