@@ -127,7 +127,7 @@ sudo reboot 0
 ```
 
 ```sh
-dbus-run-session Hyprland --config ~/.hypr
+exec start-hyprland -- --config ~/.hypr
 ```
 
 ![Hyprland Desktop Screenshot](./hypr.webp)
