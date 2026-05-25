@@ -16,7 +16,13 @@ echo "/var/swap none swap sw 0 0" >> /etc/fstab
 apt install --yes\
   pipewire-audio\
     easyeffects\
-  bluetooth;
+  bluetooth\
+  upower;
+
+systemctl enable --now upower.service
+
+# Secret Service is D-Bus activated; avoid starting a second daemon via systemd.
+systemctl --global disable gnome-keyring-daemon.service gnome-keyring-daemon.socket
 
 # todo: automate this
 # bluetoothctl pair 3C:B0:ED:A7:96:8D

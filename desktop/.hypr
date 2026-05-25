@@ -78,6 +78,7 @@ bind = SUPER SHIFT, 9, movetoworkspace, 9
 
 env = XCURSOR_SIZE,48
 env = HYPRCURSOR_SIZE,48
+env = SSH_AUTH_SOCK,/run/user/1000/gcr/ssh
 
 # Every new Window opens with
 # the original size (floating size)
