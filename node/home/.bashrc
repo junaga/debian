@@ -41,5 +41,3 @@ alias date="date +%Y-%m-%d-%H-%M-%S"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote ssh-remote+$1 $2; }
 alias chat="codex --dangerously-bypass-approvals-and-sandbox"
-
-function ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
