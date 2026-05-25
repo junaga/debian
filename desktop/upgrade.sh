@@ -1,10 +1,11 @@
 SWAP="16G"
 DESKTOP="$(dirname "$0")"
+export DEBIAN_FRONTEND="noninteractive"
 
 # faster PC boot (skip UEFI and GRUB sleep)
 efibootmgr --timeout 0
-sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=1|" /etc/default/grub
-rm -r /etc/default/grub.d/
+sed -i "s|^GRUB_TIMEOUT=.*|GRUB_TIMEOUT=1|" /etc/default/grub
+rm -rf /etc/default/grub.d/
 update-grub
 
 # Local filesystems
@@ -53,7 +54,7 @@ apt install --yes\
   nvidia-driver\
   dkms\
   build-essential\
-  linux-headers-amd64;
+  linux-headers-$(uname -r);
 
 # NVIDIA DRM KMS for Wayland
 install -Dm644 "$DESKTOP/sys/nvidia-drm.conf" /etc/modprobe.d/nvidia-drm.conf
@@ -82,8 +83,6 @@ apt install --yes\
   	fonts-noto-cjk-extra\
   fonts-noto-color-emoji;
 
-export DEBIAN_FRONTEND="noninteractive"
-
 function installURL {
 	local FILE=/tmp/$RANDOM.deb
 	curl -fL "$1" > $FILE
@@ -94,4 +93,4 @@ installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
 installURL "https://discord.com/api/download?platform=linux&format=deb"
 installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
 
-npm install --global --no-fund webtorrent-cli
+npm install --global --no-fund webtorrent-cli || command -v webtorrent
