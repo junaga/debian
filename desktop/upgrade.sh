@@ -6,6 +6,9 @@ sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=0|" /etc/default/grub
 rm -r /etc/default/grub.d/
 update-grub
 
+# Virtual terminal autologin
+printf '%s\n' '[Service]' 'ExecStart=' 'ExecStart=-/usr/bin/login -f 1000' | systemctl edit getty@.service --stdin
+
 # memory swap file (reserve memory)
 fallocate -l $SWAP /var/swap
 chmod 600 /var/swap
