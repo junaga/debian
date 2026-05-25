@@ -1,0 +1,8 @@
+[Unit]
+Description=Swap File
+
+[Swap]
+What=/var/swap
+
+[Install]
+WantedBy=swap.target

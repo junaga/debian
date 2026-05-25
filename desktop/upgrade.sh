@@ -1,4 +1,5 @@
 SWAP="16G"
+DESKTOP="$(dirname "$0")"
 
 # faster PC boot (skip UEFI and GRUB sleep)
 efibootmgr --timeout 0
@@ -6,11 +7,19 @@ sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=0|" /etc/default/grub
 rm -r /etc/default/grub.d/
 update-grub
 
+# Virtual terminal autologin
+systemctl enable getty@tty1.service
+printf '%s\n' '[Service]' 'ExecStart=' 'ExecStart=-/usr/bin/login -f 1000' | systemctl edit getty@.service --stdin
+
 # memory swap file (reserve memory)
-fallocate -l $SWAP /var/swap
-chmod 600 /var/swap
-mkswap /var/swap
-echo "/var/swap none swap sw 0 0" >> /etc/fstab
+if [ ! -e /var/swap ]; then
+	fallocate -l $SWAP /var/swap
+	chmod 600 /var/swap
+	mkswap /var/swap
+fi
+
+install -Dm644 "$DESKTOP/var-swap.swap" /etc/systemd/system/var-swap.swap
+systemctl enable --now var-swap.swap
 
 # Audio and Bluetooth
 apt install --yes\
