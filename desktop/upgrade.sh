@@ -9,7 +9,7 @@ update-grub
 
 # Virtual terminal autologin
 systemctl enable getty@tty1.service
-printf '%s\n' '[Service]' 'ExecStart=' 'ExecStart=-/usr/bin/login -f 1000' | systemctl edit getty@.service --stdin
+printf '%s\n' '[Service]' 'ExecStart=' "ExecStart=-/usr/sbin/agetty --autologin $(getent passwd 1000 | cut -d: -f1) --noreset --noclear - \${TERM}" | systemctl edit getty@.service --stdin
 
 # memory swap file (reserve memory)
 if [ ! -e /var/swap ]; then
