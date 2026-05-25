@@ -32,6 +32,8 @@ declare PS2="	"
 
 # shell initialization
 ##########################
+export EDITOR="micro"
+
 function man { echo "https://manpages.debian.org/$1.en"; }
 alias ls="ls --color --group-directories-first"
 alias date="date +%Y-%m-%d-%H-%M-%S"
