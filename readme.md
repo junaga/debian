@@ -78,6 +78,7 @@ cat ~/.ssh/id_ed25519.pub
 # 3. Register public key on remote
 
 # 4. Connect remote shell
+systemctl --user enable --now ssh-agent.socket # Enable SSH remote forwarding
 ssh $REMOTE
 
 
