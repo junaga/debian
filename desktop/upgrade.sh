@@ -8,8 +8,8 @@ rm -r /etc/default/grub.d/
 update-grub
 
 # Local filesystems
-install -Dm644 "$DESKTOP/usr-local.mount" /etc/systemd/system/usr-local.mount
-install -Dm644 "$DESKTOP/usr-local-old.mount" /etc/systemd/system/usr-local-old.mount
+install -Dm644 "$DESKTOP/sys/usr-local.mount" /etc/systemd/system/usr-local.mount
+install -Dm644 "$DESKTOP/sys/usr-local-old.mount" /etc/systemd/system/usr-local-old.mount
 sed -i '\|^# /usr/local was on /dev/sda3 during installation$|d; \|^UUID=47e498ee-c3ec-4708-b732-747c122114c0[[:space:]]\+/usr/local[[:space:]]|d; \|^# /usr/local/old was on /dev/sdb1 during installation$|d; \|^UUID=44db4ead-1413-4041-b963-33e5c634c381[[:space:]]\+/usr/local/old[[:space:]]|d' /etc/fstab
 systemctl enable usr-local.mount usr-local-old.mount
 
@@ -24,7 +24,7 @@ if [ ! -e /var/swap ]; then
 	mkswap /var/swap
 fi
 
-install -Dm644 "$DESKTOP/var-swap.swap" /etc/systemd/system/var-swap.swap
+install -Dm644 "$DESKTOP/sys/var-swap.swap" /etc/systemd/system/var-swap.swap
 systemctl enable --now var-swap.swap
 
 # Audio and Bluetooth
@@ -56,7 +56,7 @@ apt install --yes\
   linux-headers-amd64;
 
 # NVIDIA DRM KMS for Wayland
-echo "options nvidia_drm modeset=1" >> /etc/modprobe.d/nvidia-drm.conf
+install -Dm644 "$DESKTOP/sys/nvidia-drm.conf" /etc/modprobe.d/nvidia-drm.conf
 update-initramfs -u
 
 # Hyprland
