@@ -7,6 +7,12 @@ sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=0|" /etc/default/grub
 rm -r /etc/default/grub.d/
 update-grub
 
+# Local filesystems
+install -Dm644 "$DESKTOP/usr-local.mount" /etc/systemd/system/usr-local.mount
+install -Dm644 "$DESKTOP/usr-local-old.mount" /etc/systemd/system/usr-local-old.mount
+sed -i '\|^# /usr/local was on /dev/sda3 during installation$|d; \|^UUID=47e498ee-c3ec-4708-b732-747c122114c0[[:space:]]\+/usr/local[[:space:]]|d; \|^# /usr/local/old was on /dev/sdb1 during installation$|d; \|^UUID=44db4ead-1413-4041-b963-33e5c634c381[[:space:]]\+/usr/local/old[[:space:]]|d' /etc/fstab
+systemctl enable usr-local.mount usr-local-old.mount
+
 # Virtual terminal autologin
 systemctl enable getty@tty1.service
 printf '%s\n' '[Service]' 'ExecStart=' "ExecStart=-/usr/sbin/agetty --autologin $(getent passwd 1000 | cut -d: -f1) --noreset --noclear - \${TERM}" | systemctl edit getty@.service --stdin
