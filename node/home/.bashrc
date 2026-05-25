@@ -22,33 +22,21 @@ bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
 
 # bash CLI
 ################
-function branch {
-	BRANCH=$(git branch --show-current 2>/dev/null)
-	test $BRANCH && echo "|$BRANCH"
-}
-
-declare BLACK="\[\e[1;30m\]"
-declare RED="\[\e[1;31m\]"
-declare GREEN="\[\e[1;32m\]"
-declare YELLOW="\[\e[1;33m\]"
-declare BLUE="\[\e[1;34m\]"
-declare MAGENTA="\[\e[1;35m\]"
-declare CYAN="\[\e[1;36m\]"
 declare WHITE="\[\e[1;37m\]"
+declare BLUE="\[\e[1;34m\]"
 declare RESET="\[\e[0m\]"
 
-# "host:directory|branch"
-declare PS1="$WHITE\H:$BLUE\$PWD$CYAN\$(branch)$RESET "
+# "host:directory "
+declare PS1="$WHITE\H:$BLUE\$PWD$RESET "
 declare PS2="	"
 
 # shell initialization
 ##########################
-function ls { env ls --color="auto" --group-directories-first "$@"; }
-function date { env date +%Y-%m-%d-%H-%M-%S; }
 function man { echo "https://manpages.debian.org/$1.en"; }
-function micro { env micro --config-dir /tmp -softwrap true -wordwrap true "$@"; }
-function rcp { rsync -azP --filter=":- .gitignore" "$@"; }
+alias ls="ls --color --group-directories-first"
+alias date="date +%Y-%m-%d-%H-%M-%S"
+alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote ssh-remote+$1 $2; }
-function chat { codex --dangerously-bypass-approvals-and-sandbox "$@"; }
+alias chat="codex --dangerously-bypass-approvals-and-sandbox"
 
 function ssh_bridge { eval "$(ssh-agent -s)"; ssh-add ~/.ssh/id_ed25519; }
