@@ -1,0 +1,27 @@
+[Unit]
+Description=Autologin on %I
+After=systemd-user-sessions.service
+Conflicts=getty@%i.service rescue.service
+Before=rescue.service
+
+# Virtual terminals only. Cloud/serial consoles use serial-getty@.service or SSH.
+ConditionPathExists=/dev/tty0
+
+[Service]
+EnvironmentFile=/etc/default/autologin
+ExecStart=-/usr/bin/login -f ${AUTOLOGIN_USER}
+Type=idle
+Restart=always
+RestartSec=0
+UtmpIdentifier=%I
+StandardInput=tty
+StandardOutput=tty
+TTYPath=/dev/%I
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+IgnoreSIGPIPE=no
+SendSIGHUP=yes
+
+[Install]
+WantedBy=getty.target
