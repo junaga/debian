@@ -3,7 +3,7 @@ DESKTOP="$(dirname "$0")"
 
 # faster PC boot (skip UEFI and GRUB sleep)
 efibootmgr --timeout 0
-sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=0|" /etc/default/grub
+sed -i "s|GRUB_TIMEOUT=5|GRUB_TIMEOUT=1|" /etc/default/grub
 rm -r /etc/default/grub.d/
 update-grub
 
