@@ -38,7 +38,7 @@ bind = $win, f, pseudo,             # fullscreen
 bind = $win, m, exec, $mute         # mute
 bind = $win, p, exec, $screenshot   # print
 
-bind = $win ctrl shift, w, exec, /sbin/shutdown 0
+bind = $win ctrl shift, w, exec, bash -lc '/usr/local/src/desktop/status.sh; hyprctl dispatch exit && /sbin/shutdown 0'
 bind = $win shift, w, exit
 
 bindm = $win, $click, movewindow
@@ -83,7 +83,6 @@ env = HYPRCURSOR_SIZE,48
 # the original size (floating size)
 # not fullscreen size (tiled size)
 general { layout = dwindle }
-dwindle { pseudotile = true }
 windowrule = match:class ^(.*)$, pseudo on
 
 # https://wiki.hypr.land/Configuring/Variables/#general
@@ -190,7 +189,6 @@ animations {
 
 # See https://wiki.hypr.land/Configuring/Dwindle-Layout/ for more
 dwindle {
-    pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
     preserve_split = true # You probably want this
 }
 
