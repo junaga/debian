@@ -11,7 +11,7 @@ hostnamectl # Debian
 
 ### Windows - _Recommended_
 
-On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./windows/readme.md).
+On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./wsl.md).
 
 ```sh
 wsl.exe --install debian
