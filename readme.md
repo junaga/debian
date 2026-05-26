@@ -53,17 +53,6 @@ codex login # --device-auth
 codex "code a \"Hello, World\" API in JavaScript"
 ```
 
-### Node Log
-
-For lightweight system feedback without desktop capture, video, or paid multimodal analysis:
-
-```sh
-bash ./node/log/goodnight.sh
-bash ./node/log/goodnight.sh --no-run
-```
-
-The harness is tracked in this repo. It writes `system.log`, `codex.log`, and `goodnight.log` under `~/log/YYYY-MM-DD/`; checkpoint history and the run lock live in `~/log/goodnight.lock`. `system.log` is node health. `codex.log` is the Codex TUI digest, not raw tool output.
-
 Configure SSH and install Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
