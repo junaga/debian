@@ -40,4 +40,4 @@ alias ls="ls --color --group-directories-first"
 alias date="date +%Y-%m-%d-%H-%M-%S"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote ssh-remote+$1 $2; }
-alias chat="codex --dangerously-bypass-approvals-and-sandbox"
+alias chat="codex resume --dangerously-bypass-approvals-and-sandbox"
