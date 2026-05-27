@@ -1,15 +1,15 @@
 {
+  "tabsize": 2,
   "softwrap": true,
   "wordwrap": true,
-  "tabsize": 2,
-  "hlsearch": true,
-  "ignorecase": true,
   "scrollbar": true,
+  "hlsearch": true,
 
+  "autosu": true,
   "savecursor": true,
   "saveundo": true,
-  "mkparents": true,  
-  "autosu": true,
+
+  "mkparents": true,
   "rmtrailingws": true,
   "eofnewline": true
 }

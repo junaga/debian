@@ -59,7 +59,7 @@ Configure SSH and install Microsoft [VS Code](https://code.visualstudio.com/).
 REMOTE="root@46.224.172.45"
 
 # 1. Generate public/private keypair
-ssh-keygen -N "" -C "junaga"
+ssh-keygen -N "" -C $USER@$HOSTNAME
 
 # 2. Copy public key
 cat ~/.ssh/id_ed25519.pub
@@ -67,8 +67,10 @@ cat ~/.ssh/id_ed25519.pub
 # 3. Register public key on remote
 
 # 4. Connect remote shell
-systemctl --user enable --now ssh-agent.socket # Enable SSH remote forwarding
 ssh $REMOTE
+
+# # Optional: Enable SSH remote forwarding
+# systemctl --user enable --now ssh-agent.socket
 
 
 # 1. Download and Install VS Code

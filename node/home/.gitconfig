@@ -1,8 +1,8 @@
 [user]
-	name = codex
-	email = codex@localhost
+	name = Codex
+	email = codex@openai.com
 
-[pull]
-	rebase = false
 [init]
 	defaultBranch = main
+[pull]
+	rebase = false

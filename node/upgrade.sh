@@ -23,8 +23,7 @@ apt install --yes \
 	git ssh kitty-terminfo \
 	nodejs npm build-essential \
 	curl ca-certificates openssl \
-	fd-find ripgrep tree file \
-	crudini jq pup
+	fd-find ripgrep tree file crudini jq pup
 
 npm install --global --no-fund \
 	@openai/codex
