@@ -1,7 +1,7 @@
 # run this on your desktop system
 # then listen to $PORT on the server system
 
-DATA="$HOME/google-chrome-openclaw"
+DATA="$HOME/.google-chrome-codex"
 PROFILE="${1:-Default}" # "Default" profile
 USER_HOST="root@46.224.172.45" # SOS Brigade
 PORT="${2:-9222}" # Chrome DevTools Protocol
