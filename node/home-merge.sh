@@ -1,38 +1,33 @@
-# Modern Linux $HOME is fucked beyond repair:
-# - dotdirs
-# - package managers
-# - non-sudo installations
-# - XDG
-#   - Config
-#   - Cache
-#   - Data
-#
-# $HOME is artifacts and dependencies, not a workspace.
-# apps and data seperation is lost entirely:
-# - /usr/local for "local software" apps
-# - $HOME for "personal files" data
-#
-# We merge "personal files" into "local software",
-# and move the "idea of home" into a new directory.
-# $HOME/dev is our new home.
-#
-# | directory      | path  | dependency     |
+# ===== PROBLEM =====
+# $HOME is not a workspace anymore; it's a mess:
+#  - installations and dependencies
+#  - artifacts, caches, and logs
+#  - dotdirs and package managers
+#  - XDG Config, XDG Cache, XDG Data
+# The Unix app and data seperation, is lost:
+#  1. /usr/local for installed apps
+#  2. $HOME for saved data
+
+# ===== SOLUTION =====
+# 1. We merge $HOME into /usr/local
+# 2. Our new workspace is $HOME/dev
+# | directory      | path  | scope          |
 # | -------------- | ----- | -------------- |
-# | /              |       | Linux          |
-# | /usr           |       | Debian         |
+# | /usr/local/dev | ~/dev | user           |
 # | /usr/local     | ~     | npm, pip, rust |
-# | /usr/local/dev | ~/dev |                |
+# | /usr           |       | Debian         |
+# | /              |       | Linux          |
 
 cd /
 
-# take over
+# claim and cleanup
 sudo chown -R $USER:$USER /usr/local/
 find /usr/local/ -type d -empty -delete
 
-# move
-cp -r $HOME/. /usr/local/.
+# move and merge
+cp -ar $HOME/. /usr/local/.
 sudo sed -i "s|$HOME|/usr/local|" /etc/passwd
-rm -fr $HOME/
 
-# new home in $HOME
+# our new home in $HOME
 mkdir -p /usr/local/dev
+echo "exit the shell to reload"
