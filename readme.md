@@ -44,46 +44,27 @@ Outside Windows `explorer.exe` the key `CTRL+C` sends byte `3` which is `"End of
 
 ## Configuration
 
-Install packages and login into OpenAI [Codex](https://openai.com/codex).
+Install packages; and log in to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
 sudo bash ./node/upgrade.sh
-codex login # --device-auth
 
+codex login
 codex "code a \"Hello, World\" API in JavaScript"
 ```
 
-Configure SSH and install Microsoft [VS Code](https://code.visualstudio.com/).
+Copy configs; and set up Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-REMOTE="root@46.224.172.45"
-
-# 1. Generate public/private keypair
-ssh-keygen -N "" -C $USER@$HOSTNAME
-
-# 2. Copy public key
-cat ~/.ssh/id_ed25519.pub
-
-# 3. Register public key on remote
-
-# 4. Connect remote shell
-ssh $REMOTE
-
-# # Optional: Enable SSH remote forwarding
-# systemctl --user enable --now ssh-agent.socket
-
+bash ./node/setup.sh
+cp -ra ./node/home/. ~/.
+source ~/.bashrc
 
 # 1. Download and Install VS Code
-
 # 2. Install extensions
 bash ./desktop/vscode/extensions.sh
-
-# 3. Quick remote code/files/FTP alias
-echo "alias rcode=\"code --remote ssh-remote+$REMOTE\"" >> ~/.bashrc
-bash
-
-# 4. Edit remote directory or file
-rcode ~/dev/
+# 3. Edit remote directory or file
+rcode sosdan ~/dev/
 ```
 
 _History of Editors: CLI, TUI, GUI_
