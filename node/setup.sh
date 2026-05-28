@@ -1,3 +1,10 @@
+# autologin Linux terminals
+sudo systemctl edit getty@.service --stdin <<-EOF
+	[Service]
+	ExecStart=
+	ExecStart=-login -f $USER
+EOF
+
 # generate SSH key
 ssh-keygen -N "" -C $USER@$HOSTNAME
 echo
