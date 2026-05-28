@@ -19,7 +19,7 @@ apt clean
 
 # get Packages
 apt install --yes \
-	micro less rsync \
+	micro less rsync sudo \
 	git ssh kitty-terminfo \
 	nodejs npm build-essential \
 	curl ca-certificates openssl \
