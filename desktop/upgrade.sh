@@ -1,5 +1,5 @@
 SWAP="16G"
-DESKTOP="$(dirname "$0")"
+DIR="$(dirname "$0")"
 export DEBIAN_FRONTEND="noninteractive"
 
 # faster PC boot (skip UEFI and GRUB sleep)
@@ -8,9 +8,10 @@ sed -i "s|^GRUB_TIMEOUT=.*|GRUB_TIMEOUT=1|" /etc/default/grub
 rm -rf /etc/default/grub.d/
 update-grub
 
+# System config
+cp -ar "$DIR/etc/." /etc/.
+
 # Local filesystems
-install -Dm644 "$DESKTOP/sys/usr-local.mount" /etc/systemd/system/usr-local.mount
-install -Dm644 "$DESKTOP/sys/usr-local-old.mount" /etc/systemd/system/usr-local-old.mount
 sed -i '\|^# /usr/local was on /dev/sda3 during installation$|d; \|^UUID=47e498ee-c3ec-4708-b732-747c122114c0[[:space:]]\+/usr/local[[:space:]]|d; \|^# /usr/local/old was on /dev/sdb1 during installation$|d; \|^UUID=44db4ead-1413-4041-b963-33e5c634c381[[:space:]]\+/usr/local/old[[:space:]]|d' /etc/fstab
 systemctl enable usr-local.mount usr-local-old.mount
 
@@ -21,7 +22,6 @@ if [ ! -e /var/swap ]; then
 	mkswap /var/swap
 fi
 
-install -Dm644 "$DESKTOP/sys/var-swap.swap" /etc/systemd/system/var-swap.swap
 systemctl enable --now var-swap.swap
 
 # Audio and Bluetooth
@@ -53,7 +53,6 @@ apt install --yes\
   linux-headers-$(uname -r);
 
 # NVIDIA DRM KMS for Wayland
-install -Dm644 "$DESKTOP/sys/nvidia-drm.conf" /etc/modprobe.d/nvidia-drm.conf
 update-initramfs -u
 
 # Hyprland
