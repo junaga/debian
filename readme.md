@@ -60,11 +60,9 @@ bash ./node/setup.sh
 cp -ra ./node/home/. ~/.
 source ~/.bashrc
 
-# 1. Download and Install VS Code
-# 2. Install extensions
-bash ./desktop/vscode/extensions.sh
-# 3. Edit remote directory or file
-rcode sosdan ~/dev/
+# 1: Download and Install VS Code for Windows or Linux ...
+code --install-extension ms-vscode-remote.remote-ssh
+rcode sosdan ./dev
 ```
 
 _History of Editors: CLI, TUI, GUI_
