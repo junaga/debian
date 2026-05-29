@@ -2,13 +2,13 @@
 # then listen to $PORT on the server system
 
 DATA="$HOME/.google-chrome-codex"
-PROFILE="${1:-Default}" # "Default" profile
-USER_HOST="root@46.224.172.45" # SOS Brigade
-PORT="${2:-9222}" # Chrome DevTools Protocol
+PORT="9222" # Chrome DevTools Protocol
+REMOTE="$1" # SSH destination: alias or [user@]host
+
+test "$REMOTE" || { echo "usage: bash $0 remote"; exit 1; }
 
 google-chrome \
   --user-data-dir="$DATA" \
-  --profile-directory="$PROFILE" \
   \
   --mute-audio \
   --use-fake-device-for-media-stream \
@@ -25,7 +25,7 @@ sleep 1
 curl http://localhost:$PORT/json/version
 
 # Cursed Technique port tunnel
-ssh -N -R localhost:$PORT:localhost:$PORT $USER_HOST & disown
+ssh -N -R localhost:$PORT:localhost:$PORT "$REMOTE" & disown
 
 # on the server:
 # dev-browser --connect http://localhost:9222

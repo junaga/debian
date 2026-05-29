@@ -1,9 +1,0 @@
-[Mount]
-# Mount by filesystem UUID so the disk can move between hardware ports.
-Type=ext4
-What=/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381
-Where=/usr/local/old
-Options=noatime,nodiratime,nodev,nosuid,noexec
-
-[Install]
-WantedBy=local-fs.target
