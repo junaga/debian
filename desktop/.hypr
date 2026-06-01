@@ -16,6 +16,7 @@ $discord = discord \
   --ozone-platform=wayland \
   --enable-features=WaylandWindowDecorations
 
+$desktop = /usr/local/src/desktop
 $terminal = kitty
 $screenshot = grim -g "$(slurp -d)" - | wl-copy
 $mute = echo
@@ -109,6 +110,7 @@ general {
 decoration {
     rounding = 10
     rounding_power = 2
+    screen_shader = $desktop/hypr/shaders/amber-crt.frag
 
     # Change transparency of focused and unfocused windows
     active_opacity = 1.0
