@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+"""Run a command in a PTY and paint printable output one character at a time."""
+
+import errno
+import os
+import select
+import signal
+import sys
+import termios
+import time
+import tty
+
+
+DELAY_MS = float(os.environ.get("CRTPAINT_DELAY_MS", "3.0"))
+DELAY = max(0.0, DELAY_MS / 1000.0)
+
+
+class Painter:
+    def __init__(self, out):
+        self.out = out
+        self.state = "text"
+        self.seq = bytearray()
+        self.utf8 = bytearray()
+        self.utf8_left = 0
+
+    def emit(self, data, painted=False):
+        self.out.write(data)
+        self.out.flush()
+        if painted and DELAY:
+            time.sleep(DELAY)
+
+    def feed(self, data):
+        for byte in data:
+            self.feed_byte(byte)
+
+    def feed_byte(self, byte):
+        if self.state == "text":
+            self.feed_text(byte)
+        elif self.state == "esc":
+            self.feed_esc(byte)
+        elif self.state == "csi":
+            self.seq.append(byte)
+            if 0x40 <= byte <= 0x7E:
+                self.emit(bytes(self.seq))
+                self.state = "text"
+        elif self.state == "osc":
+            self.seq.append(byte)
+            if byte == 0x07:
+                self.emit(bytes(self.seq))
+                self.state = "text"
+            elif byte == 0x1B:
+                self.state = "osc_esc"
+        elif self.state == "osc_esc":
+            self.seq.append(byte)
+            if byte == 0x5C:
+                self.emit(bytes(self.seq))
+                self.state = "text"
+            else:
+                self.state = "osc"
+        elif self.state == "string":
+            self.seq.append(byte)
+            if byte == 0x07:
+                self.emit(bytes(self.seq))
+                self.state = "text"
+            elif byte == 0x1B:
+                self.state = "string_esc"
+        elif self.state == "string_esc":
+            self.seq.append(byte)
+            if byte == 0x5C:
+                self.emit(bytes(self.seq))
+                self.state = "text"
+            else:
+                self.state = "string"
+
+    def feed_text(self, byte):
+        if self.utf8_left:
+            self.utf8.append(byte)
+            if 0x80 <= byte <= 0xBF:
+                self.utf8_left -= 1
+            else:
+                self.utf8_left = 0
+            if self.utf8_left == 0:
+                self.emit(bytes(self.utf8), painted=True)
+                self.utf8.clear()
+            return
+
+        if byte == 0x1B:
+            self.seq = bytearray([byte])
+            self.state = "esc"
+        elif byte < 0x20 or byte == 0x7F:
+            self.emit(bytes([byte]))
+        elif byte < 0x80:
+            self.emit(bytes([byte]), painted=True)
+        else:
+            size = self.utf8_size(byte)
+            if size == 1:
+                self.emit(bytes([byte]), painted=True)
+            else:
+                self.utf8 = bytearray([byte])
+                self.utf8_left = size - 1
+
+    def feed_esc(self, byte):
+        self.seq.append(byte)
+        if byte == 0x5B:
+            self.state = "csi"
+        elif byte == 0x5D:
+            self.state = "osc"
+        elif byte in (0x50, 0x58, 0x5E, 0x5F):
+            self.state = "string"
+        elif 0x30 <= byte <= 0x7E:
+            self.emit(bytes(self.seq))
+            self.state = "text"
+
+    @staticmethod
+    def utf8_size(byte):
+        if 0xC2 <= byte <= 0xDF:
+            return 2
+        if 0xE0 <= byte <= 0xEF:
+            return 3
+        if 0xF0 <= byte <= 0xF4:
+            return 4
+        return 1
+
+
+def copy_winsize(master_fd):
+    try:
+        size = termios.tcgetwinsize(sys.stdin.fileno())
+        termios.tcsetwinsize(master_fd, size)
+    except (OSError, termios.error):
+        pass
+
+
+def exec_child(argv):
+    os.environ.setdefault("CRTPAINT", "1")
+    os.execvp(argv[0], argv)
+
+
+def main():
+    argv = sys.argv[1:] or [os.environ.get("SHELL", "/bin/bash")]
+    pid, master_fd = os.forkpty()
+
+    if pid == 0:
+        exec_child(argv)
+
+    old_term = None
+    stdin_fd = sys.stdin.fileno()
+    stdin_open = True
+    if os.isatty(stdin_fd):
+        old_term = termios.tcgetattr(stdin_fd)
+        tty.setraw(stdin_fd)
+
+    copy_winsize(master_fd)
+
+    def on_winch(signum, frame):
+        copy_winsize(master_fd)
+        try:
+            os.kill(pid, signal.SIGWINCH)
+        except OSError:
+            pass
+
+    signal.signal(signal.SIGWINCH, on_winch)
+    painter = Painter(sys.stdout.buffer)
+    status = 0
+
+    try:
+        while True:
+            fds = [master_fd]
+            if stdin_open:
+                fds.append(stdin_fd)
+            try:
+                readable, _, _ = select.select(fds, [], [])
+            except InterruptedError:
+                continue
+
+            if stdin_fd in readable:
+                try:
+                    data = os.read(stdin_fd, 4096)
+                except OSError as exc:
+                    if exc.errno != errno.EIO:
+                        raise
+                    data = b""
+                if data:
+                    os.write(master_fd, data)
+                else:
+                    stdin_open = False
+
+            if master_fd in readable:
+                try:
+                    data = os.read(master_fd, 4096)
+                except OSError as exc:
+                    if exc.errno != errno.EIO:
+                        raise
+                    data = b""
+                if not data:
+                    break
+                painter.feed(data)
+    finally:
+        if old_term is not None:
+            termios.tcsetattr(stdin_fd, termios.TCSADRAIN, old_term)
+        try:
+            _, raw_status = os.waitpid(pid, 0)
+            if os.WIFEXITED(raw_status):
+                status = os.WEXITSTATUS(raw_status)
+            elif os.WIFSIGNALED(raw_status):
+                status = 128 + os.WTERMSIG(raw_status)
+        except ChildProcessError:
+            pass
+
+    return status
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
