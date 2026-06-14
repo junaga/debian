@@ -14,10 +14,9 @@ declare HISTSIZE="-1" # not 500, unlimited bash history
 
 # interface
 ################
-declare WHITE="\[\e[1;37m\]"
 declare BLUE="\[\e[1;34m\]"
 declare RESET="\[\e[0m\]"
-declare PS1="$WHITE\H$BLUE\$PWD$RESET "
+declare PS1="$BLUE\H\$PWD$RESET "
 declare PS2="	"
 
 shopt -s autocd # cd directories automatically
