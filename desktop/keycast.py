@@ -105,8 +105,8 @@ class Keycast:
           border: 2px solid #5a340b;
         }
         window.covered {
-          background: rgba(5,3,0,0.36);
-          border-color: rgba(90,52,11,0.36);
+          background: rgba(5,3,0,0.62);
+          border-color: rgba(90,52,11,0.62);
         }
         #keys {
           color: #ffb84d;
@@ -115,7 +115,7 @@ class Keycast:
           font-weight: 700;
         }
         window.covered #keys {
-          color: rgba(255,184,77,0.36);
+          color: rgba(255,184,77,0.62);
           text-shadow: none;
         }
         """
