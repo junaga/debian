@@ -20,6 +20,8 @@ TITLE = "Keycast"
 TEXT_TIMEOUT = 4200
 COMBO_TIMEOUT = 1400
 TEXT_EXPIRY = TEXT_TIMEOUT / 1000
+FADED_CLASS = "covered"
+POINTER_POLL_MS = 160
 MODS = {
     "KEY_LEFTCTRL": "CTRL",
     "KEY_RIGHTCTRL": "CTRL",
@@ -70,6 +72,9 @@ class Keycast:
         self.caps = False
         self.text = ""
         self.last_text_at = 0
+        self.bounds = None
+        self.faded = False
+        self.poll_count = 0
         self.serial = 0
 
         self.label = Gtk.Label(label="waiting for keys")
@@ -90,6 +95,7 @@ class Keycast:
         self.window.set_skip_taskbar_hint(True)
         self.window.set_skip_pager_hint(True)
         self.window.set_type_hint(Gdk.WindowTypeHint.UTILITY)
+        self.window.connect("realize", self.make_click_through)
         self.window.connect("destroy", self.quit)
         self.window.add(self.label)
 
@@ -98,11 +104,19 @@ class Keycast:
           background: rgba(5,3,0,0.88);
           border: 2px solid #5a340b;
         }
+        window.covered {
+          background: rgba(5,3,0,0.14);
+          border-color: rgba(90,52,11,0.14);
+        }
         #keys {
           color: #ffb84d;
           text-shadow: 0 0 7px rgba(255,184,77,0.55);
           font: 36px "Fira Code", "DejaVu Sans Mono", "Noto Sans Mono", monospace;
           font-weight: 700;
+        }
+        window.covered #keys {
+          color: rgba(255,184,77,0.14);
+          text-shadow: none;
         }
         """
         provider = Gtk.CssProvider()
@@ -144,6 +158,50 @@ class Keycast:
             stderr=subprocess.DEVNULL,
             check=False,
         )
+
+    def make_click_through(self, *_):
+        self.window.get_window().set_pass_through(True)
+
+    def hypr_json(self, *args):
+        try:
+            return json.loads(subprocess.check_output(["hyprctl", *args], text=True))
+        except Exception:
+            return None
+
+    def update_bounds(self):
+        clients = self.hypr_json("clients", "-j")
+        if not clients:
+            return
+        for client in clients:
+            if client.get("title") == TITLE and client.get("pid") == os.getpid():
+                x, y = client["at"]
+                width, height = client["size"]
+                self.bounds = (x, y, x + width, y + height)
+                return
+
+    def set_faded(self, faded):
+        if faded == self.faded:
+            return
+        self.faded = faded
+        styles = self.window.get_style_context()
+        if faded:
+            styles.add_class(FADED_CLASS)
+        else:
+            styles.remove_class(FADED_CLASS)
+        self.window.queue_draw()
+
+    def fade_near_pointer(self):
+        if not self.in_hyprland():
+            return False
+        self.poll_count += 1
+        if self.bounds is None or self.poll_count % 8 == 0:
+            self.update_bounds()
+        pos = self.hypr_json("cursorpos", "-j")
+        if self.bounds and pos:
+            x1, y1, x2, y2 = self.bounds
+            covered = x1 <= pos["x"] <= x2 and y1 <= pos["y"] <= y2
+            self.set_faded(covered)
+        return True
 
     def show(self, text, timeout=1800):
         self.serial += 1
@@ -261,6 +319,7 @@ class Keycast:
             )
             threading.Thread(target=self.read_libinput, daemon=True).start()
         self.window.show_all()
+        GLib.timeout_add(POINTER_POLL_MS, self.fade_near_pointer)
         Gtk.main()
 
     def quit(self, *_):
