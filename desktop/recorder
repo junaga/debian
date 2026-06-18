@@ -1,0 +1,327 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEVICE="${RECORDER_DEVICE:-/dev/video0}"
+SIZE="${RECORDER_SIZE:-1280x720}"
+FPS="${RECORDER_FPS:-30}"
+SCREEN_OUTPUT="${RECORDER_OUTPUT:-}"
+MIC_AUDIO_SOURCE="${RECORDER_AUDIO:-}"
+DESKTOP_AUDIO_SOURCE="${RECORDER_DESKTOP_AUDIO:-}"
+CAM_AUDIO_SOURCE="${RECORDER_CAM_AUDIO:-${RECORDER_HEADPHONES_AUDIO:-${RECORDER_HEADPHONE_AUDIO:-}}}"
+CAM_TITLE="${RECORDER_CAM_TITLE:-Camera Test}"
+CAM_WIDTH="${RECORDER_CAM_WIDTH:-480}"
+CAM_HEIGHT="${RECORDER_CAM_HEIGHT:-270}"
+CAM_X="${RECORDER_CAM_X:-80}"
+CAM_Y="${RECORDER_CAM_Y:-120}"
+LIVE_WIDTH="${RECORDER_LIVE_WIDTH:-960}"
+LIVE_HEIGHT="${RECORDER_LIVE_HEIGHT:-540}"
+CAMERA_WINDOW_PID=""
+
+usage() {
+  cat <<'USAGE'
+usage:
+  recorder live
+  recorder record [seconds]
+  recorder screen [seconds]
+  recorder screen-mic [seconds]
+  recorder screen-cam [seconds]
+  recorder split [seconds]
+
+recordings are saved in the current directory as:
+  ./YYYY-MM-DD-HH-MM-SS.mp4
+  ./YYYY-MM-DD-HH-MM-SS-screen.mp4 and ./YYYY-MM-DD-HH-MM-SS-cam.mp4 for split
+
+split records:
+  *-screen.mp4 = screen video + desktop audio
+  *-cam.mp4    = webcam video + mic audio
+
+environment:
+  RECORDER_DEVICE=/dev/video0
+  RECORDER_SIZE=1280x720
+  RECORDER_FPS=30
+  RECORDER_OUTPUT=HDMI-A-1
+  RECORDER_AUDIO=bluez_input.3C:B0:ED:A7:96:8D
+  RECORDER_DESKTOP_AUDIO=bluez_output.3C_B0_ED_A7_96_8D.1.monitor
+  RECORDER_CAM_AUDIO=bluez_input.3C:B0:ED:A7:96:8D
+  RECORDER_CAM_WIDTH=480
+  RECORDER_CAM_HEIGHT=270
+  RECORDER_CAM_X=80
+  RECORDER_CAM_Y=120
+USAGE
+}
+
+die() {
+  printf 'recorder: %s\n' "$*" >&2
+  exit 1
+}
+
+need() {
+  command -v "$1" >/dev/null 2>&1 || die "missing dependency: $1"
+}
+
+timestamp_file() {
+  printf './%s.mp4\n' "$(date +%F-%H-%M-%S)"
+}
+
+timestamp_prefix() {
+  printf './%s\n' "$(date +%F-%H-%M-%S)"
+}
+
+default_desktop_audio_source() {
+  local sink
+
+  command -v pactl >/dev/null 2>&1 || return
+  sink="$(pactl get-default-sink 2>/dev/null || true)"
+  if [ -n "$sink" ]; then
+    printf '%s.monitor\n' "$sink"
+  fi
+}
+
+default_mic_audio_source() {
+  command -v pactl >/dev/null 2>&1 || return
+  pactl get-default-source 2>/dev/null || true
+}
+
+build_wf_command() {
+  local -n cmd_ref="$1"
+  local file="$2"
+  local audio_source="${3:-}"
+  local audio_mode="${4:-}"
+
+  cmd_ref=(wf-recorder)
+
+  if [ -n "$SCREEN_OUTPUT" ]; then
+    cmd_ref+=(-o "$SCREEN_OUTPUT")
+  fi
+
+  if [ -n "$audio_source" ]; then
+    cmd_ref+=("--audio=$audio_source")
+  elif [ "$audio_mode" = "default-audio" ]; then
+    cmd_ref+=(-a)
+  fi
+
+  cmd_ref+=(-y -r "$FPS" -c libx264 -p preset=veryfast -p crf=23 -f "$file")
+}
+
+build_cam_command() {
+  local -n cmd_ref="$1"
+  local file="$2"
+  local audio_source="${3:-}"
+
+  cmd_ref=(ffmpeg
+    -hide_banner -y
+    -f v4l2 -input_format mjpeg -video_size "$SIZE" -framerate "$FPS"
+    -i "$DEVICE")
+
+  if [ -n "$audio_source" ]; then
+    cmd_ref+=(-f pulse -i "$audio_source")
+  fi
+
+  cmd_ref+=(-map 0:v:0)
+
+  if [ -n "$audio_source" ]; then
+    cmd_ref+=(-map 1:a:0)
+  fi
+
+  cmd_ref+=(-c:v libx264 -preset veryfast -pix_fmt yuv420p)
+
+  if [ -n "$audio_source" ]; then
+    cmd_ref+=(-c:a aac -b:a 128k)
+  else
+    cmd_ref+=(-an)
+  fi
+
+  cmd_ref+=("$file")
+}
+
+run_for_seconds() {
+  local seconds="$1"
+  shift
+
+  if [ -n "$seconds" ]; then
+    "$@" &
+    local pid="$!"
+    sleep "$seconds"
+    kill -INT "$pid" 2>/dev/null || true
+    wait "$pid" || true
+  else
+    "$@"
+  fi
+}
+
+stop_recording_pid() {
+  local pid="${1:-}"
+
+  if [ -n "$pid" ]; then
+    kill -INT "$pid" 2>/dev/null || true
+  fi
+}
+
+wait_recording_pid() {
+  local pid="${1:-}"
+
+  if [ -n "$pid" ]; then
+    wait "$pid" || true
+  fi
+}
+
+position_camera_window() {
+  if ! command -v hyprctl >/dev/null 2>&1; then
+    return
+  fi
+
+  sleep 1
+  hyprctl dispatch focuswindow "title:^(${CAM_TITLE})$" >/dev/null 2>&1 || true
+  hyprctl dispatch setfloating active >/dev/null 2>&1 || true
+  hyprctl dispatch resizeactive exact "$CAM_WIDTH" "$CAM_HEIGHT" >/dev/null 2>&1 || true
+  hyprctl dispatch moveactive exact "$CAM_X" "$CAM_Y" >/dev/null 2>&1 || true
+}
+
+start_camera_window() {
+  local log="$1"
+
+  ffplay \
+    -hide_banner -loglevel warning \
+    -fflags nobuffer -flags low_delay -framedrop \
+    -window_title "$CAM_TITLE" -x "$CAM_WIDTH" -y "$CAM_HEIGHT" \
+    -f v4l2 -input_format mjpeg -video_size "$SIZE" -framerate "$FPS" \
+    -i "$DEVICE" \
+    >"$log" 2>&1 &
+  CAMERA_WINDOW_PID="$!"
+}
+
+stop_camera_window() {
+  local pid="${1:-}"
+
+  if [ -n "$pid" ]; then
+    kill "$pid" 2>/dev/null || true
+    wait "$pid" 2>/dev/null || true
+  fi
+}
+
+mode="${1:-}"
+case "$mode" in
+  live|preview|view)
+    need ffplay
+    exec ffplay \
+      -hide_banner -loglevel warning \
+      -fflags nobuffer -flags low_delay -framedrop \
+      -window_title "$CAM_TITLE" -x "$LIVE_WIDTH" -y "$LIVE_HEIGHT" \
+      -f v4l2 -input_format mjpeg -video_size "$SIZE" -framerate "$FPS" \
+      -i "$DEVICE"
+    ;;
+
+  record|save|cam|camera)
+    need ffmpeg
+    seconds="${2:-}"
+    out="$(timestamp_file)"
+    cmd=(ffmpeg
+      -hide_banner -y
+      -f v4l2 -input_format mjpeg -video_size "$SIZE" -framerate "$FPS"
+      -i "$DEVICE")
+
+    if [ -n "$seconds" ]; then
+      cmd+=(-t "$seconds")
+    fi
+
+    cmd+=(-an -c:v libx264 -preset veryfast -pix_fmt yuv420p "$out")
+    "${cmd[@]}"
+    printf '%s\n' "$out"
+    ;;
+
+  screen|desktop)
+    need wf-recorder
+    seconds="${2:-}"
+    out="$(timestamp_file)"
+    build_wf_command cmd "$out"
+    run_for_seconds "$seconds" "${cmd[@]}"
+    printf '%s\n' "$out"
+    ;;
+
+  screen-mic|screenmic|desktop-mic|desktopmic)
+    need wf-recorder
+    seconds="${2:-}"
+    out="$(timestamp_file)"
+    mic_source="${MIC_AUDIO_SOURCE:-$(default_mic_audio_source)}"
+    build_wf_command cmd "$out" "$mic_source" default-audio
+    run_for_seconds "$seconds" "${cmd[@]}"
+    printf '%s\n' "$out"
+    ;;
+
+  screen-cam|screencam|desktop-cam|desktopcam)
+    need ffplay
+    need wf-recorder
+    seconds="${2:-}"
+    out="$(timestamp_file)"
+    preview_log="${TMPDIR:-/tmp}/recorder-camera-preview-$$.log"
+    start_camera_window "$preview_log"
+    preview_pid="$CAMERA_WINDOW_PID"
+
+    cleanup_preview() {
+      stop_camera_window "$preview_pid"
+    }
+
+    trap cleanup_preview EXIT INT TERM
+    position_camera_window
+    build_wf_command cmd "$out"
+    run_for_seconds "$seconds" "${cmd[@]}"
+    trap - EXIT INT TERM
+    cleanup_preview
+    printf '%s\n' "$out"
+    ;;
+
+  split|screen-cam-files|screencam-files|screen-cam-split|screencam-split)
+    need ffmpeg
+    need wf-recorder
+    need pactl
+    seconds="${2:-}"
+    prefix="$(timestamp_prefix)"
+    screen_out="${prefix}-screen.mp4"
+    cam_out="${prefix}-cam.mp4"
+    screen_pid=""
+    cam_pid=""
+    desktop_audio_source="${DESKTOP_AUDIO_SOURCE:-$(default_desktop_audio_source)}"
+    cam_audio_source="${CAM_AUDIO_SOURCE:-$(default_mic_audio_source)}"
+
+    [ -n "$desktop_audio_source" ] || die "could not find desktop audio source; set RECORDER_DESKTOP_AUDIO"
+    [ -n "$cam_audio_source" ] || die "could not find camera audio source; set RECORDER_CAM_AUDIO"
+
+    build_wf_command screen_cmd "$screen_out" "$desktop_audio_source"
+    build_cam_command cam_cmd "$cam_out" "$cam_audio_source"
+
+    "${cam_cmd[@]}" &
+    cam_pid="$!"
+
+    "${screen_cmd[@]}" &
+    screen_pid="$!"
+
+    cleanup_split() {
+      stop_recording_pid "$screen_pid"
+      stop_recording_pid "$cam_pid"
+      wait_recording_pid "$screen_pid"
+      wait_recording_pid "$cam_pid"
+    }
+
+    trap cleanup_split EXIT INT TERM
+
+    if [ -n "$seconds" ]; then
+      sleep "$seconds"
+    else
+      wait -n "$screen_pid" "$cam_pid" || true
+    fi
+
+    cleanup_split
+    trap - EXIT INT TERM
+    printf '%s\n%s\n' "$screen_out" "$cam_out"
+    ;;
+
+  -h|--help|help|"")
+    usage
+    ;;
+
+  *)
+    printf 'recorder: unknown command: %s\n\n' "$mode" >&2
+    usage >&2
+    exit 2
+    ;;
+esac
