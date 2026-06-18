@@ -31,6 +31,8 @@ recordings are saved in the current directory as:
   ./YYYY-MM-DD-HH-MM-SS.mp4
   ./YYYY-MM-DD-HH-MM-SS-screen.mp4 and ./YYYY-MM-DD-HH-MM-SS-cam.mp4 for split
 
+omit seconds to record until Ctrl+C.
+
 split records:
   *-screen.mp4 = screen video + desktop audio
   *-cam.mp4    = webcam video + mic audio
@@ -109,7 +111,7 @@ build_cam_command() {
   local audio_source="${3:-}"
 
   cmd_ref=(ffmpeg
-    -hide_banner -y
+    -hide_banner -nostdin -y
     -f v4l2 -input_format mjpeg -video_size "$SIZE" -framerate "$FPS"
     -i "$DEVICE")
 
@@ -165,6 +167,38 @@ wait_recording_pid() {
   fi
 }
 
+stop_recording_pids() {
+  local pid
+
+  for pid in "$@"; do
+    stop_recording_pid "$pid"
+  done
+}
+
+wait_recording_pids() {
+  local pid
+
+  for pid in "$@"; do
+    wait_recording_pid "$pid"
+  done
+}
+
+start_detached_recording() {
+  local -n cmd_ref="$1"
+  local -n pid_ref="$2"
+
+  setsid "${cmd_ref[@]}" &
+  pid_ref="$!"
+}
+
+print_output_files() {
+  local file
+
+  for file in "$@"; do
+    printf '%s\n' "$file"
+  done
+}
+
 position_camera_window() {
   if ! command -v hyprctl >/dev/null 2>&1; then
     return
@@ -197,6 +231,76 @@ stop_camera_window() {
     kill "$pid" 2>/dev/null || true
     wait "$pid" 2>/dev/null || true
   fi
+}
+
+run_split() {
+  local seconds="${1:-}"
+  local prefix
+  local screen_out
+  local cam_out
+  local screen_pid=""
+  local cam_pid=""
+  local cleaned_up=""
+  local printed_outputs=""
+  local desktop_audio_source
+  local cam_audio_source
+  local -a screen_cmd
+  local -a cam_cmd
+
+  need ffmpeg
+  need wf-recorder
+  need pactl
+  need setsid
+
+  prefix="$(timestamp_prefix)"
+  screen_out="${prefix}-screen.mp4"
+  cam_out="${prefix}-cam.mp4"
+  desktop_audio_source="${DESKTOP_AUDIO_SOURCE:-$(default_desktop_audio_source)}"
+  cam_audio_source="${CAM_AUDIO_SOURCE:-$(default_mic_audio_source)}"
+
+  [ -n "$desktop_audio_source" ] || die "could not find desktop audio source; set RECORDER_DESKTOP_AUDIO"
+  [ -n "$cam_audio_source" ] || die "could not find camera audio source; set RECORDER_CAM_AUDIO"
+
+  build_wf_command screen_cmd "$screen_out" "$desktop_audio_source"
+  build_cam_command cam_cmd "$cam_out" "$cam_audio_source"
+
+  start_detached_recording cam_cmd cam_pid
+  start_detached_recording screen_cmd screen_pid
+
+  cleanup_split() {
+    [ -z "$cleaned_up" ] || return
+    cleaned_up="1"
+    stop_recording_pids "$screen_pid" "$cam_pid"
+    wait_recording_pids "$screen_pid" "$cam_pid"
+  }
+
+  print_split_outputs() {
+    [ -z "$printed_outputs" ] || return
+    printed_outputs="1"
+    print_output_files "$screen_out" "$cam_out"
+  }
+
+  finish_split() {
+    cleanup_split
+    trap - EXIT INT TERM
+    print_split_outputs
+  }
+
+  interrupt_split() {
+    finish_split
+    exit 130
+  }
+
+  trap cleanup_split EXIT
+  trap interrupt_split INT TERM
+
+  if [ -n "$seconds" ]; then
+    sleep "$seconds"
+  else
+    wait -n "$screen_pid" "$cam_pid" || true
+  fi
+
+  finish_split
 }
 
 mode="${1:-}"
@@ -271,48 +375,7 @@ case "$mode" in
     ;;
 
   split|screen-cam-files|screencam-files|screen-cam-split|screencam-split)
-    need ffmpeg
-    need wf-recorder
-    need pactl
-    seconds="${2:-}"
-    prefix="$(timestamp_prefix)"
-    screen_out="${prefix}-screen.mp4"
-    cam_out="${prefix}-cam.mp4"
-    screen_pid=""
-    cam_pid=""
-    desktop_audio_source="${DESKTOP_AUDIO_SOURCE:-$(default_desktop_audio_source)}"
-    cam_audio_source="${CAM_AUDIO_SOURCE:-$(default_mic_audio_source)}"
-
-    [ -n "$desktop_audio_source" ] || die "could not find desktop audio source; set RECORDER_DESKTOP_AUDIO"
-    [ -n "$cam_audio_source" ] || die "could not find camera audio source; set RECORDER_CAM_AUDIO"
-
-    build_wf_command screen_cmd "$screen_out" "$desktop_audio_source"
-    build_cam_command cam_cmd "$cam_out" "$cam_audio_source"
-
-    "${cam_cmd[@]}" &
-    cam_pid="$!"
-
-    "${screen_cmd[@]}" &
-    screen_pid="$!"
-
-    cleanup_split() {
-      stop_recording_pid "$screen_pid"
-      stop_recording_pid "$cam_pid"
-      wait_recording_pid "$screen_pid"
-      wait_recording_pid "$cam_pid"
-    }
-
-    trap cleanup_split EXIT INT TERM
-
-    if [ -n "$seconds" ]; then
-      sleep "$seconds"
-    else
-      wait -n "$screen_pid" "$cam_pid" || true
-    fi
-
-    cleanup_split
-    trap - EXIT INT TERM
-    printf '%s\n%s\n' "$screen_out" "$cam_out"
+    run_split "${2:-}"
     ;;
 
   -h|--help|help|"")
