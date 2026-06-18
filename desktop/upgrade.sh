@@ -27,6 +27,7 @@ systemctl enable --now var-swap.swap
 # Audio and Bluetooth
 apt install --yes\
   pipewire-audio\
+    pulseaudio-utils\
     easyeffects\
   bluetooth\
   upower;
@@ -67,7 +68,11 @@ apt install --yes\
   wl-clipboard\
     xclip\
   grim\
-    slurp;
+    slurp\
+  ffmpeg\
+  wf-recorder;
+
+ln -sf "$(readlink -f "$DIR/recorder")" /usr/local/bin/recorder
 
 # Wayland Terminal Emulator
 apt install --yes\
