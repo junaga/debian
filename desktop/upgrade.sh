@@ -8,12 +8,19 @@ sed -i "s|^GRUB_TIMEOUT=.*|GRUB_TIMEOUT=1|" /etc/default/grub
 rm -rf /etc/default/grub.d/
 update-grub
 
+# Btrfs snapshots
+apt install --yes snapper;
+
 # System config
 cp -ar "$DIR/etc/." /etc/.
 
 # Local filesystems
 sed -i '\|^# /usr/local was on /dev/sda3 during installation$|d; \|^UUID=47e498ee-c3ec-4708-b732-747c122114c0[[:space:]]\+/usr/local[[:space:]]|d; \|^# /usr/local/old was on /dev/sdb1 during installation$|d; \|^UUID=44db4ead-1413-4041-b963-33e5c634c381[[:space:]]\+/usr/local/old[[:space:]]|d' /etc/fstab
 systemctl enable usr-local.mount usr-local-old.mount
+
+if [ ! -e /usr/local/.snapshots ]; then
+	btrfs subvolume create /usr/local/.snapshots
+fi
 
 # memory swap file (reserve memory)
 if [ ! -e /var/swap ]; then
