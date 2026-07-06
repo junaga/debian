@@ -16,7 +16,7 @@ $discord = discord \
   --ozone-platform=wayland \
   --enable-features=WaylandWindowDecorations
 
-$desktop = /usr/local/src/desktop
+$desktop = /usr/local/dev/home/desktop
 $terminal = kitty
 $screenshot = grim -g "$(slurp -d)" - | wl-copy
 $mute = echo
@@ -39,7 +39,7 @@ bind = $win, f, pseudo,             # fullscreen
 bind = $win, m, exec, $mute         # mute
 bind = $win, p, exec, $screenshot   # print
 
-bind = $win ctrl shift, w, exec, bash -lc '/usr/local/src/desktop/status.sh && hyprctl dispatch exit && /sbin/shutdown 0'
+bind = $win ctrl shift, w, exec, bash -lc '$desktop/status.sh && hyprctl dispatch exit && /sbin/shutdown 0'
 bind = $win shift, w, exit
 
 bindm = $win, $click, movewindow
