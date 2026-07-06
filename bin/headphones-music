@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Nothing Headphone (1): LDAC/A2DP gives high-quality playback.
+# The headset microphone is unavailable in this profile; use another mic.
+CARD="bluez_card.3C_B0_ED_A7_96_8D"
+SINK="bluez_output.3C_B0_ED_A7_96_8D.1"
+BRIO_SOURCE="alsa_input.usb-046d_Brio_100_2610APBJEMJ8-02.mono-fallback"
+
+pactl set-card-profile "$CARD" a2dp-sink
+pactl set-default-sink "$SINK"
+
+# Prefer the webcam mic after leaving headset mode, when present.
+if pactl list sources short | awk '{print $2}' | grep -Fxq "$BRIO_SOURCE"; then
+  pactl set-default-source "$BRIO_SOURCE"
+fi
