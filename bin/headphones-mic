@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Nothing Headphone (1): headset mode enables the headphone microphone.
+# This uses HFP/HSP mSBC, so playback quality is call-grade while active.
+CARD="bluez_card.3C_B0_ED_A7_96_8D"
+SINK="bluez_output.3C_B0_ED_A7_96_8D.1"
+SOURCE="bluez_input.3C:B0:ED:A7:96:8D"
+
+pactl set-card-profile "$CARD" headset-head-unit
+pactl set-default-sink "$SINK"
+pactl set-default-source "$SOURCE"
