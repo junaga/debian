@@ -1,0 +1,13 @@
+{
+  "name": "",
+  "private": true,
+  "author": "junaga",
+  "type": "module",
+  "scripts": {
+    "deploy": "bash deploy.sh"
+  },
+  "dependencies": {
+    "cf": "^0.1.0",
+    "wrangler": "^4.107.0"
+  }
+}
