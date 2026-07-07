@@ -1,0 +1,14 @@
+*.log*
+tmp/
+*.env
+dist/
+
+# windows, macos
+desktop.ini
+*Zone.Identifier
+.DS_Store
+__MACOSX/
+
+# javascript
+node_modules/
+.wrangler/
