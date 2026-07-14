@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 sudo apt update
 sudo apt install steam-libs steam-libs-i386:i386
 
