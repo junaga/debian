@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+sudo modprobe -r nvidia_drm
+sudo modprobe nvidia_drm modeset=1
+exec start-hyprland
