@@ -63,6 +63,8 @@ apt install --yes\
   hyprland-backgrounds\
   systemd-timesyncd;
 
+ln -sf "$(readlink -f "$DIR/boot")" /usr/local/bin/desktop
+
 # Desktop Utilities
 apt install --yes\
   wl-clipboard\

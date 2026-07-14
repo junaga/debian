@@ -93,12 +93,13 @@ Make sure you manually disable `Secure Boot` in `UEFI`; Because `apt:nvidia-driv
 ```sh
 sudo bash ./node/upgrade.sh
 sudo bash ./desktop/upgrade.sh
-cp ./desktop/.hypr ~/.hypr
+mkdir -p ~/.config
+cp -r ./desktop/hypr ~/.config
 sudo reboot 0
 ```
 
 ```sh
-exec start-hyprland -- --config ~/.hypr
+exec desktop
 ```
 
 ![Hyprland Desktop Screenshot](./hypr.webp)
