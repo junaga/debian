@@ -35,6 +35,9 @@ apt install --yes\
 
 systemctl enable --now upower.service
 
+# Unix print service (enables modern driverless printing with IPP)
+apt install --yes cups;
+
 # todo: automate this
 # bluetoothctl pair 3C:B0:ED:A7:96:8D
 # bluetoothctl trust 3C:B0:ED:A7:96:8D
