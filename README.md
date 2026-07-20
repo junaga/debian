@@ -63,10 +63,11 @@ source ~/.bashrc
 
 # 1: Download and Install VS Code for Windows or Linux ...
 code --install-extension ms-vscode-remote.remote-ssh
-rcode sosdan ./desktop/dev
+# 3: register your SSH public key on the remote server ...
+rcode sosdan ./dev
 ```
 
-_History of Editors: CLI, TUI, GUI_
+### History of Editors
 
 ```sh
 # ed $FILE             # 1969
