@@ -11,4 +11,5 @@ __MACOSX/
 
 # javascript
 node_modules/
+coverage/
 .wrangler/
