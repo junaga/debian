@@ -61,9 +61,9 @@ bash ./base/setup.sh
 cp -ra ./base/home/. ~/.
 source ~/.bashrc
 
-# 1: Download and Install VS Code for Windows or Linux ...
+# 1: Download and Install VS Code for Windows or Linux
 code --install-extension ms-vscode-remote.remote-ssh
-# 3: register your SSH public key on the remote server ...
+# 3: register your SSH public key on the remote server
 rcode sosdan ./dev
 ```
 
