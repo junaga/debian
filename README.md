@@ -11,7 +11,7 @@ hostnamectl # Debian
 
 ### Windows - _Recommended_
 
-On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./wsl.md).
+On Windows 11 or Windows 10 use the [Windows subsystem for Linux](./windows/linux/README.md).
 
 ```sh
 wsl.exe --install debian
@@ -23,7 +23,7 @@ Sign up [anywhere in the cloud](https://getdeploying.com/reference/compute-price
 
 ### Hardware - _don't do this_
 
-For Desktop;Laptop;`x86-64` devices _64-Bit-Wintel-IBM-PC_ you can [create a bootable USB drive](./desktop/install/readme.md). Boot UEFI, then boot the USB, then install a system to your M.2;SSD;HDD drive, then boot that drive. You can also boot from microSD, network, or memory. Ask ChatGPT for help AND call me on discord for advice.
+For Desktop;Laptop;`x86-64` devices _64-Bit-Wintel-IBM-PC_ you can [create a bootable USB drive](./windows/readme.md). Boot UEFI, then boot the USB, then install a system to your M.2;SSD;HDD drive, then boot that drive. You can also boot from microSD, network, or memory. Ask ChatGPT for help AND call me on discord for advice.
 
 ## Initialization
 
@@ -47,7 +47,7 @@ Outside Windows `explorer.exe` the key `CTRL+C` sends byte `3` which is `"End of
 Install packages; and log in to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
-sudo bash ./node/upgrade.sh
+sudo bash ./upgrade.sh
 
 codex login
 codex "code a \"Hello, World\" API in JavaScript"
@@ -56,14 +56,16 @@ codex "code a \"Hello, World\" API in JavaScript"
 Copy configs; and set up Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-bash ./node/setup.sh
-cp -ra ./node/home/. ~/.
+bash ./setup.sh
+cp -ra ./home/. ~/.
 source ~/.bashrc
 
 # 1: Download and Install VS Code for Windows or Linux ...
 code --install-extension ms-vscode-remote.remote-ssh
-rcode sosdan ./dev
+rcode sosdan ./desktop/dev
 ```
+
+For a graphical workstation, continue with the [desktop setup](./desktop/README.md).
 
 _History of Editors: CLI, TUI, GUI_
 
@@ -85,21 +87,3 @@ code $FILE           # 2015
 micro $FILE          # 2016
 # cursor $FILE         # 2023
 ```
-
-### NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
-
-Make sure you manually disable `Secure Boot` in `UEFI`; Because `apt:nvidia-driver` is not installed, it's compiled with `apt:dkms`. Installing `apt:nvidia-driver` installs the source code, then it compiles, then installs the actual driver software. But the newly compiled software has no cryptographic release signature, which is required for `Secure Boot`.
-
-```sh
-sudo bash ./node/upgrade.sh
-sudo bash ./desktop/upgrade.sh
-mkdir -p ~/.config
-cp -r ./desktop/hypr ~/.config
-sudo reboot 0
-```
-
-```sh
-exec desktop
-```
-
-![Hyprland Desktop Screenshot](./hypr.webp)
