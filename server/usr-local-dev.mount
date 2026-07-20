@@ -1,7 +1,0 @@
-[Mount]
-Type=ext4
-What=/dev/disk/by-uuid/5d689e99-b2d9-4802-be61-586b64921ed8
-Where=/usr/local/dev
-
-[Install]
-WantedBy=local-fs.target

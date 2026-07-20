@@ -25,8 +25,8 @@ shopt -s globstar # allow recursive globs "**"
 
 # initialization
 ##########################
-alias date="date +%Y-%m-%d"
-alias datetime="date +%Y-%m-%d-%H-%M-%S"
+alias date="env date +%Y-%m-%d"
+alias datetime="env date +%Y-%m-%d-%H-%M-%S"
 function man { echo "https://manpages.debian.org/$1.en"; }
 
 alias ls="ls --color --group-directories-first"
