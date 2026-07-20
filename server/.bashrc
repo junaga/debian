@@ -16,16 +16,17 @@ declare HISTSIZE="-1" # not 500, unlimited bash history
 ################
 declare BLUE="\[\e[1;34m\]"
 declare RESET="\[\e[0m\]"
+
 declare PS1="$BLUE\H\$PWD$RESET "
 declare PS2="	"
 
-shopt -s autocd # cd directories automatically
 bind "\C-H":backward-kill-word # CTRL+Backspace deletes a word
+shopt -s autocd # cd directories automatically
 shopt -s globstar # allow recursive globs "**"
 
 # initialization
 ##########################
-alias date="env date +%Y-%m-%d"
+alias date="date +%Y-%m-%d"
 alias datetime="env date +%Y-%m-%d-%H-%M-%S"
 function man { echo "https://manpages.debian.org/$1.en"; }
 
