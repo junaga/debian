@@ -7,7 +7,7 @@ Make sure you manually disable `Secure Boot` in `UEFI`; Because `apt:nvidia-driv
 Run these commands from the repository root.
 
 ```sh
-sudo bash ./server/upgrade.sh
+sudo bash ./base/upgrade.sh
 sudo bash ./desktop/install.sh
 mkdir -p ~/.config ~/bin
 cp -ra ./desktop/.config/. ~/.config/.

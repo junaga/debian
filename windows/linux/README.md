@@ -73,7 +73,7 @@ _`Ubuntu Stable` updates take 6 months, that's why I recommend `Debian Testing`.
 wsl.exe --install debian
 ```
 
-Every system needs a user. For `username` you could use your [github.com](https://github.com) username. Choose a strong, unique password.
+Every system needs a user. For `username` you could use your [github.com](https://github.com) username and for `password` you could use `1`
 
 ```cmd
 REM enter username
