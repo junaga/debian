@@ -60,7 +60,7 @@ update-initramfs -u
 # Hyprland
 apt install --yes\
   hyprland\
- 	hyprland-qtutils\
+  	hyprland-qtutils\
   hyprland-backgrounds\
   systemd-timesyncd;
 
