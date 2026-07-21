@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # run this on your desktop system
 # then listen to $PORT on the server system
 
@@ -5,7 +7,7 @@ DATA="$HOME/.google-chrome-codex"
 PORT="9222" # Chrome DevTools Protocol
 REMOTE="$1" # SSH destination: alias or [user@]host
 
-test "$REMOTE" || { echo "usage: bash $0 remote"; exit 1; }
+test "$REMOTE" || { echo "usage: $0 remote"; exit 1; }
 
 google-chrome \
   --user-data-dir="$DATA" \

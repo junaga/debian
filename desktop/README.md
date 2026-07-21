@@ -8,10 +8,11 @@ Run these commands from the repository root.
 
 ```sh
 sudo bash ./base/upgrade.sh
+cp -ra ./base/home/. ~/.
+
 sudo bash ./desktop/install.sh
-mkdir -p ~/.config ~/bin
-cp -ra ./desktop/.config/. ~/.config/.
-cp -ra ./desktop/bin/. ~/bin/.
+cp -ra ./desktop/home/. ~/.
+
 sudo reboot 0
 ```
 
