@@ -1,6 +1,5 @@
-set -e
-
 DEBIAN="testing"
+set -e
 
 # set Config
 test -f /etc/apt/sources.list && mv /etc/apt/{sources.list,sources.list.disabled}

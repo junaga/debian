@@ -1,3 +1,5 @@
+set -e
+
 # autologin Linux terminals
 sudo systemctl edit getty@.service --stdin <<-EOF
 	[Service]
@@ -14,7 +16,7 @@ read -e -i "$USER@$HOSTNAME" -p "Email: " EMAIL
 mkdir -p ~/.ssh
 ssh-keygen -q -N "" \
 	-f ~/.ssh/id_ed25519 \
-	-C "$EMAIL"
+	-C "$EMAIL" || true
 
 # enable SSH forwarding
 systemctl --user enable --now ssh-agent.socket
