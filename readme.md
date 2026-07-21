@@ -88,4 +88,4 @@ micro $FILE          # 2016
 # cursor $FILE         # 2023
 ```
 
-For a graphical workstation, continue with the [desktop/](./desktop/README.md) readme.
+For a graphical workstation, continue with the [desktop/](./desktop/readme.md) readme.
