@@ -1,6 +1,5 @@
 *.log*
 tmp/
-*.env
 dist/
 
 # windows, macos
@@ -10,6 +9,6 @@ desktop.ini
 __MACOSX/
 
 # javascript
+*.env
 node_modules/
 coverage/
-.wrangler/

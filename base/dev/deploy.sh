@@ -1,6 +1,3 @@
-set -a
-. .env
-
 # buy and register the domain
 cf registrar registrations create --domain-name "$DOMAIN"
 cf zones create --name "$DOMAIN"
