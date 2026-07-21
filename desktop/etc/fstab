@@ -1,16 +1,16 @@
 # Filesystem table
 # each filesystem UUID is generated when formatting
-#                                             <mount>         <type> <options>                     <dump> <pass>
+# <file system>                                                             <mount>         <type>  <options>                    <dump>  <pass>
 
 # Debian 14 installation
-UUID=66342810-348d-4508-a1c8-2552b6db1339     /               ext4   errors=remount-ro             0      1
+/dev/disk/by-id/ata-Samsung_SSD_850_EVO_mSATA_250GB_S33GNX0J713319N-part2  /               ext4   errors=remount-ro            0       1
 
 # User Data
-UUID=47e498ee-c3ec-4708-b732-747c122114c0     /usr/local      btrfs  defaults                      0      0
+/dev/disk/by-uuid/47e498ee-c3ec-4708-b732-747c122114c0                     /usr/local      btrfs  defaults                     0       0
 
 # User Data Archive
-UUID=44db4ead-1413-4041-b963-33e5c634c381     /usr/local/old  ext4   noatime,nodev,nosuid,noexec   0      2
+/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381                     /usr/local/old  ext4   noatime,nodev,nosuid,noexec  0       2
 
 # boot and swap
-/dev/disk/by-designator/esp                   /boot/efi       vfat   umask=0077                    0      1
-/var/swap                                     none            swap   defaults                      0      0
+/dev/disk/by-designator/esp                                                /boot/efi       vfat   umask=0077                   0       1
+/var/swap                                                                  none            swap   defaults                     0       0
