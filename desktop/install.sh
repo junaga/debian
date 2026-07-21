@@ -64,8 +64,6 @@ apt install --yes\
   hyprland-backgrounds\
   systemd-timesyncd;
 
-ln -sf "$(readlink -f "$DIR/boot")" /usr/local/bin/desktop
-
 # Desktop Utilities
 apt install --yes\
   wl-clipboard\
@@ -74,9 +72,6 @@ apt install --yes\
     slurp\
   ffmpeg\
   wf-recorder;
-
-ln -sf "$(readlink -f "$DIR/recorder")" /usr/local/bin/recorder
-install -Dm755 "$DIR/keycast.py" /usr/local/bin/keycast
 
 # Wayland Terminal Emulator
 apt install --yes\
