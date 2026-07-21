@@ -57,8 +57,8 @@ codex "code a \"Hello, World\" API in JavaScript"
 Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-bash ./base/setup.sh
 cp -ra ./base/home/. ~/.
+bash ./base/setup.sh
 source ~/.bashrc
 
 # 1: Download and Install VS Code for Windows or Linux
