@@ -26,13 +26,13 @@ shopt -s globstar # allow recursive globs "**"
 
 # initialization
 ##########################
-alias date="date +%Y-%m-%d"
-alias datetime="env date +%Y-%m-%d-%H-%M-%S"
+alias today="date +%Y-%m-%d"
+alias timestamp="date +%Y-%m-%d-%H-%M-%S"
 function man { echo "https://manpages.debian.org/$1.en"; }
 
 alias ls="ls --color --group-directories-first"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
-function rcode { code --remote ssh-remote+$1 $2; }
+function rcode { code --remote "ssh-remote+$1" "$2"; }
 alias chat="codex resume --yolo"
 
 export PAGER="less -FRX"

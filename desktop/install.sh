@@ -73,9 +73,17 @@ apt install --yes\
   grim\
     slurp\
   ffmpeg\
-  wf-recorder;
+  wf-recorder\
+  libinput-tools\
+  python3-libevdev\
+  python3-cairo\
+  python3-gi-cairo\
+  python3-gi\
+  gir1.2-gtk-3.0\
+  gir1.2-gtklayershell-0.1;
 
 ln -sf "$(readlink -f "$DIR/recorder")" /usr/local/bin/recorder
+install -Dm755 "$DIR/keycast.py" /usr/local/bin/keycast
 
 # Wayland Terminal Emulator
 apt install --yes\
