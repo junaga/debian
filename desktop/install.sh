@@ -11,18 +11,12 @@ efibootmgr --timeout 0
 btrfs subvolume create /usr/local/.snapshots
 apt install snapper --yes
 
-# Local filesystems
-sed -i '\|^# /usr/local was on /dev/sda3 during installation$|d; \|^UUID=47e498ee-c3ec-4708-b732-747c122114c0[[:space:]]\+/usr/local[[:space:]]|d; \|^# /usr/local/old was on /dev/sdb1 during installation$|d; \|^UUID=44db4ead-1413-4041-b963-33e5c634c381[[:space:]]\+/usr/local/old[[:space:]]|d' /etc/fstab
-systemctl enable usr-local.mount usr-local-old.mount
-
 # memory swap file (reserve memory)
 if [ ! -e /var/swap ]; then
 	fallocate -l $SWAP /var/swap
 	chmod 600 /var/swap
 	mkswap /var/swap
 fi
-
-systemctl enable --now var-swap.swap
 
 # Audio and Bluetooth
 apt install --yes\

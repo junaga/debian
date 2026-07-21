@@ -1,7 +1,0 @@
-[Mount]
-Where=/usr/local
-Type=btrfs
-What=/dev/disk/by-uuid/47e498ee-c3ec-4708-b732-747c122114c0
-
-[Install]
-WantedBy=local-fs.target
