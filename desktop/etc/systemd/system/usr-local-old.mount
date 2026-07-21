@@ -1,8 +1,0 @@
-[Mount]
-Where=/usr/local/old
-Type=ext4
-Options=noatime,nodiratime,nodev,nosuid,noexec
-What=/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381
-
-[Install]
-WantedBy=local-fs.target
