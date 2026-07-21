@@ -19,4 +19,12 @@ sudo reboot 0
 exec desktop
 ```
 
+## Keycast
+
+Keycast displays keyboard input without intercepting the pointer. Hover Keycast
+while holding `Super` to make it interactive, then left-drag to move it. A 3-by-5
+alignment grid appears while dragging, and Keycast snaps to the nearest slot on
+release. The selected monitor and slot are restored on the next launch. If it is
+closed, press `Super` + `K` to open it again.
+
 ![Hyprland Desktop Screenshot](./hypr.webp)
