@@ -1,24 +1,16 @@
-# /etc/fstab: static file system information.
-#
-# Use 'blkid' to print the universally unique identifier for a
-# device; this may be used with UUID= as a more robust way to name devices
-# that works even if disks are added and removed. See fstab(5).
-#
-# systemd generates mount units based on this file, see systemd.mount(5).
-# Please run 'systemctl daemon-reload' after making changes here.
-#
-# <file system> <mount point>   <type>  <options>       <dump>  <pass>
-# / was on /dev/sda2 during installation
-UUID=66342810-348d-4508-a1c8-2552b6db1339 /               ext4    errors=remount-ro 0       1
-# /boot/efi was on /dev/sda1 during installation
-UUID=A31E-0712  /boot/efi       vfat    umask=0077      0       1
-/dev/sr0        /media/cdrom0   udf,iso9660 user,noauto     0       0
+# Filesystem table
+# each filesystem UUID is generated when formatting
+#                                             <mount>         <type> <options>                     <dump> <pass>
+
+# Debian 14 installation
+UUID=66342810-348d-4508-a1c8-2552b6db1339     /               ext4   errors=remount-ro             0      1
 
 # User Data
-UUID=47e498ee-c3ec-4708-b732-747c122114c0 /usr/local     btrfs   defaults                    0       0
+UUID=47e498ee-c3ec-4708-b732-747c122114c0     /usr/local      btrfs  defaults                      0      0
 
 # User Data Archive
-UUID=44db4ead-1413-4041-b963-33e5c634c381 /usr/local/old ext4    noatime,nodev,nosuid,noexec 0       2
+UUID=44db4ead-1413-4041-b963-33e5c634c381     /usr/local/old  ext4   noatime,nodev,nosuid,noexec   0      2
 
-# SWAP space
-/var/swap none swap defaults 0 0
+# boot and swap
+UUID=A31E-0712                                 /boot/efi       vfat   umask=0077                    0      1
+/var/swap                                     none            swap   defaults                      0      0
