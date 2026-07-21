@@ -1,8 +1,11 @@
-[user]
-	name = junaga
-	email = hermann@stanew.name
-
 [init]
 	defaultBranch = main
+
 [pull]
 	rebase = false
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
