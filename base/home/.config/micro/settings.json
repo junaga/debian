@@ -4,6 +4,7 @@
   "wordwrap": true,
   "scrollbar": true,
   "hlsearch": true,
+  "colorscheme": "simple",
 
   "autosu": true,
   "savecursor": true,
