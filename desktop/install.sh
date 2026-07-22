@@ -1,3 +1,5 @@
+set -e
+
 SWAP="16G"
 DIR="$(dirname "$0")"
 
