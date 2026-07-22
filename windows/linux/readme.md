@@ -40,9 +40,9 @@ REM > Virtualization-based security: Status: Running Base Virtualization Support
 ## 2. Enable WSL
 
 1. **Windows Settings** > **System > Optional features** `ms-settings:optionalfeatures`
-3. Click **More Windows features** `optionalfeatures`
-2. Check **Virtual Machine Platform** and **Windows Subsystem for Linux**
-3. Click OK and reboot
+2. Click **More Windows features** `optionalfeatures`
+3. Check **Virtual Machine Platform** and **Windows Subsystem for Linux**
+4. Click OK and reboot
 
 ![Enable Windows Optional features](./.screenshots/optional-features.png)
 
