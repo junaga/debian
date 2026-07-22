@@ -1,0 +1,26 @@
+{
+  // Files and tabs
+  "Ctrl-o": "command-edit:tab ",
+  "Ctrl-w": "Quit",
+  "Ctrl-q": "QuitAll",
+  "CtrlTab": "NextTab|FirstTab",
+  "CtrlShiftTab": "PreviousTab|LastTab",
+
+  // Navigation and selection
+  "Ctrl-g": "command-edit:goto ",
+  "CtrlBackslash": "JumpToMatchingBrace",
+  "CtrlShiftHome": "SelectToStart",
+  "CtrlShiftEnd": "SelectToEnd",
+  "Ctrl-l": "SelectLine",
+
+  // Editing
+  "CtrlH": "DeleteWordLeft",
+  "CtrlDelete": "DeleteWordRight",
+  "Alt-d": "Duplicate|DuplicateLine",
+  "Ctrl-d": "SpawnMultiCursor",
+  "Alt-MouseLeft": "MouseMultiCursor",
+
+  // Interface
+  "Alt-z": "command:togglelocal softwrap",
+  "F1": "None"
+}

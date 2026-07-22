@@ -1,16 +1,25 @@
 {
+  // Interface
+  "colorscheme": "simple",
+  "scrollbar": true,
+  "diffgutter": true,
+  "hlsearch": true,
+  "hltrailingws": true,
+  "statusformatr": "",
+
+  // Editing
   "tabsize": 2,
   "softwrap": true,
   "wordwrap": true,
-  "scrollbar": true,
-  "hlsearch": true,
-  "colorscheme": "simple",
-
-  "autosu": true,
-  "savecursor": true,
-  "saveundo": true,
-
-  "mkparents": true,
   "rmtrailingws": true,
-  "eofnewline": true
+
+  // Files
+  "reload": "auto",
+  "autosu": true,
+  "mkparents": true,
+  "parsecursor": true,
+
+  // History
+  "savecursor": true,
+  "saveundo": true
 }
