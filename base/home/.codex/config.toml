@@ -4,8 +4,3 @@ model_reasoning_effort = "low"
 
 [tui]
 status_line = ["current-dir", "git-branch", "model-with-reasoning"]
-
-[projects."/usr/local"]
-trust_level = "trusted"
-[projects."/usr/local/dev"]
-trust_level = "trusted"
