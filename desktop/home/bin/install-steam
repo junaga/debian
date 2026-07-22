@@ -6,7 +6,7 @@ sudo apt update
 sudo apt install steam-libs steam-libs-i386:i386
 
 URL=https://repo.steampowered.com/steam/archive/stable/steam_latest.tar.gz
-ALIAS=/home/junaga
+ALIAS="/home/$USER"
 
 # install
 # Valve's pressure-vessel cannot access Steam or HOME below /usr, so the
