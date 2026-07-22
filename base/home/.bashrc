@@ -35,5 +35,8 @@ alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote "ssh-remote+$1" "$2"; }
 alias chat="codex resume --yolo"
 
-export PAGER="less -FRX"
+# BROWSER=""
 export EDITOR="micro"
+export LANG="C.UTF-8"
+export PAGER="less -FRX"
+export SHELL="/bin/bash"
