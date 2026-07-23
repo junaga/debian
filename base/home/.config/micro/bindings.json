@@ -1,29 +1,20 @@
 {
-  // Files and tabs
-  "Ctrl-o": "command-edit:tab ",
-  "Ctrl-w": "Quit",
-  "Ctrl-q": "QuitAll",
+
+  // web like navigation
   "CtrlTab": "NextTab|FirstTab",
   "CtrlShiftTab": "PreviousTab|LastTab",
+  "Ctrl-w": "ForceQuit",
 
-  // Navigation and selection
-  "Ctrl-g": "command-edit:goto ",
-  "CtrlBackslash": "JumpToMatchingBrace",
+  // VS Code Editing
+  "CtrlH": "DeleteWordLeft", // CTRL+Backspace
+  "CtrlDelete": "DeleteWordRight",
   "CtrlShiftHome": "SelectToStart",
   "CtrlShiftEnd": "SelectToEnd",
-  "CtrlShiftLeft": "SelectWordLeft",
-  "CtrlShiftRight": "SelectWordRight",
   "Ctrl-l": "SelectLine",
+  "CtrlBackslash": "JumpToMatchingBrace",
 
-  // Editing
-  "CtrlH": "lua:initlua.deleteWordLeft",
-  "CtrlBackspace": "lua:initlua.deleteWordLeft",
-  "CtrlDelete": "lua:initlua.deleteWordRight",
-  "Alt-d": "Duplicate|DuplicateLine",
+  // VS code multi-cursor
   "Ctrl-d": "SpawnMultiCursor",
   "Alt-MouseLeft": "MouseMultiCursor",
-
-  // Interface
-  "Alt-z": "command:togglelocal softwrap",
-  "F1": "None"
+  "Ctrl-g": "command-edit:goto "
 }
