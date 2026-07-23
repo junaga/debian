@@ -7,6 +7,7 @@
 
 terminal = "kitty"
 browser = "google-chrome-stable"
+fileManager = "dolphin"
 
 require("style")
 require("input")

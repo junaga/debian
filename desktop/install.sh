@@ -62,6 +62,7 @@ apt install --yes\
 
 # Desktop Utilities
 apt install --yes\
+  dolphin\
   wl-clipboard\
     xclip\
   grim\
