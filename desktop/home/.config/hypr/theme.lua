@@ -15,8 +15,8 @@ return {
     opacity = 0.88,
 
     gaps = {
-        inner = 5,
-        outer = 20
+        inner = 8,
+        outer = 27
     },
 
     border = 0,
