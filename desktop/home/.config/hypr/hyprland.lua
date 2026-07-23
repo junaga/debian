@@ -11,20 +11,12 @@
 -- ┌─────────┬─────────┬─────────┐
 -- │    1    │    2    │    3    │ → 4 …
 -- └─────────┴─────────┴─────────┘
--- A lone tiled window fills the workspace without outer gaps, borders, or
--- rounded corners; decorations return when another tiled window opens.
+-- A lone column fills the available workspace while retaining its normal
+-- gaps, border, rounded corners, and shadow.
 
 hl.config({
     general = { layout = "scrolling" },
     scrolling = { column_width = 1 / 3 }
-})
-
-loneTiledWindow = "w[t1]s[false]"
-hl.workspace_rule({ workspace = loneTiledWindow, gaps_out = 0 })
-hl.window_rule({
-    match = { workspace = loneTiledWindow, float = false },
-    border_size = 0,
-    rounding = 0
 })
 
 -- Synchronize presentation with the monitors (VSync).

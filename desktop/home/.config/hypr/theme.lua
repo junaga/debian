@@ -9,8 +9,9 @@ return {
     },
 
     background = {
-        opacity = 0,
-        blur = 8
+        color = "#050300",
+        opacity = 0.88,
+        blur = 3
     },
 
     font = "Fira Code"
