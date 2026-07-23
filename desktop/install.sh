@@ -57,6 +57,7 @@ update-initramfs -u
 apt install --yes\
   hyprland\
   hyprland-backgrounds\
+  hyprshutdown\
   systemd-timesyncd;
 
 # Desktop Utilities
