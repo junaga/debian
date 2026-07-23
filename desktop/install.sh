@@ -71,6 +71,7 @@ apt install --yes\
 # Wayland Terminal Emulator
 apt install --yes\
   kitty\
+  fonts-firacode\
   fonts-noto\
   	fonts-noto-extra\
   	fonts-noto-cjk\
