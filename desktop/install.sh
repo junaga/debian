@@ -66,6 +66,7 @@ apt install --yes\
     xclip\
   grim\
     slurp\
+  playerctl\
   ffmpeg\
   wf-recorder;
 
