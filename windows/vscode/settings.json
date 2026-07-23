@@ -1,15 +1,17 @@
 // VS Code User Settings (JSON)
 
 {
-  // OK
-  "git.enableSmartCommit": true,
-  "git.confirmSync": false,
-  "git.autofetch": true,
-  "explorer.confirmDragAndDrop": false,
-  "window.confirmSaveUntitledWorkspace": false,
-
-  // Config
   "editor.tabSize": 2,
+
+  // Remembered prompts and hints
+  "git.enableSmartCommit": true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmPasteNative": false,
+  "window.confirmSaveUntitledWorkspace": false,
+  "debug.javascript.codelens.npmScripts": "never",
+  "workbench.editor.empty.hint": "hidden",
 
   // Extensions
   "workbench.iconTheme": "material-icon-theme",
