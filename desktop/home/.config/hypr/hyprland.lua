@@ -1,10 +1,10 @@
 -- https://wiki.hypr.land/Configuring/
 
-require("style")
-
+require("windows")
 terminal = "kitty"
 explorer = "dolphin"
 browser = "google-chrome-stable"
+require("keyboard")
 
 function autostart()
     hl.exec_cmd(browser)
@@ -13,5 +13,3 @@ function autostart()
 end
 
 hl.on("hyprland.start", autostart)
-
-require("input")
