@@ -11,11 +11,14 @@
   "CtrlBackslash": "JumpToMatchingBrace",
   "CtrlShiftHome": "SelectToStart",
   "CtrlShiftEnd": "SelectToEnd",
+  "CtrlShiftLeft": "SelectWordLeft",
+  "CtrlShiftRight": "SelectWordRight",
   "Ctrl-l": "SelectLine",
 
   // Editing
-  "CtrlH": "DeleteWordLeft",
-  "CtrlDelete": "DeleteWordRight",
+  "CtrlH": "lua:initlua.deleteWordLeft",
+  "CtrlBackspace": "lua:initlua.deleteWordLeft",
+  "CtrlDelete": "lua:initlua.deleteWordRight",
   "Alt-d": "Duplicate|DuplicateLine",
   "Ctrl-d": "SpawnMultiCursor",
   "Alt-MouseLeft": "MouseMultiCursor",
