@@ -2,6 +2,10 @@
 
 local theme = require("theme")
 
+-- Pin both the Xcursor assets and their scale for XWayland applications and games.
+hl.env("XCURSOR_THEME", "Adwaita")
+hl.env("XCURSOR_SIZE", "48")
+
 
 -----------------------
 ---- LOOK AND FEEL ----
