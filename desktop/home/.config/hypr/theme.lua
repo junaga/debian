@@ -1,33 +1,39 @@
--- Reusable colors and visual proportions.
+-- Portable desktop theme: plain sRGB colors and shared visual proportions.
 
 return {
     colors = {
-        accent    = "rgba(33ccffee)",
-        highlight = "rgba(00ff99ee)",
-        muted     = "rgba(595959aa)",
-        shadow    = 0xee1a1a1a,
+        background = "#050300",
+        accent     = "#ffb84d",
+        highlight  = "#ffd28a",
+        muted      = "#d8912f",
+        inverse    = "#120800",
+        shadow     = "#000000"
     },
+
+    font = "Fira Code",
+
+    opacity = 0.88,
 
     gaps = {
         inner = 5,
-        outer = 20,
+        outer = 20
     },
 
-    border = 2,
+    border = 0,
 
     corners = {
         radius = 10,
-        power  = 2,
+        power  = 2
     },
 
     shadow = {
-        range = 4,
-        power = 3,
+        range = 64,
+        power = 2
     },
 
     blur = {
         size     = 3,
         passes   = 1,
-        vibrancy = 0.1696,
-    },
+        vibrancy = 0.1696
+    }
 }

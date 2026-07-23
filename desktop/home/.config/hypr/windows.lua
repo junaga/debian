@@ -16,14 +16,6 @@ hl.config({
         gaps_out    = theme.gaps.outer,
         border_size = theme.border,
 
-        col = {
-            active_border = {
-                colors = { theme.colors.accent, theme.colors.highlight },
-                angle  = 45,
-            },
-            inactive_border = theme.colors.muted,
-        },
-
         resize_on_border = false,
         allow_tearing    = false,
         layout           = "dwindle",
@@ -35,12 +27,16 @@ hl.config({
 
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
+        dim_inactive     = true,
+        dim_strength     = 0.16,
 
         shadow = {
-            enabled      = true,
-            range        = theme.shadow.range,
-            render_power = theme.shadow.power,
-            color        = theme.colors.shadow,
+            enabled        = true,
+            range          = theme.shadow.range,
+            render_power   = theme.shadow.power,
+            offset         = { 0, 20 },
+            color          = "rgba(" .. theme.colors.shadow:sub(2) .. "ff)",
+            color_inactive = "rgba(" .. theme.colors.shadow:sub(2) .. "aa)",
         },
 
         blur = {
