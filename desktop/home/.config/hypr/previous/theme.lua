@@ -1,4 +1,4 @@
--- Portable visual preferences.
+-- Previous portable visual preferences, retained during the rebuild.
 
 return {
     colors = {
