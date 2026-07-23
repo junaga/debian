@@ -1,20 +1,38 @@
 {
+  // Complete Micro's PC editor keymap and record its lineage.
 
-  // web like navigation
-  "CtrlTab": "NextTab|FirstTab",
-  "CtrlShiftTab": "PreviousTab|LastTab",
-  "Ctrl-w": "ForceQuit",
+  // 1981–1988 — IBM PC and Common User Access:
+  // 1981: editing keypad; 1987: Shift-selection and clipboard; 1988: shifted F-keys.
+  "CtrlInsert": "Copy|CopyLine",
+  "ShiftInsert": "Paste",
+  "ShiftDelete": "Cut|CutLine",
+  "F15": "FindPrevious|Find", // Shift+F3
 
-  // VS Code Editing
-  "CtrlH": "DeleteWordLeft", // CTRL+Backspace
+  // 1984 — Apple Macintosh: ⌘Z/X/C/V establishes the GUI editing cluster.
+  // Micro provides the PC Ctrl equivalents by default.
+
+  // 1992 — Microsoft Windows 3.1: Ctrl-based document and text-control keys.
+  // Micro already provides the standard editing and navigation bindings.
+  "CtrlH": "DeleteWordLeft", // Ctrl+Backspace
   "CtrlDelete": "DeleteWordRight",
   "CtrlShiftHome": "SelectToStart",
   "CtrlShiftEnd": "SelectToEnd",
-  "Ctrl-l": "SelectLine",
-  "CtrlBackslash": "JumpToMatchingBrace",
+  "CtrlN": "AddTab",
+  "F3": "FindNext|Find",
 
-  // VS code multi-cursor
-  "Ctrl-d": "SpawnMultiCursor",
+  // 2004 — Mozilla Firefox: Ctrl+W closes a tab; Ctrl+PageUp/Down navigates.
+  "CtrlW": "ForceQuit",
+
+  // 2011 — Sublime Text 2: Ctrl+P quick open and Ctrl+D multiple selection.
+  "CtrlP": "OpenFile",
+  "CtrlD": "SpawnMultiCursor",
+
+  // 2015 — Microsoft Visual Studio Code: final code-editor baseline.
+  "CtrlShiftS": "SaveAs",
+  "ShiftF3": "FindPrevious|Find",
+  "CtrlG": "command-edit:goto ",
+  "CtrlL": "SelectLine",
+  "CtrlBackslash": "JumpToMatchingBrace", // Ctrl+Shift+\
   "Alt-MouseLeft": "MouseMultiCursor",
-  "Ctrl-g": "command-edit:goto "
+  "CtrlR": "command-edit:replace " // VS Code Ctrl+H conflicts with Ctrl+Backspace
 }
