@@ -2,8 +2,7 @@
 
 local theme = require("theme")
 
--- Pin both the Xcursor assets and their scale for XWayland applications and games.
-hl.env("XCURSOR_THEME", "Adwaita")
+-- Xcursor remains the shared fallback while Wayland cursor-shape support matures.
 hl.env("XCURSOR_SIZE", "48")
 
 
