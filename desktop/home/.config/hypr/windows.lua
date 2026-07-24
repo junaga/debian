@@ -1,17 +1,15 @@
--- Monitors, Displays, Layout, and Windows.
+-- Monitors, Displays, Windows.
 
 -- enable VSync
 hl.config({ general = { allow_tearing = false } })
 
 -- Windows form one-third-width columns on a horizontal tape.
---   one:  [              A              ]
+--   one:  [      A      ]
 --   many: [ A ][ B ][ C ] -> [ D ] ...
 hl.config({
     general = { layout = "scrolling" },
     scrolling = { column_width = 1 / 3 }
 })
-
--- Let a lone window reach every edge of its workspace.
 hl.workspace_rule({ workspace = "w[tv1]", gaps_in = 0, gaps_out = 0 })
 
 -- Custom Decorations
