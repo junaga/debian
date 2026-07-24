@@ -1,36 +1,33 @@
--- Displays, desktop layout, and window appearance.
-
-theme = require("theme")
+-- Monitors, Displays, Layout, and Windows.
 
 -- enable VSync
 hl.config({ general = { allow_tearing = false } })
-
--- double the mouse cursor
-hl.env("XCURSOR_SIZE", "48")
 
 -----------------------
 ---- LOOK AND FEEL ----
 -----------------------
 
+theme = require("theme")
+
 hl.config({
     general = {
-        gaps_in     = 8,
         gaps_out    = 27,
-        border_size = 0
+        border_size = 0,
+        gaps_in     = 8
     },
-
     decoration = {
         blur = { size = theme.blur },
         rounding     = theme.rounding,
+
+        -- The focused window stays bright and elevated while inactive windows recede.
         dim_inactive = true,
         dim_strength = 0.20,
-
         shadow = {
-            color          = theme.colors.shadow.active,
-            color_inactive = theme.colors.shadow.inactive,
+            color          = "#000000cc",
+            color_inactive = "#00000033",
             range          = 64,
             render_power   = 2,
-            offset         = { 0, 5 }
+            offset         = { 0, 2 }
         }
     }
 })

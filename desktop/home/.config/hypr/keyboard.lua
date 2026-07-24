@@ -1,9 +1,12 @@
--- Keyboard, mouse, and hotkeys
+-- Keyboard, Mouse, and Hotkeys
 
+-- double the mouse cursor
+hl.env("XCURSOR_SIZE", "48")
+
+hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
 hl.bind("SUPER + W", hl.dsp.window.close())
 hl.bind("SUPER + T", hl.dsp.exec_cmd(terminal))
 hl.bind("SUPER + E", hl.dsp.exec_cmd(explorer))
-hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + P", hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | wl-copy]]))
 
