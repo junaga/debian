@@ -1,9 +1,14 @@
--- Displays
--- Keep compositor frames synchronized with the monitors.
+-------------
+-- Display --
+-------------
+
+-- enable VSync
 hl.config({ general = { allow_tearing = false } })
 
--- Desktop
-hl.config({ misc = { force_default_wallpaper = 2 } })
+
+-------------
+-- Desktop --
+-------------
 
 -- Windows form one-third-width columns on a horizontal tape.
 --   one:  [      A      ]
@@ -16,7 +21,14 @@ hl.config({
     }
 })
 
--- Windows
+local animeWallpaper = 2
+hl.config({ misc = { force_default_wallpaper = animeWallpaper } })
+
+
+-------------
+-- Windows --
+-------------
+
 theme = require("theme")
 
 hl.config({

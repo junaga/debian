@@ -1,4 +1,6 @@
--- Portable desktop theme: plain sRGB colors and shared visual proportions.
+-----------
+-- Theme --
+-----------
 
 return {
     font = "Fira Code",
