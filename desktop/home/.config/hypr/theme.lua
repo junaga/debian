@@ -8,11 +8,7 @@ return {
         accent     = "#ffb84d",
         highlight  = "#ffd28a",
         muted      = "#d8912f",
-        inverse    = "#120800",
-        shadow = {
-            active   = "#000000cc",
-            inactive = "#00000033"
-        }
+        inverse    = "#120800"
     },
 
     opacity = 0.88,
