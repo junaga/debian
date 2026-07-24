@@ -46,31 +46,6 @@ hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "a
 -- Windows --
 -------------
 
-theme = require("theme")
-
-hl.config({
-    general = {
-        gaps_out    = 27,
-        border_size = 0,
-        gaps_in     = 8
-    },
-    decoration = {
-        blur = { size = theme.blur },
-        rounding     = theme.rounding,
-
-        -- The focused window stays bright and elevated while inactive windows recede.
-        dim_inactive = true,
-        dim_strength = 0.20,
-        shadow = {
-            color          = "#000000cc",
-            color_inactive = "#00000033",
-            range          = 64,
-            render_power   = 2,
-            offset         = { 0, 2 }
-        }
-    }
-})
-
 -- Create a window.
 hl.animation({ leaf = "windowsIn", enabled = true, speed = 4.1,  spring = "easy",         style = "popin 87%" })
 hl.animation({ leaf = "fadeIn",    enabled = true, speed = 1.73, bezier = "almostLinear" })
