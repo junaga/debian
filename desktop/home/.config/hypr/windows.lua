@@ -3,25 +3,13 @@
 -- enable VSync
 hl.config({ general = { allow_tearing = false } })
 
----------------
----- LAYOUT ---
----------------
-
 hl.config({
-    general = {
-        layout = "scrolling",
-        resize_on_border = true
-    },
-
+    general = { layout = "scrolling" },
     scrolling = {
         column_width = 1 / 3,
-        fullscreen_on_one_column = true
+        fullscreen_on_one_column = false
     }
 })
-
------------------------
----- LOOK AND FEEL ----
------------------------
 
 theme = require("theme")
 
@@ -121,3 +109,16 @@ hl.window_rule({
     move  = "20 monitor_h-120",
     float = true,
 })
+
+-- Fill the monitor without changing the client's presentation mode.
+function fullscreen()
+    local window = hl.get_active_window()
+    if window == nil then return end
+
+    hl.dispatch(hl.dsp.window.fullscreen_state({
+        internal     = 2,
+        client       = 0,
+        action       = window.fullscreen == 2 and "unset" or "set",
+        layout_aware = false
+    }))
+end
