@@ -3,17 +3,6 @@
 
 require("design")
 
-----------------
-----  MISC  ----
-----------------
-
-hl.config({
-    misc = {
-        force_default_wallpaper = 2 -- Pin the anime mascot wallpaper instead of choosing randomly.
-    }
-})
-
-
 ---------------
 ---- INPUT ----
 ---------------
