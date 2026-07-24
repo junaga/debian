@@ -16,39 +16,26 @@ hl.config({
         gaps_out    = theme.gaps.outer,
         border_size = theme.border,
 
-        resize_on_border = false,
-        allow_tearing    = false,
-        layout           = "dwindle",
+        -- Keep compositor synchronization enabled: never permit tearing.
+        allow_tearing = false,
     },
 
     decoration = {
-        rounding       = theme.corners.radius,
-        rounding_power = theme.corners.power,
-
-        active_opacity   = 1.0,
-        inactive_opacity = 1.0,
-        dim_inactive     = true,
-        dim_strength     = 0.16,
+        rounding     = theme.corners.radius,
+        dim_inactive = true,
+        dim_strength = 0.20,
 
         shadow = {
-            enabled        = true,
             range          = theme.shadow.range,
             render_power   = theme.shadow.power,
-            offset         = { 0, 20 },
-            color          = "rgba(" .. theme.colors.shadow:sub(2) .. "ff)",
-            color_inactive = "rgba(" .. theme.colors.shadow:sub(2) .. "aa)",
+            offset         = { 0, 5 },
+            color          = "rgba(" .. theme.colors.shadow:sub(2) .. "cc)",
+            color_inactive = "rgba(" .. theme.colors.shadow:sub(2) .. "33)",
         },
 
         blur = {
-            enabled  = true,
-            size     = theme.blur.size,
-            passes   = theme.blur.passes,
-            vibrancy = theme.blur.vibrancy,
+            size = theme.blur.size,
         },
-    },
-
-    animations = {
-        enabled = true,
     },
 })
 
