@@ -1,9 +1,9 @@
 -- https://wiki.hypr.land/Configuring/
 
-require("windows")
+require("core.windows")
 require("style")
 
-require("start")
+require("core.start")
 screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
 terminal = "kitty"
 explorer = "dolphin"

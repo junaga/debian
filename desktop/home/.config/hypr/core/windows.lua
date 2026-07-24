@@ -24,7 +24,7 @@ hl.config({
 local animeWallpaper = 2
 hl.config({ misc = { force_default_wallpaper = animeWallpaper } })
 
-require("motion")
+require("core.motion")
 
 -- Create desktop surfaces.
 hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
