@@ -1,5 +1,5 @@
 {
-  // Interface: preserve terminal colors and show only useful signals.
+  // Interface
   "colorscheme": "simple",
   "scrollbar": true,
   "diffgutter": true,
@@ -7,13 +7,13 @@
   "hltrailingws": true,
   "statusformatr": "",
 
-  // Editing: two-column tabs, word wrapping, and clean saves.
+  // Editing
   "tabsize": 2,
   "softwrap": true,
   "wordwrap": true,
   "rmtrailingws": true,
 
-  // Files: accept diagnostic paths, follow changes, and preserve working state.
+  // Files
   "parsecursor": true,
   "reload": "auto",
   "mkparents": true,
