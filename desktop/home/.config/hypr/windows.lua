@@ -1,20 +1,24 @@
--- Monitors, Displays, Windows.
-
--- enable VSync
+-- Displays
+-- Keep compositor frames synchronized with the monitors.
 hl.config({ general = { allow_tearing = false } })
+
+-- Desktop
+hl.config({ misc = { force_default_wallpaper = 2 } })
 
 -- Windows form one-third-width columns on a horizontal tape.
 --   one:  [      A      ]
 --   many: [ A ][ B ][ C ] -> [ D ] ...
 hl.config({
     general = { layout = "scrolling" },
-    scrolling = { column_width = 1 / 3 }
+    scrolling = {
+        column_width = 1 / 3,
+        fullscreen_on_one_column = false
+    }
 })
-hl.workspace_rule({ workspace = "w[tv1]", gaps_in = 0, gaps_out = 0 })
-hl.config({ misc = { force_default_wallpaper = 2 } })
 
--- Custom Decorations
+-- Windows
 theme = require("theme")
+
 hl.config({
     general = {
         gaps_out    = 27,
@@ -38,6 +42,7 @@ hl.config({
     }
 })
 
+-- Default animations and compatibility
 -- Default curves and animations.
 -- https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
 hl.curve("easeOutQuint",   { type = "bezier", points = { {0.23, 1},    {0.32, 1} } })
@@ -65,19 +70,6 @@ hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "a
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
 
---------------------------------
----- WINDOWS AND WORKSPACES ----
---------------------------------
-
--- https://wiki.hypr.land/Configuring/Basics/Window-Rules/
-local suppressMaximizeRule = hl.window_rule({
-    name  = "suppress-maximize-events",
-    match = { class = ".*" },
-
-    suppress_event = "maximize",
-})
--- suppressMaximizeRule:set_enabled(false)
-
 hl.window_rule({
     name = "fix-xwayland-drags",
     match = {
@@ -90,12 +82,4 @@ hl.window_rule({
     },
 
     no_focus = true,
-})
-
-hl.window_rule({
-    name  = "move-hyprland-run",
-    match = { class = "hyprland-run" },
-
-    move  = "20 monitor_h-120",
-    float = true,
 })

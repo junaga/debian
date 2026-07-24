@@ -1,6 +1,8 @@
 -- https://wiki.hypr.land/Configuring/
 
 require("windows")
+require("start")
+
 terminal = "kitty"
 explorer = "dolphin"
 browser = "google-chrome-stable"
