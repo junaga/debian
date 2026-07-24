@@ -2,8 +2,8 @@
 
 require("windows")
 
-screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
 require("start")
+screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
 terminal = "kitty"
 explorer = "dolphin"
 browser = "google-chrome-stable"
