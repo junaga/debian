@@ -3,6 +3,22 @@
 -- enable VSync
 hl.config({ general = { allow_tearing = false } })
 
+---------------
+---- LAYOUT ---
+---------------
+
+hl.config({
+    general = {
+        layout = "scrolling",
+        resize_on_border = true
+    },
+
+    scrolling = {
+        column_width = 1 / 3,
+        fullscreen_on_one_column = true
+    }
+})
+
 -----------------------
 ---- LOOK AND FEEL ----
 -----------------------
@@ -58,22 +74,6 @@ hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.94, bezier = "a
 hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
-
-
----------------
----- LAYOUT ---
----------------
-
-hl.config({
-    dwindle = {
-        preserve_split = true,
-    },
-
-    scrolling = {
-        fullscreen_on_one_column = true,
-    },
-})
-
 
 ----------------
 ----  MISC  ----
