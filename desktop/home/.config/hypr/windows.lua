@@ -21,7 +21,7 @@ hl.config({
     },
 
     decoration = {
-        rounding     = theme.corners.radius,
+        rounding     = theme.rounding,
         dim_inactive = true,
         dim_strength = 0.20,
 
@@ -29,12 +29,12 @@ hl.config({
             range          = theme.shadow.range,
             render_power   = theme.shadow.power,
             offset         = { 0, 5 },
-            color          = "rgba(" .. theme.colors.shadow:sub(2) .. "cc)",
-            color_inactive = "rgba(" .. theme.colors.shadow:sub(2) .. "33)",
+            color          = theme.colors.shadow .. "cc",
+            color_inactive = theme.colors.shadow .. "33",
         },
 
         blur = {
-            size = theme.blur.size,
+            size = theme.blur,
         },
     },
 })
