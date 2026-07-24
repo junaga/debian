@@ -1,7 +1,30 @@
-start = "hyprland-run"
+-- TODO: Delete this comment after Debian ships a Hyprtoolkit release that
+-- includes https://github.com/hyprwm/hyprtoolkit/commit/bf9219cc53548c119e61d74b210076ceeded1f65
+--
+-- Debian Testing currently ships Hyprtoolkit 0.5.4. That version routes
+-- keyboard events to Hyprtoolkit's `m_currentWindow`, but it sets and clears
+-- that variable from `wl_pointer.enter` and `wl_pointer.leave`. It does not
+-- track `wl_keyboard.enter` or `wl_keyboard.leave`. As a result,
+-- hyprland-run receives text and Escape only while the mouse pointer is
+-- physically inside its surface, even when Hyprland correctly reports the
+-- launcher as the active, keyboard-focused window.
+--
+-- Upstream fixed the bug by tracking a separate `m_keyboardWindow` from the
+-- Wayland keyboard enter/leave events and routing key and repeat events to
+-- it. The fix was committed after the 0.5.4 release and has not yet appeared
+-- in a tagged Hyprtoolkit release or Debian package. There is intentionally
+-- no compositor workaround here: this rule describes where Start belongs,
+-- and hyprland-run should obey normal Wayland keyboard focus once Debian
+-- packages the upstream fix.
 
--- Toggle start when the left Super key is pressed and released by itself.
-hl.bind("SUPER + SUPER_L", hl.dsp.exec_cmd("pkill -x " .. start .. " || " .. start), { release = true })
+function closeOrOpen(command)
+    return "pkill -fx " .. command .. " || " .. command
+end
+
+
+start = "hyprland-run"
+hl.bind("SUPER + SUPER_L", hl.dsp.exec_cmd(closeOrOpen(start)), { release = true })
+hl.bind("SUPER + SUPER_R", hl.dsp.exec_cmd(closeOrOpen(start)), { release = true })
 
 hl.window_rule({
     match = { class = start },

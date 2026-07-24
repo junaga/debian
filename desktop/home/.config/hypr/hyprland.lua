@@ -2,11 +2,11 @@
 
 require("windows")
 
+screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
+require("start")
 terminal = "kitty"
 explorer = "dolphin"
 browser = "google-chrome-stable"
-screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
-require("start")
 require("keyboard")
 
 function autostart()
