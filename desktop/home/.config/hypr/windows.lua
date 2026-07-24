@@ -11,6 +11,7 @@ hl.config({
     scrolling = { column_width = 1 / 3 }
 })
 hl.workspace_rule({ workspace = "w[tv1]", gaps_in = 0, gaps_out = 0 })
+hl.config({ misc = { force_default_wallpaper = 2 } })
 
 -- Custom Decorations
 theme = require("theme")
@@ -63,8 +64,6 @@ hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.94, bezier = "a
 hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
-
-hl.config({ misc = { force_default_wallpaper = 2 } })
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
