@@ -3,16 +3,19 @@
 -- enable VSync
 hl.config({ general = { allow_tearing = false } })
 
+-- Windows form one-third-width columns on a horizontal tape.
+--   one:  [              A              ]
+--   many: [ A ][ B ][ C ] -> [ D ] ...
 hl.config({
     general = { layout = "scrolling" },
-    scrolling = {
-        column_width = 1 / 3,
-        fullscreen_on_one_column = false
-    }
+    scrolling = { column_width = 1 / 3 }
 })
 
-theme = require("theme")
+-- Let a lone window reach every edge of its workspace.
+hl.workspace_rule({ workspace = "w[tv1]", gaps_in = 0, gaps_out = 0 })
 
+-- Custom Decorations
+theme = require("theme")
 hl.config({
     general = {
         gaps_out    = 27,
@@ -109,16 +112,3 @@ hl.window_rule({
     move  = "20 monitor_h-120",
     float = true,
 })
-
--- Fill the monitor without changing the client's presentation mode.
-function fullscreen()
-    local window = hl.get_active_window()
-    if window == nil then return end
-
-    hl.dispatch(hl.dsp.window.fullscreen_state({
-        internal     = 2,
-        client       = 0,
-        action       = window.fullscreen == 2 and "unset" or "set",
-        layout_aware = false
-    }))
-end
