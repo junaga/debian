@@ -5,7 +5,8 @@
   "diffgutter": true,
   "hlsearch": true,
   "hltrailingws": true,
-  "statusformatr": "",
+  "statusformatl": "$(filename):$(line):$(col) $(modified)$(overwrite)$(status.paste)",
+  "statusformatr": "$(opt:filetype) | $(status.size) | $(percentage)%",
 
   // Editing
   "tabsize": 2,
