@@ -2,7 +2,9 @@
 
 local theme = require("theme")
 
--- Xcursor remains the shared fallback while Wayland cursor-shape support matures.
+-- enable VSync
+hl.config({ general = { allow_tearing = false } })
+
 hl.env("XCURSOR_SIZE", "48")
 
 
@@ -16,8 +18,6 @@ hl.config({
         gaps_out    = theme.gaps.outer,
         border_size = theme.border,
 
-        -- Keep compositor synchronization enabled: never permit tearing.
-        allow_tearing = false,
     },
 
     decoration = {
