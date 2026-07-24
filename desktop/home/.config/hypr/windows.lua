@@ -1,12 +1,12 @@
 -- Displays, desktop layout, and window appearance.
 
-local theme = require("theme")
+theme = require("theme")
 
 -- enable VSync
 hl.config({ general = { allow_tearing = false } })
 
+-- double the mouse cursor
 hl.env("XCURSOR_SIZE", "48")
-
 
 -----------------------
 ---- LOOK AND FEEL ----
@@ -14,29 +14,25 @@ hl.env("XCURSOR_SIZE", "48")
 
 hl.config({
     general = {
-        gaps_in     = theme.gaps.inner,
-        gaps_out    = theme.gaps.outer,
-        border_size = theme.border,
-
+        gaps_in     = 8,
+        gaps_out    = 27,
+        border_size = 0
     },
 
     decoration = {
+        blur = { size = theme.blur },
         rounding     = theme.rounding,
         dim_inactive = true,
         dim_strength = 0.20,
 
         shadow = {
-            range          = theme.shadow.range,
-            render_power   = theme.shadow.power,
-            offset         = { 0, 5 },
-            color          = theme.colors.shadow .. "cc",
-            color_inactive = theme.colors.shadow .. "33",
-        },
-
-        blur = {
-            size = theme.blur,
-        },
-    },
+            color          = theme.colors.shadow.active,
+            color_inactive = theme.colors.shadow.inactive,
+            range          = 64,
+            render_power   = 2,
+            offset         = { 0, 5 }
+        }
+    }
 })
 
 -- Default curves and animations.
