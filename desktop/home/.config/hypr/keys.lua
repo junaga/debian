@@ -1,25 +1,6 @@
------------
--- Mouse --
------------
-
-hl.env("XCURSOR_SIZE", "48")
-
-
---------------
--- Touchpad --
---------------
-
--- Swipe between workspaces with three fingers.
-hl.gesture({
-    fingers = 3,
-    direction = "horizontal",
-    action = "workspace"
-})
-
-
---------------
--- Keyboard --
---------------
+--------------------------------
+-- Keyboard: Apple II (1977) --
+--------------------------------
 
 hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
 hl.bind("SUPER + W", hl.dsp.window.close())
@@ -31,11 +12,32 @@ hl.bind("SUPER + E", hl.dsp.exec_cmd(explorer))
 hl.bind("SUPER + B", hl.dsp.exec_cmd(browser))
 
 
----------------------
--- Laptop Keyboard --
----------------------
+----------------------------------
+-- Mouse: Macintosh 128K (1984) --
+----------------------------------
 
--- Volume.
+hl.env("XCURSOR_SIZE", "48")
+
+hl.config({
+    input = {
+        -- follow_mouse = 2,
+        sensitivity = 0.35,
+        scroll_factor = 1.4
+    }
+})
+
+-----------------------------------
+-- Laptop: Toshiba T1100 (1985) --
+-----------------------------------
+
+-- Touchpad: swipe between workspaces with three fingers.
+hl.gesture({
+    fingers = 3,
+    direction = "horizontal",
+    action = "workspace"
+})
+
+-- Media keys: volume.
 hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
 hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
@@ -48,9 +50,9 @@ hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
 
-----------------
--- Navigation --
-----------------
+----------
+-- TODO --
+----------
 
 -- Move focus with Super + arrow keys.
 hl.bind("SUPER + left",  hl.dsp.focus({ direction = "left" }))
