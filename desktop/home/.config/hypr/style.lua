@@ -1,23 +1,3 @@
------------
--- Style --
------------
-
-local theme = {
-    font = "Fira Code",
-
-    colors = {
-        background = "#050300",
-        accent     = "#ffb84d",
-        highlight  = "#ffd28a",
-        muted      = "#d8912f",
-        inverse    = "#120800"
-    },
-
-    opacity = 0.88,
-    rounding = 10,
-    blur = 3
-}
-
 hl.config({
     general = {
         gaps_out    = 27,
@@ -25,8 +5,8 @@ hl.config({
         gaps_in     = 8
     },
     decoration = {
-        blur = { size = theme.blur },
-        rounding = theme.rounding,
+        blur = { size = 3 },
+        rounding = 10,
 
         -- The focused window stays bright and elevated while inactive windows recede.
         dim_inactive = true,
