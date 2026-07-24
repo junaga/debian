@@ -1,6 +1,6 @@
---------------------------------
--- Keyboard: Apple II (1977) --
---------------------------------
+--------------
+-- Keyboard --
+--------------
 
 hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
 hl.bind("SUPER + W", hl.dsp.window.close())
@@ -12,9 +12,9 @@ hl.bind("SUPER + E", hl.dsp.exec_cmd(explorer))
 hl.bind("SUPER + B", hl.dsp.exec_cmd(browser))
 
 
-----------------------------------
--- Mouse: Macintosh 128K (1984) --
-----------------------------------
+---------------------------------------
+-- Mouse; Macintosh (1984) onward. --
+---------------------------------------
 
 hl.env("XCURSOR_SIZE", "48")
 
@@ -26,28 +26,23 @@ hl.config({
     }
 })
 
------------------------------------
--- Laptop: Toshiba T1100 (1985) --
------------------------------------
+------------------------------------
+-- Media; iBook (1999) onward. --
+------------------------------------
 
--- Touchpad: swipe between workspaces with three fingers.
-hl.gesture({
-    fingers = 3,
-    direction = "horizontal",
-    action = "workspace"
-})
+-- Volume controls.
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%"), { locked = true, repeating = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"), { locked = true, repeating = true })
+hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"), { locked = true })
+hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"), { locked = true })
 
--- Media keys: volume.
-hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
-hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
-hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
-
--- Media playback (requires playerctl).
-hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+-- Playback controls (requires playerctl).
+hl.bind("XF86AudioPlay",    hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPause",   hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioNext",    hl.dsp.exec_cmd("playerctl next"),       { locked = true })
+hl.bind("XF86AudioPrev",    hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+hl.bind("XF86AudioForward", hl.dsp.exec_cmd("playerctl position 0.1+"), { locked = true, repeating = true })
+hl.bind("XF86AudioRewind",  hl.dsp.exec_cmd("playerctl position 0.1-"), { locked = true, repeating = true })
 
 
 ----------
