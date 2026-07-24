@@ -1,6 +1,7 @@
 -- https://wiki.hypr.land/Configuring/
 
 require("windows")
+require("style")
 
 require("start")
 screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
