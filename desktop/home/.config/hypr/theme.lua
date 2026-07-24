@@ -22,8 +22,7 @@ return {
     border = 0,
 
     corners = {
-        radius = 10,
-        power  = 2
+        radius = 10
     },
 
     shadow = {
@@ -32,8 +31,6 @@ return {
     },
 
     blur = {
-        size     = 3,
-        passes   = 1,
-        vibrancy = 0.1696
+        size = 3
     }
 }
