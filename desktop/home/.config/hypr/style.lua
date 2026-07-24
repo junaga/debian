@@ -2,7 +2,8 @@ hl.config({
     general = {
         gaps_out    = 27,
         border_size = 0,
-        gaps_in     = 8
+        gaps_in     = 8,
+        resize_on_border = true
     },
     decoration = {
         blur = { size = 3 },
