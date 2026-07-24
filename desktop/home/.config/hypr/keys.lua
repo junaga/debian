@@ -20,11 +20,20 @@ hl.env("XCURSOR_SIZE", "48")
 
 hl.config({
     input = {
-        -- follow_mouse = 2,
-        sensitivity = 0.35,
-        scroll_factor = 1.4
+        scroll_factor = 1.0
     }
 })
+
+if hl.plugin.windows_pointer_linux then
+    hl.config({
+        plugin = {
+            windows_pointer_linux = {
+                pointer_speed = "10/20",
+                enhance_pointer_precision = true
+            }
+        }
+    })
+end
 
 ------------------------------------
 -- Media; iBook (1999) onward. --
