@@ -6,6 +6,18 @@ hl.env("XCURSOR_SIZE", "48")
 
 
 --------------
+-- Touchpad --
+--------------
+
+-- Swipe between workspaces with three fingers.
+hl.gesture({
+    fingers = 3,
+    direction = "horizontal",
+    action = "workspace"
+})
+
+
+--------------
 -- Keyboard --
 --------------
 
