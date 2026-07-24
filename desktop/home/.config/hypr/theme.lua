@@ -1,32 +1,21 @@
 -- Portable desktop theme: plain sRGB colors and shared visual proportions.
 
 return {
+    font = "Fira Code",
+
     colors = {
         background = "#050300",
         accent     = "#ffb84d",
         highlight  = "#ffd28a",
         muted      = "#d8912f",
         inverse    = "#120800",
-        shadow     = "#000000"
+        shadow = {
+            active   = "#000000cc",
+            inactive = "#00000033"
+        }
     },
-
-    font = "Fira Code",
 
     opacity = 0.88,
-
-    gaps = {
-        inner = 8,
-        outer = 27
-    },
-
-    border = 0,
-
     rounding = 10,
-
-    shadow = {
-        range = 64,
-        power = 2
-    },
-
     blur = 3
 }
