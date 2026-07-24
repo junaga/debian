@@ -8,7 +8,7 @@ hl.bind("SUPER + W", hl.dsp.window.close())
 hl.bind("SUPER + T", hl.dsp.exec_cmd(terminal))
 hl.bind("SUPER + E", hl.dsp.exec_cmd(explorer))
 hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind("SUPER + P", hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | wl-copy]]))
+hl.bind("SUPER + P", hl.dsp.exec_cmd(screenshot))
 
 -- Move focus with Super + arrow keys.
 hl.bind("SUPER + left",  hl.dsp.focus({ direction = "left" }))
