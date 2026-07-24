@@ -21,16 +21,12 @@ return {
 
     border = 0,
 
-    corners = {
-        radius = 10
-    },
+    rounding = 10,
 
     shadow = {
         range = 64,
         power = 2
     },
 
-    blur = {
-        size = 3
-    }
+    blur = 3
 }
