@@ -5,7 +5,7 @@ require("style")
 
 require("core.start")
 screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
-terminal = "kitty"
+terminal = "crtty --shader ~/.config/crtty/amber-crt.glsl"
 explorer = "dolphin"
 browser = "google-chrome-stable"
 require("keyboard")

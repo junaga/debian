@@ -74,6 +74,7 @@ apt install --yes\
 # Wayland Terminal Emulator
 apt install --yes\
   kitty\
+  cargo\
   fonts-firacode\
   fonts-noto\
   	fonts-noto-extra\
@@ -86,6 +87,20 @@ function installURL {
 	curl -fL "$1" > $FILE
 	apt install --yes $FILE
 }
+
+function installCRTty {
+	local DIR
+	DIR="$(mktemp -d)"
+
+	git clone --quiet https://github.com/kosa12/CRTty.git "$DIR"
+	git -C "$DIR" checkout --quiet 673f61528a7640299719c07a380d0b87841a4aa3
+	cargo build --quiet --release --workspace --manifest-path "$DIR/Cargo.toml"
+
+	install -m 755 "$DIR/target/release/crtty" /usr/local/bin/crtty
+	install -m 755 "$DIR/target/release/libcrtty_crt.so" /usr/local/lib/libcrtty_crt.so
+}
+
+installCRTty
 
 installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 installURL "https://discord.com/api/download?platform=linux&format=deb"
