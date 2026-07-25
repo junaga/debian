@@ -17,14 +17,7 @@
 -- and hyprland-run should obey normal Wayland keyboard focus once Debian
 -- packages the upstream fix.
 
-function closeOrOpen(command)
-    return "pkill -fx " .. command .. " || " .. command
-end
-
-
-start = "hyprland-run"
-hl.bind("SUPER + SUPER_L", hl.dsp.exec_cmd(closeOrOpen(start)), { release = true })
-hl.bind("SUPER + SUPER_R", hl.dsp.exec_cmd(closeOrOpen(start)), { release = true })
+local start = "hyprland-run"
 
 hl.window_rule({
     match = { class = start },
@@ -34,3 +27,9 @@ hl.window_rule({
     move  = { 20, "monitor_h-120" },
     float = true
 })
+
+function closeOrOpen(command)
+    return "pkill -fx " .. command .. " || " .. command
+end
+
+return closeOrOpen(start)

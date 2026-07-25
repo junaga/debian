@@ -1,3 +1,20 @@
+-------------
+-- Desktop --
+-------------
+
+hl.config({
+    general = { layout = "scrolling" },
+    scrolling = { column_width = 1 }
+})
+
+local animeWallpaper = 2
+hl.config({ misc = { force_default_wallpaper = animeWallpaper } })
+
+
+-----------
+-- Style --
+-----------
+
 hl.config({
     general = {
         gaps_out    = 27,

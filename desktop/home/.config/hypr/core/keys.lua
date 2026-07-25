@@ -2,15 +2,21 @@
 -- Keyboard --
 --------------
 
-hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
-hl.bind("SUPER + W", hl.dsp.window.close())
-hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind("SUPER + P", hl.dsp.exec_cmd(screenshot))
+function open(keys, command, rules)
+    if rules then
+        command = "exec " .. command
+    end
 
-hl.bind("SUPER + T", hl.dsp.exec_cmd(terminal))
-hl.bind("SUPER + E", hl.dsp.exec_cmd(explorer))
-hl.bind("SUPER + B", hl.dsp.exec_cmd(browser))
+    hl.bind(keys, hl.dsp.exec_cmd(command, rules))
+end
 
+function close(keys)
+    hl.bind(keys, hl.dsp.window.close())
+end
+
+function exit(keys)
+    hl.bind(keys, hl.dsp.exec_cmd("hyprshutdown"))
+end
 
 ---------------------------------------
 -- Mouse; Macintosh (1984) onward. --
