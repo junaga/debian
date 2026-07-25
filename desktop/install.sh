@@ -60,6 +60,27 @@ apt install --yes\
   hyprshutdown\
   systemd-timesyncd;
 
+function installWindowsPointer {
+	local USER_NAME="${SUDO_USER:?Run desktop/install.sh with sudo.}"
+	local USER_HOME
+	USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+
+	if sudo --user "$USER_NAME" env HOME="$USER_HOME" hyprpm list |
+		grep --quiet "Repository windows-pointer-linux"; then
+		sudo --user "$USER_NAME" env HOME="$USER_HOME" hyprpm update
+	else
+		printf "y\n" |
+			sudo --user "$USER_NAME" env HOME="$USER_HOME" hyprpm add \
+				https://github.com/junaga/windows-pointer-linux \
+				5da916bbde44baa8824b2ca55ef55c92b73418ae
+	fi
+
+	sudo --user "$USER_NAME" env HOME="$USER_HOME" \
+		hyprpm enable windows-pointer-linux
+}
+
+installWindowsPointer
+
 # Desktop Utilities
 apt install --yes\
   dolphin\

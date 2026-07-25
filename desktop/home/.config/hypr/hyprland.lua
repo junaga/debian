@@ -1,10 +1,5 @@
 -- https://wiki.hypr.land/Configuring/
 
-local pointer = os.getenv("HOME")
-    .. "/.local/lib/hyprland/plugins/windows-pointer-linux.so"
-
-hl.plugin.load(pointer)
-
 require("core.windows")
 require("style")
 
