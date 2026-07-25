@@ -10,25 +10,15 @@ hl.config({ general = { allow_tearing = false } })
 -- Desktop --
 -------------
 
--- Applications occupy a full-width column unless they have a compact profile.
+-- Windows form one-third-width columns on a horizontal tape.
+--   one:  [      A      ]
+--   many: [ A ][ B ][ C ] -> [ D ] ...
 hl.config({
     general = { layout = "scrolling" },
     scrolling = {
-        column_width = 1,
+        column_width = 1 / 3,
         fullscreen_on_one_column = false
     }
-})
-
-hl.window_rule({
-    name = "terminal-width",
-    match = { class = "^kitty$" },
-    scrolling_width = 0.395
-})
-
-hl.window_rule({
-    name = "music-width",
-    match = { class = "^com\\.github\\.th_ch\\.youtube_music$" },
-    scrolling_width = 0.28
 })
 
 local animeWallpaper = 2

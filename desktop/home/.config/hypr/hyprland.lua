@@ -6,7 +6,6 @@ require("style")
 require("core.start")
 screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
 terminal = "kitty"
-music = "youtube-music"
 explorer = "dolphin"
 browser = "google-chrome-stable"
 require("keys")
