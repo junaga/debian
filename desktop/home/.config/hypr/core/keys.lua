@@ -2,33 +2,50 @@
 -- Keyboard --
 --------------
 
-function open(keys, command, rules)
-    if rules then
-        command = "exec " .. command
-    end
+local columns = require("core.columns")
+local start = require("core.start")
 
-    hl.bind(keys, hl.dsp.exec_cmd(command, rules))
+function open(keys, command)
+    hl.bind(keys, hl.dsp.exec_cmd(command))
 end
 
-function close(keys)
-    hl.bind(keys, hl.dsp.window.close())
+-- Desktop.
+hl.bind("SUPER + R",         hl.dsp.exec_cmd(start))
+hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
+hl.bind("SUPER + W",         hl.dsp.window.close())
+
+-- Navigation.
+hl.bind("SUPER + left",        hl.dsp.focus({ direction = "left" }))
+hl.bind("SUPER + SHIFT + tab", hl.dsp.focus({ direction = "left" }))
+hl.bind("SUPER + right",       hl.dsp.focus({ direction = "right" }))
+hl.bind("SUPER + tab",         hl.dsp.focus({ direction = "right" }))
+hl.bind("SUPER + home",        columns.focusFirst)
+hl.bind("SUPER + end",         columns.focusLast)
+
+-- Switch workspaces, or move the active window with Shift.
+for i = 1, 10 do
+    local key = i % 10
+    hl.bind(("SUPER + %d"):format(key),         hl.dsp.focus({ workspace = i }))
+    hl.bind(("SUPER + SHIFT + %d"):format(key), hl.dsp.window.move({ workspace = i }))
 end
 
-function exit(keys)
-    hl.bind(keys, hl.dsp.exec_cmd("hyprshutdown"))
-end
+-- Sizing.
+hl.bind("SUPER + up",     hl.dsp.layout("colresize +conf"))
+hl.bind("SUPER + down",   hl.dsp.layout("colresize -conf"))
+hl.bind("SUPER + insert", columns.saveWidth)
 
 ---------------------------------------
 -- Mouse; Macintosh (1984) onward. --
 ---------------------------------------
 
-hl.env("XCURSOR_SIZE", "48")
+-- Scroll through columns on the active workspace.
+hl.bind("SUPER + mouse_down", hl.dsp.layout("focus r"))
+hl.bind("SUPER + mouse_up",   hl.dsp.layout("focus l"))
 
-hl.config({
-    input = {
-        scroll_factor = 1.0
-    }
-})
+-- Move and resize windows with Super + left/right mouse drag.
+hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
+hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+
 
 if hl.plugin.windows_pointer_linux then
     hl.config({
@@ -58,24 +75,3 @@ hl.bind("XF86AudioNext",    hl.dsp.exec_cmd("playerctl next"),       { locked = 
 hl.bind("XF86AudioPrev",    hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 hl.bind("XF86AudioForward", hl.dsp.exec_cmd("playerctl position 0.1+"), { locked = true, repeating = true })
 hl.bind("XF86AudioRewind",  hl.dsp.exec_cmd("playerctl position 0.1-"), { locked = true, repeating = true })
-
-
-----------------
--- Navigation --
-----------------
-
--- Navigate columns by their physical order.
-local previousColumn = hl.dsp.layout("focus l")
-local nextColumn = hl.dsp.layout("focus r")
-
-hl.bind("SUPER + left",        previousColumn)
-hl.bind("SUPER + SHIFT + tab", previousColumn)
-hl.bind("SUPER + right",       nextColumn)
-hl.bind("SUPER + tab",         nextColumn)
-
--- Restore the focused column to the configured default width.
-hl.bind("SUPER + backspace", hl.dsp.layout("colresize 0.667"))
-
--- Move and resize windows with Super + left/right mouse drag.
-hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
-hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
