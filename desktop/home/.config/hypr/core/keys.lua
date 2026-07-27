@@ -5,7 +5,7 @@
 local columns = require("core.columns")
 local start = require("core.start")
 
-function open(keys, command)
+local function open(keys, command)
     hl.bind(keys, hl.dsp.exec_cmd(command))
 end
 
@@ -30,13 +30,19 @@ for i = 1, 10 do
 end
 
 -- Sizing.
-hl.bind("SUPER + up",     hl.dsp.layout("colresize +conf"))
-hl.bind("SUPER + down",   hl.dsp.layout("colresize -conf"))
-hl.bind("SUPER + insert", columns.saveWidth)
+hl.bind("SUPER + up",   columns.widen)
+hl.bind("SUPER + down", columns.narrow)
 
 ---------------------------------------
 -- Mouse; Macintosh (1984) onward. --
 ---------------------------------------
+
+-- Remember columns changed by mouse or border resizing.
+for _, button in ipairs({ 272, 273 }) do
+    local key = ("mouse:%d"):format(button)
+    hl.bind(key, columns.beginResize, { ignore_mods = true, non_consuming = true })
+    hl.bind(key, columns.endResize,   { ignore_mods = true, non_consuming = true, release = true })
+end
 
 -- Scroll through columns on the active workspace.
 hl.bind("SUPER + mouse_down", hl.dsp.layout("focus r"))
@@ -45,7 +51,6 @@ hl.bind("SUPER + mouse_up",   hl.dsp.layout("focus l"))
 -- Move and resize windows with Super + left/right mouse drag.
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
-
 
 if hl.plugin.windows_pointer_linux then
     hl.config({
@@ -75,3 +80,5 @@ hl.bind("XF86AudioNext",    hl.dsp.exec_cmd("playerctl next"),       { locked = 
 hl.bind("XF86AudioPrev",    hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 hl.bind("XF86AudioForward", hl.dsp.exec_cmd("playerctl position 0.1+"), { locked = true, repeating = true })
 hl.bind("XF86AudioRewind",  hl.dsp.exec_cmd("playerctl position 0.1-"), { locked = true, repeating = true })
+
+return open

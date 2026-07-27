@@ -28,8 +28,4 @@ hl.window_rule({
     float = true
 })
 
-function closeOrOpen(command)
-    return "pkill -fx " .. command .. " || " .. command
-end
-
-return closeOrOpen(start)
+return "pkill -fx " .. start .. " || " .. start
