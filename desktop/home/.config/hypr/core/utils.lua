@@ -1,11 +1,6 @@
 local utils = {}
 
 function utils.writeFile(path, contents)
-    local directory = path:match("^(.*)/[^/]+$")
-    if directory then
-        assert(os.execute(("mkdir -p %q"):format(directory)))
-    end
-
     local temporary = path .. ".tmp"
     local file = assert(io.open(temporary, "w"))
 

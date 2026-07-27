@@ -1,22 +1,15 @@
--------------
--- Desktop --
--------------
-
-hl.config({ general = { layout = "scrolling" } })
-
 local animeWallpaper = 2
-hl.config({ misc = { force_default_wallpaper = animeWallpaper } })
-
------------
--- Style --
------------
 
 hl.config({
     general = {
-        gaps_out    = 27,
-        border_size = 0,
-        gaps_in     = 8,
+        layout           = "scrolling",
+        gaps_out         = 27,
+        border_size      = 0,
+        gaps_in          = 8,
         resize_on_border = true
+    },
+    misc = {
+        force_default_wallpaper = animeWallpaper
     },
     decoration = {
         blur = { size = 3 },
