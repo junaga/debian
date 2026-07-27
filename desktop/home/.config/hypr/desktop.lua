@@ -4,11 +4,17 @@
 
 hl.config({
     general = { layout = "scrolling" },
-    scrolling = { column_width = 1 }
+    scrolling = { column_width = 0.667 }
 })
 
 local animeWallpaper = 2
 hl.config({ misc = { force_default_wallpaper = animeWallpaper } })
+
+-- Keep application-owned dialogs out of the tiled column layout.
+hl.window_rule({
+    match = { modal = true },
+    float = true
+})
 
 
 -----------

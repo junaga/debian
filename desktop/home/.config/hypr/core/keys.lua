@@ -60,26 +60,21 @@ hl.bind("XF86AudioForward", hl.dsp.exec_cmd("playerctl position 0.1+"), { locked
 hl.bind("XF86AudioRewind",  hl.dsp.exec_cmd("playerctl position 0.1-"), { locked = true, repeating = true })
 
 
-----------
--- TODO --
-----------
+----------------
+-- Navigation --
+----------------
 
--- Move focus with Super + arrow keys.
-hl.bind("SUPER + left",  hl.dsp.focus({ direction = "left" }))
-hl.bind("SUPER + right", hl.dsp.focus({ direction = "right" }))
-hl.bind("SUPER + up",    hl.dsp.focus({ direction = "up" }))
-hl.bind("SUPER + down",  hl.dsp.focus({ direction = "down" }))
+-- Navigate columns by their physical order.
+local previousColumn = hl.dsp.layout("focus l")
+local nextColumn = hl.dsp.layout("focus r")
 
--- Switch workspaces, or move the active window with Shift.
-for i = 1, 10 do
-    local key = i % 10
-    hl.bind(("SUPER + %d"):format(key),         hl.dsp.focus({ workspace = i }))
-    hl.bind(("SUPER + SHIFT + %d"):format(key), hl.dsp.window.move({ workspace = i }))
-end
+hl.bind("SUPER + left",        previousColumn)
+hl.bind("SUPER + SHIFT + tab", previousColumn)
+hl.bind("SUPER + right",       nextColumn)
+hl.bind("SUPER + tab",         nextColumn)
 
--- Scroll through existing workspaces.
-hl.bind("SUPER + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind("SUPER + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+-- Restore the focused column to the configured default width.
+hl.bind("SUPER + backspace", hl.dsp.layout("colresize 0.667"))
 
 -- Move and resize windows with Super + left/right mouse drag.
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
