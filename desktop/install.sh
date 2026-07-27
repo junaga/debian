@@ -61,6 +61,7 @@ apt install --yes\
   systemd-timesyncd;
 
 sudo --user "$SUDO_USER" hyprpm add https://github.com/junaga/windows-pointer-linux
+sudo --user "$SUDO_USER" hyprpm update
 sudo --user "$SUDO_USER" hyprpm enable windows-pointer-linux
 sudo --user "$SUDO_USER" hyprpm reload
 
