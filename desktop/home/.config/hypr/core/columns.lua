@@ -156,41 +156,4 @@ function columns.endResize()
     remember(resized)
 end
 
-local function edgeWindow(workspace, last)
-    local target
-    local targetIndex
-
-    for _, window in ipairs(hl.get_workspace_windows(workspace)) do
-        local current = column(window)
-
-        if current and (
-            targetIndex == nil or
-            (last and current.index > targetIndex) or
-            (not last and current.index < targetIndex)
-        ) then
-            target = window
-            targetIndex = current.index
-        end
-    end
-
-    return target
-end
-
-local function focusEdge(last)
-    local active = hl.get_active_window()
-    local target = active and active.workspace and edgeWindow(active.workspace, last)
-
-    if target then
-        hl.dispatch(hl.dsp.focus({ window = target }))
-    end
-end
-
-function columns.focusFirst()
-    focusEdge(false)
-end
-
-function columns.focusLast()
-    focusEdge(true)
-end
-
 return columns
