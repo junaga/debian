@@ -1,5 +1,7 @@
 local animeWallpaper = 2
+local home = os.getenv("HOME")
 
+hl.env("XCURSOR_PATH", home .. "/.local/share/icons:" .. home .. "/.icons:/usr/share/icons:/usr/share/pixmaps")
 hl.env("XCURSOR_THEME", "arrow-on-text")
 hl.env("XCURSOR_SIZE", "48")
 
