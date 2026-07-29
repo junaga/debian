@@ -1,5 +1,8 @@
 local animeWallpaper = 2
 
+hl.env("XCURSOR_THEME", "arrow-on-text")
+hl.env("XCURSOR_SIZE", "48")
+
 hl.config({
     general = {
         layout           = "scrolling",
@@ -10,6 +13,9 @@ hl.config({
     },
     misc = {
         force_default_wallpaper = animeWallpaper
+    },
+    cursor = {
+        enable_hyprcursor = false
     },
     decoration = {
         blur = { size = 3 },
