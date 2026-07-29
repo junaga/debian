@@ -55,10 +55,34 @@ update-initramfs -u
 
 # Hyprland
 apt install --yes\
+  adwaita-icon-theme\
   hyprland\
   hyprland-backgrounds\
   hyprshutdown\
   systemd-timesyncd;
+
+function installCursorTheme {
+	local USER_NAME="${SUDO_USER:?Run desktop/install.sh with sudo.}"
+	local USER_GROUP
+	local USER_HOME
+	local THEME
+
+	USER_GROUP="$(id -gn "$USER_NAME")"
+	USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+	THEME="$USER_HOME/.local/share/icons/arrow-on-text"
+
+	install -d -o "$USER_NAME" -g "$USER_GROUP" "$THEME/cursors"
+	install -m 0644 -o "$USER_NAME" -g "$USER_GROUP" \
+		"$DIR/home/.local/share/icons/arrow-on-text/index.theme" \
+		"$THEME/index.theme"
+
+	for SHAPE in text vertical-text xterm; do
+		ln -sfn /usr/share/icons/Adwaita/cursors/default "$THEME/cursors/$SHAPE"
+		chown -h "$USER_NAME:$USER_GROUP" "$THEME/cursors/$SHAPE"
+	done
+}
+
+installCursorTheme
 
 sudo --user "$SUDO_USER" hyprpm add https://github.com/junaga/windows-pointer-linux
 sudo --user "$SUDO_USER" hyprpm update

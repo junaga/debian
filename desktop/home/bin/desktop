@@ -2,13 +2,7 @@
 
 set -e
 
-CURSORS="$HOME/.local/share/icons/default-pointer/cursors"
-mkdir -p "$CURSORS" "$HOME/.config/hypr/state"
-for SHAPE in hand1 hand2 pointer text vertical-text xterm; do
-	ln -sf /usr/share/icons/Adwaita/cursors/default "$CURSORS/$SHAPE"
-done
-export XCURSOR_THEME=default-pointer
-export XCURSOR_SIZE=48
+mkdir -p "$HOME/.config/hypr/state"
 
 sudo modprobe -r nvidia_drm
 sudo modprobe nvidia_drm modeset=1

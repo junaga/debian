@@ -52,17 +52,6 @@ hl.bind("SUPER + mouse_up",   hl.dsp.layout("focus l"))
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
-if hl.plugin.windows_pointer_linux then
-    hl.config({
-        plugin = {
-            windows_pointer_linux = {
-                pointer_speed = "10/20",
-                enhance_pointer_precision = true
-            }
-        }
-    })
-end
-
 ------------------------------------
 -- Media; iBook (1999) onward. --
 ------------------------------------
