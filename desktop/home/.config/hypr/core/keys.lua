@@ -10,6 +10,13 @@ local function open(keys, command)
     hl.bind(keys, hl.dsp.exec_cmd(command))
 end
 
+local function zoom(amount)
+    local current = hl.get_config("cursor:zoom_factor")
+    local factor = math.max(1.0, math.min(20.0, current + amount))
+
+    hl.config({ cursor = { zoom_factor = factor } })
+end
+
 -- Desktop.
 hl.bind("SUPER + R",         hl.dsp.exec_cmd(start))
 hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
@@ -44,6 +51,8 @@ end
 -- Sizing.
 hl.bind("SUPER + left",  columns.narrow)
 hl.bind("SUPER + right", columns.widen)
+hl.bind("SUPER + KP_Subtract", function() zoom(-0.3) end, { repeating = true, description = "Screen: Zoom out" })
+hl.bind("SUPER + KP_Add",      function() zoom(0.3) end,  { repeating = true, description = "Screen: Zoom in" })
 
 ---------------------------------------
 -- Mouse; Macintosh (1984) onward. --
