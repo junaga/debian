@@ -4,6 +4,4 @@ set -e
 
 mkdir -p "$HOME/.config/hypr/state"
 
-sudo modprobe -r nvidia_drm
-sudo modprobe nvidia_drm modeset=1
 exec start-hyprland
