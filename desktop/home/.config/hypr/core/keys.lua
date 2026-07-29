@@ -4,6 +4,7 @@
 
 local columns = require("core.columns")
 local start = require("core.start")
+local tape = require("core.tape")
 
 local function open(keys, command)
     hl.bind(keys, hl.dsp.exec_cmd(command))
@@ -13,14 +14,25 @@ end
 hl.bind("SUPER + R",         hl.dsp.exec_cmd(start))
 hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown"))
 hl.bind("SUPER + W",         hl.dsp.window.close())
+-- hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("hyprshutdown --vt --post-cmd 'systemctl poweroff'"))
 
 -- Navigation.
-hl.bind("SUPER + left",        hl.dsp.focus({ direction = "left" }))
-hl.bind("SUPER + SHIFT + tab", hl.dsp.focus({ direction = "left" }))
-hl.bind("SUPER + right",       hl.dsp.focus({ direction = "right" }))
-hl.bind("SUPER + tab",         hl.dsp.focus({ direction = "right" }))
-hl.bind("SUPER + home",        columns.focusFirst)
-hl.bind("SUPER + end",         columns.focusLast)
+hl.bind("SUPER + up",          tape.previous)
+hl.bind("SUPER + SHIFT + tab", tape.previous)
+hl.bind("SUPER + down",        tape.next)
+hl.bind("SUPER + tab",         tape.next)
+hl.bind("SUPER + home",        tape.first)
+hl.bind("SUPER + end",         tape.last)
+hl.bind("SUPER + page_up",     hl.dsp.focus({ workspace = "e-1" }))
+hl.bind("SUPER + page_down",   hl.dsp.focus({ workspace = "e+1" }))
+
+-- Movement.
+hl.bind("SUPER + SHIFT + up",        tape.movePrevious)
+hl.bind("SUPER + SHIFT + down",      tape.moveNext)
+hl.bind("SUPER + SHIFT + home",      tape.sendFirst)
+hl.bind("SUPER + SHIFT + end",       tape.sendLast)
+hl.bind("SUPER + SHIFT + page_up",   tape.sendPreviousWorkspace)
+hl.bind("SUPER + SHIFT + page_down", tape.sendNextWorkspace)
 
 -- Switch workspaces, or move the active window with Shift.
 for i = 1, 10 do
@@ -30,8 +42,8 @@ for i = 1, 10 do
 end
 
 -- Sizing.
-hl.bind("SUPER + up",   columns.widen)
-hl.bind("SUPER + down", columns.narrow)
+hl.bind("SUPER + left",  columns.narrow)
+hl.bind("SUPER + right", columns.widen)
 
 ---------------------------------------
 -- Mouse; Macintosh (1984) onward. --
@@ -44,12 +56,12 @@ for _, button in ipairs({ 272, 273 }) do
     hl.bind(key, columns.endResize,   { ignore_mods = true, non_consuming = true, release = true })
 end
 
--- Scroll through columns on the active workspace.
-hl.bind("SUPER + mouse_down", hl.dsp.layout("focus r"))
-hl.bind("SUPER + mouse_up",   hl.dsp.layout("focus l"))
+-- Scroll through the same global tape as the keyboard.
+hl.bind("SUPER + mouse_down", tape.next)
+hl.bind("SUPER + mouse_up",   tape.previous)
 
--- Move and resize windows with Super + left/right mouse drag.
-hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
+-- Resize windows with Super + right mouse drag. Column dragging is intentionally
+-- keyboard-only because Hyprland otherwise stacks the dropped window.
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 ------------------------------------
