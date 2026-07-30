@@ -157,3 +157,22 @@ Package versions were recorded on 2026-07-22.
 
 `--allow-releaseinfo-change` accepts the initial suite change; `full-upgrade`
 resolves its dependency transitions. The source replacement dates to `28274ab`.
+
+## Standardize on NetworkManager
+
+[`base/upgrade.sh`](./base/upgrade.sh)
+
+Debian [recommends NetworkManager for desktops but not
+servers](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html#_the_modern_network_configuration_for_desktop).
+This repository uses it on every host to keep one configuration format and CLI.
+
+NetworkManager is production-ready: RHEL uses it for bare-metal and virtual
+servers, hypervisors, container hosts, bonds, bridges, VLANs, routes, VPNs, and
+[fleet automation](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/configuring_and_managing_networking/index).
+OpenShift also uses it beneath
+[nmstate](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/observability/networking_operators/index)
+to configure cluster nodes in production.
+
+The upgrade imports `/etc/network/interfaces`, migrates its profiles to native
+NetworkManager keyfiles, and disables `networking.service` for the next boot.
+WSL and containers are skipped because their host owns their networking.

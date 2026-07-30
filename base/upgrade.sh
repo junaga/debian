@@ -30,3 +30,14 @@ apt install --yes \
 
 npm install --global --no-fund \
 	@openai/codex
+
+# WSL and containers inherit networking from their host.
+systemd-detect-virt --container --quiet && exit
+
+# replace ifupdown with NetworkManager
+apt install --yes network-manager
+crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
+systemctl restart NetworkManager
+nmcli connection migrate
+crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
+systemctl disable networking
