@@ -18,6 +18,7 @@ from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 REFRESH_DELAY_MS = 30
 RECONNECT_DELAY_MS = 1000
+HOVER_RECHECK_MS = 20
 REFRESH_EVENTS = {
     "activewindowv2",
     "workspace",
@@ -181,7 +182,7 @@ class TapeEdges:
                 transition: 80ms ease;
             }
 
-            button.left:hover {
+            button.left.hovered {
                 color: rgba(245, 248, 255, 0.92);
                 background-image: linear-gradient(
                     to right,
@@ -191,7 +192,7 @@ class TapeEdges:
                 );
             }
 
-            button.right:hover {
+            button.right.hovered {
                 color: rgba(245, 248, 255, 0.92);
                 background-image: linear-gradient(
                     to left,
@@ -215,6 +216,8 @@ class TapeEdges:
 
     def rebuild(self, *_arguments):
         for control in self.controls.values():
+            if control["hover_source"] is not None:
+                GLib.source_remove(control["hover_source"])
             control["window"].destroy()
         self.controls = {}
 
@@ -241,6 +244,7 @@ class TapeEdges:
         if not state:
             return
 
+        pointer = hyprctl_json("cursorpos")
         desired = {}
         for monitor_name in state["monitors"]:
             for target in clipped_targets(state, monitor_name):
@@ -260,10 +264,25 @@ class TapeEdges:
             control["signature"] = signature
             if target is None:
                 control["address"] = None
+                control["rect"] = None
+                self.set_hovered(control, False)
                 control["window"].hide()
                 continue
 
+            monitor_name, side = key
+            monitor = state["monitors"][monitor_name]
+            left = (
+                monitor["x"]
+                if side == "left"
+                else monitor["x"] + monitor["width"] - target["width"]
+            )
             control["address"] = target["address"]
+            control["rect"] = (
+                left,
+                monitor["y"] + target["top"],
+                target["width"],
+                target["height"],
+            )
             GtkLayerShell.set_margin(
                 control["window"],
                 GtkLayerShell.Edge.TOP,
@@ -274,6 +293,10 @@ class TapeEdges:
                 target["height"],
             )
             control["window"].show_all()
+            self.set_hovered(
+                control,
+                self.pointer_inside(pointer, control["rect"]),
+            )
 
     @staticmethod
     def match_monitor(gdk_monitor, state):
@@ -321,7 +344,9 @@ class TapeEdges:
             "window": window,
             "button": button,
             "address": None,
+            "rect": None,
             "signature": None,
+            "hover_source": None,
         }
         button.connect(
             "clicked",
@@ -329,8 +354,58 @@ class TapeEdges:
             if control["address"]
             else None,
         )
+        button.connect("enter-notify-event", TapeEdges.pointer_entered, control)
+        button.connect("leave-notify-event", TapeEdges.pointer_left, control)
         window.add(button)
         return control
+
+    @staticmethod
+    def pointer_inside(pointer, rect):
+        if not pointer or not rect:
+            return False
+        left, top, width, height = rect
+        return (
+            left <= pointer["x"] < left + width
+            and top <= pointer["y"] < top + height
+        )
+
+    @staticmethod
+    def set_hovered(control, hovered):
+        context = control["button"].get_style_context()
+        if hovered:
+            context.add_class("hovered")
+        else:
+            context.remove_class("hovered")
+
+    @staticmethod
+    def pointer_entered(_button, _event, control):
+        if control["hover_source"] is not None:
+            GLib.source_remove(control["hover_source"])
+            control["hover_source"] = None
+        TapeEdges.set_hovered(control, True)
+        return Gdk.EVENT_PROPAGATE
+
+    @staticmethod
+    def pointer_left(_button, event, control):
+        if event.detail == Gdk.NotifyType.INFERIOR:
+            return Gdk.EVENT_PROPAGATE
+        if control["hover_source"] is None:
+            control["hover_source"] = GLib.timeout_add(
+                HOVER_RECHECK_MS,
+                TapeEdges.recheck_hover,
+                control,
+            )
+        return Gdk.EVENT_PROPAGATE
+
+    @staticmethod
+    def recheck_hover(control):
+        pointer = hyprctl_json("cursorpos")
+        TapeEdges.set_hovered(
+            control,
+            TapeEdges.pointer_inside(pointer, control["rect"]),
+        )
+        control["hover_source"] = None
+        return GLib.SOURCE_REMOVE
 
     def schedule_refresh(self):
         if not self.refresh_scheduled:
