@@ -25,7 +25,6 @@ hl.config({
         -- web (~1280 px), and full width.
         column_width             = 0.553,
         explicit_column_widths   = "0.272, 0.391, 0.553, 0.690, 1.0",
-        focus_fit_method         = 0,
         fullscreen_on_one_column = false,
         wrap_focus               = false,
         wrap_swapcol             = false
