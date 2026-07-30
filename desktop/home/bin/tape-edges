@@ -6,7 +6,6 @@ import os
 import signal
 import socket
 import subprocess
-import sys
 
 import gi
 
@@ -17,14 +16,6 @@ gi.require_version("GtkLayerShell", "0.1")
 from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 
-EDGE_SENSOR_WIDTH = 22
-HANDLE_WIDTH = 48
-HANDLE_SURFACE_WIDTH = 68
-HANDLE_HEIGHT = 132
-EDGE_MARGIN = 0
-HANDLE_VERTICAL_PADDING = 28
-REVEAL_DELAY_MS = 18
-HIDE_DELAY_MS = 140
 REFRESH_DELAY_MS = 30
 RECONNECT_DELAY_MS = 1000
 REFRESH_EVENTS = (
@@ -77,102 +68,94 @@ def desktop_state():
     }
 
 
-def navigation_targets(state, monitor_name):
+def clipped_targets(state, monitor_name):
     monitor = state["monitors"].get(monitor_name)
     if not monitor:
-        return None, None, False
+        return []
 
     workspace_id = monitor["activeWorkspace"]["id"]
     workspace = state["workspaces"].get(workspace_id)
     if not workspace or workspace.get("hasfullscreen", False):
-        return None, None, True
+        return []
 
-    columns = {}
+    monitor_left = monitor["x"]
+    monitor_top = monitor["y"]
+    monitor_right = monitor_left + monitor["width"]
+    monitor_bottom = monitor_top + monitor["height"]
+    current_address = workspace.get("lastwindow", "")
+    candidates = {"left": [], "right": []}
+
     for client in state["clients"]:
         if (
-            client.get("mapped", False)
-            and not client.get("hidden", False)
-            and not client.get("floating", False)
-            and client.get("workspace", {}).get("id") == workspace_id
+            not client.get("mapped", False)
+            or client.get("hidden", False)
+            or client.get("floating", False)
+            or client.get("workspace", {}).get("id") != workspace_id
+            or client["address"] == current_address
         ):
-            columns.setdefault(client["at"][0], []).append(client)
+            continue
 
-    if not columns:
-        return None, None, False
+        client_left, client_top = client["at"]
+        client_width, client_height = client["size"]
+        client_right = client_left + client_width
+        client_bottom = client_top + client_height
+        visible_top = max(client_top, monitor_top)
+        visible_bottom = min(client_bottom, monitor_bottom)
+        visible_height = visible_bottom - visible_top
+        if visible_height <= 0:
+            continue
 
-    ordered_columns = sorted(columns)
-    current_address = workspace.get("lastwindow", "")
-    current_client = next(
-        (
-            client
-            for clients in columns.values()
-            for client in clients
-            if client["address"] == current_address
-        ),
-        None,
-    )
+        if client_left < monitor_left < client_right:
+            visible_right = min(client_right, monitor_right)
+            candidates["left"].append(
+                {
+                    "address": client["address"],
+                    "side": "left",
+                    "top": visible_top - monitor_top,
+                    "width": visible_right - monitor_left,
+                    "height": visible_height,
+                    "position": client_left,
+                }
+            )
 
-    if current_client:
-        current_column = current_client["at"][0]
-    else:
-        monitor_center = monitor["x"] + monitor["width"] / 2
-        current_column = min(
-            ordered_columns,
-            key=lambda x: abs(
-                x + max(client["size"][0] for client in columns[x]) / 2
-                - monitor_center
-            ),
-        )
+        if client_left < monitor_right < client_right:
+            visible_left = max(client_left, monitor_left)
+            candidates["right"].append(
+                {
+                    "address": client["address"],
+                    "side": "right",
+                    "top": visible_top - monitor_top,
+                    "width": monitor_right - visible_left,
+                    "height": visible_height,
+                    "position": client_left,
+                }
+            )
 
-    column_index = ordered_columns.index(current_column)
-
-    def address_at(index):
-        if not 0 <= index < len(ordered_columns):
-            return None
-
-        clients = columns[ordered_columns[index]]
-        return min(
-            clients,
-            key=lambda client: (
-                client.get("focusHistoryID", 2**31),
-                client["at"][1],
-            ),
-        )["address"]
-
-    return address_at(column_index - 1), address_at(column_index + 1), False
+    targets = []
+    if candidates["left"]:
+        targets.append(max(candidates["left"], key=lambda target: target["position"]))
+    if candidates["right"]:
+        targets.append(min(candidates["right"], key=lambda target: target["position"]))
+    return targets
 
 
 def focus_window(address):
-    if not address:
-        return
-
-    # Addresses are produced by Hyprland, and JSON quoting is valid Lua quoting.
     window = json.dumps(f"address:{address}")
     hyprctl("dispatch", f"hl.dsp.focus({{ window = {window} }})")
 
 
-def step(monitor_name, direction):
-    state = desktop_state()
-    if not state:
-        return
-
-    left, right, fullscreen = navigation_targets(state, monitor_name)
-    if not fullscreen:
-        focus_window(left if direction == "left" else right)
-
-
 class TapeEdges:
     def __init__(self):
-        self.controls = {}
+        self.windows = []
         self.event_socket = None
         self.event_buffer = ""
         self.refresh_scheduled = False
         self.display = Gdk.Display.get_default()
-        self.display.connect("monitor-added", self.rebuild)
-        self.display.connect("monitor-removed", self.rebuild)
+        self.display.connect("monitor-added", self.refresh)
+        self.display.connect("monitor-removed", self.refresh)
         self.install_style()
-        self.rebuild()
         self.connect_event_socket()
+        self.refresh()
 
     @staticmethod
     def install_style():
@@ -184,48 +167,41 @@ class TapeEdges:
             }
 
             button {
-                min-width: 48px;
-                min-height: 132px;
                 padding: 0;
                 color: transparent;
                 background: transparent;
                 border: 0;
+                border-radius: 0;
                 box-shadow: none;
-                font-size: 32px;
+                outline: none;
+                font-size: 40px;
                 font-weight: 300;
-                transition: 120ms ease;
+                transition: 80ms ease;
             }
 
-            button.revealed {
-                min-width: 48px;
-                color: rgba(235, 242, 255, 0.90);
-                background: rgba(12, 16, 24, 0.80);
-                box-shadow:
-                    inset 0 0 0 1px rgba(220, 232, 255, 0.16),
-                    0 8px 28px rgba(0, 0, 0, 0.48),
-                    0 0 24px rgba(112, 151, 224, 0.10);
+            button.left:hover {
+                color: rgba(245, 248, 255, 0.92);
+                background-image: linear-gradient(
+                    to right,
+                    rgba(7, 10, 16, 0.34),
+                    rgba(7, 10, 16, 0.08) 58%,
+                    rgba(7, 10, 16, 0.02)
+                );
             }
 
-            button.left.revealed {
-                border-radius: 0 20px 20px 0;
+            button.right:hover {
+                color: rgba(245, 248, 255, 0.92);
+                background-image: linear-gradient(
+                    to left,
+                    rgba(7, 10, 16, 0.34),
+                    rgba(7, 10, 16, 0.08) 58%,
+                    rgba(7, 10, 16, 0.02)
+                );
             }
 
-            button.right.revealed {
-                border-radius: 20px 0 0 20px;
-            }
-
-            button.revealed:hover {
+            button:active {
                 color: rgba(255, 255, 255, 1.0);
-                background: rgba(18, 24, 35, 0.90);
-                box-shadow:
-                    inset 0 0 0 1px rgba(225, 236, 255, 0.26),
-                    0 10px 34px rgba(0, 0, 0, 0.56),
-                    0 0 28px rgba(112, 151, 224, 0.16);
-            }
-
-            button.revealed:active {
-                color: rgba(255, 255, 255, 1.0);
-                background: rgba(112, 151, 224, 0.24);
+                background-color: rgba(210, 222, 245, 0.10);
             }
             """
         )
@@ -235,10 +211,10 @@ class TapeEdges:
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
-    def rebuild(self, *_arguments):
-        for control in self.controls.values():
-            control["window"].destroy()
-        self.controls = {}
+    def refresh(self, *_arguments):
+        for window in self.windows:
+            window.destroy()
+        self.windows = []
 
         state = desktop_state()
         if not state:
@@ -250,12 +226,10 @@ class TapeEdges:
             if not monitor_name:
                 continue
 
-            for side in ("left", "right"):
-                self.controls[(monitor_name, side)] = self.make_control(
-                    gdk_monitor, monitor_name, side
+            for target in clipped_targets(state, monitor_name):
+                self.windows.append(
+                    self.make_target(gdk_monitor, target)
                 )
-
-        self.refresh()
 
     @staticmethod
     def match_monitor(gdk_monitor, state):
@@ -270,13 +244,16 @@ class TapeEdges:
                 return monitor["name"]
         return None
 
-    def make_control(self, monitor, monitor_name, side):
-        geometry = monitor.get_geometry()
+    @staticmethod
+    def make_target(monitor, target):
+        side = target["side"]
+        edge = GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT
 
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
         window.set_app_paintable(True)
         window.set_decorated(False)
         window.set_resizable(False)
+        window.set_accept_focus(False)
 
         GtkLayerShell.init_for_window(window)
         GtkLayerShell.set_namespace(window, "tape-edges")
@@ -285,169 +262,27 @@ class TapeEdges:
         GtkLayerShell.set_keyboard_mode(window, GtkLayerShell.KeyboardMode.NONE)
         GtkLayerShell.set_exclusive_zone(window, 0)
         GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.TOP, True)
-        GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.BOTTOM, True)
-        edge = GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT
         GtkLayerShell.set_anchor(window, edge, True)
-        GtkLayerShell.set_margin(window, edge, EDGE_MARGIN)
-
-        rail = Gtk.Fixed()
-        rail.set_size_request(EDGE_SENSOR_WIDTH, -1)
+        GtkLayerShell.set_margin(window, GtkLayerShell.Edge.TOP, target["top"])
+        GtkLayerShell.set_margin(window, edge, 0)
 
         button = Gtk.Button(label="‹" if side == "left" else "›")
-        button.set_size_request(HANDLE_WIDTH, HANDLE_HEIGHT)
-        button.set_no_show_all(True)
+        button.set_size_request(target["width"], target["height"])
         button.set_can_focus(False)
         button.set_focus_on_click(False)
-        button.set_sensitive(False)
         button.get_style_context().add_class(side)
         button.get_accessible().set_name(
-            "Previous window" if side == "left" else "Next window"
+            "Bring previous window into view"
+            if side == "left"
+            else "Bring next window into view"
         )
         button.connect(
             "clicked",
-            lambda _button: step(monitor_name, side),
+            lambda _button: focus_window(target["address"]),
         )
-        button_x = HANDLE_SURFACE_WIDTH - HANDLE_WIDTH if side == "right" else 0
-        rail.put(button, button_x, HANDLE_VERTICAL_PADDING)
-        window.add(rail)
-        window.add_events(
-            Gdk.EventMask.ENTER_NOTIFY_MASK
-            | Gdk.EventMask.LEAVE_NOTIFY_MASK
-            | Gdk.EventMask.POINTER_MOTION_MASK
-        )
-
-        control = {
-            "window": window,
-            "rail": rail,
-            "button": button,
-            "height": geometry.height,
-            "button_x": button_x,
-            "handle_y": HANDLE_VERTICAL_PADDING,
-            "pointer_y": geometry.height / 2,
-            "reveal_source": None,
-            "hide_source": None,
-            "revealed": False,
-        }
-        window.connect("enter-notify-event", self.schedule_reveal, control)
-        window.connect("leave-notify-event", self.schedule_hide, control)
-        window.connect("motion-notify-event", self.track_pointer, control)
-
-        return control
-
-    @staticmethod
-    def schedule_reveal(_window, event, control):
-        if control["hide_source"] is not None:
-            GLib.source_remove(control["hide_source"])
-            control["hide_source"] = None
-
-        control["pointer_y"] = event.y
-        if not control["revealed"] and control["reveal_source"] is None:
-            control["reveal_source"] = GLib.timeout_add(
-                REVEAL_DELAY_MS,
-                TapeEdges.reveal_control,
-                control,
-            )
-        return Gdk.EVENT_PROPAGATE
-
-    @staticmethod
-    def reveal_control(control):
-        TapeEdges.position_handle(control, control["pointer_y"])
-        control["rail"].set_size_request(HANDLE_SURFACE_WIDTH, -1)
-        button = control["button"]
-        button.get_style_context().add_class("revealed")
-        button.set_sensitive(True)
-        button.show()
-        control["revealed"] = True
-        control["reveal_source"] = None
-        return GLib.SOURCE_REMOVE
-
-    @staticmethod
-    def track_pointer(_window, event, control):
-        control["pointer_y"] = event.y
-        if control["revealed"]:
-            handle_y = control["handle_y"]
-            if (
-                event.y < handle_y + HANDLE_HEIGHT * 0.25
-                or event.y > handle_y + HANDLE_HEIGHT * 0.75
-            ):
-                TapeEdges.position_handle(control, event.y)
-        return Gdk.EVENT_PROPAGATE
-
-    @staticmethod
-    def position_handle(control, pointer_y):
-        maximum_y = control["height"] - HANDLE_HEIGHT - HANDLE_VERTICAL_PADDING
-        handle_y = round(
-            max(
-                HANDLE_VERTICAL_PADDING,
-                min(pointer_y - HANDLE_HEIGHT / 2, maximum_y),
-            )
-        )
-        control["rail"].move(control["button"], control["button_x"], handle_y)
-        control["handle_y"] = handle_y
-
-    @staticmethod
-    def schedule_hide(_window, event, control):
-        if event.detail == Gdk.NotifyType.INFERIOR:
-            return Gdk.EVENT_PROPAGATE
-
-        if control["reveal_source"] is not None:
-            GLib.source_remove(control["reveal_source"])
-            control["reveal_source"] = None
-
-        if control["revealed"] and control["hide_source"] is None:
-            control["hide_source"] = GLib.timeout_add(
-                HIDE_DELAY_MS,
-                TapeEdges.hide_control,
-                control,
-            )
-        return Gdk.EVENT_PROPAGATE
-
-    @staticmethod
-    def hide_control(control):
-        button = control["button"]
-        button.set_sensitive(False)
-        button.get_style_context().remove_class("revealed")
-        button.hide()
-        control["rail"].set_size_request(EDGE_SENSOR_WIDTH, -1)
-        control["hide_source"] = None
-        control["revealed"] = False
-        return GLib.SOURCE_REMOVE
-
-    @staticmethod
-    def reset_control(control):
-        for source_name in ("reveal_source", "hide_source"):
-            source = control[source_name]
-            if source is not None:
-                GLib.source_remove(source)
-                control[source_name] = None
-
-        button = control["button"]
-        button.set_sensitive(False)
-        button.get_style_context().remove_class("revealed")
-        button.hide()
-        control["rail"].set_size_request(EDGE_SENSOR_WIDTH, -1)
-        control["revealed"] = False
-
-    def refresh(self):
-        state = desktop_state()
-        if not state:
-            return
-
-        for monitor_name in state["monitors"]:
-            left, right, fullscreen = navigation_targets(state, monitor_name)
-            availability = {
-                "left": bool(left) and not fullscreen,
-                "right": bool(right) and not fullscreen,
-            }
-            for side in ("left", "right"):
-                control = self.controls.get((monitor_name, side))
-                if not control:
-                    continue
-                if availability[side]:
-                    control["window"].show_all()
-                else:
-                    self.reset_control(control)
-                    control["window"].hide()
+        window.add(button)
+        window.show_all()
+        return window
 
     def schedule_refresh(self):
         if not self.refresh_scheduled:
@@ -529,10 +364,6 @@ class TapeEdges:
 
 
 def main():
-    if len(sys.argv) == 4 and sys.argv[1] == "--step":
-        step(sys.argv[2], sys.argv[3])
-        return
-
     runtime_directory = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
     lock = open(os.path.join(runtime_directory, "tape-edges.lock"), "w")
     try:
