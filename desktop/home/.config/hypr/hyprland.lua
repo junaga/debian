@@ -11,7 +11,6 @@ local browser = "google-chrome-stable"
 local music = "youtube-music"
 local steam = "steam -system-composer"
 local discord = "discord --ozone-platform=wayland"
-local tapeEdges = "tape-edges"
 
 open("SUPER + P", screenshot)
 open("SUPER + T", terminal)
@@ -23,7 +22,6 @@ local function autostart()
     hl.exec_cmd(browser)
     hl.exec_cmd(steam)
     hl.exec_cmd(discord)
-    hl.exec_cmd(tapeEdges)
 end
 
 hl.on("hyprland.start", autostart)
