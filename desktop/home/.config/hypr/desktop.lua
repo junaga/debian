@@ -6,6 +6,11 @@ hl.env("XCURSOR_THEME", "arrow-on-text")
 hl.env("XCURSOR_SIZE", "48")
 
 hl.config({
+    input = {
+        -- The scrolling layout moves windows beneath a stationary pointer.
+        -- Do not let that stationary pointer steal focus after navigation.
+        mouse_refocus = false
+    },
     general = {
         layout           = "scrolling",
         -- Wider sides reveal the neighboring column without wasting vertical space.

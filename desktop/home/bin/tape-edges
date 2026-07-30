@@ -6,19 +6,22 @@ import os
 import signal
 import socket
 import subprocess
+import time
+from dataclasses import dataclass
 
+import cairo
 import gi
 
-gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
+gi.require_version("Gtk", "3.0")
 gi.require_version("GtkLayerShell", "0.1")
 
 from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 
-REFRESH_DELAY_MS = 30
-RECONNECT_DELAY_MS = 1000
-HOVER_RECHECK_MS = 20
+FADE_MS = 80
+REFRESH_MS = 30
+RECONNECT_MS = 1000
 REFRESH_EVENTS = {
     "activewindowv2",
     "workspace",
@@ -33,16 +36,18 @@ REFRESH_EVENTS = {
 }
 
 
-def hyprctl(*arguments):
-    return subprocess.run(
-        ("hyprctl", *arguments),
-        check=False,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+@dataclass(frozen=True)
+class Target:
+    address: str
+    side: str
+    x: int
+    y: int
+    width: int
+    height: int
+    position: int
 
 
-def hyprctl_json(command):
+def hypr_json(command):
     try:
         result = subprocess.run(
             ("hyprctl", "-j", command),
@@ -56,12 +61,11 @@ def hyprctl_json(command):
 
 
 def desktop_state():
-    monitors = hyprctl_json("monitors")
-    workspaces = hyprctl_json("workspaces")
-    clients = hyprctl_json("clients")
+    monitors = hypr_json("monitors")
+    workspaces = hypr_json("workspaces")
+    clients = hypr_json("clients")
     if monitors is None or workspaces is None or clients is None:
         return None
-
     return {
         "monitors": {monitor["name"]: monitor for monitor in monitors},
         "workspaces": {workspace["id"]: workspace for workspace in workspaces},
@@ -70,21 +74,16 @@ def desktop_state():
 
 
 def clipped_targets(state, monitor_name):
-    monitor = state["monitors"].get(monitor_name)
-    if not monitor:
-        return []
-
+    monitor = state["monitors"][monitor_name]
     workspace_id = monitor["activeWorkspace"]["id"]
     workspace = state["workspaces"].get(workspace_id)
     if not workspace or workspace.get("hasfullscreen", False):
         return []
 
-    monitor_left = monitor["x"]
-    monitor_top = monitor["y"]
-    monitor_right = monitor_left + monitor["width"]
-    monitor_bottom = monitor_top + monitor["height"]
-    current_address = workspace.get("lastwindow", "")
-    candidates = {"left": [], "right": []}
+    left, top = monitor["x"], monitor["y"]
+    right, bottom = left + monitor["width"], top + monitor["height"]
+    active = workspace.get("lastwindow")
+    left_targets, right_targets = [], []
 
     for client in state["clients"]:
         if (
@@ -92,214 +91,275 @@ def clipped_targets(state, monitor_name):
             or client.get("hidden", False)
             or client.get("floating", False)
             or client.get("workspace", {}).get("id") != workspace_id
-            or client["address"] == current_address
+            or client["address"] == active
         ):
             continue
 
         client_left, client_top = client["at"]
-        client_width, client_height = client["size"]
-        client_right = client_left + client_width
-        client_bottom = client_top + client_height
-        visible_top = max(client_top, monitor_top)
-        visible_bottom = min(client_bottom, monitor_bottom)
-        visible_height = visible_bottom - visible_top
+        width, height = client["size"]
+        client_right = client_left + width
+        visible_top = max(client_top, top)
+        visible_height = min(client_top + height, bottom) - visible_top
         if visible_height <= 0:
             continue
 
-        if client_left < monitor_left < client_right:
-            visible_right = min(client_right, monitor_right)
-            candidates["left"].append(
-                {
-                    "address": client["address"],
-                    "side": "left",
-                    "top": visible_top - monitor_top,
-                    "width": visible_right - monitor_left,
-                    "height": visible_height,
-                    "position": client_left,
-                }
+        if client_left < left < client_right:
+            left_targets.append(
+                Target(
+                    client["address"],
+                    "left",
+                    0,
+                    visible_top - top,
+                    min(client_right, right) - left,
+                    visible_height,
+                    client_left,
+                )
             )
-
-        if client_left < monitor_right < client_right:
-            visible_left = max(client_left, monitor_left)
-            candidates["right"].append(
-                {
-                    "address": client["address"],
-                    "side": "right",
-                    "top": visible_top - monitor_top,
-                    "width": monitor_right - visible_left,
-                    "height": visible_height,
-                    "position": client_left,
-                }
+        if client_left < right < client_right:
+            visible_left = max(client_left, left)
+            right_targets.append(
+                Target(
+                    client["address"],
+                    "right",
+                    visible_left - left,
+                    visible_top - top,
+                    right - visible_left,
+                    visible_height,
+                    client_left,
+                )
             )
 
     targets = []
-    if candidates["left"]:
-        targets.append(max(candidates["left"], key=lambda target: target["position"]))
-    if candidates["right"]:
-        targets.append(min(candidates["right"], key=lambda target: target["position"]))
+    if left_targets:
+        targets.append(max(left_targets, key=lambda target: target.position))
+    if right_targets:
+        targets.append(min(right_targets, key=lambda target: target.position))
     return targets
 
 
 def focus_window(address):
-    window = json.dumps(f"address:{address}")
-    hyprctl("dispatch", f"hl.dsp.focus({{ window = {window} }})")
+    selector = json.dumps(f"address:{address}")
+    subprocess.run(
+        ("hyprctl", "dispatch", f"hl.dsp.focus({{ window = {selector} }})"),
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+class MonitorCanvas(Gtk.DrawingArea):
+    def __init__(self, geometry):
+        super().__init__()
+        self.geometry = geometry
+        self.targets = []
+        self.hovered = None
+        self.draw_target = None
+        self.opacity = 0.0
+        self.pressed = False
+        self.fade = None
+        self.fade_source = None
+        self.pointer_source = None
+
+        self.set_size_request(geometry.width, geometry.height)
+        self.set_app_paintable(True)
+        self.add_events(
+            Gdk.EventMask.POINTER_MOTION_MASK
+            | Gdk.EventMask.LEAVE_NOTIFY_MASK
+            | Gdk.EventMask.BUTTON_PRESS_MASK
+            | Gdk.EventMask.BUTTON_RELEASE_MASK
+        )
+        self.connect("realize", lambda *_: self.apply_input_region())
+        self.connect("motion-notify-event", self.on_motion)
+        self.connect("leave-notify-event", self.on_leave)
+        self.connect("button-press-event", self.on_press)
+        self.connect("button-release-event", self.on_release)
+        self.connect("draw", self.on_draw)
+        self.get_accessible().set_name("Clipped window navigation")
+
+    def set_targets(self, targets, pointer):
+        if targets != self.targets:
+            self.targets = targets
+            self.apply_input_region()
+        x = pointer["x"] - self.geometry.x if pointer else -1
+        y = pointer["y"] - self.geometry.y if pointer else -1
+        self.set_hovered(self.target_at(x, y))
+
+    def apply_input_region(self):
+        if not self.get_realized():
+            return
+        region = cairo.Region()
+        for target in self.targets:
+            region.union(
+                cairo.RectangleInt(
+                    target.x,
+                    target.y,
+                    target.width,
+                    target.height,
+                )
+            )
+        surface = self.get_toplevel().get_window()
+        surface.input_shape_combine_region(region, 0, 0)
+        surface.get_display().flush()
+
+    def target_at(self, x, y):
+        return next(
+            (
+                target
+                for target in self.targets
+                if target.x <= x < target.x + target.width
+                and target.y <= y < target.y + target.height
+            ),
+            None,
+        )
+
+    def set_hovered(self, target):
+        old_address = self.hovered.address if self.hovered else None
+        new_address = target.address if target else None
+        self.hovered = target
+        if old_address == new_address:
+            if target:
+                self.draw_target = target
+                self.queue_draw()
+            return
+        if target:
+            self.draw_target = target
+        self.animate_to(1.0 if target else 0.0)
+
+    def animate_to(self, opacity):
+        self.fade = (time.monotonic(), self.opacity, opacity)
+        if self.fade_source is None:
+            self.fade_source = GLib.timeout_add(16, self.animate)
+
+    def animate(self):
+        started, initial, target = self.fade
+        progress = min(1.0, (time.monotonic() - started) * 1000 / FADE_MS)
+        eased = progress * (2.0 - progress)
+        self.opacity = initial + (target - initial) * eased
+        self.queue_draw()
+        if progress < 1.0:
+            return GLib.SOURCE_CONTINUE
+        if self.opacity == 0.0:
+            self.draw_target = None
+        self.fade_source = None
+        return GLib.SOURCE_REMOVE
+
+    def on_motion(self, _widget, event):
+        if self.pointer_source is not None:
+            GLib.source_remove(self.pointer_source)
+            self.pointer_source = None
+        self.set_hovered(self.target_at(event.x, event.y))
+        return Gdk.EVENT_PROPAGATE
+
+    def on_leave(self, _widget, _event):
+        if self.pointer_source is None:
+            self.pointer_source = GLib.timeout_add(20, self.reconcile_pointer)
+        return Gdk.EVENT_PROPAGATE
+
+    def reconcile_pointer(self):
+        pointer = hypr_json("cursorpos")
+        x = pointer["x"] - self.geometry.x if pointer else -1
+        y = pointer["y"] - self.geometry.y if pointer else -1
+        self.set_hovered(self.target_at(x, y))
+        self.pointer_source = None
+        return GLib.SOURCE_REMOVE
+
+    def on_press(self, _widget, event):
+        self.pressed = event.button == 1 and self.target_at(event.x, event.y) is not None
+        self.queue_draw()
+        return Gdk.EVENT_STOP
+
+    def on_release(self, _widget, event):
+        target = self.target_at(event.x, event.y)
+        clicked = event.button == 1 and self.pressed and target
+        self.pressed = False
+        self.queue_draw()
+        if clicked:
+            focus_window(target.address)
+        return Gdk.EVENT_STOP
+
+    def on_draw(self, _widget, context):
+        target = self.draw_target
+        if not target or self.opacity <= 0.0:
+            return True
+
+        context.save()
+        context.rectangle(target.x, target.y, target.width, target.height)
+        context.clip()
+
+        start = target.x if target.side == "left" else target.x + target.width
+        end = target.x + target.width if target.side == "left" else target.x
+        gradient = cairo.LinearGradient(start, 0, end, 0)
+        strength = 1.15 if self.pressed else 1.0
+        gradient.add_color_stop_rgba(
+            0, 7 / 255, 10 / 255, 16 / 255, 0.34 * self.opacity * strength
+        )
+        gradient.add_color_stop_rgba(
+            0.58, 7 / 255, 10 / 255, 16 / 255, 0.08 * self.opacity
+        )
+        gradient.add_color_stop_rgba(
+            1, 7 / 255, 10 / 255, 16 / 255, 0.02 * self.opacity
+        )
+        context.set_source(gradient)
+        context.paint()
+
+        center_x = target.x + target.width / 2
+        center_y = target.y + target.height / 2
+        direction = -1 if target.side == "left" else 1
+        context.set_source_rgba(245 / 255, 248 / 255, 1, 0.92 * self.opacity)
+        context.set_line_width(2.6)
+        context.set_line_cap(cairo.LINE_CAP_ROUND)
+        context.set_line_join(cairo.LINE_JOIN_ROUND)
+        context.move_to(center_x - direction * 4.5, center_y - 9)
+        context.line_to(center_x + direction * 4.5, center_y)
+        context.line_to(center_x - direction * 4.5, center_y + 9)
+        context.stroke()
+        context.restore()
+        return True
 
 
 class TapeEdges:
     def __init__(self):
-        self.controls = {}
+        self.surfaces = {}
         self.event_socket = None
         self.event_buffer = ""
-        self.refresh_scheduled = False
-        active_window = hyprctl_json("activewindow") or {}
-        self.last_active_address = active_window.get("address", "").removeprefix("0x")
+        self.refresh_source = None
+        self.reconnect_source = None
+        active = hypr_json("activewindow") or {}
+        self.last_active = active.get("address", "").removeprefix("0x")
         self.display = Gdk.Display.get_default()
         self.display.connect("monitor-added", self.rebuild)
         self.display.connect("monitor-removed", self.rebuild)
         self.install_style()
-        self.connect_event_socket()
+        self.connect_events()
         self.rebuild()
 
     @staticmethod
     def install_style():
         provider = Gtk.CssProvider()
-        provider.load_from_data(
-            b"""
-            window {
-                background: transparent;
-            }
-
-            button {
-                padding: 0;
-                color: transparent;
-                background: transparent;
-                border: 0;
-                border-radius: 0;
-                box-shadow: none;
-                outline: none;
-                font-size: 40px;
-                font-weight: 300;
-                transition: 80ms ease;
-            }
-
-            button.left.hovered {
-                color: rgba(245, 248, 255, 0.92);
-                background-image: linear-gradient(
-                    to right,
-                    rgba(7, 10, 16, 0.34),
-                    rgba(7, 10, 16, 0.08) 58%,
-                    rgba(7, 10, 16, 0.02)
-                );
-            }
-
-            button.right.hovered {
-                color: rgba(245, 248, 255, 0.92);
-                background-image: linear-gradient(
-                    to left,
-                    rgba(7, 10, 16, 0.34),
-                    rgba(7, 10, 16, 0.08) 58%,
-                    rgba(7, 10, 16, 0.02)
-                );
-            }
-
-            button:active {
-                color: rgba(255, 255, 255, 1.0);
-                background-color: rgba(210, 222, 245, 0.10);
-            }
-            """
-        )
+        provider.load_from_data(b"window, drawingarea { background: transparent; }")
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),
             provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
-    def rebuild(self, *_arguments):
-        for control in self.controls.values():
-            if control["hover_source"] is not None:
-                GLib.source_remove(control["hover_source"])
-            control["window"].destroy()
-        self.controls = {}
+    def rebuild(self, *_args):
+        for window, _canvas in self.surfaces.values():
+            window.destroy()
+        self.surfaces = {}
 
         state = desktop_state()
         if not state:
             return
-
         for index in range(self.display.get_n_monitors()):
-            gdk_monitor = self.display.get_monitor(index)
-            monitor_name = self.match_monitor(gdk_monitor, state)
-            if not monitor_name:
-                continue
-
-            for side in ("left", "right"):
-                self.controls[(monitor_name, side)] = self.make_control(
-                    gdk_monitor,
-                    side,
-                )
-
-        self.refresh()
-
-    def refresh(self):
-        state = desktop_state()
-        if not state:
-            return
-
-        pointer = hyprctl_json("cursorpos")
-        desired = {}
-        for monitor_name in state["monitors"]:
-            for target in clipped_targets(state, monitor_name):
-                desired[(monitor_name, target["side"])] = target
-
-        for key, control in self.controls.items():
-            target = desired.get(key)
-            signature = (
-                target["address"],
-                target["top"],
-                target["width"],
-                target["height"],
-            ) if target else None
-            if signature == control["signature"]:
-                continue
-
-            control["signature"] = signature
-            if target is None:
-                control["address"] = None
-                control["rect"] = None
-                self.set_hovered(control, False)
-                control["window"].hide()
-                continue
-
-            monitor_name, side = key
-            monitor = state["monitors"][monitor_name]
-            left = (
-                monitor["x"]
-                if side == "left"
-                else monitor["x"] + monitor["width"] - target["width"]
-            )
-            control["address"] = target["address"]
-            control["rect"] = (
-                left,
-                monitor["y"] + target["top"],
-                target["width"],
-                target["height"],
-            )
-            GtkLayerShell.set_margin(
-                control["window"],
-                GtkLayerShell.Edge.TOP,
-                target["top"],
-            )
-            control["button"].set_size_request(
-                target["width"],
-                target["height"],
-            )
-            control["window"].show_all()
-            self.set_hovered(
-                control,
-                self.pointer_inside(pointer, control["rect"]),
-            )
+            monitor = self.display.get_monitor(index)
+            name = self.monitor_name(monitor, state)
+            if name:
+                self.surfaces[name] = self.make_surface(monitor)
+        self.refresh(state)
 
     @staticmethod
-    def match_monitor(gdk_monitor, state):
+    def monitor_name(gdk_monitor, state):
         geometry = gdk_monitor.get_geometry()
         for monitor in state["monitors"].values():
             if (
@@ -312,13 +372,10 @@ class TapeEdges:
         return None
 
     @staticmethod
-    def make_control(monitor, side):
-        edge = GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT
-
+    def make_surface(monitor):
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
         window.set_app_paintable(True)
         window.set_decorated(False)
-        window.set_resizable(False)
         window.set_accept_focus(False)
 
         GtkLayerShell.init_for_window(window)
@@ -327,118 +384,49 @@ class TapeEdges:
         GtkLayerShell.set_monitor(window, monitor)
         GtkLayerShell.set_keyboard_mode(window, GtkLayerShell.KeyboardMode.NONE)
         GtkLayerShell.set_exclusive_zone(window, 0)
-        GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.TOP, True)
-        GtkLayerShell.set_anchor(window, edge, True)
-        GtkLayerShell.set_margin(window, edge, 0)
+        for edge in (
+            GtkLayerShell.Edge.TOP,
+            GtkLayerShell.Edge.RIGHT,
+            GtkLayerShell.Edge.BOTTOM,
+            GtkLayerShell.Edge.LEFT,
+        ):
+            GtkLayerShell.set_anchor(window, edge, True)
 
-        button = Gtk.Button(label="‹" if side == "left" else "›")
-        button.set_can_focus(False)
-        button.set_focus_on_click(False)
-        button.get_style_context().add_class(side)
-        button.get_accessible().set_name(
-            "Bring previous window into view"
-            if side == "left"
-            else "Bring next window into view"
-        )
-        control = {
-            "window": window,
-            "button": button,
-            "address": None,
-            "rect": None,
-            "signature": None,
-            "hover_source": None,
-        }
-        button.connect(
-            "clicked",
-            lambda _button: focus_window(control["address"])
-            if control["address"]
-            else None,
-        )
-        button.connect("enter-notify-event", TapeEdges.pointer_entered, control)
-        button.connect("leave-notify-event", TapeEdges.pointer_left, control)
-        window.add(button)
-        return control
+        canvas = MonitorCanvas(monitor.get_geometry())
+        window.add(canvas)
+        window.show_all()
+        return window, canvas
 
-    @staticmethod
-    def pointer_inside(pointer, rect):
-        if not pointer or not rect:
-            return False
-        left, top, width, height = rect
-        return (
-            left <= pointer["x"] < left + width
-            and top <= pointer["y"] < top + height
-        )
-
-    @staticmethod
-    def set_hovered(control, hovered):
-        context = control["button"].get_style_context()
-        if hovered:
-            context.add_class("hovered")
-        else:
-            context.remove_class("hovered")
-
-    @staticmethod
-    def pointer_entered(_button, _event, control):
-        if control["hover_source"] is not None:
-            GLib.source_remove(control["hover_source"])
-            control["hover_source"] = None
-        TapeEdges.set_hovered(control, True)
-        return Gdk.EVENT_PROPAGATE
-
-    @staticmethod
-    def pointer_left(_button, event, control):
-        if event.detail == Gdk.NotifyType.INFERIOR:
-            return Gdk.EVENT_PROPAGATE
-        if control["hover_source"] is None:
-            control["hover_source"] = GLib.timeout_add(
-                HOVER_RECHECK_MS,
-                TapeEdges.recheck_hover,
-                control,
-            )
-        return Gdk.EVENT_PROPAGATE
-
-    @staticmethod
-    def recheck_hover(control):
-        pointer = hyprctl_json("cursorpos")
-        TapeEdges.set_hovered(
-            control,
-            TapeEdges.pointer_inside(pointer, control["rect"]),
-        )
-        control["hover_source"] = None
-        return GLib.SOURCE_REMOVE
+    def refresh(self, state=None):
+        state = state or desktop_state()
+        if not state:
+            return
+        pointer = hypr_json("cursorpos")
+        for name, (_window, canvas) in self.surfaces.items():
+            canvas.set_targets(clipped_targets(state, name), pointer)
 
     def schedule_refresh(self):
-        if not self.refresh_scheduled:
-            self.refresh_scheduled = True
-            GLib.timeout_add(REFRESH_DELAY_MS, self.run_scheduled_refresh)
+        if self.refresh_source is None:
+            self.refresh_source = GLib.timeout_add(REFRESH_MS, self.run_refresh)
 
-    def run_scheduled_refresh(self):
-        self.refresh_scheduled = False
+    def run_refresh(self):
+        self.refresh_source = None
         self.refresh()
         return GLib.SOURCE_REMOVE
 
-    def connect_event_socket(self):
+    def connect_events(self):
         signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
-        runtime_directory = os.environ.get("XDG_RUNTIME_DIR")
-        if not signature or not runtime_directory:
-            GLib.timeout_add(RECONNECT_DELAY_MS, self.retry_event_socket)
-            return
-
-        path = os.path.join(
-            runtime_directory,
-            "hypr",
-            signature,
-            ".socket2.sock",
-        )
+        runtime = os.environ.get("XDG_RUNTIME_DIR")
         event_socket = None
         try:
+            path = os.path.join(runtime, "hypr", signature, ".socket2.sock")
             event_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             event_socket.connect(path)
             event_socket.setblocking(False)
-        except OSError:
+        except (OSError, TypeError):
             if event_socket is not None:
                 event_socket.close()
-            GLib.timeout_add(RECONNECT_DELAY_MS, self.retry_event_socket)
+            self.reconnect_later()
             return
 
         self.event_socket = event_socket
@@ -446,67 +434,73 @@ class TapeEdges:
         GLib.io_add_watch(
             event_socket,
             GLib.IO_IN | GLib.IO_HUP | GLib.IO_ERR,
-            self.handle_event_socket,
+            self.on_events,
         )
 
-    def retry_event_socket(self):
+    def reconnect_later(self):
+        if self.reconnect_source is None:
+            self.reconnect_source = GLib.timeout_add(
+                RECONNECT_MS,
+                self.reconnect,
+            )
+
+    def reconnect(self):
+        self.reconnect_source = None
         if self.event_socket is None:
-            self.connect_event_socket()
+            self.connect_events()
         return GLib.SOURCE_REMOVE
 
-    def handle_event_socket(self, event_socket, condition):
+    def on_events(self, event_socket, condition):
         if condition & (GLib.IO_HUP | GLib.IO_ERR):
-            self.disconnect_event_socket()
-            return GLib.SOURCE_REMOVE
-
+            return self.disconnect_events()
         try:
             chunk = event_socket.recv(65536)
         except BlockingIOError:
             return GLib.SOURCE_CONTINUE
         except OSError:
-            self.disconnect_event_socket()
-            return GLib.SOURCE_REMOVE
-
+            return self.disconnect_events()
         if not chunk:
-            self.disconnect_event_socket()
-            return GLib.SOURCE_REMOVE
+            return self.disconnect_events()
 
         self.event_buffer += chunk.decode(errors="replace")
         lines = self.event_buffer.split("\n")
         self.event_buffer = lines.pop()
-        refresh_needed = False
+        refresh = False
+        rebuild = False
         for line in lines:
-            event, _separator, payload = line.partition(">>")
+            event, _, payload = line.partition(">>")
             if event not in REFRESH_EVENTS:
                 continue
             if event == "activewindowv2":
                 address = payload.split(",", 1)[0].removeprefix("0x")
-                if address == self.last_active_address:
+                if address == self.last_active:
                     continue
-                self.last_active_address = address
-            refresh_needed = True
+                self.last_active = address
+            refresh = True
+            rebuild |= event == "configreloaded"
 
-        if refresh_needed:
+        if rebuild:
+            GLib.idle_add(self.rebuild)
+        elif refresh:
             self.schedule_refresh()
-
         return GLib.SOURCE_CONTINUE
 
-    def disconnect_event_socket(self):
+    def disconnect_events(self):
         if self.event_socket is not None:
             self.event_socket.close()
             self.event_socket = None
-        GLib.timeout_add(RECONNECT_DELAY_MS, self.retry_event_socket)
+        self.reconnect_later()
+        return GLib.SOURCE_REMOVE
 
 
 def main():
-    runtime_directory = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
-    lock = open(os.path.join(runtime_directory, "tape-edges.lock"), "w")
+    runtime = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+    lock = open(os.path.join(runtime, "tape-edges.lock"), "w")
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
         return
-
-    signal.signal(signal.SIGTERM, lambda *_arguments: Gtk.main_quit())
+    signal.signal(signal.SIGTERM, lambda *_: Gtk.main_quit())
     TapeEdges()
     Gtk.main()
 
