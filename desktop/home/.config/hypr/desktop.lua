@@ -9,17 +9,9 @@ hl.config({
     general = {
         layout           = "scrolling",
         gaps_out         = 27,
-        border_size      = 1,
+        border_size      = 0,
         gaps_in          = 8,
-        resize_on_border = true,
-        col = {
-            -- A quiet slate gradient marks focus; inactive windows keep a clean edge.
-            active_border = {
-                colors = { "rgba(475569b3)", "rgba(64748bb3)", "rgba(6b617db3)" },
-                angle = 45
-            },
-            inactive_border = "rgba(00000000)"
-        }
+        resize_on_border = true
     },
     misc = {
         force_default_wallpaper = animeWallpaper
