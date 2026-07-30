@@ -19,8 +19,9 @@ from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 EDGE_SENSOR_WIDTH = 16
 HANDLE_WIDTH = 48
-HANDLE_HEIGHT = 180
+HANDLE_HEIGHT = 132
 EDGE_MARGIN = 0
+HANDLE_VERTICAL_PADDING = 28
 REVEAL_DELAY_MS = 90
 HIDE_DELAY_MS = 180
 REFRESH_DELAY_MS = 30
@@ -182,8 +183,8 @@ class TapeEdges:
             }
 
             button {
-                min-width: 16px;
-                min-height: 180px;
+                min-width: 48px;
+                min-height: 132px;
                 padding: 0;
                 color: transparent;
                 background: transparent;
@@ -281,17 +282,17 @@ class TapeEdges:
         GtkLayerShell.set_keyboard_mode(window, GtkLayerShell.KeyboardMode.NONE)
         GtkLayerShell.set_exclusive_zone(window, 0)
         GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.TOP, True)
+        GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.BOTTOM, True)
         edge = GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT
         GtkLayerShell.set_anchor(window, edge, True)
-        GtkLayerShell.set_margin(
-            window,
-            GtkLayerShell.Edge.TOP,
-            max(0, (geometry.height - HANDLE_HEIGHT) // 2),
-        )
         GtkLayerShell.set_margin(window, edge, EDGE_MARGIN)
 
+        rail = Gtk.Fixed()
+        rail.set_size_request(EDGE_SENSOR_WIDTH, -1)
+
         button = Gtk.Button(label="‹" if side == "left" else "›")
-        button.set_size_request(EDGE_SENSOR_WIDTH, HANDLE_HEIGHT)
+        button.set_size_request(HANDLE_WIDTH, HANDLE_HEIGHT)
+        button.set_no_show_all(True)
         button.set_can_focus(False)
         button.set_focus_on_click(False)
         button.set_sensitive(False)
@@ -303,29 +304,38 @@ class TapeEdges:
             "clicked",
             lambda _button: step(monitor_name, side),
         )
-        window.add(button)
+        rail.put(button, 0, HANDLE_VERTICAL_PADDING)
+        window.add(rail)
         window.add_events(
-            Gdk.EventMask.ENTER_NOTIFY_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK
+            Gdk.EventMask.ENTER_NOTIFY_MASK
+            | Gdk.EventMask.LEAVE_NOTIFY_MASK
+            | Gdk.EventMask.POINTER_MOTION_MASK
         )
 
         control = {
             "window": window,
+            "rail": rail,
             "button": button,
+            "height": geometry.height,
+            "handle_y": HANDLE_VERTICAL_PADDING,
+            "pointer_y": geometry.height / 2,
             "reveal_source": None,
             "hide_source": None,
             "revealed": False,
         }
         window.connect("enter-notify-event", self.schedule_reveal, control)
         window.connect("leave-notify-event", self.schedule_hide, control)
+        window.connect("motion-notify-event", self.track_pointer, control)
 
         return control
 
     @staticmethod
-    def schedule_reveal(_window, _event, control):
+    def schedule_reveal(_window, event, control):
         if control["hide_source"] is not None:
             GLib.source_remove(control["hide_source"])
             control["hide_source"] = None
 
+        control["pointer_y"] = event.y
         if not control["revealed"] and control["reveal_source"] is None:
             control["reveal_source"] = GLib.timeout_add(
                 REVEAL_DELAY_MS,
@@ -336,13 +346,39 @@ class TapeEdges:
 
     @staticmethod
     def reveal_control(control):
+        TapeEdges.position_handle(control, control["pointer_y"])
+        control["rail"].set_size_request(HANDLE_WIDTH, -1)
         button = control["button"]
-        button.set_size_request(HANDLE_WIDTH, HANDLE_HEIGHT)
         button.get_style_context().add_class("revealed")
         button.set_sensitive(True)
+        button.show()
         control["revealed"] = True
         control["reveal_source"] = None
         return GLib.SOURCE_REMOVE
+
+    @staticmethod
+    def track_pointer(_window, event, control):
+        control["pointer_y"] = event.y
+        if control["revealed"]:
+            handle_y = control["handle_y"]
+            if (
+                event.y < handle_y + HANDLE_HEIGHT * 0.25
+                or event.y > handle_y + HANDLE_HEIGHT * 0.75
+            ):
+                TapeEdges.position_handle(control, event.y)
+        return Gdk.EVENT_PROPAGATE
+
+    @staticmethod
+    def position_handle(control, pointer_y):
+        maximum_y = control["height"] - HANDLE_HEIGHT - HANDLE_VERTICAL_PADDING
+        handle_y = round(
+            max(
+                HANDLE_VERTICAL_PADDING,
+                min(pointer_y - HANDLE_HEIGHT / 2, maximum_y),
+            )
+        )
+        control["rail"].move(control["button"], 0, handle_y)
+        control["handle_y"] = handle_y
 
     @staticmethod
     def schedule_hide(_window, event, control):
@@ -366,7 +402,8 @@ class TapeEdges:
         button = control["button"]
         button.set_sensitive(False)
         button.get_style_context().remove_class("revealed")
-        button.set_size_request(EDGE_SENSOR_WIDTH, HANDLE_HEIGHT)
+        button.hide()
+        control["rail"].set_size_request(EDGE_SENSOR_WIDTH, -1)
         control["hide_source"] = None
         control["revealed"] = False
         return GLib.SOURCE_REMOVE
@@ -382,7 +419,8 @@ class TapeEdges:
         button = control["button"]
         button.set_sensitive(False)
         button.get_style_context().remove_class("revealed")
-        button.set_size_request(EDGE_SENSOR_WIDTH, HANDLE_HEIGHT)
+        button.hide()
+        control["rail"].set_size_request(EDGE_SENSOR_WIDTH, -1)
         control["revealed"] = False
 
     def refresh(self):
