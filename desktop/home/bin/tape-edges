@@ -4,7 +4,9 @@ import fcntl
 import json
 import os
 import signal
+import socket
 import subprocess
+import sys
 
 import gi
 
@@ -12,12 +14,26 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 gi.require_version("GtkLayerShell", "0.1")
 
-from gi.repository import Gdk, Gtk, GtkLayerShell
+from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 
-BUTTON_WIDTH = 32
-BUTTON_HEIGHT = 112
-SIDE_MARGIN = 8
+HANDLE_WIDTH = 28
+HANDLE_HEIGHT = 88
+EDGE_MARGIN = 8
+REFRESH_DELAY_MS = 30
+RECONNECT_DELAY_MS = 1000
+REFRESH_EVENTS = (
+    "activewindow",
+    "activewindowv2",
+    "workspace",
+    "workspacev2",
+    "focusedmon",
+    "openwindow",
+    "closewindow",
+    "movewindow",
+    "fullscreen",
+    "configreloaded",
+)
 
 
 def hyprctl(*arguments):
@@ -42,38 +58,116 @@ def hyprctl_json(command):
         return None
 
 
-def pointer_monitor():
-    pointer = hyprctl_json("cursorpos")
+def desktop_state():
     monitors = hyprctl_json("monitors")
-    if not pointer or not monitors:
+    workspaces = hyprctl_json("workspaces")
+    clients = hyprctl_json("clients")
+    if monitors is None or workspaces is None or clients is None:
         return None
 
-    for monitor in monitors:
+    return {
+        "monitors": {monitor["name"]: monitor for monitor in monitors},
+        "workspaces": {workspace["id"]: workspace for workspace in workspaces},
+        "clients": clients,
+    }
+
+
+def navigation_targets(state, monitor_name):
+    monitor = state["monitors"].get(monitor_name)
+    if not monitor:
+        return None, None, False
+
+    workspace_id = monitor["activeWorkspace"]["id"]
+    workspace = state["workspaces"].get(workspace_id)
+    if not workspace or workspace.get("hasfullscreen", False):
+        return None, None, True
+
+    columns = {}
+    for client in state["clients"]:
         if (
-            monitor["x"] <= pointer["x"] < monitor["x"] + monitor["width"]
-            and monitor["y"] <= pointer["y"] < monitor["y"] + monitor["height"]
+            client.get("mapped", False)
+            and not client.get("hidden", False)
+            and not client.get("floating", False)
+            and client.get("workspace", {}).get("id") == workspace_id
         ):
-            return monitor["name"]
+            columns.setdefault(client["at"][0], []).append(client)
 
-    return None
+    if not columns:
+        return None, None, False
+
+    ordered_columns = sorted(columns)
+    current_address = workspace.get("lastwindow", "")
+    current_client = next(
+        (
+            client
+            for clients in columns.values()
+            for client in clients
+            if client["address"] == current_address
+        ),
+        None,
+    )
+
+    if current_client:
+        current_column = current_client["at"][0]
+    else:
+        monitor_center = monitor["x"] + monitor["width"] / 2
+        current_column = min(
+            ordered_columns,
+            key=lambda x: abs(
+                x + max(client["size"][0] for client in columns[x]) / 2
+                - monitor_center
+            ),
+        )
+
+    column_index = ordered_columns.index(current_column)
+
+    def address_at(index):
+        if not 0 <= index < len(ordered_columns):
+            return None
+
+        clients = columns[ordered_columns[index]]
+        return min(
+            clients,
+            key=lambda client: (
+                client.get("focusHistoryID", 2**31),
+                client["at"][1],
+            ),
+        )["address"]
+
+    return address_at(column_index - 1), address_at(column_index + 1), False
 
 
-def step(direction):
-    monitor = pointer_monitor()
-    if monitor:
-        hyprctl("dispatch", f'hl.dsp.focus({{ monitor = "{monitor}" }})')
+def focus_window(address):
+    if not address:
+        return
 
-    hyprctl("dispatch", f'hl.dsp.layout("focus {direction}")')
+    # Addresses are produced by Hyprland, and JSON quoting is valid Lua quoting.
+    window = json.dumps(f"address:{address}")
+    hyprctl("dispatch", f"hl.dsp.focus({{ window = {window} }})")
+
+
+def step(monitor_name, direction):
+    state = desktop_state()
+    if not state:
+        return
+
+    left, right, fullscreen = navigation_targets(state, monitor_name)
+    if not fullscreen:
+        focus_window(left if direction == "left" else right)
 
 
 class TapeEdges:
     def __init__(self):
-        self.windows = []
+        self.controls = {}
+        self.event_socket = None
+        self.event_buffer = ""
+        self.refresh_scheduled = False
         self.display = Gdk.Display.get_default()
         self.display.connect("monitor-added", self.rebuild)
         self.display.connect("monitor-removed", self.rebuild)
         self.install_style()
         self.rebuild()
+        self.connect_event_socket()
 
     @staticmethod
     def install_style():
@@ -85,27 +179,28 @@ class TapeEdges:
             }
 
             button {
-                min-width: 32px;
-                min-height: 112px;
+                min-width: 28px;
+                min-height: 88px;
                 padding: 0;
-                color: rgba(255, 255, 255, 0.42);
-                background: rgba(5, 3, 0, 0.28);
-                border: 1px solid rgba(255, 255, 255, 0.10);
-                border-radius: 16px;
+                color: rgba(255, 255, 255, 0.20);
+                background: transparent;
+                border: 0;
+                border-radius: 14px;
                 box-shadow: none;
-                font-size: 28px;
+                font-size: 24px;
                 font-weight: 300;
-                transition: 120ms ease;
+                transition: 140ms ease;
             }
 
             button:hover {
-                color: rgba(255, 232, 194, 0.95);
-                background: rgba(255, 184, 77, 0.16);
-                border-color: rgba(255, 210, 138, 0.34);
+                color: rgba(255, 225, 178, 0.92);
+                background: rgba(8, 6, 3, 0.62);
+                box-shadow: inset 0 0 0 1px rgba(255, 204, 128, 0.20);
             }
 
             button:active {
-                background: rgba(255, 184, 77, 0.26);
+                color: rgba(255, 239, 214, 1.0);
+                background: rgba(255, 184, 77, 0.18);
             }
             """
         )
@@ -116,18 +211,41 @@ class TapeEdges:
         )
 
     def rebuild(self, *_arguments):
-        for window in self.windows:
-            window.destroy()
-        self.windows = []
+        for control in self.controls.values():
+            control["window"].destroy()
+        self.controls = {}
+
+        state = desktop_state()
+        if not state:
+            return
 
         for index in range(self.display.get_n_monitors()):
-            monitor = self.display.get_monitor(index)
-            self.windows.append(self.make_button(monitor, "left"))
-            self.windows.append(self.make_button(monitor, "right"))
+            gdk_monitor = self.display.get_monitor(index)
+            monitor_name = self.match_monitor(gdk_monitor, state)
+            if not monitor_name:
+                continue
 
-    def make_button(self, monitor, side):
-        direction = "l" if side == "left" else "r"
-        label = "‹" if side == "left" else "›"
+            for side in ("left", "right"):
+                self.controls[(monitor_name, side)] = self.make_control(
+                    gdk_monitor, monitor_name, side
+                )
+
+        self.refresh()
+
+    @staticmethod
+    def match_monitor(gdk_monitor, state):
+        geometry = gdk_monitor.get_geometry()
+        for monitor in state["monitors"].values():
+            if (
+                monitor["x"] == geometry.x
+                and monitor["y"] == geometry.y
+                and monitor["width"] == geometry.width
+                and monitor["height"] == geometry.height
+            ):
+                return monitor["name"]
+        return None
+
+    def make_control(self, monitor, monitor_name, side):
         geometry = monitor.get_geometry()
 
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
@@ -142,37 +260,134 @@ class TapeEdges:
         GtkLayerShell.set_keyboard_mode(window, GtkLayerShell.KeyboardMode.NONE)
         GtkLayerShell.set_exclusive_zone(window, 0)
         GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.TOP, True)
-        GtkLayerShell.set_anchor(
-            window,
-            GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT,
-            True,
-        )
+        edge = GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT
+        GtkLayerShell.set_anchor(window, edge, True)
         GtkLayerShell.set_margin(
             window,
             GtkLayerShell.Edge.TOP,
-            max(0, (geometry.height - BUTTON_HEIGHT) // 2),
+            max(0, (geometry.height - HANDLE_HEIGHT) // 2),
         )
-        GtkLayerShell.set_margin(
-            window,
-            GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT,
-            SIDE_MARGIN,
-        )
+        GtkLayerShell.set_margin(window, edge, EDGE_MARGIN)
 
-        button = Gtk.Button(label=label)
-        button.set_size_request(BUTTON_WIDTH, BUTTON_HEIGHT)
+        button = Gtk.Button(label="‹" if side == "left" else "›")
+        button.set_size_request(HANDLE_WIDTH, HANDLE_HEIGHT)
         button.set_can_focus(False)
         button.set_focus_on_click(False)
-        button.set_tooltip_text(
+        button.get_accessible().set_name(
             "Previous window" if side == "left" else "Next window"
         )
-        button.connect("clicked", lambda _button: step(direction))
+        button.connect(
+            "clicked",
+            lambda _button: step(monitor_name, side),
+        )
         window.add(button)
-        window.show_all()
 
-        return window
+        return {"window": window, "button": button}
+
+    def refresh(self):
+        state = desktop_state()
+        if not state:
+            return
+
+        for monitor_name in state["monitors"]:
+            left, right, fullscreen = navigation_targets(state, monitor_name)
+            availability = {
+                "left": bool(left) and not fullscreen,
+                "right": bool(right) and not fullscreen,
+            }
+            for side in ("left", "right"):
+                control = self.controls.get((monitor_name, side))
+                if not control:
+                    continue
+                if availability[side]:
+                    control["window"].show_all()
+                else:
+                    control["window"].hide()
+
+    def schedule_refresh(self):
+        if not self.refresh_scheduled:
+            self.refresh_scheduled = True
+            GLib.timeout_add(REFRESH_DELAY_MS, self.run_scheduled_refresh)
+
+    def run_scheduled_refresh(self):
+        self.refresh_scheduled = False
+        self.refresh()
+        return GLib.SOURCE_REMOVE
+
+    def connect_event_socket(self):
+        signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
+        runtime_directory = os.environ.get("XDG_RUNTIME_DIR")
+        if not signature or not runtime_directory:
+            GLib.timeout_add(RECONNECT_DELAY_MS, self.retry_event_socket)
+            return
+
+        path = os.path.join(
+            runtime_directory,
+            "hypr",
+            signature,
+            ".socket2.sock",
+        )
+        event_socket = None
+        try:
+            event_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            event_socket.connect(path)
+            event_socket.setblocking(False)
+        except OSError:
+            if event_socket is not None:
+                event_socket.close()
+            GLib.timeout_add(RECONNECT_DELAY_MS, self.retry_event_socket)
+            return
+
+        self.event_socket = event_socket
+        self.event_buffer = ""
+        GLib.io_add_watch(
+            event_socket,
+            GLib.IO_IN | GLib.IO_HUP | GLib.IO_ERR,
+            self.handle_event_socket,
+        )
+
+    def retry_event_socket(self):
+        if self.event_socket is None:
+            self.connect_event_socket()
+        return GLib.SOURCE_REMOVE
+
+    def handle_event_socket(self, event_socket, condition):
+        if condition & (GLib.IO_HUP | GLib.IO_ERR):
+            self.disconnect_event_socket()
+            return GLib.SOURCE_REMOVE
+
+        try:
+            chunk = event_socket.recv(65536)
+        except BlockingIOError:
+            return GLib.SOURCE_CONTINUE
+        except OSError:
+            self.disconnect_event_socket()
+            return GLib.SOURCE_REMOVE
+
+        if not chunk:
+            self.disconnect_event_socket()
+            return GLib.SOURCE_REMOVE
+
+        self.event_buffer += chunk.decode(errors="replace")
+        lines = self.event_buffer.split("\n")
+        self.event_buffer = lines.pop()
+        if any(line.startswith(REFRESH_EVENTS) for line in lines):
+            self.schedule_refresh()
+
+        return GLib.SOURCE_CONTINUE
+
+    def disconnect_event_socket(self):
+        if self.event_socket is not None:
+            self.event_socket.close()
+            self.event_socket = None
+        GLib.timeout_add(RECONNECT_DELAY_MS, self.retry_event_socket)
 
 
 def main():
+    if len(sys.argv) == 4 and sys.argv[1] == "--step":
+        step(sys.argv[2], sys.argv[3])
+        return
+
     runtime_directory = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
     lock = open(os.path.join(runtime_directory, "tape-edges.lock"), "w")
     try:
