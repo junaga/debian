@@ -10,7 +10,7 @@ local explorer = "dolphin"
 local browser = "google-chrome-stable"
 local music = "youtube-music"
 local steam = "steam -system-composer"
-local discord = "discord"
+local discord = "discord --ozone-platform=wayland"
 
 open("SUPER + P", screenshot)
 open("SUPER + T", terminal)
