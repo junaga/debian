@@ -8,7 +8,8 @@ hl.env("XCURSOR_SIZE", "48")
 hl.config({
     general = {
         layout           = "scrolling",
-        gaps_out         = 27,
+        -- Wider sides reveal the neighboring column without wasting vertical space.
+        gaps_out         = { top = 27, right = 48, bottom = 27, left = 48 },
         border_size      = 0,
         gaps_in          = 8,
         resize_on_border = true
@@ -24,6 +25,7 @@ hl.config({
         -- web (~1280 px), and full width.
         column_width             = 0.553,
         explicit_column_widths   = "0.272, 0.391, 0.553, 0.690, 1.0",
+        focus_fit_method         = 0,
         fullscreen_on_one_column = false,
         wrap_focus               = false,
         wrap_swapcol             = false
