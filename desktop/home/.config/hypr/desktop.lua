@@ -8,8 +8,14 @@ hl.env("XCURSOR_SIZE", "48")
 hl.config({
     input = {
         -- The scrolling layout moves windows beneath a stationary pointer.
-        -- Do not let that stationary pointer steal focus after navigation.
+        -- Only physical pointer movement should refocus the moved content.
         mouse_refocus = false
+    },
+    gestures = {
+        scrolling = {
+            -- Gesture navigation must obey the same no-warp rule as keys.
+            move_snap_cursor = false
+        }
     },
     general = {
         layout           = "scrolling",

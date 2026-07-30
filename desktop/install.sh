@@ -123,9 +123,6 @@ unsudo crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
 # Desktop utilities
 apt install --yes\
   dolphin\
-  python3-gi\
-    gir1.2-gtk-3.0\
-    gir1.2-gtklayershell-0.1\
   wl-clipboard\
     xclip\
   grim\
