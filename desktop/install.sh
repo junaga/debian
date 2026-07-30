@@ -59,6 +59,11 @@ apt install --yes\
   bluetooth\
   upower;
 
+# Enable BlueZ battery-provider and LE Audio support.
+crudini --set /etc/bluetooth/main.conf General Experimental true
+crudini --set /etc/bluetooth/main.conf General KernelExperimental true
+
+systemctl restart bluetooth.service
 systemctl enable --now upower.service
 
 # TODO: Automate Bluetooth device setup.
