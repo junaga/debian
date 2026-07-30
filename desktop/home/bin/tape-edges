@@ -17,13 +17,14 @@ gi.require_version("GtkLayerShell", "0.1")
 from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 
-EDGE_SENSOR_WIDTH = 16
+EDGE_SENSOR_WIDTH = 22
 HANDLE_WIDTH = 48
+HANDLE_SURFACE_WIDTH = 68
 HANDLE_HEIGHT = 132
 EDGE_MARGIN = 0
 HANDLE_VERTICAL_PADDING = 28
-REVEAL_DELAY_MS = 90
-HIDE_DELAY_MS = 180
+REVEAL_DELAY_MS = 18
+HIDE_DELAY_MS = 140
 REFRESH_DELAY_MS = 30
 RECONNECT_DELAY_MS = 1000
 REFRESH_EVENTS = (
@@ -197,11 +198,12 @@ class TapeEdges:
 
             button.revealed {
                 min-width: 48px;
-                color: rgba(255, 225, 178, 0.88);
-                background: rgba(8, 6, 3, 0.74);
+                color: rgba(235, 242, 255, 0.90);
+                background: rgba(12, 16, 24, 0.80);
                 box-shadow:
-                    inset 0 0 0 1px rgba(255, 204, 128, 0.18),
-                    0 4px 18px rgba(0, 0, 0, 0.26);
+                    inset 0 0 0 1px rgba(220, 232, 255, 0.16),
+                    0 8px 28px rgba(0, 0, 0, 0.48),
+                    0 0 24px rgba(112, 151, 224, 0.10);
             }
 
             button.left.revealed {
@@ -213,16 +215,17 @@ class TapeEdges:
             }
 
             button.revealed:hover {
-                color: rgba(255, 234, 201, 1.0);
-                background: rgba(16, 11, 5, 0.82);
+                color: rgba(255, 255, 255, 1.0);
+                background: rgba(18, 24, 35, 0.90);
                 box-shadow:
-                    inset 0 0 0 1px rgba(255, 210, 138, 0.30),
-                    0 5px 22px rgba(0, 0, 0, 0.32);
+                    inset 0 0 0 1px rgba(225, 236, 255, 0.26),
+                    0 10px 34px rgba(0, 0, 0, 0.56),
+                    0 0 28px rgba(112, 151, 224, 0.16);
             }
 
             button.revealed:active {
-                color: rgba(255, 239, 214, 1.0);
-                background: rgba(255, 184, 77, 0.22);
+                color: rgba(255, 255, 255, 1.0);
+                background: rgba(112, 151, 224, 0.24);
             }
             """
         )
@@ -304,7 +307,8 @@ class TapeEdges:
             "clicked",
             lambda _button: step(monitor_name, side),
         )
-        rail.put(button, 0, HANDLE_VERTICAL_PADDING)
+        button_x = HANDLE_SURFACE_WIDTH - HANDLE_WIDTH if side == "right" else 0
+        rail.put(button, button_x, HANDLE_VERTICAL_PADDING)
         window.add(rail)
         window.add_events(
             Gdk.EventMask.ENTER_NOTIFY_MASK
@@ -317,6 +321,7 @@ class TapeEdges:
             "rail": rail,
             "button": button,
             "height": geometry.height,
+            "button_x": button_x,
             "handle_y": HANDLE_VERTICAL_PADDING,
             "pointer_y": geometry.height / 2,
             "reveal_source": None,
@@ -347,7 +352,7 @@ class TapeEdges:
     @staticmethod
     def reveal_control(control):
         TapeEdges.position_handle(control, control["pointer_y"])
-        control["rail"].set_size_request(HANDLE_WIDTH, -1)
+        control["rail"].set_size_request(HANDLE_SURFACE_WIDTH, -1)
         button = control["button"]
         button.get_style_context().add_class("revealed")
         button.set_sensitive(True)
@@ -377,7 +382,7 @@ class TapeEdges:
                 min(pointer_y - HANDLE_HEIGHT / 2, maximum_y),
             )
         )
-        control["rail"].move(control["button"], 0, handle_y)
+        control["rail"].move(control["button"], control["button_x"], handle_y)
         control["handle_y"] = handle_y
 
     @staticmethod
