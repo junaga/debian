@@ -165,6 +165,9 @@ resolves its dependency transitions. The source replacement dates to `28274ab`.
 Debian [recommends NetworkManager for desktops but not
 servers](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html#_the_modern_network_configuration_for_desktop).
 This repository uses it on every host to keep one configuration format and CLI.
+It is preferred over `systemd-networkd` because it also covers interactive
+Wi-Fi, mobile broadband, VPN profiles, secrets, runtime switching, checkpoints,
+and desktop integration.
 
 NetworkManager is production-ready: RHEL uses it for bare-metal and virtual
 servers, hypervisors, container hosts, bonds, bridges, VLANs, routes, VPNs, and
@@ -174,5 +177,6 @@ OpenShift also uses it beneath
 to configure cluster nodes in production.
 
 The upgrade imports `/etc/network/interfaces`, migrates its profiles to native
-NetworkManager keyfiles, and disables `networking.service` for the next boot.
-WSL and containers are skipped because their host owns their networking.
+NetworkManager keyfiles, stops the old service, and restarts NetworkManager to
+complete the handover. WSL and containers are skipped because their host owns
+their networking.
