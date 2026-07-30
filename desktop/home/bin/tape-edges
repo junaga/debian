@@ -18,8 +18,7 @@ from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 REFRESH_DELAY_MS = 30
 RECONNECT_DELAY_MS = 1000
-REFRESH_EVENTS = (
-    "activewindow",
+REFRESH_EVENTS = {
     "activewindowv2",
     "workspace",
     "workspacev2",
@@ -29,7 +28,7 @@ REFRESH_EVENTS = (
     "movewindow",
     "fullscreen",
     "configreloaded",
-)
+}
 
 
 def hyprctl(*arguments):
@@ -147,6 +146,7 @@ def focus_window(address):
 class TapeEdges:
     def __init__(self):
         self.windows = []
+        self.geometry_signature = None
         self.event_socket = None
         self.event_buffer = ""
         self.refresh_scheduled = False
@@ -212,14 +212,11 @@ class TapeEdges:
         )
 
     def refresh(self, *_arguments):
-        for window in self.windows:
-            window.destroy()
-        self.windows = []
-
         state = desktop_state()
         if not state:
             return
 
+        desired = []
         for index in range(self.display.get_n_monitors()):
             gdk_monitor = self.display.get_monitor(index)
             monitor_name = self.match_monitor(gdk_monitor, state)
@@ -227,9 +224,27 @@ class TapeEdges:
                 continue
 
             for target in clipped_targets(state, monitor_name):
-                self.windows.append(
-                    self.make_target(gdk_monitor, target)
+                signature = (
+                    monitor_name,
+                    target["address"],
+                    target["side"],
+                    target["top"],
+                    target["width"],
+                    target["height"],
                 )
+                desired.append((signature, gdk_monitor, target))
+
+        geometry_signature = tuple(item[0] for item in desired)
+        if geometry_signature == self.geometry_signature:
+            return
+
+        for window in self.windows:
+            window.destroy()
+        self.windows = [
+            self.make_target(monitor, target)
+            for _signature, monitor, target in desired
+        ]
+        self.geometry_signature = geometry_signature
 
     @staticmethod
     def match_monitor(gdk_monitor, state):
@@ -351,7 +366,7 @@ class TapeEdges:
         self.event_buffer += chunk.decode(errors="replace")
         lines = self.event_buffer.split("\n")
         self.event_buffer = lines.pop()
-        if any(line.startswith(REFRESH_EVENTS) for line in lines):
+        if any(line.partition(">>")[0] in REFRESH_EVENTS for line in lines):
             self.schedule_refresh()
 
         return GLib.SOURCE_CONTINUE
