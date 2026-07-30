@@ -37,13 +37,13 @@ hl.config({
 
         -- The focused window stays bright and elevated while inactive windows recede.
         dim_inactive = true,
-        dim_strength = 0.20,
+        dim_strength = 0.12,
         shadow = {
             color          = "#000000cc",
-            color_inactive = "#00000033",
-            range          = 64,
-            render_power   = 2,
-            offset         = { 0, 2 }
+            color_inactive = "#00000014",
+            range          = 28,
+            render_power   = 3,
+            offset         = { 0, 4 }
         }
     }
 })
