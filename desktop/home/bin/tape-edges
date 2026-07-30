@@ -17,9 +17,12 @@ gi.require_version("GtkLayerShell", "0.1")
 from gi.repository import Gdk, GLib, Gtk, GtkLayerShell
 
 
-HANDLE_WIDTH = 28
-HANDLE_HEIGHT = 88
-EDGE_MARGIN = 8
+EDGE_SENSOR_WIDTH = 16
+HANDLE_WIDTH = 48
+HANDLE_HEIGHT = 180
+EDGE_MARGIN = 0
+REVEAL_DELAY_MS = 90
+HIDE_DELAY_MS = 180
 REFRESH_DELAY_MS = 30
 RECONNECT_DELAY_MS = 1000
 REFRESH_EVENTS = (
@@ -179,28 +182,46 @@ class TapeEdges:
             }
 
             button {
-                min-width: 28px;
-                min-height: 88px;
+                min-width: 16px;
+                min-height: 180px;
                 padding: 0;
-                color: rgba(255, 255, 255, 0.20);
+                color: transparent;
                 background: transparent;
                 border: 0;
-                border-radius: 14px;
                 box-shadow: none;
-                font-size: 24px;
+                font-size: 32px;
                 font-weight: 300;
-                transition: 140ms ease;
+                transition: 120ms ease;
             }
 
-            button:hover {
-                color: rgba(255, 225, 178, 0.92);
-                background: rgba(8, 6, 3, 0.62);
-                box-shadow: inset 0 0 0 1px rgba(255, 204, 128, 0.20);
+            button.revealed {
+                min-width: 48px;
+                color: rgba(255, 225, 178, 0.88);
+                background: rgba(8, 6, 3, 0.74);
+                box-shadow:
+                    inset 0 0 0 1px rgba(255, 204, 128, 0.18),
+                    0 4px 18px rgba(0, 0, 0, 0.26);
             }
 
-            button:active {
+            button.left.revealed {
+                border-radius: 0 20px 20px 0;
+            }
+
+            button.right.revealed {
+                border-radius: 20px 0 0 20px;
+            }
+
+            button.revealed:hover {
+                color: rgba(255, 234, 201, 1.0);
+                background: rgba(16, 11, 5, 0.82);
+                box-shadow:
+                    inset 0 0 0 1px rgba(255, 210, 138, 0.30),
+                    0 5px 22px rgba(0, 0, 0, 0.32);
+            }
+
+            button.revealed:active {
                 color: rgba(255, 239, 214, 1.0);
-                background: rgba(255, 184, 77, 0.18);
+                background: rgba(255, 184, 77, 0.22);
             }
             """
         )
@@ -270,9 +291,11 @@ class TapeEdges:
         GtkLayerShell.set_margin(window, edge, EDGE_MARGIN)
 
         button = Gtk.Button(label="‹" if side == "left" else "›")
-        button.set_size_request(HANDLE_WIDTH, HANDLE_HEIGHT)
+        button.set_size_request(EDGE_SENSOR_WIDTH, HANDLE_HEIGHT)
         button.set_can_focus(False)
         button.set_focus_on_click(False)
+        button.set_sensitive(False)
+        button.get_style_context().add_class(side)
         button.get_accessible().set_name(
             "Previous window" if side == "left" else "Next window"
         )
@@ -281,8 +304,86 @@ class TapeEdges:
             lambda _button: step(monitor_name, side),
         )
         window.add(button)
+        window.add_events(
+            Gdk.EventMask.ENTER_NOTIFY_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK
+        )
 
-        return {"window": window, "button": button}
+        control = {
+            "window": window,
+            "button": button,
+            "reveal_source": None,
+            "hide_source": None,
+            "revealed": False,
+        }
+        window.connect("enter-notify-event", self.schedule_reveal, control)
+        window.connect("leave-notify-event", self.schedule_hide, control)
+
+        return control
+
+    @staticmethod
+    def schedule_reveal(_window, _event, control):
+        if control["hide_source"] is not None:
+            GLib.source_remove(control["hide_source"])
+            control["hide_source"] = None
+
+        if not control["revealed"] and control["reveal_source"] is None:
+            control["reveal_source"] = GLib.timeout_add(
+                REVEAL_DELAY_MS,
+                TapeEdges.reveal_control,
+                control,
+            )
+        return Gdk.EVENT_PROPAGATE
+
+    @staticmethod
+    def reveal_control(control):
+        button = control["button"]
+        button.set_size_request(HANDLE_WIDTH, HANDLE_HEIGHT)
+        button.get_style_context().add_class("revealed")
+        button.set_sensitive(True)
+        control["revealed"] = True
+        control["reveal_source"] = None
+        return GLib.SOURCE_REMOVE
+
+    @staticmethod
+    def schedule_hide(_window, event, control):
+        if event.detail == Gdk.NotifyType.INFERIOR:
+            return Gdk.EVENT_PROPAGATE
+
+        if control["reveal_source"] is not None:
+            GLib.source_remove(control["reveal_source"])
+            control["reveal_source"] = None
+
+        if control["revealed"] and control["hide_source"] is None:
+            control["hide_source"] = GLib.timeout_add(
+                HIDE_DELAY_MS,
+                TapeEdges.hide_control,
+                control,
+            )
+        return Gdk.EVENT_PROPAGATE
+
+    @staticmethod
+    def hide_control(control):
+        button = control["button"]
+        button.set_sensitive(False)
+        button.get_style_context().remove_class("revealed")
+        button.set_size_request(EDGE_SENSOR_WIDTH, HANDLE_HEIGHT)
+        control["hide_source"] = None
+        control["revealed"] = False
+        return GLib.SOURCE_REMOVE
+
+    @staticmethod
+    def reset_control(control):
+        for source_name in ("reveal_source", "hide_source"):
+            source = control[source_name]
+            if source is not None:
+                GLib.source_remove(source)
+                control[source_name] = None
+
+        button = control["button"]
+        button.set_sensitive(False)
+        button.get_style_context().remove_class("revealed")
+        button.set_size_request(EDGE_SENSOR_WIDTH, HANDLE_HEIGHT)
+        control["revealed"] = False
 
     def refresh(self):
         state = desktop_state()
@@ -302,6 +403,7 @@ class TapeEdges:
                 if availability[side]:
                     control["window"].show_all()
                 else:
+                    self.reset_control(control)
                     control["window"].hide()
 
     def schedule_refresh(self):
