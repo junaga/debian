@@ -18,7 +18,9 @@ hl.config({
         force_default_wallpaper = animeWallpaper
     },
     cursor = {
-        enable_hyprcursor = false
+        enable_hyprcursor = false,
+        -- Window navigation must never drag the physical pointer along with focus.
+        no_warps = true
     },
     scrolling = {
         -- Mobile (~500 px), mainframe/terminal (~720 px), desktop (~1024 px),
