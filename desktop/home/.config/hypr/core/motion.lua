@@ -46,7 +46,6 @@ hl.animation({ leaf = "fadeIn",    enabled = true, speed = 1.73, bezier = "almos
 
 -- Manage window movement and persistent effects.
 hl.animation({ leaf = "windows", enabled = true, speed = 4.79, spring = "easy" })
-hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
 hl.animation({ leaf = "fade",   enabled = true, speed = 3.03, bezier = "quick" })
 
 -- Destroy a window.
