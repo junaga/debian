@@ -37,10 +37,10 @@ if test "$(systemd-detect-virt --container)" = none; then
 	if systemctl is-enabled --quiet networking ||
 		test "$(crudini --get /etc/NetworkManager/NetworkManager.conf main plugins)" != keyfile; then
 		crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
+		systemctl disable --now networking
 		systemctl restart NetworkManager
 		nmcli connection migrate
 		crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
-		systemctl disable --now networking
 		systemctl restart NetworkManager
 	fi
 fi
