@@ -26,6 +26,7 @@ REFRESH_EVENTS = {
     "openwindow",
     "closewindow",
     "movewindow",
+    "movewindowv2",
     "fullscreen",
     "configreloaded",
 }
@@ -145,17 +146,18 @@ def focus_window(address):
 
 class TapeEdges:
     def __init__(self):
-        self.windows = []
-        self.geometry_signature = None
+        self.controls = {}
         self.event_socket = None
         self.event_buffer = ""
         self.refresh_scheduled = False
+        active_window = hyprctl_json("activewindow") or {}
+        self.last_active_address = active_window.get("address", "").removeprefix("0x")
         self.display = Gdk.Display.get_default()
-        self.display.connect("monitor-added", self.refresh)
-        self.display.connect("monitor-removed", self.refresh)
+        self.display.connect("monitor-added", self.rebuild)
+        self.display.connect("monitor-removed", self.rebuild)
         self.install_style()
         self.connect_event_socket()
-        self.refresh()
+        self.rebuild()
 
     @staticmethod
     def install_style():
@@ -211,40 +213,67 @@ class TapeEdges:
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
 
-    def refresh(self, *_arguments):
+    def rebuild(self, *_arguments):
+        for control in self.controls.values():
+            control["window"].destroy()
+        self.controls = {}
+
         state = desktop_state()
         if not state:
             return
 
-        desired = []
         for index in range(self.display.get_n_monitors()):
             gdk_monitor = self.display.get_monitor(index)
             monitor_name = self.match_monitor(gdk_monitor, state)
             if not monitor_name:
                 continue
 
-            for target in clipped_targets(state, monitor_name):
-                signature = (
-                    monitor_name,
-                    target["address"],
-                    target["side"],
-                    target["top"],
-                    target["width"],
-                    target["height"],
+            for side in ("left", "right"):
+                self.controls[(monitor_name, side)] = self.make_control(
+                    gdk_monitor,
+                    side,
                 )
-                desired.append((signature, gdk_monitor, target))
 
-        geometry_signature = tuple(item[0] for item in desired)
-        if geometry_signature == self.geometry_signature:
+        self.refresh()
+
+    def refresh(self):
+        state = desktop_state()
+        if not state:
             return
 
-        for window in self.windows:
-            window.destroy()
-        self.windows = [
-            self.make_target(monitor, target)
-            for _signature, monitor, target in desired
-        ]
-        self.geometry_signature = geometry_signature
+        desired = {}
+        for monitor_name in state["monitors"]:
+            for target in clipped_targets(state, monitor_name):
+                desired[(monitor_name, target["side"])] = target
+
+        for key, control in self.controls.items():
+            target = desired.get(key)
+            signature = (
+                target["address"],
+                target["top"],
+                target["width"],
+                target["height"],
+            ) if target else None
+            if signature == control["signature"]:
+                continue
+
+            control["signature"] = signature
+            if target is None:
+                control["address"] = None
+                control["window"].hide()
+                continue
+
+            control["address"] = target["address"]
+            GtkLayerShell.set_margin(
+                control["window"],
+                GtkLayerShell.Edge.TOP,
+                target["top"],
+            )
+            control["button"].set_size_request(
+                target["width"],
+                target["height"],
+            )
+            control["window"].show_all()
 
     @staticmethod
     def match_monitor(gdk_monitor, state):
@@ -260,8 +289,7 @@ class TapeEdges:
         return None
 
     @staticmethod
-    def make_target(monitor, target):
-        side = target["side"]
+    def make_control(monitor, side):
         edge = GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT
 
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
@@ -278,11 +306,9 @@ class TapeEdges:
         GtkLayerShell.set_exclusive_zone(window, 0)
         GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.TOP, True)
         GtkLayerShell.set_anchor(window, edge, True)
-        GtkLayerShell.set_margin(window, GtkLayerShell.Edge.TOP, target["top"])
         GtkLayerShell.set_margin(window, edge, 0)
 
         button = Gtk.Button(label="‹" if side == "left" else "›")
-        button.set_size_request(target["width"], target["height"])
         button.set_can_focus(False)
         button.set_focus_on_click(False)
         button.get_style_context().add_class(side)
@@ -291,13 +317,20 @@ class TapeEdges:
             if side == "left"
             else "Bring next window into view"
         )
+        control = {
+            "window": window,
+            "button": button,
+            "address": None,
+            "signature": None,
+        }
         button.connect(
             "clicked",
-            lambda _button: focus_window(target["address"]),
+            lambda _button: focus_window(control["address"])
+            if control["address"]
+            else None,
         )
         window.add(button)
-        window.show_all()
-        return window
+        return control
 
     def schedule_refresh(self):
         if not self.refresh_scheduled:
@@ -366,7 +399,19 @@ class TapeEdges:
         self.event_buffer += chunk.decode(errors="replace")
         lines = self.event_buffer.split("\n")
         self.event_buffer = lines.pop()
-        if any(line.partition(">>")[0] in REFRESH_EVENTS for line in lines):
+        refresh_needed = False
+        for line in lines:
+            event, _separator, payload = line.partition(">>")
+            if event not in REFRESH_EVENTS:
+                continue
+            if event == "activewindowv2":
+                address = payload.split(",", 1)[0].removeprefix("0x")
+                if address == self.last_active_address:
+                    continue
+                self.last_active_address = address
+            refresh_needed = True
+
+        if refresh_needed:
             self.schedule_refresh()
 
         return GLib.SOURCE_CONTINUE
