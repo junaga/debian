@@ -92,6 +92,9 @@ sudo --user "$SUDO_USER" hyprpm reload
 # Desktop Utilities
 apt install --yes\
   dolphin\
+  python3-gi\
+    gir1.2-gtk-3.0\
+    gir1.2-gtklayershell-0.1\
   wl-clipboard\
     xclip\
   grim\

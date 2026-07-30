@@ -1,0 +1,189 @@
+#!/usr/bin/python3
+
+import fcntl
+import json
+import os
+import signal
+import subprocess
+
+import gi
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
+gi.require_version("GtkLayerShell", "0.1")
+
+from gi.repository import Gdk, Gtk, GtkLayerShell
+
+
+BUTTON_WIDTH = 32
+BUTTON_HEIGHT = 112
+SIDE_MARGIN = 8
+
+
+def hyprctl(*arguments):
+    return subprocess.run(
+        ("hyprctl", *arguments),
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def hyprctl_json(command):
+    try:
+        result = subprocess.run(
+            ("hyprctl", "-j", command),
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return json.loads(result.stdout)
+    except (OSError, subprocess.CalledProcessError, json.JSONDecodeError):
+        return None
+
+
+def pointer_monitor():
+    pointer = hyprctl_json("cursorpos")
+    monitors = hyprctl_json("monitors")
+    if not pointer or not monitors:
+        return None
+
+    for monitor in monitors:
+        if (
+            monitor["x"] <= pointer["x"] < monitor["x"] + monitor["width"]
+            and monitor["y"] <= pointer["y"] < monitor["y"] + monitor["height"]
+        ):
+            return monitor["name"]
+
+    return None
+
+
+def step(direction):
+    monitor = pointer_monitor()
+    if monitor:
+        hyprctl("dispatch", f'hl.dsp.focus({{ monitor = "{monitor}" }})')
+
+    hyprctl("dispatch", f'hl.dsp.layout("focus {direction}")')
+
+
+class TapeEdges:
+    def __init__(self):
+        self.windows = []
+        self.display = Gdk.Display.get_default()
+        self.display.connect("monitor-added", self.rebuild)
+        self.display.connect("monitor-removed", self.rebuild)
+        self.install_style()
+        self.rebuild()
+
+    @staticmethod
+    def install_style():
+        provider = Gtk.CssProvider()
+        provider.load_from_data(
+            b"""
+            window {
+                background: transparent;
+            }
+
+            button {
+                min-width: 32px;
+                min-height: 112px;
+                padding: 0;
+                color: rgba(255, 255, 255, 0.42);
+                background: rgba(5, 3, 0, 0.28);
+                border: 1px solid rgba(255, 255, 255, 0.10);
+                border-radius: 16px;
+                box-shadow: none;
+                font-size: 28px;
+                font-weight: 300;
+                transition: 120ms ease;
+            }
+
+            button:hover {
+                color: rgba(255, 232, 194, 0.95);
+                background: rgba(255, 184, 77, 0.16);
+                border-color: rgba(255, 210, 138, 0.34);
+            }
+
+            button:active {
+                background: rgba(255, 184, 77, 0.26);
+            }
+            """
+        )
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
+
+    def rebuild(self, *_arguments):
+        for window in self.windows:
+            window.destroy()
+        self.windows = []
+
+        for index in range(self.display.get_n_monitors()):
+            monitor = self.display.get_monitor(index)
+            self.windows.append(self.make_button(monitor, "left"))
+            self.windows.append(self.make_button(monitor, "right"))
+
+    def make_button(self, monitor, side):
+        direction = "l" if side == "left" else "r"
+        label = "‹" if side == "left" else "›"
+        geometry = monitor.get_geometry()
+
+        window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
+        window.set_app_paintable(True)
+        window.set_decorated(False)
+        window.set_resizable(False)
+
+        GtkLayerShell.init_for_window(window)
+        GtkLayerShell.set_namespace(window, "tape-edges")
+        GtkLayerShell.set_layer(window, GtkLayerShell.Layer.TOP)
+        GtkLayerShell.set_monitor(window, monitor)
+        GtkLayerShell.set_keyboard_mode(window, GtkLayerShell.KeyboardMode.NONE)
+        GtkLayerShell.set_exclusive_zone(window, 0)
+        GtkLayerShell.set_anchor(window, GtkLayerShell.Edge.TOP, True)
+        GtkLayerShell.set_anchor(
+            window,
+            GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT,
+            True,
+        )
+        GtkLayerShell.set_margin(
+            window,
+            GtkLayerShell.Edge.TOP,
+            max(0, (geometry.height - BUTTON_HEIGHT) // 2),
+        )
+        GtkLayerShell.set_margin(
+            window,
+            GtkLayerShell.Edge.LEFT if side == "left" else GtkLayerShell.Edge.RIGHT,
+            SIDE_MARGIN,
+        )
+
+        button = Gtk.Button(label=label)
+        button.set_size_request(BUTTON_WIDTH, BUTTON_HEIGHT)
+        button.set_can_focus(False)
+        button.set_focus_on_click(False)
+        button.set_tooltip_text(
+            "Previous window" if side == "left" else "Next window"
+        )
+        button.connect("clicked", lambda _button: step(direction))
+        window.add(button)
+        window.show_all()
+
+        return window
+
+
+def main():
+    runtime_directory = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+    lock = open(os.path.join(runtime_directory, "tape-edges.lock"), "w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        return
+
+    signal.signal(signal.SIGTERM, lambda *_arguments: Gtk.main_quit())
+    TapeEdges()
+    Gtk.main()
+
+
+if __name__ == "__main__":
+    main()
