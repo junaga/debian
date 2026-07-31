@@ -5,7 +5,7 @@ local open = require("core.keys")
 require("desktop")
 
 local screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
-local terminal = "kitty"
+local terminal = "kitty --single-instance"
 local explorer = "dolphin"
 local browser = "google-chrome-stable"
 local music = "youtube-music"
