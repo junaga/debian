@@ -18,6 +18,7 @@ nmcli -t -f UUID,TYPE connection show | while IFS=: read -r uuid type; do
 		ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes ipv4.dns 1.1.1.1,1.0.0.1 ;;
 	esac
 done
+sudo systemctl stop 'ifup@*.service'
 sudo systemctl disable --now networking
 sudo systemctl restart NetworkManager
 
