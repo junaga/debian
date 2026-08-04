@@ -1,3 +1,4 @@
+# Run repeatedly on every system.
 DEBIAN="testing"
 set -e
 
@@ -30,17 +31,3 @@ apt install --yes \
 
 npm install --global --no-fund \
 	@openai/codex
-
-# Networking: replace ifupdown with NetworkManager on hosts.
-if test "$(systemd-detect-virt --container)" = none; then
-	apt install --yes network-manager
-	if systemctl is-enabled --quiet networking ||
-		test "$(crudini --get /etc/NetworkManager/NetworkManager.conf main plugins)" != keyfile; then
-		crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
-		systemctl disable --now networking
-		systemctl restart NetworkManager
-		nmcli connection migrate
-		crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
-		systemctl restart NetworkManager
-	fi
-fi

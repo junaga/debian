@@ -1,4 +1,20 @@
+# Servers and desktops, not containers.
+test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
+	echo "Container detected; use FORCE=1."
+	exit 0
+}
 set -e
+
+# use NetworkManager and Cloudflare DNS
+sudo apt install --yes network-manager
+sudo crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
+sudo systemctl disable --now networking
+sudo systemctl restart NetworkManager
+sudo nmcli connection migrate
+sudo crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
+sudo install -d /etc/NetworkManager/conf.d
+sudo crudini --set /etc/NetworkManager/conf.d/dns.conf 'global-dns-domain-*' servers 1.1.1.1,1.0.0.1
+sudo systemctl restart NetworkManager
 
 # autologin Linux terminals
 sudo systemctl edit getty@.service --stdin <<-EOF
