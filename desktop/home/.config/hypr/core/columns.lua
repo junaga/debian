@@ -8,6 +8,8 @@ end
 
 local columns = {}
 local widthsBeforeResize = {}
+local dragging = false
+local draggedWidth
 
 local function column(window)
     local layout = window and window.layout
@@ -131,6 +133,8 @@ end
 
 function columns.beginResize()
     widthsBeforeResize = {}
+    dragging = false
+    draggedWidth = nil
 
     for _, window in ipairs(hl.get_windows()) do
         local currentWidth = width(window)
@@ -141,6 +145,11 @@ function columns.beginResize()
 end
 
 function columns.endResize()
+    if dragging then
+        widthsBeforeResize = {}
+        return
+    end
+
     local resized = {}
 
     for _, window in ipairs(hl.get_windows()) do
@@ -154,6 +163,44 @@ function columns.endResize()
 
     widthsBeforeResize = {}
     remember(resized)
+end
+
+function columns.beginDrag()
+    local active = hl.get_active_window()
+
+    dragging = true
+    draggedWidth = active and widthsBeforeResize[active.address]
+end
+
+function columns.endDrag()
+    local savedWidth = draggedWidth
+    local active = hl.get_active_window()
+    local columnWindows = activeColumnWindows()
+    dragging = false
+    draggedWidth = nil
+
+    if #columnWindows > 1 then
+        local cursor = hl.get_cursor_pos()
+        local target
+
+        for _, window in ipairs(columnWindows) do
+            if window.address ~= active.address then
+                target = window
+                break
+            end
+        end
+
+        local dropLeft = target and cursor.x < target.at.x + target.size.x / 2
+        hl.dispatch(hl.dsp.layout("promote"))
+
+        if dropLeft then
+            hl.dispatch(hl.dsp.layout("swapcol l"))
+        end
+    end
+
+    if savedWidth then
+        resize(("colresize %.3f"):format(savedWidth))
+    end
 end
 
 return columns

@@ -69,8 +69,10 @@ end
 hl.bind("SUPER + mouse_down", tape.next)
 hl.bind("SUPER + mouse_up",   tape.previous)
 
--- Resize windows with Super + right mouse drag. Column dragging is intentionally
--- keyboard-only because Hyprland otherwise stacks the dropped window.
+-- Move and resize windows with Super + left/right mouse drag.
+hl.bind("SUPER + mouse:272", hl.dsp.window.drag(),   { mouse = true })
+hl.bind("SUPER + mouse:272", columns.beginDrag,      { non_consuming = true })
+hl.bind("SUPER + mouse:272", columns.endDrag,        { drag = true, non_consuming = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 ------------------------------------
