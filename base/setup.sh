@@ -12,8 +12,13 @@ sudo systemctl disable --now networking
 sudo systemctl restart NetworkManager
 sudo nmcli connection migrate
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
-sudo install -d /etc/NetworkManager/conf.d
-sudo crudini --set /etc/NetworkManager/conf.d/dns.conf 'global-dns-domain-*' servers 1.1.1.1,1.0.0.1
+sudo crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager file
+nmcli -t -f UUID,TYPE connection show | while IFS=: read -r uuid type; do
+	case "$type" in
+	802-3-ethernet|802-11-wireless) sudo nmcli connection modify "$uuid" \
+		ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes ipv4.dns 1.1.1.1,1.0.0.1 ;;
+	esac
+done
 sudo systemctl restart NetworkManager
 
 # autologin Linux terminals
