@@ -2,5 +2,8 @@ check_for_update_on_startup = false
 
 model_reasoning_effort = "low"
 
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
 [tui]
 status_line = ["current-dir", "git-branch", "model-with-reasoning"]
