@@ -1,7 +1,5 @@
 check_for_update_on_startup = false
 
-model_reasoning_effort = "low"
-
 [features]
 memories = true
 
