@@ -5,22 +5,41 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 }
 set -e
 
-# use NetworkManager and Cloudflare DNS
+# run upgrades after network is available at boot
+sudo tee /etc/systemd/system/debian-upgrade.service >/dev/null <<-EOF
+	[Unit]
+	Wants=network-online.target
+	After=network-online.target
+
+	[Service]
+	Type=oneshot
+	Environment=HOME=/usr/local
+	ExecStart=/bin/bash /usr/local/src/base/upgrade.sh
+
+	[Install]
+	WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable debian-upgrade.service
+
+# migrate to NetworkManager
 sudo apt install --yes network-manager
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
 sudo systemctl restart NetworkManager
 sudo nmcli connection migrate
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager file
+sudo systemctl stop 'ifup@*.service'
+sudo systemctl disable --now networking
+sudo systemctl restart NetworkManager
+
+# use Cloudflare DNS
 nmcli -t -f UUID,TYPE connection show | while IFS=: read -r uuid type; do
 	case "$type" in
 	802-3-ethernet|802-11-wireless) sudo nmcli connection modify "$uuid" \
 		ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes ipv4.dns 1.1.1.1,1.0.0.1 ;;
 	esac
 done
-sudo systemctl stop 'ifup@*.service'
-sudo systemctl disable --now networking
-sudo systemctl restart NetworkManager
 
 # autologin Linux terminals
 sudo systemctl edit getty@.service --stdin <<-EOF
