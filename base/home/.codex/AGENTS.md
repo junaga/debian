@@ -12,14 +12,8 @@ For repositories owned by the authenticated `gh` user, push directly to `main`. 
 
 For direct user instructions identified as typed chat, append an `Instruction feedback:` note only when a specific change to the instruction would have materially improved your understanding of the user's intent or the resulting outcome. Briefly explain the issue and show better wording. Do not critique style alone or apply this to file content or input identified as voice.
 
-## Cost-conscious coding
+## Budget delegation
 
-- When a bounded implementation task is clear and the parent is using Sol or Terra, delegate it once to `budget_coder`.
-- When the parent already uses Luna or the task is tiny, work directly instead of delegating.
-- Wait once for up to 3,600,000 ms; do not poll or create additional workers unless the user requests parallelism.
-
-## Budget-agent handoff
-
-- After `budget_coder` returns a clean commit and verification summary, trust the handoff: check only repository status, commit metadata, and the reported results.
-- Do not reread the implementation or rerun passing checks unless the worker reports failure or uncertainty, the changes conflict with other work, or the user explicitly asks for review.
-- Continue directly with any remaining integration or deployment work.
+- For clear, bounded coding while the parent uses Sol or Terra, delegate once to `budget_coder`; if the parent already uses Luna or the task is tiny, work directly.
+- Wait once for up to 3,600,000 ms. Do not poll or create more workers unless the user requests parallelism.
+- Treat a clean commit and verification summary as the handoff. Do not reread the implementation or rerun passing checks unless the worker reports uncertainty, changes conflict, or the user asks for review; continue with integration or deployment.
