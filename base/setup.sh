@@ -6,7 +6,7 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 set -e
 
 # run upgrades at boot
-echo '@reboot /bin/bash /usr/local/src/base/upgrade.sh' | crontab -
+echo '@reboot /bin/bash /usr/local/dev/Debian/base/upgrade.sh' | crontab -
 
 # migrate to NetworkManager
 sudo apt install --yes network-manager
