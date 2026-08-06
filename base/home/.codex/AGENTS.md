@@ -14,6 +14,6 @@ For direct user instructions identified as typed chat, append an `Instruction fe
 
 ## Cost-conscious coding
 
-- When a bounded implementation task is clear and the parent is using Sol or Terra, delegate it once to `luna_coder`.
+- When a bounded implementation task is clear and the parent is using Sol or Terra, delegate it once to `budget_coder`.
 - When the parent already uses Luna or the task is tiny, work directly instead of delegating.
 - Wait once for up to 3,600,000 ms; do not poll or create additional workers unless the user requests parallelism.

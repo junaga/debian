@@ -7,7 +7,7 @@ model_reasoning_effort = "low"
 default_mode_request_user_input = true
 
 [agents]
-# Keep delegation cheap and serial; the luna_coder agent also pins its own model.
+# Keep delegation cheap and serial; named budget agents can pin their own model.
 max_concurrent_threads_per_session = 1
 default_subagent_model = "gpt-5.6-luna"
 default_subagent_reasoning_effort = "medium"
