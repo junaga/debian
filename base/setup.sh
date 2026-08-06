@@ -71,3 +71,9 @@ echo ============================
 echo "Copy this SSH public key to remote systems for authentication:"
 cat ~/.ssh/id_ed25519.pub
 echo ============================
+
+# filesystem cleansing
+sudo mkdir -p /usr/local/app
+sudo rm -df /opt /srv
+sudo ln -s /usr/local/app /opt
+sudo ln -s /usr/local/app /srv
