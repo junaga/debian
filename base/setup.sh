@@ -25,7 +25,6 @@ sudo systemctl enable debian-upgrade.service
 # migrate to NetworkManager
 sudo apt install --yes network-manager
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
-sudo systemctl restart NetworkManager
 sudo nmcli connection migrate
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
 sudo crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager file
