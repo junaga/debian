@@ -17,3 +17,9 @@ For direct user instructions identified as typed chat, append an `Instruction fe
 - When a bounded implementation task is clear and the parent is using Sol or Terra, delegate it once to `budget_coder`.
 - When the parent already uses Luna or the task is tiny, work directly instead of delegating.
 - Wait once for up to 3,600,000 ms; do not poll or create additional workers unless the user requests parallelism.
+
+## Budget-agent handoff
+
+- After `budget_coder` returns a clean commit and verification summary, trust the handoff: check only repository status, commit metadata, and the reported results.
+- Do not reread the implementation or rerun passing checks unless the worker reports failure or uncertainty, the changes conflict with other work, or the user explicitly asks for review.
+- Continue directly with any remaining integration or deployment work.
