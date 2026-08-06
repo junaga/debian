@@ -5,10 +5,8 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 }
 set -e
 
-# run upgrades after network is available at boot
-sudo install -Dm644 /usr/local/src/base/debian-upgrade.service /etc/systemd/system/debian-upgrade.service
-sudo systemctl daemon-reload
-sudo systemctl enable debian-upgrade.service
+# run upgrades at boot
+echo '@reboot /bin/bash /usr/local/src/base/upgrade.sh' | crontab -
 
 # migrate to NetworkManager
 sudo apt install --yes network-manager
