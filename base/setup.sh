@@ -6,19 +6,7 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 set -e
 
 # run upgrades after network is available at boot
-sudo tee /etc/systemd/system/debian-upgrade.service >/dev/null <<-EOF
-	[Unit]
-	Wants=network-online.target
-	After=network-online.target
-
-	[Service]
-	Type=oneshot
-	Environment=HOME=/usr/local
-	ExecStart=/bin/bash /usr/local/src/base/upgrade.sh
-
-	[Install]
-	WantedBy=multi-user.target
-EOF
+sudo install -Dm644 /usr/local/src/base/debian-upgrade.service /etc/systemd/system/debian-upgrade.service
 sudo systemctl daemon-reload
 sudo systemctl enable debian-upgrade.service
 
