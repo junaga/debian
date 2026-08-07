@@ -34,4 +34,3 @@ npm install --global --no-fund \
 mkdir -p "$HOME/.codex/packages/standalone"
 ln -sfnT "$(npm root -g)/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl" "$HOME/.codex/packages/standalone/current"
 ln -sfn bin/codex "$HOME/.codex/packages/standalone/current/codex"
-/usr/local/bin/codex remote-control start || true
