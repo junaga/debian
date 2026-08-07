@@ -1,13 +1,12 @@
+# Disable update and experimental-feature dialogs.
 check_for_update_on_startup = false
 suppress_unstable_features_warning = true
 
-[features]
-# ask like /plan mode does; but do it outside of /plan mode.
-default_mode_request_user_input = true
+# Allow structured questions outside Plan mode.
+features.default_mode_request_user_input = true
 
-[agents]
-# Luna uses 90% fewer credits than Terra for a typical local task (5 vs. 50).
-default_subagent_model = "gpt-5.6-luna"
+# Use Luna for subagents; typical local tasks consume 90% fewer credits than Terra.
+agents.default_subagent_model = "gpt-5.6-luna"
 
 [tui]
 resume_cwd = "current"
