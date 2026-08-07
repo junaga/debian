@@ -1,19 +1,14 @@
-check_for_update_on_startup = false
-suppress_unstable_features_warning = true
-
 [features]
-# Allow structured choice prompts in Default mode.
+# ask like /plan mode does; but do it outside of /plan mode.
 default_mode_request_user_input = true
 
 [agents]
-# Limit delegation to one inexpensive worker at a time.
-max_concurrent_threads_per_session = 1
 default_subagent_model = "gpt-5.6-luna"
 
 [tui]
 resume_cwd = "current"
 status_line = ["model-with-reasoning", "current-dir", "thread-title"]
 
-[notice]
-# Hide suggestions to switch models when nearing a model-specific rate limit.
-hide_rate_limit_model_nudge = true
+# dismiss dialogs
+check_for_update_on_startup = false
+suppress_unstable_features_warning = true
