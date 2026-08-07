@@ -1,3 +1,9 @@
+## Information
+
+| Item | Value |
+|---|---|
+| Budget model | `gpt-5.6-luna` with medium reasoning |
+
 ## Git
 
 In Git repositories, commit completed changes with this trailer:
@@ -14,11 +20,4 @@ For direct user instructions identified as typed chat, append an `Instruction fe
 
 ## Fix all bugs
 
-When the user says **"fix all bugs"**, start a persistent bug-hunting loop:
-
-1. Spawn one subagent to independently find concrete, reproducible bugs across the repository, and reuse that same subagent thread for the entire loop.
-2. For each confirmed bug, have the subagent make the smallest correct fix, add regression coverage, run the relevant tests, and create a focused commit following the Git instructions above.
-3. Require a clean worktree after every commit. Do not manufacture findings or mix unrelated changes.
-4. Keep detailed investigation in the subagent. In the main thread, report only each new commit, the bug fixed, and verification, then immediately send the same subagent back to continue.
-5. Do not push, package, deploy, or install unless the user explicitly asks or another applicable instruction requires it.
-6. Continue until repeated exhaustive passes find no defensible new bug; then report that the search is exhausted.
+When the user says **"fix all bugs"**, start and reuse one subagent on the cheap budget model listed above. Have it independently find, prove, fix, regression-test, verify, and commit real bugs one at a time, without manufacturing findings or mixing unrelated changes. Keep the detailed work in the subagent, report only validated commits, and send it back until the search is genuinely exhausted. Keep the worktree clean, and do not push, package, deploy, or install unless explicitly requested or otherwise required.
