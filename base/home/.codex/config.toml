@@ -16,7 +16,7 @@ default_subagent_reasoning_effort = "medium"
 [tui]
 session_picker_view = "comfortable"
 resume_cwd = "current"
-status_line = ["current-dir", "git-branch", "model-with-reasoning"]
+status_line = ["thread-title", "current-dir", "git-branch", "model-with-reasoning"]
 
 [notice]
 hide_rate_limit_model_nudge = true
