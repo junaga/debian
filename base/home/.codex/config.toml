@@ -1,25 +1,19 @@
 check_for_update_on_startup = false
 suppress_unstable_features_warning = true
-model = "gpt-5.6-luna"
-model_reasoning_effort = "medium"
 
 [features]
-# Experimental: allow structured choice prompts in Default mode, not only Plan mode.
+# Allow structured choice prompts in Default mode.
 default_mode_request_user_input = true
 
 [agents]
-# One serial Luna worker keeps delegation predictable and inexpensive.
+# Limit delegation to one inexpensive worker at a time.
 max_concurrent_threads_per_session = 1
 default_subagent_model = "gpt-5.6-luna"
-default_subagent_reasoning_effort = "medium"
 
 [tui]
-session_picker_view = "comfortable"
 resume_cwd = "current"
-status_line = ["thread-title", "current-dir", "git-branch", "model-with-reasoning"]
+status_line = ["model-with-reasoning", "current-dir", "thread-title"]
 
 [notice]
+# Hide suggestions to switch models when nearing a model-specific rate limit.
 hide_rate_limit_model_nudge = true
-
-[plugins."computer-use@openai-bundled"]
-enabled = true
