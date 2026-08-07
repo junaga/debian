@@ -10,3 +10,11 @@
 - Enable persistent final-shutdown logging with a kernel built with
   `CONFIG_PSTORE_CONSOLE`, plus the pstore kernel parameters needed to capture
   hangs after journald has stopped.
+- Fix the reboot upgrade job and Codex remote-control daemon lifecycle. The
+  `@reboot` entry installed by `base/setup.sh` runs `base/upgrade.sh` as the
+  desktop user, although the upgrade script performs privileged package and
+  `/etc/apt` operations. Running the script manually with `sudo` caused Codex
+  remote control to start as root under `/tmp/.codex`, leaving an errored,
+  root-owned daemon disconnected from the desktop user session. Implement a
+  privilege-safe boot service with an explicit user phase before restoring
+  automatic remote-control startup.
