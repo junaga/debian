@@ -216,6 +216,9 @@ if getent group junaga >/dev/null; then
 	groupmod --new-name hypr junaga
 fi
 usermod --gid hypr --home "$HYPR_HOME" --shell /bin/bash hypr
+# The desktop identity keeps hardware groups but not Debian's unrestricted
+# administrator group.  Its sole root transition is the audited sudoers rule.
+gpasswd --delete hypr sudo 2>/dev/null || true
 sed -i 's/^junaga:/hypr:/' /etc/subuid /etc/subgid
 sed -i -E 's/(^|,)junaga(,|$)/\1hypr\2/g' /etc/group /etc/gshadow
 if test -f /var/spool/cron/crontabs/junaga; then
