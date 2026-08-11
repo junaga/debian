@@ -342,6 +342,7 @@ install -m 0644 /usr/local/src/migration/getty-override.conf \
 chown -R root:root /usr/local
 systemctl daemon-reload
 systemctl enable snapper-timeline.timer snapper-cleanup.timer
+systemctl set-default multi-user.target
 
 # End-to-end assertions run before login is unblocked and before the marker is
 # written.  A failed assertion leaves the service enabled for repair/retry.
