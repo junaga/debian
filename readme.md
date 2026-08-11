@@ -6,8 +6,6 @@ Deliberate improvements to system defaults are documented in
 [fixes.md](./fixes.md).
 The administrator-owned filesystem is documented in
 [base/readme.md](./base/readme.md).
-Communication preferences are documented in
-[mental-model.md](./mental-model.md).
 
 ```sh
 uname #> Linux
