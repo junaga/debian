@@ -88,7 +88,7 @@ copy_root_item() {
 root_items=(
 	.bash_history .bashrc .profile .ssh .gitconfig .npmrc .python_history
 	.wget-hsts .crates2.json .android .dotnet .terraform.d .luarocks .copilot
-	.codex .grok .dev-browser .openclaw-chrome .openclaw-chrome-profile
+	.codex .openclaw-chrome .openclaw-chrome-profile
 	.openclaw-dev .openclaw-shared .openclaw-state .openclaw.pre-migration
 	.config/gh .config/git .config/micro .config/fish .config/btop
 	.config/procps .config/uv .config/screeps-cli .config/systemd
@@ -96,6 +96,20 @@ root_items=(
 for item in "${root_items[@]}"; do
 	copy_root_item "$item"
 done
+
+# Keep agent state, but do not duplicate program payloads which are installed
+# under /usr/local below.
+if test -d "$HOME_MOUNT/.grok"; then
+	install -d -m 0700 /root/.grok
+	rsync -aHAX --delete --numeric-ids --exclude=/downloads/ --exclude=/bin/ \
+		"$HOME_MOUNT/.grok/" /root/.grok/
+fi
+if test -d "$HOME_MOUNT/.dev-browser"; then
+	install -d -m 0700 /root/.dev-browser
+	rsync -aHAX --delete --numeric-ids --exclude=/node_modules/ \
+		--exclude=/daemon.sock --exclude='*.pid' \
+		"$HOME_MOUNT/.dev-browser/" /root/.dev-browser/
+fi
 
 # Hermes keeps its state in root's HOME, while its program tree is local
 # administrator software.  Dependency trees are intentionally rebuilt rather
