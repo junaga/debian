@@ -236,7 +236,8 @@ normal root autologin instead of exposing a partially migrated desktop.
 Inspect and recover data with:
 
 ```sh
-snapper --config home list
+# Fast everyday listing. The omitted used-space column is not needed to restore.
+snapper --config home list --disable-used-space
 snapper --config home status 0..NUMBER
 snapper --config home diff 0..NUMBER -- path/to/file
 
@@ -246,6 +247,11 @@ cp -a /home/hypr/.snapshots/NUMBER/snapshot/path/to/file /home/hypr/path/to/file
 # Or ask Snapper to reverse selected changes between two trees.
 snapper --config home undochange NUMBER..0 path/to/file
 ```
+
+Plain `snapper --config home list` also calculates the exclusive space retained
+by each snapshot. With Btrfs quota support, Snapper performs and waits for a
+full quota rescan to populate that column, so it can take minutes on this HOME.
+Use the plain form only for capacity analysis; it is not a better health check.
 
 Snapshot `0` is the current `/home/hypr` tree. Direct copying is preferred for a small,
 auditable restore; `undochange` is useful for a reviewed set of paths. Whole
