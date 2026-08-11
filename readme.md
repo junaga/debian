@@ -4,6 +4,8 @@ I use the Debian operating system almost everywhere; [Desktop GUI](https://www.r
 
 Deliberate improvements to system defaults are documented in
 [fixes.md](./fixes.md).
+The administrator-owned filesystem is documented in
+[base/readme.md](./base/readme.md).
 
 ```sh
 uname #> Linux
