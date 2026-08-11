@@ -38,11 +38,11 @@ to `/`. The complete chain was observed on this installation and recorded in
 
 [`desktop/etc/fstab`](./desktop/etc/fstab),
 [`desktop/etc/snapper/configs/home`](./desktop/etc/snapper/configs/home), and
-[`desktop/etc/systemd/system/snapper-timeline.timer.d/frequent.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/frequent.conf)
+[`desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf)
 
 Debian does not require a separate filesystem for `/home`. This workstation
 deliberately places the complete `/home` hierarchy on its own Btrfs filesystem
-and snapshots it with Snapper every 15 minutes. The account retains the
+and snapshots it with Snapper every day. The account retains the
 conventional `/home/junaga` directory inside that filesystem. The root
 filesystem remains ext4 and is not snapshotted.
 
@@ -96,8 +96,8 @@ This is stronger than a trash directory, but it is not literally impossible
 to lose data:
 
 - a file created and deleted between snapshots was never captured;
-- the schedule gives routine changes a recovery-point objective of at most 15
-  minutes, not zero;
+- the schedule gives routine changes a recovery-point objective of at most one
+  day, not zero;
 - cleanup intentionally expires snapshots and eventually releases their
   extents;
 - snapshots share the same disk and do not survive device loss, corruption,
@@ -173,11 +173,16 @@ user history.
 
 ### Retention and space
 
-Timeline cleanup keeps 48 hourly, 30 daily, 12 weekly, 12 monthly, and 3 yearly
-recovery points. Snapper's Btrfs quota integration limits snapshots to half of
-the HOME filesystem and asks cleanup to preserve 20 percent free space. These
-are policy limits rather than reserved allocations: unchanged snapshots are
-cheap, while frequently rewritten files retain more old extents.
+Timeline cleanup keeps 31 daily and 12 monthly recovery points. Hourly and
+weekly tiers are disabled. The yearly limit is set to the largest `size_t`
+accepted by Snapper on this 64-bit system (`18446744073709551615`), making
+yearly retention practically unlimited without another timer or cleanup path.
+Snapper's Btrfs quota integration limits snapshots to half of the HOME
+filesystem and asks cleanup to preserve 20 percent free space. These are policy
+limits rather than reserved allocations: unchanged snapshots are cheap, while
+frequently rewritten files retain more old extents. Unlimited yearly retention
+still requires capacity monitoring because a sufficiently long or high-churn
+history can eventually exhaust the filesystem.
 
 Inspect and recover data with:
 
