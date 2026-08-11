@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
+test "$(id -un)" = hypr
+cd /home/hypr
+exec start-hyprland

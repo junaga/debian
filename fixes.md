@@ -41,25 +41,41 @@ to `/`. The complete chain was observed on this installation and recorded in
 [`desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf)
 
 Debian does not require a separate filesystem for `/home`. This workstation
-deliberately places the complete `/home` hierarchy on its own Btrfs filesystem
-and snapshots it with Snapper every day. The account retains the
-conventional `/home/junaga` directory inside that filesystem. The root
-filesystem remains ext4 and is not snapshotted.
+deliberately places the complete `/home` hierarchy on its own Btrfs filesystem.
+The only live user-data subvolume is `/home/hypr`, and Snapper snapshots that
+subvolume every day. The ext4 root filesystem, including `/root` and
+`/usr/local`, is intentionally not snapshotted.
 
 The boundary follows ownership of the data rather than the directory tree:
 
 ```text
 /                    Debian packages and reproducible installation state
+/root                terminal identity: shell, SSH, Git, Codex, CLI state
 /usr/local           root-owned local programs, projects, and system recipe
-/home                  irreplaceable user data and application state
+/home/hypr           desktop identity: documents and graphical app state
 ```
 
 Operating-system and application files can be reinstalled from Debian, source
-repositories, and other upstream publishers. HOME contains the work that
-cannot be reconstructed that way: documents, credentials, saves, browser
-profiles, messages, editor state, and application databases. Snapshotting only
-HOME therefore spends copy-on-write metadata and retained blocks on the data
-whose history matters.
+repositories, and other upstream publishers. The desktop HOME contains the
+work whose interactive history matters: documents, saves, browser profiles,
+messages, editor state, application databases, dotfiles, and caches.
+Snapshotting only `/home/hypr` spends copy-on-write metadata and retained blocks
+on bootable desktop history rather than on system software.
+
+Terminal administration is deliberately a separate risk domain. Root owns
+shell history, SSH and Git identities, Codex conversations, CLI credentials,
+projects, and local programs. Those paths are excluded from Snapper: a desktop
+rewind must never silently roll an SSH key, administrator project, or active
+terminal-agent database backward. They require an independent archive or
+off-machine backup.
+
+The `hypr` account owns UID/GID 1000 and cannot administer the system generally.
+The root VT command `exec desktop` performs GPU module setup as root, then uses
+a PAM login session to start Hyprland as `hypr`. Graphical programs remain
+unprivileged. Kitty is also a `hypr` process, but its configured shell may run
+only `/usr/local/sbin/root-shell` through a command-specific passwordless sudo
+rule. A compromised graphical session can therefore invoke that root shell;
+this is an explicit usability boundary, not a security sandbox.
 
 ### Filesystem-native trash and history
 
@@ -110,20 +126,20 @@ Snapper serves fast local undo and version recovery.
 
 ### Bootable past desktops
 
-A HOME snapshot captures the persistent desktop rather than the installed
+A `/home/hypr` snapshot captures the persistent desktop rather than the installed
 system: dotfiles, documents, credentials, browser profiles, application
 databases, game saves, editor state, and other user data. It intentionally does
 not capture the kernel, Debian packages, application binaries under `/usr`, or
 system state under `/var`.
 
 An old read-only snapshot can be cloned into a new writable Btrfs subvolume and
-mounted at `/home` for a controlled boot. The current Debian installation and
-current programs then open a historical desktop state:
+used as `/home/hypr` for a controlled desktop launch. The current Debian
+installation and current programs then open a historical desktop state:
 
 ```text
-read-only HOME snapshot
+read-only desktop snapshot
           |
-          +-> writable historical branch -> mount at /home -> log in
+          +-> writable historical branch -> /home/hypr -> launch desktop
 
 current HOME branch remains preserved and can be selected again
 ```
@@ -140,8 +156,9 @@ snapshot and the current HOME branch.
 For a smaller rewind, close the application and its background processes,
 create a safety snapshot of the present, and restore the complete logical
 application state from the chosen checkpoint. A machine reboot is unnecessary
-for an isolated application restore; replacing all of HOME requires every user
-session to be stopped and should be performed from a rescue environment.
+for an isolated application restore; replacing all of `/home/hypr` requires
+the graphical session to be stopped and should be performed from a root VT or
+rescue environment.
 
 ### Cache is disposable but not worthless
 
@@ -184,6 +201,30 @@ frequently rewritten files retain more old extents. Unlimited yearly retention
 still requires capacity monitoring because a sufficiently long or high-churn
 history can eventually exhaust the filesystem.
 
+### One-shot migration and recovery boundary
+
+[`base/sbin/finish-home-migration`](./base/sbin/finish-home-migration) runs once
+after both `/home` and the independent archive are mounted, but before user
+sessions or VTs. It first refreshes
+`/mnt/archive/home-restore-backup-20260811`, then creates `/home/hypr` as a
+writable Btrfs snapshot of the old flat tree. That reflinked branch establishes
+a complete desktop copy before cleanup begins.
+
+Terminal state is copied to `/root`; programs and administrator trees live in
+root-owned `/usr/local`; Steam and all graphical application state remain in
+`/home/hypr`. Reinstallable npm, Gradle, Cargo-registry, and rootless-container
+caches are retained in the archive rather than filling the small ext4 root.
+The old Snapper tree is renamed `/home/.legacy-snapshots`, so pre-migration
+history remains available but is outside the new policy. A fresh nested
+`/home/hypr/.snapshots` starts the daily desktop history.
+
+The migration is deliberately fail-closed. Its completion marker is written
+only after it proves the account names and homes, ownership, Btrfs subvolumes,
+Snapper target, sudo policy, root-owned `/usr/local`, Codex executable,
+credentials, and recorded sessions. The getty requires that service. A failure
+therefore leaves the external backup and legacy snapshots available and blocks
+normal root autologin instead of exposing a partially migrated desktop.
+
 Inspect and recover data with:
 
 ```sh
@@ -192,15 +233,15 @@ snapper --config home status 0..NUMBER
 snapper --config home diff 0..NUMBER -- path/to/file
 
 # Copy one file out without modifying the snapshot.
-cp -a /home/.snapshots/NUMBER/snapshot/junaga/path/to/file /home/junaga/path/to/file
+cp -a /home/hypr/.snapshots/NUMBER/snapshot/path/to/file /home/hypr/path/to/file
 
 # Or ask Snapper to reverse selected changes between two trees.
-snapper --config home undochange NUMBER..0 junaga/path/to/file
+snapper --config home undochange NUMBER..0 path/to/file
 ```
 
-Snapshot `0` is the current live tree. Direct copying is preferred for a small,
+Snapshot `0` is the current `/home/hypr` tree. Direct copying is preferred for a small,
 auditable restore; `undochange` is useful for a reviewed set of paths. Whole
-HOME rollback is intentionally not coupled to boot because user-data recovery
+desktop rollback is intentionally not coupled to boot because user-data recovery
 should not replace the operating-system root.
 
 ## Autologin Linux virtual terminals
@@ -211,19 +252,19 @@ should not replace the operating-system root.
 sudo systemctl edit getty@.service --stdin <<-EOF
 	[Service]
 	ExecStart=
-	ExecStart=-login -f $USER
+	ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - \${TERM}
 EOF
 ```
 
 Authority is kept on the web, not in a password stored on every machine. A
-Linux VT therefore starts the local user session without authentication.
+Linux VT therefore starts the root terminal session without authentication.
 
 Autologin makes the VT a recovery interface independent of root-password
 knowledge and network login:
 
 ```text
-hardware VT          /dev/ttyN  -> login -f $USER -> recover through sudo
-cloud VGA/VNC VT     /dev/ttyN  -> login -f $USER -> repair network or SSH
+hardware VT          /dev/ttyN  -> agetty --autologin root -> administer
+cloud VGA/VNC VT     /dev/ttyN  -> agetty --autologin root -> repair network or SSH
 cloud serial console ttyS*/hvc* -> serial-getty@.service (not covered)
 ```
 
@@ -240,18 +281,21 @@ TTYVTDisallocate=yes
 ```
 
 ```text
-getty@ttyN.service -> login -f <user> -> PAM session -> shell
+getty@ttyN.service -> agetty --autologin root -> PAM session -> shell
 ```
 
-systemd opens, resets, hangs up, and deallocates the VT. `login -f` skips
-authentication while preserving normal account and session setup. For this
-fixed VT scope, `agetty` mainly adds an `/etc/issue` banner and username prompt
-that autologin does not use.
+systemd opens, resets, hangs up, and deallocates the VT. `agetty` supplies the
+terminal parameters and invokes PAM login with the fixed root identity. The
+drop-in also requires the one-shot migration, so no root prompt appears after
+reboot until its account, storage, ownership, Snapper, and Codex assertions
+have succeeded.
 
-The heredoc expands `$USER` when setup writes the drop-in, and the `-` prefix
-preserves the vendor unit's ignored-exit behavior. The override cannot affect
+The `-` prefix preserves the vendor unit's ignored-exit behavior. The override cannot affect
 `serial-getty@.service`, SSH, display managers, rescue mode, containers, or WSL.
-The reduction to direct `login` is recorded in `833393a`.
+
+Root autologin grants anyone with physical or hypervisor-console access complete
+authority. That is deliberate for this single-user workstation recovery model;
+multi-user or physically untrusted machines must remove the drop-in.
 
 ## Guarantee an SSH identity
 

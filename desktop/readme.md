@@ -8,15 +8,17 @@ Run these commands from the repository root.
 
 ```sh
 sudo bash ./base/upgrade.sh
-cp -ra ./base/home/. ~/.
+sudo cp -ra ./base/home/. /root/.
 
 sudo bash ./desktop/install.sh
-cp -ra ./desktop/home/. ~/.
+sudo cp -ra ./desktop/home/. /home/hypr/.
+sudo chown -R hypr:hypr /home/hypr
 
 sudo reboot 0
 ```
 
 ```sh
+# From the root VT:
 exec desktop
 ```
 
