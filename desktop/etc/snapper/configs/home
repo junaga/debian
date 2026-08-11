@@ -1,4 +1,4 @@
-SUBVOLUME="/home/junaga"
+SUBVOLUME="/home"
 FSTYPE="btrfs"
 
 QGROUP=""
