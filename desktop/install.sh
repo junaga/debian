@@ -43,7 +43,7 @@ apt install --yes\
   build-essential\
   linux-headers-$(uname -r);
 
-# Enable NVIDIA DRM KMS for Wayland.
+# Rebuild the initramfs for the installed NVIDIA DKMS modules.
 update-initramfs -u
 
 # ==============================================================================
