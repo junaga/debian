@@ -18,10 +18,10 @@ cp -ar "$DIR/etc/." /etc/.
 
 # Filesystem-native recovery for user data.
 apt install --yes btrfs-progs snapper
-if ! btrfs subvolume show "$USER_HOME/.snapshots" >/dev/null 2>&1; then
-	btrfs subvolume create "$USER_HOME/.snapshots"
+if ! btrfs subvolume show /home/.snapshots >/dev/null 2>&1; then
+	btrfs subvolume create /home/.snapshots
 fi
-if btrfs qgroup show "$USER_HOME" 2>/dev/null |
+if btrfs qgroup show /home 2>/dev/null |
 	awk '$1 == "1/0" { found = 1 } END { exit !found }'; then
 	snapper --config home set-config QGROUP=1/0
 else

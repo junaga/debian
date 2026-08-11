@@ -40,17 +40,18 @@ to `/`. The complete chain was observed on this installation and recorded in
 [`desktop/etc/snapper/configs/home`](./desktop/etc/snapper/configs/home), and
 [`desktop/etc/systemd/system/snapper-timeline.timer.d/frequent.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/frequent.conf)
 
-Debian does not require a separate filesystem for a user's home directory.
-This workstation deliberately places `/home/junaga` on its own Btrfs
-filesystem and snapshots it with Snapper every 15 minutes. The root filesystem
-remains ext4 and is not snapshotted.
+Debian does not require a separate filesystem for `/home`. This workstation
+deliberately places the complete `/home` hierarchy on its own Btrfs filesystem
+and snapshots it with Snapper every 15 minutes. The account retains the
+conventional `/home/junaga` directory inside that filesystem. The root
+filesystem remains ext4 and is not snapshotted.
 
 The boundary follows ownership of the data rather than the directory tree:
 
 ```text
 /                    Debian packages and reproducible installation state
 /usr/local           root-owned local programs, projects, and system recipe
-/home/junaga          irreplaceable user data and application state
+/home                  irreplaceable user data and application state
 ```
 
 Operating-system and application files can be reinstalled from Debian, source
@@ -110,10 +111,10 @@ snapper --config home status 0..NUMBER
 snapper --config home diff 0..NUMBER -- path/to/file
 
 # Copy one file out without modifying the snapshot.
-cp -a /home/junaga/.snapshots/NUMBER/snapshot/path/to/file /home/junaga/path/to/file
+cp -a /home/.snapshots/NUMBER/snapshot/junaga/path/to/file /home/junaga/path/to/file
 
 # Or ask Snapper to reverse selected changes between two trees.
-snapper --config home undochange NUMBER..0 path/to/file
+snapper --config home undochange NUMBER..0 junaga/path/to/file
 ```
 
 Snapshot `0` is the current live tree. Direct copying is preferred for a small,
