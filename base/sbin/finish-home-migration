@@ -278,7 +278,8 @@ while IFS= read -r -d '' obsolete; do
 	# repairing this migration.  Leave that directory visible until the process
 	# exits; the retry then archives the final rollout and removes it normally.
 	if test "$obsolete" = "$HOME_MOUNT/.codex" && \
-		lsof +D "$obsolete" >/dev/null 2>&1; then
+		find /proc/[0-9]*/fd -maxdepth 1 -lname "$obsolete/*" \
+			-print -quit 2>/dev/null | grep -q .; then
 		continue
 	fi
 	test "$(dirname "$obsolete")" = "$HOME_MOUNT"
@@ -323,6 +324,9 @@ hypr ALL=(root) NOPASSWD: /usr/local/sbin/root-shell
 EOF
 chmod 0440 /etc/sudoers.d/020-hypr-root-shell
 rm -f /etc/sudoers.d/010-junaga-nopasswd /etc/sudoers.d/openclaw-nopasswd
+if test -e /etc/sudoers.d/010- && test ! -s /etc/sudoers.d/010-; then
+	chmod 0440 /etc/sudoers.d/010-
+fi
 visudo --check --strict
 
 install -d -m 0755 /etc/systemd/system/getty@.service.d

@@ -3,17 +3,29 @@ set -Eeuo pipefail
 
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CODEX_PID=${1:?Codex PID required}
-ROLLOUT=${2:?Rollout path required}
+CODEX_FD=${2:?Codex rollout FD required}
 LOG=/var/log/complete-home-migration-after-codex.log
 
 exec >>"$LOG" 2>&1
 
+ROLLOUT=$(readlink "/proc/$CODEX_PID/fd/$CODEX_FD")
+ROLLOUT=${ROLLOUT% (deleted)}
 case "$ROLLOUT" in
 	/home/.codex/sessions/*) ;;
 	*) echo "Refusing unexpected rollout path: $ROLLOUT"; exit 1 ;;
 esac
 
+relative=${ROLLOUT#/home/.codex/sessions/}
+install -d -m 0700 "/root/.codex/sessions/$(dirname "$relative")"
+capture="/root/.codex/sessions/$relative.rescue-capture"
+
+# Freeze writes, copy the still-open unlinked inode, then allow Codex to handle
+# SIGTERM cleanly.  The capture is atomic from the rollout's perspective.
+kill -STOP "$CODEX_PID"
+cp --sparse=always "/proc/$CODEX_PID/fd/$CODEX_FD" "$capture"
+chmod 0600 "$capture"
 kill -TERM "$CODEX_PID"
+kill -CONT "$CODEX_PID"
 for _ in {1..120}; do
 	kill -0 "$CODEX_PID" 2>/dev/null || break
 	sleep 1
@@ -23,10 +35,9 @@ if kill -0 "$CODEX_PID" 2>/dev/null; then
 	exit 1
 fi
 
-relative=${ROLLOUT#/home/.codex/sessions/}
-install -d -m 0700 "/root/.codex/sessions/$(dirname "$relative")"
-rsync -aHAX "$ROLLOUT" "/root/.codex/sessions/$relative"
+mv "$capture" "/root/.codex/sessions/$relative"
 
+systemctl reset-failed finish-home-migration.service
 systemctl start finish-home-migration.service
 test -e /var/lib/home-migration-complete
 systemctl isolate multi-user.target
