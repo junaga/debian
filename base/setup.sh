@@ -57,7 +57,3 @@ echo ============================
 echo "Copy this SSH public key to remote systems for authentication:"
 cat ~/.ssh/id_ed25519.pub
 echo ============================
-
-# expose administrator-owned applications and data in the local hierarchy
-sudo ln -sfnT /opt /usr/local/app
-sudo ln -sfnT /srv /usr/local/var
