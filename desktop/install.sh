@@ -159,6 +159,19 @@ function installURL {
 	)
 }
 
+function installGitHubRelease {
+	local REPOSITORY="$1"
+	local SUFFIX="$2"
+	local URL
+
+	URL="$(curl -fsSL "https://api.github.com/repos/$REPOSITORY/releases/latest" |
+		jq -er --arg suffix "$SUFFIX" \
+		'.assets | map(select(.name | endswith($suffix))) | first | .browser_download_url')"
+	installURL "$URL"
+}
+
 installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 installURL "https://discord.com/api/download?platform=linux&format=deb"
 installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
+installGitHubRelease "junaga/chatgpt" "chatgpt.deb"
+installGitHubRelease "th-ch/youtube-music" "_amd64.deb"
