@@ -6,7 +6,7 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 set -e
 
 # run upgrades at boot
-echo '@reboot /bin/bash /usr/local/dev/debian/base/upgrade.sh' | crontab -
+echo '@reboot /bin/bash /usr/local/src/base/upgrade.sh' | crontab -
 
 # migrate to NetworkManager
 sudo apt install --yes network-manager
@@ -58,8 +58,7 @@ echo "Copy this SSH public key to remote systems for authentication:"
 cat ~/.ssh/id_ed25519.pub
 echo ============================
 
-# filesystem cleansing
-sudo mkdir -p /usr/local/app
-sudo rm -df /opt /srv
-sudo ln -s /usr/local/app /opt
-sudo ln -s /usr/local/app /srv
+# expose administrator-owned applications and data in the local hierarchy
+sudo install -d -o root -g root -m 0755 /opt /srv
+sudo ln -sfnT /opt /usr/local/app
+sudo ln -sfnT /srv /usr/local/var
