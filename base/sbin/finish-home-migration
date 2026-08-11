@@ -89,7 +89,7 @@ root_items=(
 	.bash_history .bashrc .profile .ssh .gitconfig .npmrc .python_history
 	.wget-hsts .crates2.json .android .dotnet .terraform.d .luarocks .copilot
 	.codex .grok .dev-browser .openclaw-chrome .openclaw-chrome-profile
-	.openclaw-dev .openclaw-shared .openclaw-state
+	.openclaw-dev .openclaw-shared .openclaw-state .openclaw.pre-migration
 	.config/gh .config/git .config/micro .config/fish .config/btop
 	.config/procps .config/uv .config/screeps-cli .config/systemd
 )
@@ -202,7 +202,6 @@ test "$(id -g hypr)" = 1000
 if test -e /var/lib/systemd/linger/junaga; then
 	mv /var/lib/systemd/linger/junaga /var/lib/systemd/linger/hypr
 fi
-loginctl enable-linger root
 loginctl disable-linger hypr || true
 
 remove_hypr_item() {
@@ -325,4 +324,5 @@ snapper --config home list >/dev/null
 systemd-analyze verify /etc/systemd/system/finish-home-migration.service
 
 touch "$MARKER"
+loginctl enable-linger root
 echo "root/hypr Btrfs HOME migration complete"
