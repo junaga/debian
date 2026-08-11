@@ -355,7 +355,9 @@ test -n "$(find /root/.codex/sessions -type f -print -quit)"
 test -x /usr/local/bin/codex
 /usr/local/bin/codex --version
 HOME=/root bash -ic 'cd /usr/local; type codex >/dev/null' </dev/null
-test "$(runuser --login hypr --command 'printf %s "$HOME"')" = "$HYPR_HOME"
+# Avoid pam_systemd here: this service intentionally runs before user@1000,
+# while a full login session would wait for that unit and deadlock the boot.
+test "$(runuser --user hypr -- /bin/sh -c 'printf %s "$HOME"')" = "$HYPR_HOME"
 btrfs subvolume show "$HYPR_HOME" >/dev/null
 btrfs subvolume show "$HYPR_HOME/.snapshots" >/dev/null
 test -z "$(find "$HOME_MOUNT" -mindepth 1 -maxdepth 1 \
