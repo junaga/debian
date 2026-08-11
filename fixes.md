@@ -143,6 +143,34 @@ application state from the chosen checkpoint. A machine reboot is unnecessary
 for an isolated application restore; replacing all of HOME requires every user
 session to be stopped and should be performed from a rescue environment.
 
+### Cache is disposable but not worthless
+
+HOME snapshots initially include `~/.cache`. An application can normally
+delete and reconstruct cache data, but reconstructible does not mean devoid of
+historical value. A browser cache may retain the only local fragments of a web
+page which later disappears: HTML, images, scripts, media segments, or API
+responses. Historical caches can therefore contribute to application rewind
+and occasionally act as an accidental digital archive.
+
+They are not dependable web archives. Browsers use indexed and versioned cache
+formats, evict entries independently, and may need network APIs which no longer
+exist. A newer browser may reject an old cache, and a cached dynamic page may be
+incomplete. Deliberate preservation should use an archival format, but those
+limitations do not make incidental history useless.
+
+The cost is write churn. This installation currently has about 7.8 GiB in
+`~/.cache`, including roughly 4.2 GiB of Chrome HTTP cache and 1.7 GiB of Codex
+runtimes. A cache capped at 4 GiB can replace its contents many times; snapshots
+retain those evicted generations until the checkpoints containing them expire.
+The historical space can therefore greatly exceed the live cache size.
+
+Btrfs snapshots cover a complete subvolume and cannot exclude a directory by
+pattern. Excluding `~/.cache` would require making it a nested subvolume, or
+giving it its own independent snapshot policy. Do not discard it preemptively.
+Keep cache history in the initial HOME policy, measure its exclusive retained
+space, and separate it only if observed churn competes materially with durable
+user history.
+
 ### Retention and space
 
 Timeline cleanup keeps 48 hourly, 30 daily, 12 weekly, 12 monthly, and 3 yearly
