@@ -5,6 +5,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CODEX_PID=${1:?Codex PID required}
 CODEX_FD=${2:?Codex rollout FD required}
 LOG=/var/log/complete-home-migration-after-codex.log
+MARKER=/var/lib/home-migration-complete
 
 exec >>"$LOG" 2>&1
 
@@ -19,13 +20,10 @@ relative=${ROLLOUT#/home/.codex/sessions/}
 install -d -m 0700 "/root/.codex/sessions/$(dirname "$relative")"
 capture="/root/.codex/sessions/$relative.rescue-capture"
 
-# Freeze writes, copy the still-open unlinked inode, then allow Codex to handle
-# SIGTERM cleanly.  The capture is atomic from the rollout's perspective.
-kill -STOP "$CODEX_PID"
-cp --sparse=always "/proc/$CODEX_PID/fd/$CODEX_FD" "$capture"
-chmod 0600 "$capture"
+# Hold the unlinked inode open in this independent service.  Copy only after
+# Codex exits so its graceful shutdown writes are included in the final file.
+exec {ROLLOUT_FD}<"/proc/$CODEX_PID/fd/$CODEX_FD"
 kill -TERM "$CODEX_PID"
-kill -CONT "$CODEX_PID"
 for _ in {1..120}; do
 	kill -0 "$CODEX_PID" 2>/dev/null || break
 	sleep 1
@@ -35,9 +33,10 @@ if kill -0 "$CODEX_PID" 2>/dev/null; then
 	exit 1
 fi
 
+cp --sparse=always "/proc/self/fd/$ROLLOUT_FD" "$capture"
+chmod 0600 "$capture"
+test -s "$capture"
 mv "$capture" "/root/.codex/sessions/$relative"
 
-systemctl reset-failed finish-home-migration.service
-systemctl start finish-home-migration.service
-test -e /var/lib/home-migration-complete
+test -e "$MARKER"
 systemctl isolate multi-user.target
