@@ -59,6 +59,5 @@ cat ~/.ssh/id_ed25519.pub
 echo ============================
 
 # expose administrator-owned applications and data in the local hierarchy
-sudo install -d -o root -g root -m 0755 /opt /srv
 sudo ln -sfnT /opt /usr/local/app
 sudo ln -sfnT /srv /usr/local/var

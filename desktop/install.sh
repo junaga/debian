@@ -149,9 +149,14 @@ apt install --yes\
 
 # Third-party desktop applications
 function installURL {
-	local FILE=/tmp/$RANDOM.deb
-	curl -fL "$1" > $FILE
-	apt install --yes $FILE
+	(
+		local FILE
+
+		FILE="$(mktemp --suffix=.deb)"
+		trap 'rm -f "$FILE"' EXIT
+		curl -fL --output "$FILE" "$1"
+		apt install --yes "$FILE"
+	)
 }
 
 installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"

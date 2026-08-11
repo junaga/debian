@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
 function inst { code --install-extension "$1"; }
 
 inst qwtel.sqlite-viewer # https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer

@@ -49,22 +49,21 @@ Report or patch the Debian package transition, then remove the holds only after
 a consistently rebuilt package set is available and passes both normal- and
 fallback-config startup tests.
 
-## 7. Replace the HOME migration script
+## 7. Restore a conventional HOME
 
-Replace `desktop/merge-home.sh` with an explicit, repeatable migration from a
-conventional user home to `/usr/local`. The current script recursively changes
-ownership of all `/usr/local`, deletes every empty directory below it, copies
-HOME without a transactional move or collision checks, and rewrites
-`/etc/passwd` using an unrestricted string substitution. It has no preflight,
-backup, rollback, interruption recovery, verification, or safe second-run
-behavior.
+Migrate the user home from `/usr/local` back to `/home/$USER`. The current
+`desktop/merge-home.sh` recursively changes ownership of all `/usr/local`,
+deletes every empty directory below it, copies HOME without transactional moves
+or collision checks, and rewrites `/etc/passwd` using an unrestricted string
+substitution. It has no preflight, backup, rollback, interruption recovery,
+verification, or safe second-run behavior.
 
 The current machine records `/usr/local` as the account home and exposes the
 same directory inode at both `/usr/local` and `/home/junaga`. The replacement
-must define whether the conventional path is a bind mount, compatibility link,
-or removed entirely; migrate hard-coded `/home/$USER` consumers such as
-`desktop/home/bin/install-steam`; and preserve ownership boundaries for
-system-managed content under `/usr/local`.
+must make `/home/$USER` the real home; migrate hard-coded consumers such as
+`desktop/home/bin/install-steam`; and restore `/usr/local` as the root-owned
+local hierarchy without moving `dev`, `src`, `key`, or the `app` and `var`
+aliases into HOME.
 
 The HOME rename also broke Steam. Valve's Pressure Vessel runtime constructs
 its container filesystem from `/usr` and cannot share the Steam installation,
@@ -88,9 +87,8 @@ login state, and cloud-sync metadata during migration.
 
 Use account-management and filesystem primitives instead of editing
 `/etc/passwd` directly. Design and test preflight, conflict handling, atomic or
-resumable data transfer, account update, compatibility-path creation, login and
-service restart behavior, rollback, and post-migration verification. Test both
-a fresh installation and an already-migrated machine before replacing the
-current script. The acceptance test must launch Steam and a Pressure
-Vessel/Proton game after a clean reboot without an ad hoc bind mount or path
-sharing errors.
+resumable data transfer, account update, login and service restart behavior,
+rollback, and post-migration verification. Test both a fresh installation and
+the currently merged machine. The acceptance test must launch Steam and a
+Pressure Vessel/Proton game after a clean reboot without an ad hoc bind mount
+or path-sharing errors.
