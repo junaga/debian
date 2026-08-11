@@ -1,3 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+: "${DOMAIN:?Set DOMAIN to the domain being deployed}"
+
 # buy and register the domain
 cf registrar registrations create --domain-name "$DOMAIN"
 cf zones create --name "$DOMAIN"
