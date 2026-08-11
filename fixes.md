@@ -77,6 +77,10 @@ only `/usr/local/sbin/root-shell` through a command-specific passwordless sudo
 rule. A compromised graphical session can therefore invoke that root shell;
 this is an explicit usability boundary, not a security sandbox.
 
+The default systemd target is `multi-user.target`: every boot deliberately
+lands at the root VT, and the desktop starts only when root runs `exec desktop`.
+No display manager owns or bypasses that transition.
+
 ### Filesystem-native trash and history
 
 A desktop trash can implements deletion by renaming a file into a userspace
