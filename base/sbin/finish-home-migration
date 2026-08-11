@@ -287,15 +287,8 @@ rm -f /etc/sudoers.d/010-junaga-nopasswd /etc/sudoers.d/openclaw-nopasswd
 visudo --check --strict
 
 install -d -m 0755 /etc/systemd/system/getty@.service.d
-cat >/etc/systemd/system/getty@.service.d/override.conf <<'EOF'
-[Unit]
-Requires=finish-home-migration.service
-After=finish-home-migration.service
-
-[Service]
-ExecStart=
-ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - ${TERM}
-EOF
+install -m 0644 /usr/local/src/migration/getty-override.conf \
+	/etc/systemd/system/getty@.service.d/override.conf
 
 chown -R root:root /usr/local
 systemctl daemon-reload
