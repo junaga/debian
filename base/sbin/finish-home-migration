@@ -178,6 +178,8 @@ install -m 0644 /usr/local/src/base/home/.bashrc /root/.bashrc
 install -m 0644 /usr/local/src/base/home/.profile /root/.profile
 chown -R root:root /root
 chmod 0700 /root /root/.ssh 2>/dev/null || true
+find /root/.ssh -type d -exec chmod 0700 {} + 2>/dev/null || true
+find /root/.ssh -type f -exec chmod 0600 {} + 2>/dev/null || true
 
 # Codex sessions keep `/usr/local` as their workspace, but live configuration
 # must discover its state at root's conventional CODEX_HOME.  Historical JSONL
