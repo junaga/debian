@@ -61,7 +61,7 @@ profiles, messages, editor state, and application databases. Snapshotting only
 HOME therefore spends copy-on-write metadata and retained blocks on the data
 whose history matters.
 
-### Filesystem-native trash
+### Filesystem-native trash and history
 
 A desktop trash can implements deletion by renaming a file into a userspace
 directory and recording enough metadata to move it back. That is useful but
@@ -79,6 +79,19 @@ space is consumed only as later writes make old extents unique. Deletion thus
 becomes a recoverable state transition until retention expires instead of a
 special userspace move.
 
+This deliberately replaces two separate desktop concepts with one primitive:
+
+```text
+trash    -> recover a path from a snapshot taken before its deletion
+history  -> inspect or recover any path from an earlier snapshot
+```
+
+There is no special rename into a trash directory and no application-specific
+version store. Normal deletion remains normal deletion; the filesystem history
+retains the earlier path and contents until that checkpoint expires. Recovery
+can copy one file, restore an application's complete state, or create a new
+writable branch from an older HOME.
+
 This is stronger than a trash directory, but it is not literally impossible
 to lose data:
 
@@ -94,6 +107,41 @@ to lose data:
 
 The archive or an off-machine backup remains necessary for disaster recovery.
 Snapper serves fast local undo and version recovery.
+
+### Bootable past desktops
+
+A HOME snapshot captures the persistent desktop rather than the installed
+system: dotfiles, documents, credentials, browser profiles, application
+databases, game saves, editor state, and other user data. It intentionally does
+not capture the kernel, Debian packages, application binaries under `/usr`, or
+system state under `/var`.
+
+An old read-only snapshot can be cloned into a new writable Btrfs subvolume and
+mounted at `/home` for a controlled boot. The current Debian installation and
+current programs then open a historical desktop state:
+
+```text
+read-only HOME snapshot
+          |
+          +-> writable historical branch -> mount at /home -> log in
+
+current HOME branch remains preserved and can be selected again
+```
+
+This is a bootable past desktop, not a bootable past operating system. Current
+application versions may migrate old profile formats when opened, cloud sync
+may reapply remote state, and a snapshot made while an application was running
+is filesystem-consistent rather than necessarily application-consistent. Test
+historical branches offline when remote synchronization could be destructive.
+Never mount the read-only snapshot itself as an active HOME: applications need
+to write, so boot a disposable writable clone and retain both the source
+snapshot and the current HOME branch.
+
+For a smaller rewind, close the application and its background processes,
+create a safety snapshot of the present, and restore the complete logical
+application state from the chosen checkpoint. A machine reboot is unnecessary
+for an isolated application restore; replacing all of HOME requires every user
+session to be stopped and should be performed from a rescue environment.
 
 ### Retention and space
 
