@@ -35,7 +35,7 @@ test -d /usr/local/src/.git
 # Refresh the independent recovery copy before changing a pathname.  Historical
 # Btrfs subvolumes are retained separately and are not recursively duplicated.
 rsync -aHAX --numeric-ids --one-file-system \
-	--exclude=/.snapshots/ --exclude=/.legacy-snapshots/ \
+	--exclude=/.snapshots/ --exclude=/.legacy-snapshots/ --exclude=/hypr/ \
 	"$HOME_MOUNT/" "$BACKUP/"
 
 cat >"$BACKUP/MIGRATION-MANIFEST.txt" <<'EOF'
@@ -65,7 +65,13 @@ btrfs subvolume show "$LEGACY_SNAPSHOTS" >/dev/null
 journalctl --rotate || true
 journalctl --vacuum-size=1G || true
 install -d -m 0700 -o root -g root /root
-usermod --home /root --shell /bin/bash root
+# PID 1 always runs as root, so usermod refuses to edit the root account even
+# during early boot.  Update only the two intended passwd fields and validate
+# the database immediately; password, UID, GID, and GECOS remain unchanged.
+sed -i -E \
+	's|^(root:[^:]*:0:0:[^:]*:)[^:]*:[^:]*$|\1/root:/bin/bash|' \
+	/etc/passwd
+test "$(getent passwd root | cut -d: -f6-7)" = /root:/bin/bash
 
 copy_root_item() {
 	local relative=$1
