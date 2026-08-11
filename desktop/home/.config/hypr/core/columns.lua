@@ -7,9 +7,8 @@ if not loaded or type(savedWidths) ~= "table" then
 end
 
 local columns = {}
-local widthsBeforeResize = {}
-local dragging = false
-local draggedWidth
+local pointerSnapshot = {}
+local dragSnapshot
 
 local function column(window)
     local layout = window and window.layout
@@ -99,54 +98,42 @@ local function remember(windows)
     end
 end
 
-local function activeColumnWindows()
-    local active = hl.get_active_window()
-    local activeColumn = column(active)
-    local windows = {}
-
-    if not activeColumn then
-        return windows
-    end
-
-    for _, window in ipairs(hl.get_workspace_windows(active.workspace)) do
-        local candidate = column(window)
-        if candidate and candidate.index == activeColumn.index then
-            table.insert(windows, window)
-        end
-    end
-
-    return windows
+local function columnWindows(window)
+    local current = column(window)
+    return current and current.windows or {}
 end
 
-local function resize(message)
+local function resizeColumn(message)
     hl.dispatch(hl.dsp.layout(message))
-    remember(activeColumnWindows())
+    remember(columnWindows(hl.get_active_window()))
 end
 
 function columns.widen()
-    resize("colresize +conf")
+    resizeColumn("colresize +conf")
 end
 
 function columns.narrow()
-    resize("colresize -conf")
+    resizeColumn("colresize -conf")
 end
 
 function columns.beginResize()
-    widthsBeforeResize = {}
-    dragging = false
-    draggedWidth = nil
+    pointerSnapshot = {}
+    dragSnapshot = nil
 
     for _, window in ipairs(hl.get_windows()) do
         local currentWidth = width(window)
         if currentWidth then
-            widthsBeforeResize[window.address] = currentWidth
+            pointerSnapshot[window.address] = {
+                size = window.size,
+                width = currentWidth
+            }
         end
     end
 end
 
 function columns.endResize()
-    if dragging then
-        widthsBeforeResize = {}
+    if dragSnapshot then
+        pointerSnapshot = {}
         return
     end
 
@@ -154,36 +141,43 @@ function columns.endResize()
 
     for _, window in ipairs(hl.get_windows()) do
         local currentWidth = width(window)
-        local previous = widthsBeforeResize[window.address]
+        local previous = pointerSnapshot[window.address]
 
-        if currentWidth and previous and currentWidth ~= previous then
+        if currentWidth and previous and currentWidth ~= previous.width then
             table.insert(resized, window)
         end
     end
 
-    widthsBeforeResize = {}
+    pointerSnapshot = {}
     remember(resized)
 end
 
 function columns.beginDrag()
     local active = hl.get_active_window()
+    dragSnapshot = active and pointerSnapshot[active.address]
 
-    dragging = true
-    draggedWidth = active and widthsBeforeResize[active.address]
+    if dragSnapshot then
+        -- Hyprland shrinks a tiled window when it becomes floating for a drag.
+        -- Undo that before the terminal's resize debounce expires.
+        hl.dispatch(hl.dsp.window.resize({
+            x = dragSnapshot.size.x,
+            y = dragSnapshot.size.y,
+            window = active
+        }))
+    end
 end
 
 function columns.endDrag()
-    local savedWidth = draggedWidth
+    local previous = dragSnapshot
     local active = hl.get_active_window()
-    local columnWindows = activeColumnWindows()
-    dragging = false
-    draggedWidth = nil
+    local windows = columnWindows(active)
+    dragSnapshot = nil
 
-    if #columnWindows > 1 then
+    if #windows > 1 then
         local cursor = hl.get_cursor_pos()
         local target
 
-        for _, window in ipairs(columnWindows) do
+        for _, window in ipairs(windows) do
             if window.address ~= active.address then
                 target = window
                 break
@@ -198,8 +192,8 @@ function columns.endDrag()
         end
     end
 
-    if savedWidth then
-        resize(("colresize %.3f"):format(savedWidth))
+    if previous then
+        resizeColumn(("colresize %.3f"):format(previous.width))
     end
 end
 
