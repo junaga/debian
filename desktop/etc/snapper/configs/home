@@ -1,4 +1,4 @@
-SUBVOLUME="/usr/local"
+SUBVOLUME="/home/junaga"
 FSTYPE="btrfs"
 
 TIMELINE_CREATE="yes"

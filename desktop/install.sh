@@ -21,7 +21,7 @@ update-grub
 efibootmgr --timeout 0
 
 # File backups with Btrfs snapshots.
-btrfs subvolume create /usr/local/.snapshots
+btrfs subvolume create "$USER_HOME/.snapshots"
 apt install snapper --yes
 
 # Reserve swap space for memory pressure.
