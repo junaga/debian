@@ -70,9 +70,13 @@ terminal-agent database backward. They require an independent archive or
 off-machine backup.
 
 The `hypr` account owns UID/GID 1000 and cannot administer the system generally.
-The root VT command `exec desktop` performs GPU module setup as root, then uses
-a PAM login session to start Hyprland as `hypr`. Graphical programs remain
-unprivileged. Kitty is also a `hypr` process, but its configured shell may run
+The root VT command `exec desktop` performs GPU module setup as root, then gives
+systemd ownership of tty2 and performs a real PAM login whose shell is the
+Hyprland launcher.
+That gives `hypr` an active logind seat and its own XDG runtime directory;
+nesting `runuser` inside root's existing tty would provide neither. When the
+desktop exits, the launcher switches back to the original root VT. Graphical
+programs remain unprivileged. Kitty is also a `hypr` process, but its configured shell may run
 only `/usr/local/sbin/root-shell` through a command-specific passwordless sudo
 rule. A compromised graphical session can therefore invoke that root shell;
 this is an explicit usability boundary, not a security sandbox.
