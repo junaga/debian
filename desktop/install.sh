@@ -21,7 +21,12 @@ apt install --yes btrfs-progs snapper
 if ! btrfs subvolume show "$USER_HOME/.snapshots" >/dev/null 2>&1; then
 	btrfs subvolume create "$USER_HOME/.snapshots"
 fi
-snapper --config home setup-quota
+if btrfs qgroup show "$USER_HOME" 2>/dev/null |
+	awk '$1 == "1/0" { found = 1 } END { exit !found }'; then
+	snapper --config home set-config QGROUP=1/0
+else
+	snapper --config home setup-quota
+fi
 systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
 
 # Fast boot: skip the GRUB menu and UEFI delay.
