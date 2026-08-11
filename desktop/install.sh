@@ -1,6 +1,6 @@
 set -e
 
-SWAP="16G"
+SWAP="12G"
 DIR="$(dirname "$0")"
 USER_NAME="${SUDO_USER:?Run desktop/install.sh with sudo.}"
 USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
