@@ -312,6 +312,15 @@ if btrfs qgroup show "$HYPR_HOME" 2>/dev/null |
 else
 	snapper --config home setup-quota
 fi
+# The former whole-/home Snapper config may have left its newest legacy
+# snapshot attached to the reusable 1/0 cleanup qgroup.  Keep legacy history
+# mounted, but exclude it from the new hypr policy's accounting.
+while read -r legacy_id; do
+	btrfs qgroup remove "0/$legacy_id" 1/0 "$HOME_MOUNT" 2>/dev/null || true
+done < <(btrfs subvolume list -o "$LEGACY_SNAPSHOTS" | awk '{print $2}')
+btrfs qgroup show -pcre "$HOME_MOUNT" | awk \
+	'$6 ~ /(^|,)1\/0(,|$)/ && $NF ~ /^\.legacy-snapshots\// { bad = 1 }
+	 END { exit bad }'
 if ! grep -Fq '<description>root/hypr desktop migration</description>' \
 	"$HYPR_HOME"/.snapshots/*/info.xml 2>/dev/null; then
 	snapper --config home create --read-only --cleanup-algorithm timeline \
