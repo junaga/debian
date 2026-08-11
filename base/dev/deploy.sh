@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 : "${DOMAIN:?Set DOMAIN to the domain being deployed}"
 
 DOMAIN="${DOMAIN,,}"
