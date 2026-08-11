@@ -34,7 +34,7 @@ loose files.
 | Debian | Operating system and standard filesystem |
 | `base/upgrade.sh` | Release policy, upgrades, and base packages |
 | `base/setup.sh` | Network, login, SSH, and Git host configuration |
-| `base/home/` | User configuration copied during installation |
+| `base/home/` | User configuration copied to the account's standard home directory |
 | `desktop/` | Optional desktop packages and configuration |
 
 The aliases are naming recommendations, not setup requirements. Scripts neither
