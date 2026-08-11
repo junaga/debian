@@ -9,6 +9,7 @@ HOME_UUID=47e498ee-c3ec-4708-b732-747c122114c0
 ARCHIVE_UUID=44db4ead-1413-4041-b963-33e5c634c381
 BACKUP=/mnt/archive/home-restore-backup-20260811
 MARKER=/var/lib/home-migration-complete
+ROOT_COPY_MARKER=/var/lib/home-migration-root-copy-complete
 LOCK=/run/finish-home-migration.lock
 
 exec 9>"$LOCK"
@@ -93,9 +94,10 @@ root_items=(
 	.config/gh .config/git .config/micro .config/fish .config/btop
 	.config/procps .config/uv .config/screeps-cli .config/systemd
 )
-for item in "${root_items[@]}"; do
-	copy_root_item "$item"
-done
+if ! test -e "$ROOT_COPY_MARKER"; then
+	for item in "${root_items[@]}"; do
+		copy_root_item "$item"
+	done
 
 # Keep agent state, but do not duplicate program payloads which are installed
 # under /usr/local below.
@@ -158,9 +160,18 @@ if test -d "$HOME_MOUNT/.cargo/bin"; then
 fi
 copy_root_item .cargo/config.toml
 
+# These are reproducible caches inside otherwise durable agent profiles.  The
+# independent archive retains the pre-migration copies.
+rm -rf --one-file-system -- \
+	/root/.codex/cache \
+	/root/.openclaw-chrome/Default/Cache \
+	/root/.openclaw-chrome/Default/Code\ Cache
+
 # Keep ordinary free space after the copy; do not rely only on ext4's
 # root-reserved blocks for the first post-migration boot.
 test "$(df --output=avail -B1 / | tail -1)" -ge 536870912
+touch "$ROOT_COPY_MARKER"
+fi
 
 # Versioned root policy wins over the old account's generic shell template.
 install -m 0644 /usr/local/src/base/home/.bashrc /root/.bashrc
@@ -261,6 +272,13 @@ while IFS= read -r -d '' obsolete; do
 	case "$obsolete" in
 		"$HYPR_HOME"|"$LEGACY_SNAPSHOTS") continue ;;
 	esac
+	# A rescue Codex process may still be appending the conversation which is
+	# repairing this migration.  Leave that directory visible until the process
+	# exits; the retry then archives the final rollout and removes it normally.
+	if test "$obsolete" = "$HOME_MOUNT/.codex" && \
+		lsof +D "$obsolete" >/dev/null 2>&1; then
+		continue
+	fi
 	test "$(dirname "$obsolete")" = "$HOME_MOUNT"
 	rm -rf --one-file-system -- "$obsolete"
 done < <(find "$HOME_MOUNT" -mindepth 1 -maxdepth 1 -print0)
@@ -329,13 +347,18 @@ test "$(runuser --login hypr -- sh -c 'printf %s "$HOME"')" = "$HYPR_HOME"
 btrfs subvolume show "$HYPR_HOME" >/dev/null
 btrfs subvolume show "$HYPR_HOME/.snapshots" >/dev/null
 test -z "$(find "$HOME_MOUNT" -mindepth 1 -maxdepth 1 \
-	! -name hypr ! -name .legacy-snapshots -print -quit)"
+	! -name hypr ! -name .legacy-snapshots ! -name .codex -print -quit)"
 test -z "$(find /usr/local \( ! -user root -o ! -group root \) -print -quit)"
 test -z "$(find "$HYPR_HOME" -path "$HYPR_HOME/.snapshots" -prune -o \
 	\( ! -user hypr -o ! -group hypr \) -print -quit)"
 test "$(snapper --config home get-config | awk '$1 == "SUBVOLUME" {print $3}')" = "$HYPR_HOME"
 snapper --config home list >/dev/null
 systemd-analyze verify /etc/systemd/system/finish-home-migration.service
+
+if test -e "$HOME_MOUNT/.codex"; then
+	echo "Migration ready; waiting for the active rescue Codex rollout to close"
+	exit 75
+fi
 
 touch "$MARKER"
 loginctl enable-linger root
