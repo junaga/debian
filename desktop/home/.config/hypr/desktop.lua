@@ -59,3 +59,24 @@ hl.config({
         }
     }
 })
+
+-- The Codex pet is a transparent floating surface. Do not turn its empty
+-- backing surface into a visible blurred rectangle. Keep it focusable so the
+-- normal window bindings, including SUPER+W, continue to target it.
+hl.window_rule({
+    name = "clean-codex-pet",
+    match = {
+        class = "^(chatgpt|codex-desktop)$",
+        title = "^Codex( Pet Overlay)?$",
+        float = true,
+    },
+
+    border_size = 0,
+    decorate = false,
+    no_anim = true,
+    no_blur = true,
+    no_dim = true,
+    no_shadow = true,
+    no_shortcuts_inhibit = true,
+    rounding = 0,
+})
