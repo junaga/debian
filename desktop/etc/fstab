@@ -8,8 +8,8 @@
 # User Data
 /dev/disk/by-uuid/47e498ee-c3ec-4708-b732-747c122114c0                     /usr/local      btrfs  defaults                     0       0
 
-# User Data Archive
-/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381                     /usr/local/old  ext4   noatime,nodev,nosuid,noexec  0       2
+# Archive
+/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381                     /mnt/archive    ext4   noatime,nodev,nosuid,noexec  0       2
 
 # boot and swap
 /dev/disk/by-designator/esp                                                /boot/efi       vfat   umask=0077                   0       1

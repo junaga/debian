@@ -4,19 +4,19 @@
 
 ```text
 /usr/local/
-├── app -> /opt                 self-contained applications
-├── bin/                        integrated programs
-├── lib/                        integrated program files
-├── var -> /srv                 persistent local data
-├── dev/<subject>/<project>/    active or archived projects
-├── src/                        version-controlled system configuration
-├── key/                        secrets
-└── *.md                        local notes
+├── app -> /opt                 standalone application trees
+├── bin/                        executable entry points
+├── lib/                        program files and dependencies
+├── var -> /srv                 persistent service data
+├── dev/<subject>/<project>/    projects organized by subject
+├── src/                        versioned system definition
+├── key/                        private credentials
+└── *.md                        working notes
 ```
 
 `/opt` and `/srv` stay canonical so packages and services see familiar paths.
-Their aliases make applications and data part of one local hierarchy without
-adding a compatibility dependency.
+The `app` and `var` aliases may bring them into the local view without making
+software depend on those aliases.
 
 Development paths describe what the work belongs to, not where its Git remote
 is hosted. Hosting providers, fork relationships, and project lifecycle stay in
@@ -33,9 +33,12 @@ loose files.
 | --- | --- |
 | Debian | Operating system and standard filesystem |
 | `base/upgrade.sh` | Release policy, upgrades, and base packages |
-| `base/setup.sh` | Host configuration and the `app` and `var` aliases |
+| `base/setup.sh` | Network, login, SSH, and Git host configuration |
 | `base/home/` | User configuration copied during installation |
 | `desktop/` | Optional desktop packages and configuration |
+
+The aliases are naming recommendations, not setup requirements. Scripts neither
+create nor depend on them.
 
 The `src` checkout, projects, secrets, notes, and persistent data are
 administrator content. Installation scripts configure their environment but do
