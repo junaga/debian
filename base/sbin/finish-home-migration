@@ -379,7 +379,10 @@ test -z "$(find /usr/local \( ! -user root -o ! -group root \) -print -quit)"
 test -z "$(find "$HYPR_HOME" -path "$HYPR_HOME/.snapshots" -prune -o \
 	\( ! -user hypr -o ! -group hypr \) -print -quit)"
 test "$(snapper --config home get-config | awk '$1 == "SUBVOLUME" {print $3}')" = "$HYPR_HOME"
-snapper --config home list >/dev/null
+# The default list calculates the exclusive size of every snapshot.  On Btrfs
+# that deliberately starts and waits for a full quota rescan, which is useful
+# for capacity analysis but needlessly stalls this structural health check.
+snapper --config home list --disable-used-space >/dev/null
 systemd-analyze verify /etc/systemd/system/finish-home-migration.service
 rg -q '^shell /usr/bin/sudo -H -n /usr/local/sbin/root-shell$' \
 	"$HYPR_HOME/.config/kitty/kitty.conf"
