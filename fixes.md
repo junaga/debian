@@ -34,6 +34,93 @@ ESPs instead of assuming a filesystem UUID, partition number, disk, or relation
 to `/`. The complete chain was observed on this installation and recorded in
 `8da3344`.
 
+## Make deletion a recoverable state of HOME
+
+[`desktop/etc/fstab`](./desktop/etc/fstab),
+[`desktop/etc/snapper/configs/home`](./desktop/etc/snapper/configs/home), and
+[`desktop/etc/systemd/system/snapper-timeline.timer.d/frequent.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/frequent.conf)
+
+Debian does not require a separate filesystem for a user's home directory.
+This workstation deliberately places `/home/junaga` on its own Btrfs
+filesystem and snapshots it with Snapper every 15 minutes. The root filesystem
+remains ext4 and is not snapshotted.
+
+The boundary follows ownership of the data rather than the directory tree:
+
+```text
+/                    Debian packages and reproducible installation state
+/usr/local           root-owned local programs, projects, and system recipe
+/home/junaga          irreplaceable user data and application state
+```
+
+Operating-system and application files can be reinstalled from Debian, source
+repositories, and other upstream publishers. HOME contains the work that
+cannot be reconstructed that way: documents, credentials, saves, browser
+profiles, messages, editor state, and application databases. Snapshotting only
+HOME therefore spends copy-on-write metadata and retained blocks on the data
+whose history matters.
+
+### Filesystem-native trash
+
+A desktop trash can implements deletion by renaming a file into a userspace
+directory and recording enough metadata to move it back. That is useful but
+incomplete: command-line deletion can bypass it, applications can overwrite or
+truncate files in place, and moving a large tree to trash is still a visible
+file operation. Cloud services commonly add server-side version history, but
+only for data already synchronized to that service.
+
+Btrfs snapshots preserve an earlier filesystem tree without renaming its
+files. Snapper creates read-only points in time below normal applications, so
+the same recovery mechanism covers deletion, overwrite, truncation, and
+renames performed by graphical applications, shells, package managers, or
+programs. A snapshot initially shares extents with the live subvolume; extra
+space is consumed only as later writes make old extents unique. Deletion thus
+becomes a recoverable state transition until retention expires instead of a
+special userspace move.
+
+This is stronger than a trash directory, but it is not literally impossible
+to lose data:
+
+- a file created and deleted between snapshots was never captured;
+- the schedule gives routine changes a recovery-point objective of at most 15
+  minutes, not zero;
+- cleanup intentionally expires snapshots and eventually releases their
+  extents;
+- snapshots share the same disk and do not survive device loss, corruption,
+  theft, or destruction;
+- snapshots of a running database or virtual machine are filesystem-consistent,
+  not necessarily application-consistent.
+
+The archive or an off-machine backup remains necessary for disaster recovery.
+Snapper serves fast local undo and version recovery.
+
+### Retention and space
+
+Timeline cleanup keeps 48 hourly, 30 daily, 12 weekly, 12 monthly, and 3 yearly
+recovery points. Snapper's Btrfs quota integration limits snapshots to half of
+the HOME filesystem and asks cleanup to preserve 20 percent free space. These
+are policy limits rather than reserved allocations: unchanged snapshots are
+cheap, while frequently rewritten files retain more old extents.
+
+Inspect and recover data with:
+
+```sh
+snapper --config home list
+snapper --config home status 0..NUMBER
+snapper --config home diff 0..NUMBER -- path/to/file
+
+# Copy one file out without modifying the snapshot.
+cp -a /home/junaga/.snapshots/NUMBER/snapshot/path/to/file /home/junaga/path/to/file
+
+# Or ask Snapper to reverse selected changes between two trees.
+snapper --config home undochange NUMBER..0 path/to/file
+```
+
+Snapshot `0` is the current live tree. Direct copying is preferred for a small,
+auditable restore; `undochange` is useful for a reviewed set of paths. Whole
+HOME rollback is intentionally not coupled to boot because user-data recovery
+should not replace the operating-system root.
+
 ## Autologin Linux virtual terminals
 
 [`base/setup.sh`](./base/setup.sh)

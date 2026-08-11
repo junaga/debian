@@ -16,6 +16,14 @@ function unsudo {
 # Configuration files.
 cp -ar "$DIR/etc/." /etc/.
 
+# Filesystem-native recovery for user data.
+apt install --yes btrfs-progs snapper
+if ! btrfs subvolume show "$USER_HOME/.snapshots" >/dev/null 2>&1; then
+	btrfs subvolume create "$USER_HOME/.snapshots"
+fi
+snapper --config home setup-quota
+systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
+
 # Fast boot: skip the GRUB menu and UEFI delay.
 update-grub
 efibootmgr --timeout 0
