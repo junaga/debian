@@ -34,12 +34,14 @@ loose files.
 | Debian | Operating system and standard filesystem |
 | `base/upgrade.sh` | Release policy, upgrades, and base packages |
 | `base/setup.sh` | Network, login, SSH, and Git host configuration |
-| `base/home/` | User configuration copied to the account's standard home directory |
+| `base/home/` | Root terminal configuration copied to `/root` |
 | `desktop/` | Optional desktop packages and configuration |
 
 The aliases are naming recommendations, not setup requirements. Scripts neither
 create nor depend on them.
 
-The `src` checkout, projects, secrets, notes, and persistent data are
-administrator content. Installation scripts configure their environment but do
-not create or restore that content.
+The `src` checkout, projects, secrets, notes, and persistent data are root-owned
+administrator content. Interactive terminal work runs as root from
+`/usr/local`; the separate `hypr` identity owns only the graphical desktop and
+its application data under `/home/hypr`. Installation scripts configure these
+two environments but do not create or restore administrator content.

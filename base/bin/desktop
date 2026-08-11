@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euo pipefail
+
+if (( EUID != 0 )); then
+	echo "desktop must be launched from the root VT." >&2
+	exit 1
+fi
+
+test -d /home/hypr
+test "$(getent passwd hypr | cut -d: -f6)" = /home/hypr
+
+# Kernel work is completed before authority is dropped.  The compositor and
+# every graphical application then run as the unprivileged desktop identity.
+modprobe -r nvidia_drm 2>/dev/null || true
+modprobe nvidia_drm modeset=1
+install -d -m 0700 -o hypr -g hypr /home/hypr/.config/hypr/state
+
+unset DBUS_SESSION_BUS_ADDRESS XDG_RUNTIME_DIR XDG_SESSION_ID WAYLAND_DISPLAY DISPLAY
+exec runuser --login hypr -- /usr/local/libexec/start-hypr-desktop

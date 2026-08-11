@@ -1,0 +1,14 @@
+[Unit]
+Description=Finish the one-time root/hypr Btrfs HOME migration
+RequiresMountsFor=/home /mnt/archive
+After=local-fs.target
+Before=systemd-user-sessions.service getty-pre.target display-manager.service user@1000.service user-runtime-dir@1000.service snapper-timeline.service snapper-cleanup.service
+ConditionPathExists=!/var/lib/home-migration-complete
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/finish-home-migration
+TimeoutStartSec=infinity
+
+[Install]
+WantedBy=multi-user.target

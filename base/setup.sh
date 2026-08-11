@@ -27,11 +27,12 @@ nmcli -t -f UUID,TYPE connection show | while IFS=: read -r uuid type; do
 done
 sudo systemctl restart NetworkManager
 
-# autologin Linux terminals
+# Autologin is the physical recovery path.  Terminal administration belongs to
+# root; the unprivileged hypr account exists only for the graphical session.
 sudo systemctl edit getty@.service --stdin <<-EOF
 	[Service]
 	ExecStart=
-	ExecStart=-login -f $USER
+	ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - \${TERM}
 EOF
 
 # input $EMAIL

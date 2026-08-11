@@ -33,7 +33,16 @@ function man { echo "https://manpages.debian.org/$1.en"; }
 alias ls="ls --color --group-directories-first"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote "ssh-remote+$1" "$2"; }
-alias chat="codex resume --yolo"
+# With no arguments, return to the most recent Codex conversation for the
+# current workspace.  Subcommands and flags retain the normal CLI behavior.
+function codex {
+	if (( $# == 0 )); then
+		command codex resume --last --dangerously-bypass-approvals-and-sandbox
+	else
+		command codex "$@"
+	fi
+}
+alias chat="codex"
 
 # BROWSER=""
 export EDITOR="micro"

@@ -2,8 +2,13 @@ set -e
 
 SWAP="12G"
 DIR="$(dirname "$0")"
-USER_NAME="${SUDO_USER:?Run desktop/install.sh with sudo.}"
-USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+USER_NAME=hypr
+USER_HOME=/home/hypr
+
+if ! getent passwd "$USER_NAME" >/dev/null; then
+	useradd --no-create-home --user-group --shell /bin/bash \
+		--home-dir "$USER_HOME" "$USER_NAME"
+fi
 
 function unsudo {
 	sudo --user "$USER_NAME" "$@"
@@ -18,16 +23,41 @@ cp -ar "$DIR/etc/." /etc/.
 
 # Filesystem-native recovery for user data.
 apt install --yes btrfs-progs snapper
-if ! btrfs subvolume show /home/.snapshots >/dev/null 2>&1; then
-	btrfs subvolume create /home/.snapshots
+if ! btrfs subvolume show "$USER_HOME" >/dev/null 2>&1; then
+	test -z "$(find "$USER_HOME" -mindepth 1 -print -quit 2>/dev/null)"
+	rmdir "$USER_HOME" 2>/dev/null || true
+	btrfs subvolume create "$USER_HOME"
 fi
-if btrfs qgroup show /home 2>/dev/null |
+chown "$USER_NAME:$USER_NAME" "$USER_HOME"
+for skeleton in /etc/skel/.[!.]*; do
+	test -e "$USER_HOME/${skeleton##*/}" || cp -a "$skeleton" "$USER_HOME/"
+done
+chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
+if ! btrfs subvolume show "$USER_HOME/.snapshots" >/dev/null 2>&1; then
+	btrfs subvolume create "$USER_HOME/.snapshots"
+fi
+chown root:root "$USER_HOME/.snapshots"
+chmod 0750 "$USER_HOME/.snapshots"
+if btrfs qgroup show "$USER_HOME" 2>/dev/null |
 	awk '$1 == "1/0" { found = 1 } END { exit !found }'; then
 	snapper --config home set-config QGROUP=1/0
 else
 	snapper --config home setup-quota
 fi
 systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
+
+# Root launches the graphical session; graphical terminals cross only this
+# explicit boundary back into the administrator shell.
+install -m 0755 "$DIR/../base/bin/desktop" /usr/local/bin/desktop
+install -d -m 0755 /usr/local/libexec
+install -m 0755 "$DIR/../base/libexec/start-hypr-desktop" \
+	/usr/local/libexec/start-hypr-desktop
+install -m 0755 "$DIR/../base/sbin/root-shell" /usr/local/sbin/root-shell
+install -m 0440 "$DIR/etc/sudoers.d/020-hypr-root-shell" \
+	/etc/sudoers.d/020-hypr-root-shell
+for PROGRAM in "$DIR"/home/bin/*; do
+	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
+done
 
 # Fast boot: skip the GRUB menu and UEFI delay.
 update-grub

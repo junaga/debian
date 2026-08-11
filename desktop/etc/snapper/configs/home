@@ -1,11 +1,11 @@
-SUBVOLUME="/home"
+SUBVOLUME="/home/hypr"
 FSTYPE="btrfs"
 
 QGROUP=""
 SPACE_LIMIT="0.5"
 FREE_LIMIT="0.2"
 
-ALLOW_USERS="junaga"
+ALLOW_USERS="hypr"
 ALLOW_GROUPS=""
 SYNC_ACL="yes"
 
