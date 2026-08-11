@@ -32,24 +32,7 @@ root-owned daemon disconnected from the desktop user session.
 Implement a privilege-safe boot service with an explicit user phase before
 restoring automatic remote-control startup.
 
-## 6. Debian Hyprgraphics ABI-transition crash
-
-Debian testing upgraded `libhyprgraphics4` from `0.5.1-2+b1` to `0.5.1-2+b2`.
-The rebuilt library uses `libhyprutils13`, while Hyprland `0.55.4+ds-2+b1`
-still uses Hyprutils 12 types at the Hyprgraphics interface. Hyprland then
-crashed in image-resource cleanup, and its fallback configuration aborted while
-cleaning up a text resource.
-
-The temporary repair downgraded both `libhyprgraphics4` and
-`libhyprgraphics-dev` to the official Debian snapshot build `0.5.1-2+b1` and
-placed both packages on hold. A 12-second `desktop` smoke test produced no new
-crash report.
-
-Report or patch the Debian package transition, then remove the holds only after
-a consistently rebuilt package set is available and passes both normal- and
-fallback-config startup tests.
-
-## 7. Restore scrollback to the Linux kernel virtual console
+## 6. Restore scrollback to the Linux kernel virtual console
 
 Provide useful, bounded scrollback on the actual Linux kernel virtual terminals
 without requiring a userspace terminal emulator or multiplexer. The intended
