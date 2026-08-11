@@ -288,7 +288,10 @@ done < <(find "$HOME_MOUNT" -mindepth 1 -maxdepth 1 -print0)
 
 chown root:root "$HOME_MOUNT"
 chmod 0755 "$HOME_MOUNT"
-chown -R hypr:hypr "$HYPR_HOME"
+# Never descend into Snapper's control tree: existing snapshots are read-only
+# history and retries must neither rewrite nor fail on them.
+find "$HYPR_HOME" -path "$HYPR_HOME/.snapshots" -prune -o \
+	\( ! -user hypr -o ! -group hypr \) -exec chown hypr:hypr {} +
 
 # Snapper receives a new nested control subvolume.  Only the hypr desktop—not
 # /home as a whole, /root, or the legacy history—is in the new policy.
@@ -309,8 +312,11 @@ if btrfs qgroup show "$HYPR_HOME" 2>/dev/null |
 else
 	snapper --config home setup-quota
 fi
-snapper --config home create --read-only --cleanup-algorithm timeline \
-	--description "root/hypr desktop migration"
+if ! grep -Fq '<description>root/hypr desktop migration</description>' \
+	"$HYPR_HOME"/.snapshots/*/info.xml 2>/dev/null; then
+	snapper --config home create --read-only --cleanup-algorithm timeline \
+		--description "root/hypr desktop migration"
+fi
 
 # Install the authority boundary and boot path from versioned files.
 install -m 0755 /usr/local/src/base/bin/desktop /usr/local/bin/desktop
@@ -349,7 +355,7 @@ test -n "$(find /root/.codex/sessions -type f -print -quit)"
 test -x /usr/local/bin/codex
 /usr/local/bin/codex --version
 HOME=/root bash -ic 'cd /usr/local; type codex >/dev/null' </dev/null
-test "$(runuser --login hypr -- sh -c 'printf %s "$HOME"')" = "$HYPR_HOME"
+test "$(runuser --login hypr --command 'printf %s "$HOME"')" = "$HYPR_HOME"
 btrfs subvolume show "$HYPR_HOME" >/dev/null
 btrfs subvolume show "$HYPR_HOME/.snapshots" >/dev/null
 test -z "$(find "$HOME_MOUNT" -mindepth 1 -maxdepth 1 \
@@ -360,6 +366,8 @@ test -z "$(find "$HYPR_HOME" -path "$HYPR_HOME/.snapshots" -prune -o \
 test "$(snapper --config home get-config | awk '$1 == "SUBVOLUME" {print $3}')" = "$HYPR_HOME"
 snapper --config home list >/dev/null
 systemd-analyze verify /etc/systemd/system/finish-home-migration.service
+rg -q '^shell /usr/bin/sudo -H -n /usr/local/sbin/root-shell$' \
+	"$HYPR_HOME/.config/kitty/kitty.conf"
 
 if test -e "$HOME_MOUNT/.codex"; then
 	echo "Migration ready; waiting for the active rescue Codex rollout to close"
