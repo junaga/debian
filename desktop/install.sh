@@ -48,10 +48,7 @@ systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
 
 # Root launches the graphical session; graphical terminals cross only this
 # explicit boundary back into the administrator shell.
-install -m 0755 "$DIR/../base/bin/desktop" /usr/local/bin/desktop
-install -d -m 0755 /usr/local/libexec
-install -m 0755 "$DIR/../base/libexec/start-hypr-desktop" \
-	/usr/local/libexec/start-hypr-desktop
+install -m 0755 "$DIR/bin/desktop" /usr/local/bin/desktop
 install -m 0755 "$DIR/../base/sbin/root-shell" /usr/local/sbin/root-shell
 install -m 0440 "$DIR/etc/sudoers.d/020-hypr-root-shell" \
 	/etc/sudoers.d/020-hypr-root-shell

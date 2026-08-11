@@ -209,14 +209,11 @@ frequently rewritten files retain more old extents. Unlimited yearly retention
 still requires capacity monitoring because a sufficiently long or high-churn
 history can eventually exhaust the filesystem.
 
-### One-shot migration and recovery boundary
+### Completed migration and recovery boundary
 
-[`base/sbin/finish-home-migration`](./base/sbin/finish-home-migration) runs once
-after both `/home` and the independent archive are mounted, but before user
-sessions or VTs. It first refreshes
-`/mnt/archive/home-restore-backup-20260811`, then creates `/home/hypr` as a
-writable Btrfs snapshot of the old flat tree. That reflinked branch establishes
-a complete desktop copy before cleanup begins.
+The one-shot migration is complete and its boot service and migration program
+have been removed. `/mnt/archive/home-restore-backup-20260811` remains the
+independent pre-migration recovery copy.
 
 Terminal state is copied to `/root`; programs and administrator trees live in
 root-owned `/usr/local`; Steam and all graphical application state remain in
@@ -225,13 +222,6 @@ caches are retained in the archive rather than filling the small ext4 root.
 The old Snapper tree is renamed `/home/.legacy-snapshots`, so pre-migration
 history remains available but is outside the new policy. A fresh nested
 `/home/hypr/.snapshots` starts the daily desktop history.
-
-The migration is deliberately fail-closed. Its completion marker is written
-only after it proves the account names and homes, ownership, Btrfs subvolumes,
-Snapper target, sudo policy, root-owned `/usr/local`, Codex executable,
-credentials, and recorded sessions. The getty requires that service. A failure
-therefore leaves the external backup and legacy snapshots available and blocks
-normal root autologin instead of exposing a partially migrated desktop.
 
 Inspect and recover data with:
 
@@ -299,10 +289,7 @@ getty@ttyN.service -> agetty --autologin root -> PAM session -> shell
 ```
 
 systemd opens, resets, hangs up, and deallocates the VT. `agetty` supplies the
-terminal parameters and invokes PAM login with the fixed root identity. The
-drop-in also requires the one-shot migration, so no root prompt appears after
-reboot until its account, storage, ownership, Snapper, and Codex assertions
-have succeeded.
+terminal parameters and invokes PAM login with the fixed root identity.
 
 The `-` prefix preserves the vendor unit's ignored-exit behavior. The override cannot affect
 `serial-getty@.service`, SSH, display managers, rescue mode, containers, or WSL.
