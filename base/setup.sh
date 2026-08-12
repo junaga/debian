@@ -5,6 +5,11 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 	exit 0
 }
 set -e
+DIR="$(dirname "$0")"
+
+# Install base system configuration.
+cp -ar "$DIR/etc/." /etc/.
+systemctl daemon-reload
 
 # run upgrades at boot
 echo '@reboot /bin/bash /usr/local/src/base/upgrade.sh' | crontab -
@@ -27,14 +32,6 @@ nmcli -t -f UUID,TYPE connection show | while IFS=: read -r uuid type; do
 	esac
 done
 systemctl restart NetworkManager
-
-# Autologin is the physical recovery path. Terminal administration belongs to
-# root; the account passed to desktop exists only for the graphical session.
-systemctl edit getty@.service --stdin <<-EOF
-	[Service]
-	ExecStart=
-	ExecStart=-login -f root
-EOF
 
 # input $EMAIL
 echo "The email labels your SSH public key for simpler management."

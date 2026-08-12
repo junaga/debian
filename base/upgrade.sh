@@ -1,17 +1,8 @@
 #!/bin/bash
 # Run repeatedly on every system.
-DEBIAN="testing"
 set -e
 
-# set Config
 test -f /etc/apt/sources.list && mv /etc/apt/{sources.list,sources.list.disabled}
-cat > /etc/apt/sources.list.d/debian.sources <<-EOF
-	Types: deb
-	URIs: http://deb.debian.org/debian
-	Suites: $DEBIAN
-	Components: main contrib non-free non-free-firmware
-	Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-EOF
 
 # run Patch
 export DEBIAN_FRONTEND="noninteractive"
