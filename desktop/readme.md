@@ -18,7 +18,13 @@ reboot 0
 
 ```sh
 # From the root VT:
+cat /sys/module/nvidia_drm/parameters/modeset # Y
 exec desktop
 ```
+
+The NVIDIA DRM option must be applied on the module's first load; the current
+driver cannot be safely hot-reloaded on this machine. The loading chain and
+failure evidence are documented in
+[`fixes.md`](../fixes.md#load-nvidia-drm-modesetting-once-at-boot).
 
 ![Hyprland Desktop Screenshot](./hypr.webp)
