@@ -370,25 +370,18 @@ URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
 Trusted: yes
 ```
 
-Authenticated HTTPS is an accepted trust boundary for third-party APT sources;
-an additional manually managed repository key is not required. The URL names
-an authenticated service, not a physical origin. DNS may route it through any
-publisher-authorized CDN or proxy node, and that routing may change freely: TLS
-still verifies the requested hostname through the system CA store. This gives
-us publisher-managed distribution without maintaining a mirror list.
+HTTPS is the trust boundary for third-party APT sources; no separate repository
+key is required. The URL identifies an authenticated hostname, not a machine,
+so the publisher may change CDN or proxy nodes without changing our
+configuration. TLS authenticates that hostname through the system CA store and
+protects metadata and packages in transit.
 
-`Trusted: yes` disables APT's repository-signature requirement. TLS protects
-the metadata and packages in transit, and APT still verifies that each package
-matches the hashes in the downloaded metadata. Security therefore depends on
-the publisher and CDN control planes, the public CA system, the local CA store,
-and the TLS implementation. Compromise of that boundary could replace both
-metadata and packages.
-
-This deliberately gives up offline, transport-independent verification and
-distribution through untrusted mirrors. We prefer the simpler HTTPS boundary
-for explicitly trusted third-party services instead of duplicating publisher
-trust with another key lifecycle. Debian's archive remains signature-verified
-because its keyring and mirror model are already part of the base system.
+`Trusted: yes` skips APT's repository-signature check. APT still verifies
+package hashes against the downloaded metadata, but HTTPS is what authenticates
+both. A publisher, CDN, CA, or local trust-store compromise could therefore
+replace them. We accept that risk and give up offline verification and
+untrusted mirrors in exchange for one standard, managed trust path. Debian's
+archive keeps its built-in signed-mirror model.
 
 ## Standardize on NetworkManager
 
