@@ -222,7 +222,8 @@ not create another root backup. It removes the unused ext4 swap file to provide
 conversion workspace, disables swap for the first Btrfs boot, verifies the
 existing EFI GRUB image, and rebuilds the initramfs and GRUB configuration. Do
 not balance the result or delete `ext2_saved` until rollback is intentionally
-abandoned.
+abandoned. The prepared live-media procedure and exact boot commands are in
+[`migration/root-btrfs-live-runbook.md`](./migration/root-btrfs-live-runbook.md).
 
 The conversion still leaves root inside the same 56 GiB partition and does not
 combine it with HOME, so it does not solve the capacity problem. HOME follows

@@ -1,0 +1,30 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+SCRIPT_DIRECTORY=$(cd -- "$(dirname -- "$0")" && pwd)
+readonly SCRIPT_DIRECTORY
+readonly CONVERTER=$SCRIPT_DIRECTORY/convert-root-to-btrfs
+
+(( EUID == 0 )) || {
+	printf 'Run this command as root: sudo %s\n' "$0" >&2
+	exit 1
+}
+test -x "$CONVERTER" || {
+	printf 'Converter is missing or not executable: %s\n' "$CONVERTER" >&2
+	exit 1
+}
+
+printf 'This will convert the reviewed Samsung root partition in place.\n'
+printf 'HOME, the archive disk, and their files will not be modified.\n\n'
+
+"$CONVERTER" --offline-check
+
+printf '\nThe complete read-only preflight passed.\n'
+printf 'Type CONVERT to start the filesystem conversion: '
+read -r confirmation
+[[ $confirmation == CONVERT ]] || {
+	printf 'Conversion cancelled without modifying root.\n'
+	exit 1
+}
+
+exec "$CONVERTER" --convert --i-accept-no-root-backup --reboot
