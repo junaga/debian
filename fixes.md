@@ -46,7 +46,7 @@ that identity take its account name explicitly:
 
 ```sh
 bash ./desktop/install.sh hypr
-desktop hypr
+desktop
 install-steam hypr
 ```
 
@@ -97,7 +97,7 @@ terminal-agent database backward. They require an independent archive or
 off-machine backup.
 
 The `hypr` account owns UID/GID 1000 and cannot administer the system generally.
-The root VT command `exec desktop hypr` performs GPU module setup, then gives
+The root VT command `exec desktop` performs GPU module setup, then gives
 systemd ownership of tty2 and performs a real PAM login whose shell is the
 Hyprland launcher.
 That gives `hypr` an active logind seat and its own XDG runtime directory;
@@ -108,7 +108,7 @@ commands, and setup scripts run directly from the root VT; the graphical
 session has no privilege-escalation bridge back to root.
 
 The default systemd target is `multi-user.target`: every boot deliberately
-lands at the root VT, and the desktop starts only with `exec desktop hypr`.
+lands at the root VT, and the desktop starts only with `exec desktop`.
 No display manager owns or bypasses that transition.
 
 ### One mechanism for trash, history, and backup
