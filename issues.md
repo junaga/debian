@@ -214,12 +214,20 @@ to snapshot only `/home/hypr`; converting root to Btrfs does not imply keeping
 system snapshots. Recreate swap using the Btrfs-supported no-copy-on-write
 layout.
 
-Do not use `btrfs-convert` as the migration plan. It can convert the ext4 root
-filesystem offline while initially retaining an ext rollback image, but it
-would leave root inside the same 56 GiB partition and would not combine it with
-HOME. It therefore adds conversion and bootloader risk without solving the
-capacity problem. HOME follows root physically on disk, so it also cannot be
-grown backward over the old root partition with an ordinary filesystem resize.
+`btrfs-convert` is an optional interim experiment, not the consolidation plan.
+[`migration/convert-root-to-btrfs`](./migration/convert-root-to-btrfs) performs
+that exact-device offline conversion while preserving the filesystem UUID and
+the converter's `ext2_saved` rollback image. By explicit local policy it does
+not create another root backup. It removes the unused ext4 swap file to provide
+conversion workspace, disables swap for the first Btrfs boot, verifies the
+existing EFI GRUB image, and rebuilds the initramfs and GRUB configuration. Do
+not balance the result or delete `ext2_saved` until rollback is intentionally
+abandoned.
+
+The conversion still leaves root inside the same 56 GiB partition and does not
+combine it with HOME, so it does not solve the capacity problem. HOME follows
+root physically on disk and cannot be grown backward over the old root
+partition with an ordinary filesystem resize.
 
 Perform this only as a planned offline storage rebuild. First create and verify
 a fresh recovery copy of both root and HOME on the archive disk. Boot independent
