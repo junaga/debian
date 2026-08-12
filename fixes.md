@@ -107,67 +107,6 @@ The default systemd target is `multi-user.target`: every boot deliberately
 lands at the root VT, and the desktop starts only with `exec desktop`.
 No display manager owns or bypasses that transition.
 
-## Load NVIDIA DRM modesetting once at boot
-
-[`desktop/etc/modprobe.d/nvidia-kms.conf`](./desktop/etc/modprobe.d/nvidia-kms.conf)
-and [`desktop/bin/desktop`](./desktop/bin/desktop)
-
-Hyprland needs NVIDIA's atomic DRM KMS interface. On this installation,
-Debian's selected NVIDIA alternative exposes
-`/etc/modules-load.d/nvidia.conf`, which asks `systemd-modules-load.service` to
-load `nvidia-drm` during early userspace. The proprietary NVIDIA
-`550.163.01` driver defaults its `modeset` parameter to disabled.
-
-Module parameters are fixed when a module is inserted. A later command such
-as `modprobe nvidia_drm modeset=1` succeeds when the module is already present,
-but it does not change `/sys/module/nvidia_drm/parameters/modeset`. Hyprland
-then starts without the required KMS interface and immediately exits. Unloading
-and reinserting the active display module would normally apply the parameter,
-but that is not safe with this driver build on this machine.
-
-The attempted hot reload produced repeated kernel warnings at
-`nv_drm_revoke_modeset_permission` in `nvidia-drm-drv.c:1226`, followed by an
-unusable graphical session. Debian tracks the same warning against
-`nvidia-driver` version `550.163.01` as
-[bug #1128843](https://bugs.debian.org/1128843). The module did unload and
-reinsert, so the precise restriction is that it cannot be *safely* reloaded
-here, not that the kernel always rejects the operation.
-
-The parameter is therefore supplied before the first insertion:
-
-```modprobe
-options nvidia-current-drm modeset=1
-```
-
-The names differ because Debian's modprobe rules map the public
-`nvidia-drm` request to the version-selected `nvidia-current-drm` module file.
-After insertion, the kernel exposes the upstream runtime name `nvidia_drm`.
-The complete path is:
-
-```text
-/etc/modules-load.d/nvidia.conf
-        -> systemd-modules-load.service requests nvidia-drm
-        -> modprobe applies /etc/modprobe.d/nvidia-kms.conf
-        -> Debian loads nvidia-current-drm with modeset=1
-        -> /sys/module/nvidia_drm/parameters/modeset contains Y
-```
-
-`systemd-modules-load` initiates loading; `modprobe`, not systemd itself, reads
-the option. `desktop/install.sh` copies the tracked file into
-`/etc/modprobe.d`, then rebuilds the initramfs after installing the NVIDIA DKMS
-module. Keeping the option in the initramfs also makes it effective if a future
-boot path loads NVIDIA DRM before the real root filesystem is available.
-
-The launcher's `modprobe nvidia_drm modeset=1` remains idempotent: it loads the
-module with the right argument if boot-time loading is absent, and otherwise
-leaves the already-correct module alone. It must never unload the active DRM
-module. Verify the boot-time state before starting the desktop:
-
-```sh
-cat /sys/module/nvidia_drm/parameters/modeset # Y
-exec desktop
-```
-
 ### One mechanism for trash, history, and backup
 
 A desktop trash can implements deletion by renaming a file into a userspace
