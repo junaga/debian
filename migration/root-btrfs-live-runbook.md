@@ -4,9 +4,11 @@ The prepared SanDisk USB boots Debian 13.6 Live XFCE and has a separate
 `BTRFS-CONVERT` tools partition. The tools partition contains the reviewed
 converter, a one-command runner, this runbook, and the conversion transcripts.
 
-Boot the UEFI entry for the SanDisk USB. At the Debian menu select **Live system
-(amd64)**, not **Start installer** or an entry under the installer menus. Open
-the terminal after XFCE starts and run:
+Reboot and repeatedly press **F8** while the ASUS logo is visible. In the
+one-time boot menu select the entry beginning **UEFI:** for **SanDisk Ultra USB
+3.0**. At the Debian menu select **Live system (amd64)**, not **Start
+installer** or an entry under the installer menus. Open the terminal after XFCE
+starts and run:
 
 ```sh
 sudo -i
