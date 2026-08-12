@@ -6,4 +6,5 @@ if test "$(id -u)" -eq 0; then
 		login -f hypr --shell /usr/local/bin/desktop
 fi
 
+# Hyprland enables detailed stdout logs in its config; journald persists them.
 exec systemd-cat --identifier=hyprland start-hyprland
