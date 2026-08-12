@@ -3,7 +3,7 @@
 # <file system>                                                             <mount>         <type>  <options>                    <dump>  <pass>
 
 # Debian 14 installation
-/dev/disk/by-id/ata-Samsung_SSD_850_EVO_mSATA_250GB_S33GNX0J713319N-part2  /               ext4   errors=remount-ro            0       1
+/dev/disk/by-id/ata-Samsung_SSD_850_EVO_mSATA_250GB_S33GNX0J713319N-part2	/	btrfs	defaults,noatime,compress=zstd:3	0	0
 
 # User data
 /dev/disk/by-uuid/47e498ee-c3ec-4708-b732-747c122114c0                     /home           btrfs  defaults,noatime,compress=zstd:3  0   0
