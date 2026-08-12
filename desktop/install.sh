@@ -35,8 +35,7 @@ systemctl enable --now btrbk.timer
 swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
 # Root launches the graphical session for the explicitly named desktop user.
-install -m 0755 "$DIR/bin/desktop" /usr/local/bin/desktop
-for PROGRAM in "$DIR"/home/bin/*; do
+for PROGRAM in "$DIR"/bin/* "$DIR"/home/bin/*; do
 	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 

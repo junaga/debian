@@ -1,2 +1,2 @@
 #!/bin/sh
-exec openvt --force --switch --wait --console=2 -- systemd-run --wait --collect --pipe login -f hypr --shell /usr/bin/start-hyprland
+exec openvt --force --switch --wait --console=2 -- systemd-run --wait --collect --pipe login -f hypr --shell /usr/local/bin/start-desktop

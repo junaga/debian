@@ -6,6 +6,11 @@ hl.env("XCURSOR_THEME", "arrow-on-text")
 hl.env("XCURSOR_SIZE", "48")
 
 hl.config({
+    debug = {
+        -- Keep compositor diagnostics available through the persistent session log.
+        disable_logs = false,
+        enable_stdout_logs = true
+    },
     input = {
         -- The scrolling layout moves windows beneath a stationary pointer.
         -- Only physical pointer movement should refocus the moved content.
