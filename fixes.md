@@ -361,7 +361,7 @@ Package versions were recorded on 2026-07-22.
 `--allow-releaseinfo-change` accepts the initial suite change; `full-upgrade`
 resolves its dependency transitions. The source replacement dates to `28274ab`.
 
-## Trust the NVIDIA repository through HTTPS
+## Trust third-party APT sources through HTTPS
 
 [`desktop/etc/apt/sources.list.d/nvidia.sources`](./desktop/etc/apt/sources.list.d/nvidia.sources)
 
@@ -370,22 +370,25 @@ URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
 Trusted: yes
 ```
 
-This source deliberately trusts NVIDIA's authenticated HTTPS endpoint instead
-of requiring an additional APT repository signature. TLS authenticates the
-server through the public CA system and protects the repository metadata and
-packages in transit; APT still checks each package against the hashes in that
-metadata.
+Authenticated HTTPS is an accepted trust boundary for third-party APT sources;
+an additional manually managed repository key is not required. The URL names
+an authenticated service, not a physical origin. DNS may route it through any
+publisher-authorized CDN or proxy node, and that routing may change freely: TLS
+still verifies the requested hostname through the system CA store. This gives
+us publisher-managed distribution without maintaining a mirror list.
 
-`Trusted: yes` means a compromised NVIDIA server or trusted TLS certificate
-authority could replace both metadata and packages. It also gives up the
-offline, transport-independent verification provided by signed repository
-metadata. We accept that boundary because NVIDIA directly hosts this source,
-while its applicable Debian 12 signing key uses a SHA-1 certification rejected
-by current APT and no applicable replacement key signs the repository. Trusting
-the HTTPS origin is simpler and more honest than weakening signature policy or
-maintaining an unofficial key workaround. This exception applies only to the
-NVIDIA source; Debian's own repositories remain authenticated by the Debian
-archive keyring.
+`Trusted: yes` disables APT's repository-signature requirement. TLS protects
+the metadata and packages in transit, and APT still verifies that each package
+matches the hashes in the downloaded metadata. Security therefore depends on
+the publisher and CDN control planes, the public CA system, the local CA store,
+and the TLS implementation. Compromise of that boundary could replace both
+metadata and packages.
+
+This deliberately gives up offline, transport-independent verification and
+distribution through untrusted mirrors. We prefer the simpler HTTPS boundary
+for explicitly trusted third-party services instead of duplicating publisher
+trust with another key lifecycle. Debian's archive remains signature-verified
+because its keyring and mirror model are already part of the base system.
 
 ## Standardize on NetworkManager
 
