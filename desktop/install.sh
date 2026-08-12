@@ -58,9 +58,6 @@ apt install --yes\
   build-essential\
   "$KERNEL_HEADERS";
 
-# Rebuild the initramfs for the installed NVIDIA DKMS modules.
-update-initramfs -u
-
 # ==============================================================================
 # SERVICES
 # ==============================================================================
