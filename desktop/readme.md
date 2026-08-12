@@ -16,7 +16,7 @@ reboot 0
 
 ```sh
 # From the root VT:
-exec desktop
+desktop
 ```
 
 ## Recover a stuck desktop
@@ -24,8 +24,8 @@ exec desktop
 Magic SysRq is handled by the kernel, so it can recover the keyboard even when
 Hyprland no longer processes input. On the broken desktop VT, press
 `Alt+Print Screen+R` to return the keyboard to console mode, then press
-`Alt+Print Screen+K` to kill every process on that VT. The desktop launcher
-then exits and the root autologin returns on tty1.
+`Ctrl+Alt+F1` to reach the root shell. Use `Alt+Print Screen+K` on tty2 only
+when the entire graphical session should be terminated.
 
 `Print Screen` is the `SysRq` key. Release the keys between combinations. The
 `K` operation intentionally terminates the entire graphical session.
