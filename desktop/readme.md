@@ -18,7 +18,7 @@ reboot 0
 
 ```sh
 # From the root VT:
-exec desktop hypr
+exec desktop
 ```
 
 ![Hyprland Desktop Screenshot](./hypr.webp)
