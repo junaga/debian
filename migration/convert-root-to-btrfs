@@ -161,7 +161,10 @@ unmount_conversion_tree() {
 	if mountpoint -q "$TARGET"; then
 		umount --recursive "$TARGET"
 	fi
-	mountpoint -q "$TARGET" && die "conversion tree is still mounted"
+	if mountpoint -q "$TARGET"; then
+		die "conversion tree is still mounted"
+	fi
+	return 0
 }
 
 verify_existing_efi_support() {
