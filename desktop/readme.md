@@ -7,18 +7,18 @@ Make sure you manually disable `Secure Boot` in `UEFI`; Because `apt:nvidia-driv
 Run these commands from the repository root.
 
 ```sh
-sudo bash ./base/upgrade.sh
-sudo cp -ra ./base/home/. /root/.
+bash ./base/upgrade.sh
+cp -ra ./base/home/. /root/.
 
-sudo bash ./desktop/format.sh
-sudo bash ./desktop/install.sh
+bash ./desktop/format.sh
+bash ./desktop/install.sh hypr
 
-sudo reboot 0
+reboot 0
 ```
 
 ```sh
 # From the root VT:
-exec desktop
+exec desktop hypr
 ```
 
 ![Hyprland Desktop Screenshot](./hypr.webp)

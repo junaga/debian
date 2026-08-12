@@ -1,3 +1,4 @@
+#!/bin/bash
 # Servers and desktops, not containers.
 test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 	echo "Container detected; use FORCE=1."
@@ -9,27 +10,27 @@ set -e
 echo '@reboot /bin/bash /usr/local/src/base/upgrade.sh' | crontab -
 
 # migrate to NetworkManager
-sudo apt install --yes network-manager
-sudo crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
-sudo nmcli connection migrate
-sudo systemctl restart NetworkManager
-sudo crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
-sudo crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager file
-sudo systemctl stop 'ifup@*.service'
-sudo systemctl disable --now networking
+apt install --yes network-manager
+crudini --set /etc/NetworkManager/NetworkManager.conf ifupdown managed true
+nmcli connection migrate
+systemctl restart NetworkManager
+crudini --set /etc/NetworkManager/NetworkManager.conf main plugins keyfile
+crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager file
+systemctl stop 'ifup@*.service'
+systemctl disable --now networking
 
 # use Cloudflare DNS
 nmcli -t -f UUID,TYPE connection show | while IFS=: read -r uuid type; do
 	case "$type" in
-	802-3-ethernet|802-11-wireless) sudo nmcli connection modify "$uuid" \
+	802-3-ethernet|802-11-wireless) nmcli connection modify "$uuid" \
 		ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes ipv4.dns 1.1.1.1,1.0.0.1 ;;
 	esac
 done
-sudo systemctl restart NetworkManager
+systemctl restart NetworkManager
 
-# Autologin is the physical recovery path.  Terminal administration belongs to
-# root; the unprivileged hypr account exists only for the graphical session.
-sudo systemctl edit getty@.service --stdin <<-EOF
+# Autologin is the physical recovery path. Terminal administration belongs to
+# root; the account passed to desktop exists only for the graphical session.
+systemctl edit getty@.service --stdin <<-EOF
 	[Service]
 	ExecStart=
 	ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - \${TERM}

@@ -34,6 +34,25 @@ ESPs instead of assuming a filesystem UUID, partition number, disk, or relation
 to `/`. The complete chain was observed on this installation and recorded in
 `8da3344`.
 
+## Separate the terminal and desktop identities
+
+[`base/setup.sh`](./base/setup.sh),
+[`desktop/install.sh`](./desktop/install.sh), and
+[`desktop/bin/desktop`](./desktop/bin/desktop)
+
+Every shell, command, and script runs as `root`. A normal user owns only the
+graphical session, desktop applications, and their data. Commands that enter
+that identity take its account name explicitly:
+
+```sh
+bash ./desktop/install.sh hypr
+desktop hypr
+install-steam hypr
+```
+
+Root scripts resolve that account's HOME from the password database. Graphical
+helpers run as the normal user and use `$HOME` directly.
+
 ## Make deletion a recoverable state of HOME
 
 [`desktop/format.sh`](./desktop/format.sh),
@@ -78,19 +97,18 @@ terminal-agent database backward. They require an independent archive or
 off-machine backup.
 
 The `hypr` account owns UID/GID 1000 and cannot administer the system generally.
-The root VT command `exec desktop` performs GPU module setup as root, then gives
+The root VT command `exec desktop hypr` performs GPU module setup, then gives
 systemd ownership of tty2 and performs a real PAM login whose shell is the
 Hyprland launcher.
 That gives `hypr` an active logind seat and its own XDG runtime directory;
 nesting `runuser` inside root's existing tty would provide neither. When the
 desktop exits, the launcher switches back to the original root VT. Graphical
-programs remain unprivileged. Kitty is also a `hypr` process, but its configured shell may run
-only `/usr/local/sbin/root-shell` through a command-specific passwordless sudo
-rule. A compromised graphical session can therefore invoke that root shell;
-this is an explicit usability boundary, not a security sandbox.
+programs, including Kitty, remain unprivileged. Administration, terminal
+commands, and setup scripts run directly from the root VT; the graphical
+session has no privilege-escalation bridge back to root.
 
 The default systemd target is `multi-user.target`: every boot deliberately
-lands at the root VT, and the desktop starts only when root runs `exec desktop`.
+lands at the root VT, and the desktop starts only with `exec desktop hypr`.
 No display manager owns or bypasses that transition.
 
 ### One mechanism for trash, history, and backup
@@ -228,7 +246,7 @@ exhaust the shared filesystem.
 [`base/setup.sh`](./base/setup.sh)
 
 ```sh
-sudo systemctl edit getty@.service --stdin <<-EOF
+systemctl edit getty@.service --stdin <<-EOF
 	[Service]
 	ExecStart=
 	ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - \${TERM}

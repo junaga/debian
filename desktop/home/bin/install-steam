@@ -2,29 +2,35 @@
 
 set -e
 
-sudo apt update
-sudo apt install steam-libs steam-libs-i386:i386
+USER_NAME="${1:?usage: $0 USER}"
+USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+USER_GROUP="$(id -gn "$USER_NAME")"
+
+apt update
+apt install steam-libs steam-libs-i386:i386
 
 URL=https://repo.steampowered.com/steam/archive/stable/steam_latest.tar.gz
-STEAM_DIR="$HOME/.local/share/Steam"
+STEAM_DIR="$USER_HOME/.local/share/Steam"
 
 # install
-mkdir -p "$STEAM_DIR" "$HOME/bin"
+mkdir -p "$STEAM_DIR" "$USER_HOME/bin"
 cd "$STEAM_DIR"
 curl "$URL" -o steam.tar
 tar xf steam.tar --strip-components=1 steam-launcher/{bin_steam.sh,bootstraplinux_ubuntu12_32.tar.xz}
 rm steam.tar
 
 # launcher
-cat > "$HOME/bin/steam" <<EOF
+cat > "$USER_HOME/bin/steam" <<EOF
 #!/bin/bash
 set -e
 exec "$STEAM_DIR/bin_steam.sh" "\$@"
 EOF
-chmod +x "$HOME/bin/steam"
+chmod +x "$USER_HOME/bin/steam"
 
 # Factorio (prefer native Wayland)
-mkdir -p "$HOME/.factorio/config"
-crudini --set "$HOME/.factorio/config/config.ini" \
+mkdir -p "$USER_HOME/.factorio/config"
+crudini --set "$USER_HOME/.factorio/config/config.ini" \
 	graphics \
 	linux-preferred-video-driver wayland
+chown -R "$USER_NAME:$USER_GROUP" \
+	"$STEAM_DIR" "$USER_HOME/bin/steam" "$USER_HOME/.factorio"

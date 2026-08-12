@@ -3,15 +3,15 @@ set -e
 
 DIR="$(dirname "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
-USER_NAME=hypr
+USER_NAME="${1:?usage: $0 USER}"
 
 if ! getent passwd "$USER_NAME" >/dev/null; then
 	useradd --no-create-home --user-group --shell /bin/bash "$USER_NAME"
 fi
 USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
 
-function unsudo {
-	sudo --user "$USER_NAME" "$@"
+function asUser {
+	runuser --user "$USER_NAME" -- env HOME="$USER_HOME" "$@"
 }
 
 # ==============================================================================
@@ -34,12 +34,8 @@ cp -ar "$DIR/etc/." /etc/.
 systemctl enable --now btrbk.timer
 swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
-# Root launches the graphical session; graphical terminals cross only this
-# explicit boundary back into the administrator shell.
+# Root launches the graphical session for the explicitly named desktop user.
 install -m 0755 "$DIR/bin/desktop" /usr/local/bin/desktop
-install -m 0755 "$DIR/../base/sbin/root-shell" /usr/local/sbin/root-shell
-install -m 0440 "$DIR/etc/sudoers.d/020-hypr-root-shell" \
-	/etc/sudoers.d/020-hypr-root-shell
 for PROGRAM in "$DIR"/home/bin/*; do
 	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
@@ -128,15 +124,15 @@ function installCursorTheme {
 installCursorTheme
 
 # Hyprland cursor-shape plugin.
-unsudo hyprpm add https://github.com/junaga/windows-pointer-linux
-unsudo hyprpm update
-unsudo hyprpm enable windows-pointer-linux
-unsudo hyprpm reload
+asUser hyprpm add https://github.com/junaga/windows-pointer-linux
+asUser hyprpm update
+asUser hyprpm enable windows-pointer-linux
+asUser hyprpm reload
 
 # Passwordless desktop credential service.
 apt install --yes gnome-keyring
-unsudo mkdir -p "$USER_HOME/.local/share/keyrings"
-unsudo crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
+asUser mkdir -p "$USER_HOME/.local/share/keyrings"
+asUser crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
 
 # ==============================================================================
 # APPLICATIONS
