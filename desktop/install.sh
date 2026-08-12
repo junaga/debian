@@ -98,6 +98,10 @@ apt install --yes --allow-downgrades\
   hyprland-backgrounds\
   hyprland-dev\
   libaquamarine-dev\
+  libhyprgraphics-dev\
+  libhyprlang-dev\
+  libhyprutils-dev\
+  libhyprwire-dev\
   nwg-look\
   hyprshutdown\
   systemd-timesyncd\

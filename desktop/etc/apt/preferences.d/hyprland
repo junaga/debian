@@ -7,6 +7,22 @@ Package: libaquamarine11 libaquamarine-dev
 Pin: version 0.12.1-1
 Pin-Priority: 1001
 
+Package: libhyprgraphics4 libhyprgraphics-dev
+Pin: version 0.5.1-2+b1
+Pin-Priority: 1001
+
+Package: libhyprlang2 libhyprlang-dev
+Pin: version 0.6.8-4+b1
+Pin-Priority: 1001
+
+Package: libhyprutils12 libhyprutils-dev
+Pin: version 0.13.1-2
+Pin-Priority: 1001
+
+Package: libhyprwire3 libhyprwire-dev
+Pin: version 0.3.1-3
+Pin-Priority: 1001
+
 Package: xdg-desktop-portal-hyprland
 Pin: version 1.4.0-1
 Pin-Priority: 1001
