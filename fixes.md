@@ -371,17 +371,14 @@ Trusted: yes
 ```
 
 HTTPS is the trust boundary for third-party APT sources; no separate repository
-key is required. The URL identifies an authenticated hostname, not a machine,
-so the publisher may change CDN or proxy nodes without changing our
-configuration. TLS authenticates that hostname through the system CA store and
-protects metadata and packages in transit.
+key is required. TLS authenticates the hostname, not a machine, so its publisher
+may change CDN or proxy nodes without changing our configuration.
 
 `Trusted: yes` skips APT's repository-signature check. APT still verifies
 package hashes against the downloaded metadata, but HTTPS is what authenticates
-both. A publisher, CDN, CA, or local trust-store compromise could therefore
-replace them. We accept that risk and give up offline verification and
-untrusted mirrors in exchange for one standard, managed trust path. Debian's
-archive keeps its built-in signed-mirror model.
+both. A publisher, CDN, CA, or local trust-store compromise could replace them.
+We accept losing offline verification and untrusted mirrors in exchange for one
+managed trust path. Debian's archive keeps its built-in signed-mirror model.
 
 ## Standardize on NetworkManager
 
