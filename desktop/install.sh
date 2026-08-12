@@ -49,10 +49,12 @@ efibootmgr --timeout 0
 # ==============================================================================
 
 # NVIDIA graphics.
+apt update
+apt install --yes nvidia-driver-pinning-580
 apt install --yes\
   firmware-misc-nonfree\
-  nvidia-driver\
-  dkms\
+  'nvidia-driver=580*'\
+  nvidia-settings\
   build-essential\
   "$KERNEL_HEADERS";
 
