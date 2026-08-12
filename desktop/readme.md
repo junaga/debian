@@ -18,12 +18,7 @@ reboot 0
 
 ```sh
 # From the root VT:
-cat /sys/module/nvidia_drm/parameters/modeset # Y
 exec desktop
 ```
-
-[NVIDIA 550.163.01 cannot safely reload `nvidia-drm`](https://bugs.debian.org/1128843).
-Systemd loads it at boot, so [`nvidia-kms.conf`](./etc/modprobe.d/nvidia-kms.conf)
-makes modprobe apply `modeset=1` on its first load.
 
 ![Hyprland Desktop Screenshot](./hypr.webp)

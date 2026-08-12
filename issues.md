@@ -21,7 +21,18 @@ Enable persistent final-shutdown logging with a kernel built with
 `CONFIG_PSTORE_CONSOLE`, plus the pstore kernel parameters needed to capture
 hangs after journald has stopped.
 
-## 5. Restore scrollback to the Linux kernel virtual console
+## 5. NVIDIA DRM reload bug
+
+Hyprland needs `nvidia_drm.modeset=1`, but Debian loads `nvidia-drm` before the
+desktop starts. Module options cannot change after loading, and reloading
+NVIDIA 550.163.01 triggers a kernel warning and freezes the graphical session
+([Debian #1128843](https://bugs.debian.org/1128843)).
+
+`desktop/etc/modprobe.d/nvidia-kms.conf` currently makes modprobe apply the
+option on the first boot-time load. Upgrade to a fixed driver, verify safe
+reload, then remove this workaround.
+
+## 6. Restore scrollback to the Linux kernel virtual console
 
 Provide useful, bounded scrollback on the actual Linux kernel virtual terminals
 without requiring a userspace terminal emulator or multiplexer. The intended
