@@ -187,3 +187,27 @@ Completion means Codex and ordinary shell output can be reviewed with
 Shift+PageUp/PageDown directly on a real kernel VT, across resize and VT-switch
 tests, without GNU Screen, tmux, KMSCON, a graphical terminal, or a userspace
 terminal-emulation daemon, and without weakening the machine's recovery path.
+
+## 6. Simplify the desktop login handoff
+
+Replace the dense inline launcher in
+[`desktop/bin/desktop`](desktop/bin/desktop) with a simpler mechanism that still
+creates a real `hypr` login on `tty2` while root remains logged in on `tty1`.
+
+The current chain is proven to work:
+
+```text
+openvt tty2 -> transient systemd service -> login hypr -> start-hyprland
+```
+
+Both boundaries are necessary today. `openvt` supplies and switches the
+physical VT, while `systemd-run` moves the process out of root's existing
+logind session cgroup. `openvt` followed directly by `login` was tested and
+rejected by `pam_systemd` with `CreateSession: InvalidParameter`; placing the
+same `login` inside the transient service created a normal `hypr` tty session.
+
+Find a first-class, declarative or upstream-supported interface that expresses
+this handoff without a display manager, persistent custom service, hidden
+state, or duplicated PAM/session setup. Preserve tty1 as the root recovery
+console, return there when Hyprland exits, and verify the resulting session has
+the correct seat, VT, `XDG_RUNTIME_DIR`, user manager, and device access.
