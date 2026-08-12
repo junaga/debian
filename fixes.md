@@ -361,6 +361,32 @@ Package versions were recorded on 2026-07-22.
 `--allow-releaseinfo-change` accepts the initial suite change; `full-upgrade`
 resolves its dependency transitions. The source replacement dates to `28274ab`.
 
+## Trust the NVIDIA repository through HTTPS
+
+[`desktop/etc/apt/sources.list.d/nvidia.sources`](./desktop/etc/apt/sources.list.d/nvidia.sources)
+
+```deb822
+URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
+Trusted: yes
+```
+
+This source deliberately trusts NVIDIA's authenticated HTTPS endpoint instead
+of requiring an additional APT repository signature. TLS authenticates the
+server through the public CA system and protects the repository metadata and
+packages in transit; APT still checks each package against the hashes in that
+metadata.
+
+`Trusted: yes` means a compromised NVIDIA server or trusted TLS certificate
+authority could replace both metadata and packages. It also gives up the
+offline, transport-independent verification provided by signed repository
+metadata. We accept that boundary because NVIDIA directly hosts this source,
+while its applicable Debian 12 signing key uses a SHA-1 certification rejected
+by current APT and no applicable replacement key signs the repository. Trusting
+the HTTPS origin is simpler and more honest than weakening signature policy or
+maintaining an unofficial key workaround. This exception applies only to the
+NVIDIA source; Debian's own repositories remain authenticated by the Debian
+archive keyring.
+
 ## Standardize on NetworkManager
 
 [`base/upgrade.sh`](./base/upgrade.sh)
