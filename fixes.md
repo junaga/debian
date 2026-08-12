@@ -245,7 +245,7 @@ exhaust the shared filesystem.
 systemctl edit getty@.service --stdin <<-EOF
 	[Service]
 	ExecStart=
-	ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - \${TERM}
+	ExecStart=-login -f root
 EOF
 ```
 
@@ -256,8 +256,8 @@ Autologin makes the VT a recovery interface independent of root-password
 knowledge and network login:
 
 ```text
-hardware VT          /dev/ttyN  -> agetty --autologin root -> administer
-cloud VGA/VNC VT     /dev/ttyN  -> agetty --autologin root -> repair network or SSH
+hardware VT          /dev/ttyN  -> login -f root -> administer
+cloud VGA/VNC VT     /dev/ttyN  -> login -f root -> repair network or SSH
 cloud serial console ttyS*/hvc* -> serial-getty@.service (not covered)
 ```
 
@@ -274,11 +274,11 @@ TTYVTDisallocate=yes
 ```
 
 ```text
-getty@ttyN.service -> agetty --autologin root -> PAM session -> shell
+getty@ttyN.service -> login -f root -> PAM session -> shell
 ```
 
-systemd opens, resets, hangs up, and deallocates the VT. `agetty` supplies the
-terminal parameters and invokes PAM login with the fixed root identity.
+systemd opens, resets, hangs up, and deallocates the VT. `login -f root`
+starts the fixed root identity without authentication.
 
 The `-` prefix preserves the vendor unit's ignored-exit behavior. The override cannot affect
 `serial-getty@.service`, SSH, display managers, rescue mode, containers, or WSL.
