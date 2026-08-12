@@ -198,17 +198,3 @@ Completion means Codex and ordinary shell output can be reviewed with
 Shift+PageUp/PageDown directly on a real kernel VT, across resize and VT-switch
 tests, without GNU Screen, tmux, KMSCON, a graphical terminal, or a userspace
 terminal-emulation daemon, and without weakening the machine's recovery path.
-
-## 7. Consolidate root and HOME into one Btrfs pool
-
-Root is now Btrfs, but its 56 GiB partition and the 176 GiB Btrfs HOME partition
-still divide the SSD's free capacity. The verified offline procedure in
-[`migration/btrfs-consolidation-runbook.md`](./migration/btrfs-consolidation-runbook.md)
-removes that last boundary: preserve the ESP, extend the existing root partition
-to the disk's end, restore HOME as a compressed child subvolume, create a native
-NOCOW swap subvolume, and start a new Snapper history for all of `/home`.
-
-Completion means the migration program has passed from the prepared Debian Live
-USB, the installed system has cold-booted, root and `/home` report the same
-Btrfs UUID, `/home` and `/swap` are the intended child subvolumes, Codex and the
-desktop launch, and the fresh initial HOME snapshot is readable.

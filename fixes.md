@@ -221,40 +221,6 @@ old extents. Unlimited yearly retention therefore requires ordinary capacity
 monitoring because a sufficiently long or high-churn history can eventually
 exhaust the shared filesystem.
 
-### Consolidation and recovery boundary
-
-The offline consolidation removes the old HOME partition, extends the existing
-root Btrfs partition to the end of the SSD, grows that filesystem, and restores
-HOME as its `home` child subvolume. The independently hashed source archive is
-`/mnt/archive/home-consolidation-20260812/hypr.tar`; retain it until the new
-layout, desktop, and first fresh snapshot have been verified after reboot.
-
-Terminal state is copied to `/root`; programs and administrator trees live in
-root-owned `/usr/local`; Steam and all graphical application state remain in
-`/home/hypr`. All previous HOME snapshots were intentionally deleted before
-the archive was made. The new `/home/.snapshots` therefore begins a clean
-daily, monthly, and yearly history with no hidden legacy tree.
-
-Inspect and recover data with:
-
-```sh
-# Fast everyday listing. The omitted used-space column is not needed to restore.
-snapper --config home list --disable-used-space
-snapper --config home status 0..NUMBER
-snapper --config home diff 0..NUMBER -- path/to/file
-
-# Copy one file out without modifying the snapshot.
-cp -a /home/.snapshots/NUMBER/snapshot/hypr/path/to/file /home/hypr/path/to/file
-
-# Or ask Snapper to reverse selected changes between two trees.
-snapper --config home undochange NUMBER..0 path/to/file
-```
-
-Snapshot `0` is the current `/home` tree. Direct copying is preferred for a small,
-auditable restore; `undochange` is useful for a reviewed set of paths. Whole
-desktop rollback is intentionally not coupled to boot because user-data recovery
-should not replace the operating-system root.
-
 ## Autologin Linux virtual terminals
 
 [`base/setup.sh`](./base/setup.sh)
