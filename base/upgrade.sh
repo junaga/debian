@@ -1,3 +1,4 @@
+#!/bin/bash
 # Run repeatedly on every system.
 DEBIAN="testing"
 set -e
@@ -21,7 +22,7 @@ apt clean
 
 # get Packages
 apt install --yes \
-	cron micro less rsync sudo \
+	cron micro less rsync \
 	git gh ssh kitty-terminfo \
 	nodejs npm build-essential pkg-config \
 	python3 python3-venv python3-pip python3-dev pipx \

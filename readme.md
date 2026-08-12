@@ -53,7 +53,7 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
-sudo bash ./base/upgrade.sh
+bash ./base/upgrade.sh
 
 codex login
 codex "code a \"Hello, World\" API in JavaScript"
