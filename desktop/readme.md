@@ -10,9 +10,8 @@ Run these commands from the repository root.
 sudo bash ./base/upgrade.sh
 sudo cp -ra ./base/home/. /root/.
 
+sudo bash ./desktop/format.sh
 sudo bash ./desktop/install.sh
-sudo cp -ra ./desktop/home/. /home/hypr/.
-sudo chown -R hypr:hypr /home/hypr
 
 sudo reboot 0
 ```

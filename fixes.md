@@ -36,14 +36,14 @@ to `/`. The complete chain was observed on this installation and recorded in
 
 ## Make deletion a recoverable state of HOME
 
-[`desktop/etc/fstab`](./desktop/etc/fstab),
-[`desktop/etc/snapper/configs/home`](./desktop/etc/snapper/configs/home), and
-[`desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf)
+[`desktop/format.sh`](./desktop/format.sh),
+[`desktop/etc/fstab`](./desktop/etc/fstab), and
+[`desktop/etc/btrbk/btrbk.conf`](./desktop/etc/btrbk/btrbk.conf)
 
 Debian does not require a separate filesystem for `/home`. This workstation
-uses one Btrfs filesystem after the ESP so root, HOME, and swap share the SSD's
-free capacity. Root is the filesystem's top-level subvolume; `/home` and
-`/swap` are child subvolumes. Snapper snapshots `/home` every day. `/root` and
+uses one Btrfs filesystem after the ESP so root, HOME, and the swapfile share
+the SSD's free capacity. Root is the filesystem's top level and `/home` is its
+compressed child subvolume. Btrbk snapshots `/home` every day. `/root` and
 `/usr/local` remain outside that snapshot boundary.
 
 The boundary follows ownership of the data rather than the directory tree:
@@ -62,20 +62,17 @@ messages, editor state, application databases, dotfiles, and caches.
 Snapshotting only `/home` spends copy-on-write metadata and retained blocks
 on bootable desktop history rather than on system software.
 
-Root deliberately inherits the NOCOW inode flag and has no compression
-property. HOME deliberately retains copy-on-write checksums and inherits Zstd
-compression. Swap uses `btrfs filesystem mkswapfile` inside its own NOCOW
-subvolume. These are per-tree inode policies: Btrfs compression and `nodatacow`
-mount options are filesystem-wide and cannot express different policies for
-root and HOME inside one pool. Existing root extents created before the NOCOW
-policy remain compressed or copy-on-write. Existing nonempty files cannot be
-converted merely by setting the flag; they must be recreated under a NOCOW
-directory. The installed policy therefore governs newly created root files,
-while a full rewrite of existing system files is intentionally deferred.
+`format.sh` creates the HOME subvolume and assigns its Zstd compression
+property. It also creates `/swapfile` with `btrfs filesystem mkswapfile`, which
+produces the preallocated NOCOW file required by Btrfs. Swap is not a partition
+or a subvolume. A separate swap subvolume would only be needed to exclude swap
+from snapshots of its parent; this system snapshots `/home`, not the root top
+level that contains `/swapfile`. Creation belongs in `format.sh`; `fstab` only
+declares that the already-created file is activated as swap at boot.
 
 Terminal administration is deliberately a separate risk domain. Root owns
 shell history, SSH and Git identities, Codex conversations, CLI credentials,
-projects, and local programs. Those paths are excluded from Snapper: a desktop
+projects, and local programs. Those paths are excluded from Btrbk: a desktop
 rewind must never silently roll an SSH key, administrator project, or active
 terminal-agent database backward. They require an independent archive or
 off-machine backup.
@@ -96,7 +93,7 @@ The default systemd target is `multi-user.target`: every boot deliberately
 lands at the root VT, and the desktop starts only when root runs `exec desktop`.
 No display manager owns or bypasses that transition.
 
-### Filesystem-native trash and history
+### One mechanism for trash, history, and backup
 
 A desktop trash can implements deletion by renaming a file into a userspace
 directory and recording enough metadata to move it back. That is useful but
@@ -106,7 +103,7 @@ file operation. Cloud services commonly add server-side version history, but
 only for data already synchronized to that service.
 
 Btrfs snapshots preserve an earlier filesystem tree without renaming its
-files. Snapper creates read-only points in time below normal applications, so
+files. Btrbk creates read-only points in time below normal applications, so
 the same recovery mechanism covers deletion, overwrite, truncation, and
 renames performed by graphical applications, shells, package managers, or
 programs. A snapshot initially shares extents with the live subvolume; extra
@@ -114,11 +111,13 @@ space is consumed only as later writes make old extents unique. Deletion thus
 becomes a recoverable state transition until retention expires instead of a
 special userspace move.
 
-This deliberately replaces two separate desktop concepts with one primitive:
+Windows commonly presents trash, file history, and backup as separate systems.
+Linux uses the same immutable HOME snapshot as the source for all three:
 
 ```text
 trash    -> recover a path from a snapshot taken before its deletion
 history  -> inspect or recover any path from an earlier snapshot
+backup   -> replicate that snapshot to an independent Btrfs filesystem
 ```
 
 There is no special rename into a trash directory and no application-specific
@@ -140,8 +139,13 @@ to lose data:
 - snapshots of a running database or virtual machine are filesystem-consistent,
   not necessarily application-consistent.
 
-The archive or an off-machine backup remains necessary for disaster recovery.
-Snapper serves fast local undo and version recovery.
+A local snapshot is not yet a backup because it dies with the SSD. Btrbk turns
+the same snapshot into a backup by transferring it incrementally with Btrfs
+send/receive to another Btrfs disk or host. The current archive filesystem is
+ext4, so it is not configured as a native Btrbk target. Its experimental raw
+target mode is deliberately avoided. After an independent target is available
+as Btrfs, adding one `target` line to `btrbk.conf` provides the backup copy
+without introducing a second history format or recovery model.
 
 ### Bootable past desktops
 
@@ -209,13 +213,11 @@ user history.
 
 ### Retention and space
 
-Timeline cleanup keeps 31 daily and 12 monthly recovery points. Hourly and
-weekly tiers are disabled. The yearly limit is set to the largest `size_t`
-accepted by Snapper on this 64-bit system (`18446744073709551615`), making
-yearly retention practically unlimited without another timer or cleanup path.
-Quotas and Snapper's space-aware cleanup are deliberately disabled. Qgroup
-rescans made ordinary listing and cleanup expensive on this HOME, and a space
-limit would conflict with the explicit policy of never expiring yearly points.
+The packaged persistent daily Btrbk timer keeps 31 daily, 12 monthly, and all
+yearly HOME snapshots. Hourly and weekly tiers are disabled. Btrbk manages
+retention without Btrfs quotas; qgroup rescans previously made ordinary
+listing and cleanup expensive on this HOME.
+
 Unchanged snapshots are cheap, while frequently rewritten files retain more
 old extents. Unlimited yearly retention therefore requires ordinary capacity
 monitoring because a sufficiently long or high-churn history can eventually

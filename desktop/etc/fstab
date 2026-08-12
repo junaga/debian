@@ -2,17 +2,12 @@
 # each filesystem UUID is generated when formatting
 # <file system>                                                             <mount>         <type>  <options>                    <dump>  <pass>
 
-# One Btrfs pool; root is the top-level subvolume.
+# One Btrfs pool; root is the top level and HOME is its child subvolume.
 /dev/disk/by-id/ata-Samsung_SSD_850_EVO_mSATA_250GB_S33GNX0J713319N-part2  /               btrfs  defaults,noatime               0       0
-
-# User data and swap are child subvolumes of the root pool. Compression and
-# NOCOW are inode properties because Btrfs mount options are filesystem-wide.
-/dev/disk/by-uuid/66342810-348d-4508-a1c8-2552b6db1339                     /home           btrfs  defaults,noatime,subvol=home    0       0
-/dev/disk/by-uuid/66342810-348d-4508-a1c8-2552b6db1339                     /swap           btrfs  defaults,noatime,subvol=swap    0       0
 
 # Archive
 /dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381                     /mnt/archive    ext4   noatime,nodev,nosuid,noexec  0       2
 
-# Boot and swap.
+# Boot and swap file.
 /dev/disk/by-designator/esp                                                /boot/efi       vfat   umask=0077                   0       1
-/swap/swapfile                                                             none            swap   defaults                     0       0
+/swapfile                                                                  none            swap   defaults                     0       0

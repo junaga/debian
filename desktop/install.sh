@@ -1,16 +1,14 @@
 #!/bin/bash
 set -e
 
-SWAP_SIZE="12G"
 DIR="$(dirname "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
 USER_NAME=hypr
-USER_HOME=/home/hypr
 
 if ! getent passwd "$USER_NAME" >/dev/null; then
-	useradd --no-create-home --user-group --shell /bin/bash \
-		--home-dir "$USER_HOME" "$USER_NAME"
+	useradd --no-create-home --user-group --shell /bin/bash "$USER_NAME"
 fi
+USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
 
 function unsudo {
 	sudo --user "$USER_NAME" "$@"
@@ -20,48 +18,21 @@ function unsudo {
 # SYSTEM
 # ==============================================================================
 
-# One Btrfs pool: NOCOW root, compressed HOME history, and NOCOW swap.
 test "$(findmnt -n -T / -o FSTYPE)" = btrfs
-test "$(findmnt -n -T /home -o UUID)" = "$(findmnt -n -T / -o UUID)"
-apt install --yes btrfs-progs snapper
-find / -xdev \( -path /home -o -path /swap \) -prune -o \
-	-type d -exec chattr +C {} +
-
-if ! btrfs subvolume show /home >/dev/null 2>&1; then
-	test -z "$(find /home -mindepth 1 -print -quit 2>/dev/null)"
-	rmdir /home 2>/dev/null || true
-	btrfs subvolume create /home
-fi
-chattr -C /home
-btrfs property set -t inode /home compression zstd
-
-if ! btrfs subvolume show /swap >/dev/null 2>&1; then
-	test -z "$(find /swap -mindepth 1 -print -quit 2>/dev/null)"
-	rmdir /swap 2>/dev/null || true
-	btrfs subvolume create /swap
-fi
-chattr +C /swap
-if [ ! -e /swap/swapfile ]; then
-	btrfs filesystem mkswapfile --size "$SWAP_SIZE" /swap/swapfile
-fi
-swapon --show=NAME --noheadings | grep -Fx /swap/swapfile >/dev/null ||
-	swapon /swap/swapfile
+btrfs subvolume show /home >/dev/null
+apt install --yes btrfs-progs btrbk
 
 mkdir -p "$USER_HOME"
 chown "$USER_NAME:$USER_NAME" "$USER_HOME"
 for skeleton in /etc/skel/.[!.]*; do
 	test -e "$USER_HOME/${skeleton##*/}" || cp -a "$skeleton" "$USER_HOME/"
 done
+cp -ra "$DIR/home/." "$USER_HOME/."
 chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
-if ! btrfs subvolume show /home/.snapshots >/dev/null 2>&1; then
-	btrfs subvolume create /home/.snapshots
-fi
-chown root:root /home/.snapshots
-chmod 0750 /home/.snapshots
-
 # Configuration files.
 cp -ar "$DIR/etc/." /etc/.
-systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
+systemctl enable --now btrbk.timer
+swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
 # Root launches the graphical session; graphical terminals cross only this
 # explicit boundary back into the administrator shell.
