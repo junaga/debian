@@ -1,2 +1,2 @@
 #!/bin/sh
-exec login -f hypr --shell /usr/bin/start-hyprland
+exec openvt --force --switch --wait --console=2 -- systemd-run --wait --collect --uid=hypr --property=PAMName=login --property=TTYPath=/dev/tty2 --property=StandardInput=tty-force --property=StandardOutput=tty --property=StandardError=tty start-hyprland
