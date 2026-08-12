@@ -55,7 +55,6 @@ apt install --yes\
   firmware-misc-nonfree\
   'nvidia-driver=580*'\
   nvidia-settings\
-  build-essential\
   "$KERNEL_HEADERS";
 
 # ==============================================================================
