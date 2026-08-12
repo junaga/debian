@@ -198,3 +198,39 @@ Completion means Codex and ordinary shell output can be reviewed with
 Shift+PageUp/PageDown directly on a real kernel VT, across resize and VT-switch
 tests, without GNU Screen, tmux, KMSCON, a graphical terminal, or a userspace
 terminal-emulation daemon, and without weakening the machine's recovery path.
+
+## 7. Consolidate root and HOME into one Btrfs pool
+
+The Samsung system SSD currently has a 976 MiB EFI System Partition, a roughly
+56 GiB ext4 root partition, and a roughly 176 GiB Btrfs HOME partition. Root has
+little free space while HOME has substantially more, but the partition boundary
+prevents either side from using the other's capacity.
+
+The target layout keeps the EFI partition and replaces the two data partitions
+with one Btrfs partition spanning the rest of the SSD. Use separate subvolumes
+for the operating-system root and `/home/hypr`, so they share free capacity but
+retain distinct administrative and snapshot boundaries. Snapper must continue
+to snapshot only `/home/hypr`; converting root to Btrfs does not imply keeping
+system snapshots. Recreate swap using the Btrfs-supported no-copy-on-write
+layout.
+
+Do not use `btrfs-convert` as the migration plan. It can convert the ext4 root
+filesystem offline while initially retaining an ext rollback image, but it
+would leave root inside the same 56 GiB partition and would not combine it with
+HOME. It therefore adds conversion and bootloader risk without solving the
+capacity problem. HOME follows root physically on disk, so it also cannot be
+grown backward over the old root partition with an ordinary filesystem resize.
+
+Perform this only as a planned offline storage rebuild. First create and verify
+a fresh recovery copy of both root and HOME on the archive disk. Boot independent
+live or rescue media, delete the old root and HOME partitions, create and format
+the combined Btrfs partition, create the subvolumes, and restore the existing
+system and user data. Then rebuild `fstab`, the initramfs and GRUB, recreate
+swap, and verify ownership, boot, Codex, Hyprland and Snapper before removing
+the fresh recovery copy. This need not reinstall Debian packages, but it has the
+same destructive storage boundary as an installation and is best implemented
+in the custom installation process when practical.
+
+Completion means root and `/home/hypr` share one Btrfs allocation pool, only
+desktop data is snapshotted, the external recovery archive has been verified,
+and the complete green health audit passes after a cold boot.
