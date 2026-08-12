@@ -1,0 +1,356 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+umask 077
+
+readonly DISK_LINK=/dev/disk/by-id/ata-Samsung_SSD_850_EVO_mSATA_250GB_S33GNX0J713319N
+readonly ROOT_LINK=${DISK_LINK}-part2
+readonly OLD_HOME_LINK=${DISK_LINK}-part3
+readonly ESP_LINK=${DISK_LINK}-part1
+readonly ARCHIVE_LINK=/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381
+readonly ROOT_UUID=66342810-348d-4508-a1c8-2552b6db1339
+readonly OLD_HOME_UUID=47e498ee-c3ec-4708-b732-747c122114c0
+readonly OLD_HOME_PARTUUID=a3635ff7-58d1-488d-8e00-acce6a98dcdb
+readonly ESP_UUID=A31E-0712
+readonly DISK_BYTES=250059350016
+readonly OLD_ROOT_BYTES=59999518720
+readonly OLD_HOME_BYTES=189035184128
+readonly ROOT_START=2000896
+readonly ROOT_SECTORS=486396239
+readonly ROOT_BYTES=249034874368
+readonly ROOT_PARTUUID=5e7dc0f9-ae4e-4a77-a838-a128ed538ec9
+readonly DISK_GUID=D41F90BC-A0B5-4285-84E6-A5499A173EA2
+readonly ESP_PARTUUID=C859EAF4-6ADF-49ED-8DCE-E20CA5FB6349
+readonly HOME_SOURCE_GENERATION=259958
+readonly BACKUP_SHA256=87c6b085335b5679d2d8b81cd807ea854acdb68992f68db90bcde00ade66d939
+ARCHIVE_MOUNT=/mnt/consolidation-archive
+readonly ROOT_MOUNT=/mnt/consolidation-root
+readonly HOME_SOURCE=/mnt/consolidation-home-source
+readonly EFI_MOUNT=$ROOT_MOUNT/boot/efi
+BACKUP_DIRECTORY=$ARCHIVE_MOUNT/home-consolidation-20260812
+BACKUP=$BACKUP_DIRECTORY/hypr.tar
+PARTITION_BACKUP=$BACKUP_DIRECTORY/partition-table-before-consolidation.sfdisk
+COMPLETE_MARKER=$BACKUP_DIRECTORY/consolidation-complete
+readonly SWAP_SIZE=12G
+
+log() {
+	printf '\n==> %s\n' "$*"
+}
+
+die() {
+	printf 'consolidate-btrfs: %s\n' "$*" >&2
+	exit 1
+}
+
+require_commands() {
+	local command
+	for command in "$@"; do
+		command -v "$command" >/dev/null || die "required command is missing: $command"
+	done
+}
+
+canonical_device() {
+	test -b "$1" || die "block device is absent: $1"
+	readlink -f "$1"
+}
+
+device_mounts() {
+	local device=$1 major_minor
+	major_minor=$(lsblk -dnro MAJ:MIN "$device")
+	findmnt -rn -o MAJ:MIN,TARGET |
+		awk -v id="$major_minor" '$1 == id { print $2 }'
+}
+
+assert_identity() {
+	local root_bytes
+	DISK=$(canonical_device "$DISK_LINK")
+	ROOT_DEVICE=$(canonical_device "$ROOT_LINK")
+	ESP_DEVICE=$(canonical_device "$ESP_LINK")
+	ARCHIVE_DEVICE=$(canonical_device "$ARCHIVE_LINK")
+	export DISK ROOT_DEVICE ESP_DEVICE ARCHIVE_DEVICE
+
+	test "$(blockdev --getsize64 "$DISK")" = "$DISK_BYTES" ||
+		die "system disk size changed"
+	test "$(blkid -p -s UUID -o value "$ROOT_DEVICE")" = "$ROOT_UUID" ||
+		die "root UUID changed"
+	test "$(lsblk -dnro PARTUUID "$ROOT_DEVICE")" = "$ROOT_PARTUUID" ||
+		die "root PARTUUID changed"
+	test "$(blkid -p -s TYPE -o value "$ROOT_DEVICE")" = btrfs ||
+		die "root is not Btrfs"
+	root_bytes=$(blockdev --getsize64 "$ROOT_DEVICE")
+	if test "$root_bytes" = "$OLD_ROOT_BYTES" && test -b "$OLD_HOME_LINK"; then
+		LAYOUT="split"
+	elif test "$root_bytes" = "$ROOT_BYTES" && ! test -b "$OLD_HOME_LINK"; then
+		LAYOUT="consolidated"
+	else
+		die "partition layout is neither the reviewed split nor consolidated state"
+	fi
+	export LAYOUT
+	test "$(blkid -p -s UUID -o value "$ESP_DEVICE")" = "$ESP_UUID" ||
+		die "ESP identity changed"
+	test "$(blkid -p -s UUID -o value "$ARCHIVE_DEVICE")" = "${ARCHIVE_LINK##*/}" ||
+		die "archive identity changed"
+}
+
+mount_archive() {
+	local mounted
+	mounted=$(findmnt -rn -S "$ARCHIVE_DEVICE" -o TARGET |
+		awk 'NR == 1 { print; exit }' || true)
+	if test -n "$mounted"; then
+		ARCHIVE_MOUNT=$mounted
+	else
+		mkdir -p "$ARCHIVE_MOUNT"
+		mount "$ARCHIVE_DEVICE" "$ARCHIVE_MOUNT"
+	fi
+	BACKUP_DIRECTORY=$ARCHIVE_MOUNT/home-consolidation-20260812
+	BACKUP=$BACKUP_DIRECTORY/hypr.tar
+	PARTITION_BACKUP=$BACKUP_DIRECTORY/partition-table-before-consolidation.sfdisk
+	COMPLETE_MARKER=$BACKUP_DIRECTORY/consolidation-complete
+}
+
+verify_backup() {
+	test -f "$BACKUP" || die "HOME archive is absent: $BACKUP"
+	printf '%s  %s\n' "$BACKUP_SHA256" "$BACKUP" | sha256sum --check --strict
+	tar -tf "$BACKUP" >/dev/null
+}
+
+cleanup() {
+	set +e
+	if mountpoint -q "$ROOT_MOUNT"; then
+		umount --recursive "$ROOT_MOUNT"
+	fi
+	if mountpoint -q "$HOME_SOURCE"; then
+		umount "$HOME_SOURCE"
+	fi
+}
+
+assert_offline() {
+	test -z "$(device_mounts "$ROOT_DEVICE")" || die "root is mounted"
+	test -z "$(device_mounts "$ESP_DEVICE")" || die "ESP is mounted"
+	if test "$LAYOUT" = split; then
+		OLD_HOME_DEVICE=$(canonical_device "$OLD_HOME_LINK")
+		test -z "$(device_mounts "$OLD_HOME_DEVICE")" || die "old HOME is mounted"
+		test "$(blkid -p -s UUID -o value "$OLD_HOME_DEVICE")" = "$OLD_HOME_UUID" ||
+			die "old HOME UUID changed"
+		test "$(lsblk -dnro PARTUUID "$OLD_HOME_DEVICE")" = "$OLD_HOME_PARTUUID" ||
+			die "old HOME PARTUUID changed"
+		test "$(blockdev --getsize64 "$OLD_HOME_DEVICE")" = "$OLD_HOME_BYTES" ||
+			die "old HOME partition no longer has the reviewed size"
+		export OLD_HOME_DEVICE
+	fi
+}
+
+restore_backup() {
+	local total
+	total=$(tar --quoting-style=escape -tf "$BACKUP" | awk 'END { print NR }')
+	tar --acls --xattrs --xattrs-include='*' --numeric-owner --same-owner \
+		--sparse --quoting-style=escape -xvpf "$BACKUP" \
+		-C "$ROOT_MOUNT/home/hypr" |
+		awk -v total="$total" '
+			{
+				done++
+				if (done == 1 || done == total || done % 1000 == 0) {
+					width = 40
+					filled = int(done * width / total)
+					printf "\rHOME restore ["
+					for (i = 1; i <= width; i++)
+						printf i <= filled ? "#" : "-"
+					printf "] %d/%d files (%d%%)", done, total, int(done * 100 / total)
+					fflush()
+				}
+			}
+			END { print "" }
+		'
+}
+
+verify_source_generation() {
+	local generation
+	mkdir -p "$HOME_SOURCE"
+	mount -o ro,subvol=hypr "$OLD_HOME_DEVICE" "$HOME_SOURCE"
+	generation=$(btrfs subvolume show "$HOME_SOURCE" |
+		awk -F: '$1 ~ /Generation/ { gsub(/ /, "", $2); print $2 }')
+	test "$generation" = "$HOME_SOURCE_GENERATION" ||
+		die "HOME changed after its verified archive was created"
+	umount "$HOME_SOURCE"
+}
+
+write_partition_table() {
+	local table
+	table=$(mktemp /run/consolidated-partitions.XXXXXX)
+	awk -v disk="$DISK" -v root_sectors="$ROOT_SECTORS" '
+		BEGIN {
+			print "label: gpt"
+			print "label-id: " ENVIRON["DISK_GUID"]
+			print "device: " disk
+			print "unit: sectors"
+			print "first-lba: 34"
+			print "last-lba: 488397134"
+			print "sector-size: 512"
+			print ""
+			print disk "1 : start=2048, size=1998848, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, uuid=" ENVIRON["ESP_PARTUUID"] ", name=\"boot\""
+			print disk "2 : start=" ENVIRON["ROOT_START"] ", size=" root_sectors ", type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=" ENVIRON["ROOT_PARTUUID"] ", name=\"debian\""
+		}
+	' /dev/null >"$table"
+	sfdisk "$DISK" <"$table"
+	rm -f "$table"
+	partprobe "$DISK"
+	udevadm settle
+
+	test ! -b "$OLD_HOME_LINK" || die "old HOME partition still exists"
+	ROOT_DEVICE=$(canonical_device "$ROOT_LINK")
+	export ROOT_DEVICE
+	test "$(blockdev --getsize64 "$ROOT_DEVICE")" = "$ROOT_BYTES" ||
+		die "expanded root partition has the wrong size"
+	test "$(blkid -p -s UUID -o value "$ROOT_DEVICE")" = "$ROOT_UUID" ||
+		die "expanded root lost its filesystem identity"
+}
+
+configure_pool() {
+	local directory
+	mkdir -p "$ROOT_MOUNT"
+	mount -o noatime "$ROOT_DEVICE" "$ROOT_MOUNT"
+	btrfs filesystem resize max "$ROOT_MOUNT"
+	if test "$LAYOUT" = consolidated; then
+		for directory in home swap; do
+			if btrfs subvolume show "$ROOT_MOUNT/$directory" >/dev/null 2>&1; then
+				log "Removing incomplete derived /$directory subvolume"
+				btrfs subvolume delete --recursive --commit-after \
+					"$ROOT_MOUNT/$directory"
+			fi
+		done
+	fi
+
+	log "Applying inherited NOCOW policy to root directories"
+	find "$ROOT_MOUNT" -xdev -type d -exec chattr +C {} +
+
+	for directory in home swap; do
+		test -z "$(find "$ROOT_MOUNT/$directory" -mindepth 1 -print -quit 2>/dev/null)" ||
+			die "/$directory is unexpectedly nonempty in the offline root"
+		rmdir "$ROOT_MOUNT/$directory" 2>/dev/null || true
+	done
+
+	btrfs subvolume create "$ROOT_MOUNT/home"
+	chattr -C "$ROOT_MOUNT/home"
+	btrfs property set -t inode "$ROOT_MOUNT/home" compression zstd
+	mkdir -p "$ROOT_MOUNT/home/hypr"
+	restore_backup
+	btrfs subvolume create "$ROOT_MOUNT/home/.snapshots"
+	chown root:root "$ROOT_MOUNT/home/.snapshots"
+	chmod 0750 "$ROOT_MOUNT/home/.snapshots"
+
+	btrfs subvolume create "$ROOT_MOUNT/swap"
+	chattr +C "$ROOT_MOUNT/swap"
+	btrfs filesystem mkswapfile --size "$SWAP_SIZE" \
+		"$ROOT_MOUNT/swap/swapfile"
+
+	install -m 0644 "$ROOT_MOUNT/usr/local/src/desktop/etc/fstab" \
+		"$ROOT_MOUNT/etc/fstab"
+	install -m 0644 "$ROOT_MOUNT/usr/local/src/desktop/etc/snapper/configs/home" \
+		"$ROOT_MOUNT/etc/snapper/configs/home"
+
+	log "Comparing restored HOME with the verified archive"
+	tar --acls --xattrs --xattrs-include='*' --numeric-owner --sparse \
+		--compare -f "$BACKUP" -C "$ROOT_MOUNT/home/hypr"
+}
+
+rebuild_boot() {
+	local initial_snapshot
+	mkdir -p "$EFI_MOUNT" "$ROOT_MOUNT"/{dev,proc,sys,run}
+	mount "$ESP_DEVICE" "$EFI_MOUNT"
+	for directory in dev proc sys run; do
+		mount --rbind "/$directory" "$ROOT_MOUNT/$directory"
+		mount --make-rslave "$ROOT_MOUNT/$directory"
+	done
+	chroot "$ROOT_MOUNT" update-initramfs -u -k all
+	chroot "$ROOT_MOUNT" update-grub
+	initial_snapshot=$(chroot "$ROOT_MOUNT" snapper --no-dbus --config home create \
+		--type single --cleanup-algorithm timeline \
+		--description "initial consolidated HOME" --print-number)
+	[[ $initial_snapshot =~ ^[0-9]+$ ]] ||
+		die "Snapper returned an invalid initial snapshot number"
+	chroot "$ROOT_MOUNT" systemctl enable snapper-timeline.timer snapper-cleanup.timer
+
+	btrfs subvolume show \
+		"$ROOT_MOUNT/home/.snapshots/$initial_snapshot/snapshot" >/dev/null ||
+		die "initial HOME snapshot was not created"
+	test "$(chroot "$ROOT_MOUNT" grub-probe -t fs /)" = btrfs ||
+		die "GRUB no longer detects the root filesystem"
+	grep -Eq '^[^#]+[[:space:]]+/home[[:space:]]+btrfs.*subvol=home' \
+		"$ROOT_MOUNT/etc/fstab" || die "HOME fstab entry is wrong"
+	grep -Eq '^/swap/swapfile[[:space:]]+none[[:space:]]+swap' \
+		"$ROOT_MOUNT/etc/fstab" || die "swap fstab entry is wrong"
+}
+
+check_online() {
+	assert_identity
+	mount_archive
+	verify_backup
+	test "$(findmnt -n -o FSTYPE /)" = btrfs || die "running root is not Btrfs"
+	test "$(findmnt -n -o UUID /)" = "$ROOT_UUID" || die "running root UUID changed"
+	test "$(findmnt -n -o UUID /home)" = "$OLD_HOME_UUID" ||
+		die "current HOME is not the reviewed source"
+	test ! -e /ext2_saved || die "ext2_saved still exists"
+	log "Online preparation check passed"
+	printf 'HOME archive: %s\n' "$BACKUP"
+	printf 'Reboot the prepared Debian Live USB to consolidate the partitions.\n'
+}
+
+consolidate() {
+	require_commands awk blkid blockdev btrfs chattr chroot find findmnt grep \
+		install lsblk mktemp mount mountpoint partprobe readlink reboot rm \
+		sfdisk sha256sum sync tar udevadm umount
+	assert_identity
+	mount_archive
+	verify_backup
+	test ! -e "$COMPLETE_MARKER" || die "consolidation is already complete"
+	assert_offline
+	trap cleanup EXIT
+
+	if test "$LAYOUT" = split; then
+		verify_source_generation
+		log "Checking both source filesystems"
+		btrfs check --readonly "$ROOT_DEVICE"
+		btrfs check --readonly "$OLD_HOME_DEVICE"
+
+		log "Saving the original partition table"
+		sfdisk --dump "$DISK" >"$PARTITION_BACKUP"
+		sync -f "$PARTITION_BACKUP"
+		log "Replacing root and HOME partitions with one expanded root partition"
+		export DISK_GUID ESP_PARTUUID ROOT_START ROOT_PARTUUID
+		write_partition_table
+		LAYOUT="consolidated"
+	else
+		log "Resuming from the already-expanded partition layout"
+		btrfs check --readonly "$ROOT_DEVICE"
+	fi
+
+	log "Growing Btrfs and creating HOME and swap subvolumes"
+	configure_pool
+	log "Rebuilding and verifying the boot path"
+	rebuild_boot
+
+	btrfs filesystem sync "$ROOT_MOUNT"
+	umount --recursive "$ROOT_MOUNT"
+	btrfs check --readonly "$ROOT_DEVICE"
+	printf 'completed %(%FT%T%z)T\n' -1 >"$COMPLETE_MARKER"
+	sync -f "$COMPLETE_MARKER"
+	trap - EXIT
+
+	log "Consolidation verified; rebooting"
+	reboot
+}
+
+(( EUID == 0 )) || die "must run as root"
+case "${1:-}" in
+--check)
+	require_commands blkid blockdev btrfs findmnt lsblk readlink sha256sum tar
+	check_online
+	;;
+--consolidate)
+	consolidate
+	;;
+*)
+	printf 'Usage: %s --check | --consolidate\n' "$0" >&2
+	exit 2
+	;;
+esac

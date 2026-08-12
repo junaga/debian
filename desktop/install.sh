@@ -1,7 +1,9 @@
+#!/bin/bash
 set -e
 
-SWAP="12G"
+SWAP_SIZE="12G"
 DIR="$(dirname "$0")"
+KERNEL_HEADERS="linux-headers-$(uname -r)"
 USER_NAME=hypr
 USER_HOME=/home/hypr
 
@@ -18,32 +20,47 @@ function unsudo {
 # SYSTEM
 # ==============================================================================
 
-# Configuration files.
-cp -ar "$DIR/etc/." /etc/.
-
-# Filesystem-native recovery for user data.
+# One Btrfs pool: NOCOW root, compressed HOME history, and NOCOW swap.
+test "$(findmnt -n -T / -o FSTYPE)" = btrfs
+test "$(findmnt -n -T /home -o UUID)" = "$(findmnt -n -T / -o UUID)"
 apt install --yes btrfs-progs snapper
-if ! btrfs subvolume show "$USER_HOME" >/dev/null 2>&1; then
-	test -z "$(find "$USER_HOME" -mindepth 1 -print -quit 2>/dev/null)"
-	rmdir "$USER_HOME" 2>/dev/null || true
-	btrfs subvolume create "$USER_HOME"
+find / -xdev \( -path /home -o -path /swap \) -prune -o \
+	-type d -exec chattr +C {} +
+
+if ! btrfs subvolume show /home >/dev/null 2>&1; then
+	test -z "$(find /home -mindepth 1 -print -quit 2>/dev/null)"
+	rmdir /home 2>/dev/null || true
+	btrfs subvolume create /home
 fi
+chattr -C /home
+btrfs property set -t inode /home compression zstd
+
+if ! btrfs subvolume show /swap >/dev/null 2>&1; then
+	test -z "$(find /swap -mindepth 1 -print -quit 2>/dev/null)"
+	rmdir /swap 2>/dev/null || true
+	btrfs subvolume create /swap
+fi
+chattr +C /swap
+if [ ! -e /swap/swapfile ]; then
+	btrfs filesystem mkswapfile --size "$SWAP_SIZE" /swap/swapfile
+fi
+swapon --show=NAME --noheadings | grep -Fx /swap/swapfile >/dev/null ||
+	swapon /swap/swapfile
+
+mkdir -p "$USER_HOME"
 chown "$USER_NAME:$USER_NAME" "$USER_HOME"
 for skeleton in /etc/skel/.[!.]*; do
 	test -e "$USER_HOME/${skeleton##*/}" || cp -a "$skeleton" "$USER_HOME/"
 done
 chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
-if ! btrfs subvolume show "$USER_HOME/.snapshots" >/dev/null 2>&1; then
-	btrfs subvolume create "$USER_HOME/.snapshots"
+if ! btrfs subvolume show /home/.snapshots >/dev/null 2>&1; then
+	btrfs subvolume create /home/.snapshots
 fi
-chown root:root "$USER_HOME/.snapshots"
-chmod 0750 "$USER_HOME/.snapshots"
-if btrfs qgroup show "$USER_HOME" 2>/dev/null |
-	awk '$1 == "1/0" { found = 1 } END { exit !found }'; then
-	snapper --config home set-config QGROUP=1/0
-else
-	snapper --config home setup-quota
-fi
+chown root:root /home/.snapshots
+chmod 0750 /home/.snapshots
+
+# Configuration files.
+cp -ar "$DIR/etc/." /etc/.
 systemctl enable --now snapper-timeline.timer snapper-cleanup.timer
 
 # Root launches the graphical session; graphical terminals cross only this
@@ -60,13 +77,6 @@ done
 update-grub
 efibootmgr --timeout 0
 
-# Reserve swap space for memory pressure.
-if [ ! -e /var/swap ]; then
-	fallocate -l $SWAP /var/swap
-	chmod 600 /var/swap
-	mkswap /var/swap
-fi
-
 # ==============================================================================
 # HARDWARE
 # ==============================================================================
@@ -77,7 +87,7 @@ apt install --yes\
   nvidia-driver\
   dkms\
   build-essential\
-  linux-headers-$(uname -r);
+  "$KERNEL_HEADERS";
 
 # Rebuild the initramfs for the installed NVIDIA DKMS modules.
 update-initramfs -u

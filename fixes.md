@@ -41,10 +41,10 @@ to `/`. The complete chain was observed on this installation and recorded in
 [`desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf`](./desktop/etc/systemd/system/snapper-timeline.timer.d/daily.conf)
 
 Debian does not require a separate filesystem for `/home`. This workstation
-deliberately places the complete `/home` hierarchy on its own Btrfs filesystem.
-The only live user-data subvolume is `/home/hypr`, and Snapper snapshots that
-subvolume every day. The ext4 root filesystem, including `/root` and
-`/usr/local`, is intentionally not snapshotted.
+uses one Btrfs filesystem after the ESP so root, HOME, and swap share the SSD's
+free capacity. Root is the filesystem's top-level subvolume; `/home` and
+`/swap` are child subvolumes. Snapper snapshots `/home` every day. `/root` and
+`/usr/local` remain outside that snapshot boundary.
 
 The boundary follows ownership of the data rather than the directory tree:
 
@@ -59,8 +59,19 @@ Operating-system and application files can be reinstalled from Debian, source
 repositories, and other upstream publishers. The desktop HOME contains the
 work whose interactive history matters: documents, saves, browser profiles,
 messages, editor state, application databases, dotfiles, and caches.
-Snapshotting only `/home/hypr` spends copy-on-write metadata and retained blocks
+Snapshotting only `/home` spends copy-on-write metadata and retained blocks
 on bootable desktop history rather than on system software.
+
+Root deliberately inherits the NOCOW inode flag and has no compression
+property. HOME deliberately retains copy-on-write checksums and inherits Zstd
+compression. Swap uses `btrfs filesystem mkswapfile` inside its own NOCOW
+subvolume. These are per-tree inode policies: Btrfs compression and `nodatacow`
+mount options are filesystem-wide and cannot express different policies for
+root and HOME inside one pool. Existing root extents created before the NOCOW
+policy remain compressed or copy-on-write. Existing nonempty files cannot be
+converted merely by setting the flag; they must be recreated under a NOCOW
+directory. The installed policy therefore governs newly created root files,
+while a full rewrite of existing system files is intentionally deferred.
 
 Terminal administration is deliberately a separate risk domain. Root owns
 shell history, SSH and Git identities, Codex conversations, CLI credentials,
@@ -134,20 +145,20 @@ Snapper serves fast local undo and version recovery.
 
 ### Bootable past desktops
 
-A `/home/hypr` snapshot captures the persistent desktop rather than the installed
+A `/home` snapshot captures the persistent desktop rather than the installed
 system: dotfiles, documents, credentials, browser profiles, application
 databases, game saves, editor state, and other user data. It intentionally does
 not capture the kernel, Debian packages, application binaries under `/usr`, or
 system state under `/var`.
 
 An old read-only snapshot can be cloned into a new writable Btrfs subvolume and
-used as `/home/hypr` for a controlled desktop launch. The current Debian
+used as `/home` for a controlled desktop launch. The current Debian
 installation and current programs then open a historical desktop state:
 
 ```text
 read-only desktop snapshot
           |
-          +-> writable historical branch -> /home/hypr -> launch desktop
+          +-> writable historical branch -> /home -> launch desktop
 
 current HOME branch remains preserved and can be selected again
 ```
@@ -164,7 +175,7 @@ snapshot and the current HOME branch.
 For a smaller rewind, close the application and its background processes,
 create a safety snapshot of the present, and restore the complete logical
 application state from the chosen checkpoint. A machine reboot is unnecessary
-for an isolated application restore; replacing all of `/home/hypr` requires
+for an isolated application restore; replacing all of `/home` requires
 the graphical session to be stopped and should be performed from a root VT or
 rescue environment.
 
@@ -202,26 +213,27 @@ Timeline cleanup keeps 31 daily and 12 monthly recovery points. Hourly and
 weekly tiers are disabled. The yearly limit is set to the largest `size_t`
 accepted by Snapper on this 64-bit system (`18446744073709551615`), making
 yearly retention practically unlimited without another timer or cleanup path.
-Snapper's Btrfs quota integration limits snapshots to half of the HOME
-filesystem and asks cleanup to preserve 20 percent free space. These are policy
-limits rather than reserved allocations: unchanged snapshots are cheap, while
-frequently rewritten files retain more old extents. Unlimited yearly retention
-still requires capacity monitoring because a sufficiently long or high-churn
-history can eventually exhaust the filesystem.
+Quotas and Snapper's space-aware cleanup are deliberately disabled. Qgroup
+rescans made ordinary listing and cleanup expensive on this HOME, and a space
+limit would conflict with the explicit policy of never expiring yearly points.
+Unchanged snapshots are cheap, while frequently rewritten files retain more
+old extents. Unlimited yearly retention therefore requires ordinary capacity
+monitoring because a sufficiently long or high-churn history can eventually
+exhaust the shared filesystem.
 
-### Completed migration and recovery boundary
+### Consolidation and recovery boundary
 
-The one-shot migration is complete and its boot service and migration program
-have been removed. `/mnt/archive/home-restore-backup-20260811` remains the
-independent pre-migration recovery copy.
+The offline consolidation removes the old HOME partition, extends the existing
+root Btrfs partition to the end of the SSD, grows that filesystem, and restores
+HOME as its `home` child subvolume. The independently hashed source archive is
+`/mnt/archive/home-consolidation-20260812/hypr.tar`; retain it until the new
+layout, desktop, and first fresh snapshot have been verified after reboot.
 
 Terminal state is copied to `/root`; programs and administrator trees live in
 root-owned `/usr/local`; Steam and all graphical application state remain in
-`/home/hypr`. Reinstallable npm, Gradle, Cargo-registry, and rootless-container
-caches are retained in the archive rather than filling the small ext4 root.
-The old Snapper tree is renamed `/home/.legacy-snapshots`, so pre-migration
-history remains available but is outside the new policy. A fresh nested
-`/home/hypr/.snapshots` starts the daily desktop history.
+`/home/hypr`. All previous HOME snapshots were intentionally deleted before
+the archive was made. The new `/home/.snapshots` therefore begins a clean
+daily, monthly, and yearly history with no hidden legacy tree.
 
 Inspect and recover data with:
 
@@ -232,18 +244,13 @@ snapper --config home status 0..NUMBER
 snapper --config home diff 0..NUMBER -- path/to/file
 
 # Copy one file out without modifying the snapshot.
-cp -a /home/hypr/.snapshots/NUMBER/snapshot/path/to/file /home/hypr/path/to/file
+cp -a /home/.snapshots/NUMBER/snapshot/hypr/path/to/file /home/hypr/path/to/file
 
 # Or ask Snapper to reverse selected changes between two trees.
 snapper --config home undochange NUMBER..0 path/to/file
 ```
 
-Plain `snapper --config home list` also calculates the exclusive space retained
-by each snapshot. With Btrfs quota support, Snapper performs and waits for a
-full quota rescan to populate that column, so it can take minutes on this HOME.
-Use the plain form only for capacity analysis; it is not a better health check.
-
-Snapshot `0` is the current `/home/hypr` tree. Direct copying is preferred for a small,
+Snapshot `0` is the current `/home` tree. Direct copying is preferred for a small,
 auditable restore; `undochange` is useful for a reviewed set of paths. Whole
 desktop rollback is intentionally not coupled to boot because user-data recovery
 should not replace the operating-system root.
