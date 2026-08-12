@@ -22,9 +22,8 @@ cat /sys/module/nvidia_drm/parameters/modeset # Y
 exec desktop
 ```
 
-The NVIDIA DRM option must be applied on the module's first load; the current
-driver cannot be safely hot-reloaded on this machine. The loading chain and
-failure evidence are documented in
-[`fixes.md`](../fixes.md#load-nvidia-drm-modesetting-once-at-boot).
+[NVIDIA 550.163.01 cannot safely reload `nvidia-drm`](https://bugs.debian.org/1128843).
+Systemd loads it at boot, so [`nvidia-kms.conf`](./etc/modprobe.d/nvidia-kms.conf)
+makes modprobe apply `modeset=1` on its first load.
 
 ![Hyprland Desktop Screenshot](./hypr.webp)
