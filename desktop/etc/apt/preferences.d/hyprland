@@ -1,0 +1,16 @@
+# Keep the known-good compositor stack until its regression is resolved.
+Package: hyprland hyprland-dev hyprland-backgrounds
+Pin: version 0.55.4+ds-2*
+Pin-Priority: 1001
+
+Package: libaquamarine11 libaquamarine-dev
+Pin: version 0.12.1-1
+Pin-Priority: 1001
+
+Package: xdg-desktop-portal-hyprland
+Pin: version 1.4.0-1
+Pin-Priority: 1001
+
+Package: xwayland
+Pin: version 2:24.1.12-1
+Pin-Priority: 1001

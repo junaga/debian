@@ -92,12 +92,17 @@ apt install --yes cups;
 # ==============================================================================
 
 # Hyprland desktop
-apt install --yes\
+apt install --yes --allow-downgrades\
   adwaita-icon-theme\
   hyprland\
+  hyprland-backgrounds\
+  hyprland-dev\
+  libaquamarine-dev\
   nwg-look\
   hyprshutdown\
-  systemd-timesyncd;
+  systemd-timesyncd\
+  xdg-desktop-portal-hyprland\
+  xwayland;
 
 # Replace text-selection cursors with the default pointer.
 function installCursorTheme {
