@@ -60,9 +60,9 @@ helpers run as the normal user and use `$HOME` directly.
 [`desktop/etc/btrbk/btrbk.conf`](./desktop/etc/btrbk/btrbk.conf)
 
 Debian does not require a separate filesystem for `/home`. This workstation
-uses one Btrfs filesystem after the ESP so root, HOME, and the swapfile share
-the SSD's free capacity. Root is the filesystem's top level and `/home` is its
-compressed child subvolume. Btrbk snapshots `/home` every day. `/root` and
+uses one Btrfs filesystem after the ESP so root and HOME share the SSD's free
+capacity. Root is the filesystem's top level and `/home` is its compressed
+child subvolume. Btrbk snapshots `/home` every day. `/root` and
 `/usr/local` remain outside that snapshot boundary.
 
 The boundary follows ownership of the data rather than the directory tree:
@@ -82,12 +82,8 @@ Snapshotting only `/home` spends copy-on-write metadata and retained blocks
 on bootable desktop history rather than on system software.
 
 `format.sh` creates the HOME subvolume and assigns its Zstd compression
-property. It also creates `/swapfile` with `btrfs filesystem mkswapfile`, which
-produces the preallocated NOCOW file required by Btrfs. Swap is not a partition
-or a subvolume. A separate swap subvolume would only be needed to exclude swap
-from snapshots of its parent; this system snapshots `/home`, not the root top
-level that contains `/swapfile`. Creation belongs in `format.sh`; `fstab` only
-declares that the already-created file is activated as swap at boot.
+property. Swap is intentionally left unconfigured until its policy is chosen;
+it does not require either a partition or a subvolume.
 
 Terminal administration is deliberately a separate risk domain. Root owns
 shell history, SSH and Git identities, Codex conversations, CLI credentials,

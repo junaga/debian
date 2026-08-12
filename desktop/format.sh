@@ -8,5 +8,3 @@ btrfs subvolume show /home >/dev/null 2>&1 || {
 	btrfs subvolume create /home
 }
 btrfs property set /home compression zstd
-mkdir -p /snapshots
-test -e /swapfile || btrfs filesystem mkswapfile --size 12G /swapfile

@@ -3,11 +3,7 @@
 # <file system>                                                             <mount>         <type>  <options>                    <dump>  <pass>
 
 # One Btrfs pool; root is the top level and HOME is its child subvolume.
-/dev/disk/by-id/ata-Samsung_SSD_850_EVO_mSATA_250GB_S33GNX0J713319N-part2  /               btrfs  defaults,noatime               0       0
+/dev/disk/by-uuid/66342810-348d-4508-a1c8-2552b6db1339                     /               btrfs  defaults,noatime               0       0
 
-# Archive
-/dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381                     /mnt/archive    ext4   noatime,nodev,nosuid,noexec  0       2
-
-# Boot and swap file.
+# Boot
 /dev/disk/by-designator/esp                                                /boot/efi       vfat   umask=0077                   0       1
-/swapfile                                                                  none            swap   defaults                     0       0
