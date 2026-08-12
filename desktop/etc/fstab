@@ -11,6 +11,6 @@
 # Archive
 /dev/disk/by-uuid/44db4ead-1413-4041-b963-33e5c634c381                     /mnt/archive    ext4   noatime,nodev,nosuid,noexec  0       2
 
-# boot and swap
+# boot; swap is intentionally disabled during root conversion
 /dev/disk/by-designator/esp                                                /boot/efi       vfat   umask=0077                   0       1
-/var/swap                                                                  none            swap   defaults                     0       0
+# /var/swap                                                                none            swap   defaults                     0       0

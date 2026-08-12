@@ -21,7 +21,11 @@ The runner performs the complete read-only offline preflight first. It asks for
 the exact word `CONVERT` only after that preflight passes. The converter then
 shows an eight-phase bar, streams the native `e2fsck` and `btrfs-convert`
 progress, saves a timestamped log on `BTRFS-CONVERT`, verifies the converted
-filesystem and boot artifacts, and reboots into the installed system.
+filesystem and boot artifacts, and reboots into the installed system. Quiet
+filesystem commits print an elapsed-time heartbeat; do not interrupt them.
+The conversion is restartable at its phase boundaries. If an earlier attempt
+removed `/var/swap` and stopped before conversion, rerun the same command; it
+detects the missing disposable swap file and resumes safely.
 
 Do not select an installer option, mount the Samsung root partition manually,
 run a balance, or delete `ext2_saved`. If any check fails, leave the machine in
