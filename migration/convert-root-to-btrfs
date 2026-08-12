@@ -34,6 +34,28 @@ phase() {
 	printf '] %d/%d  %s\n' "$current" "$PHASE_TOTAL" "$description"
 }
 
+run_with_heartbeat() {
+	local description=$1 pid status elapsed=0
+	shift
+	"$@" &
+	pid=$!
+	while kill -0 "$pid" 2>/dev/null; do
+		sleep 2
+		if kill -0 "$pid" 2>/dev/null; then
+			elapsed=$((elapsed + 2))
+			printf '\r    %s: %d seconds elapsed; do not interrupt' \
+				"$description" "$elapsed"
+		fi
+	done
+	set +e
+	wait "$pid"
+	status=$?
+	set -e
+	printf '\r%*s\r' 78 ''
+	(( status == 0 )) || die "$description failed with status $status"
+	printf '    %s: complete\n' "$description"
+}
+
 die() {
 	printf 'convert-root-to-btrfs: %s\n' "$*" >&2
 	exit 1
@@ -172,8 +194,8 @@ assert_target_boot_readiness() {
 require_offline_commands() {
 	require_commands awk blkid blockdev btrfs btrfs-convert chmod chown chroot \
 		cp date e2fsck find findmnt flock grep head install lsblk mkdir mktemp \
-		modprobe mount mountpoint mv readlink reboot rm smartctl strings sync \
-		tee tr tune2fs udevadm umount uname
+		modprobe mount mountpoint mv readlink reboot rm smartctl strings \
+		sleep tee tr tune2fs udevadm umount uname
 }
 
 assert_disk_health() {
@@ -202,7 +224,8 @@ start_persistent_log() {
 		return
 	fi
 	log_device=$(readlink -f "$LOG_MEDIA_LINK")
-	log_directory=$(findmnt -rn -S "$log_device" -o TARGET | awk 'NR == 1 { print; exit }')
+	log_directory=$(findmnt -rn -S "$log_device" -o TARGET |
+		awk 'NR == 1 { print; exit }' || true)
 	if test -z "$log_directory"; then
 		mkdir -p "$LOG_MEDIA_MOUNT"
 		mount "$log_device" "$LOG_MEDIA_MOUNT"
@@ -227,15 +250,19 @@ check_rescue_environment() {
 	start_persistent_log
 	assert_offline_and_unmounted
 	trap cleanup_mounts EXIT
+	log "Offline preflight: checking system SSD health"
 	assert_disk_health
 	assert_live_btrfs_support
+	log "Offline preflight: checking EFI boot support"
 	verify_existing_efi_support
 
+	log "Offline preflight: checking the installed boot path"
 	mkdir -p "$TARGET"
 	mount -o ro "$ROOT_DEVICE" "$TARGET"
 	assert_target_boot_readiness
 	unmount_conversion_tree
 
+	log "Offline preflight: running read-only ext4 check"
 	set +e
 	e2fsck -C 0 -f -n "$ROOT_DEVICE"
 	fsck_status=$?
@@ -329,16 +356,20 @@ convert_root() {
 	filesystem_type=$(blkid -p -s TYPE -o value "$ROOT_DEVICE")
 	case "$filesystem_type" in
 	ext4)
-		log "Removing the unused ext4 swap file to create conversion workspace"
+		log "Preparing ext4 conversion workspace"
 		mkdir -p "$TARGET"
 		mount "$ROOT_DEVICE" "$TARGET"
 		assert_target_boot_readiness
 		if test -e "$TARGET/var/swap"; then
 			test -f "$TARGET/var/swap" || die "/var/swap is not a regular file"
+			printf 'Removing the unused swap file...\n'
 			rm -f "$TARGET/var/swap"
+			printf 'Swap file removed.\n'
+		else
+			printf 'Swap file is already absent; resuming safely.\n'
 		fi
-		sync
-		unmount_conversion_tree
+		run_with_heartbeat "Committing ext4 workspace and unmounting root" \
+			unmount_conversion_tree
 
 		phase 3 "Check and safely repair ext4"
 		set +e
@@ -392,17 +423,16 @@ convert_root() {
 	verify_boot_artifacts
 
 	phase 8 "Final filesystem and boot verification"
-	sync
 	btrfs filesystem usage "$TARGET"
 	printf '\nConversion verified. ext2_saved is intact; do not balance or delete it.\n'
 	printf 'Swap is disabled for the first Btrfs boot. HOME and the archive were untouched.\n'
 	printf 'The next boot should return to the root VT, where plain codex resumes the session.\n'
 
-	unmount_conversion_tree
+	run_with_heartbeat "Committing Btrfs changes and unmounting root" \
+		unmount_conversion_tree
 	trap - EXIT
 	if [[ ${3:-} == --reboot ]]; then
 		log "Rebooting into the converted root"
-		sync
 		reboot
 	else
 		printf '\nRun reboot when ready.\n'
