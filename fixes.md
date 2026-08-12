@@ -239,14 +239,12 @@ exhaust the shared filesystem.
 
 ## Autologin Linux virtual terminals
 
-[`base/setup.sh`](./base/setup.sh)
+[`base/etc/systemd/system/getty@.service.d/override.conf`](./base/etc/systemd/system/getty@.service.d/override.conf)
 
-```sh
-systemctl edit getty@.service --stdin <<-EOF
-	[Service]
-	ExecStart=
-	ExecStart=-login -f root
-EOF
+```systemd
+[Service]
+ExecStart=
+ExecStart=-login -f root
 ```
 
 Authority is kept on the web, not in a password stored on every machine. A
@@ -326,20 +324,18 @@ This interaction was introduced in `0965401`.
 
 ## Set the release policy to Debian Testing
 
+[`base/etc/apt/sources.list.d/debian.sources`](./base/etc/apt/sources.list.d/debian.sources),
 [`base/upgrade.sh`](./base/upgrade.sh)
 
+```deb822
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: testing
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+```
+
 ```sh
-DEBIAN="testing"
-
-test -f /etc/apt/sources.list && mv /etc/apt/{sources.list,sources.list.disabled}
-cat > /etc/apt/sources.list.d/debian.sources <<-EOF
-	Types: deb
-	URIs: http://deb.debian.org/debian
-	Suites: $DEBIAN
-	Components: main contrib non-free non-free-firmware
-	Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-EOF
-
 apt update --allow-releaseinfo-change
 apt full-upgrade --yes
 ```
@@ -368,7 +364,7 @@ resolves its dependency transitions. The source replacement dates to `28274ab`.
 
 ## Trust third-party APT sources through HTTPS
 
-[`desktop/etc/apt/sources.list.d/nvidia.sources`](./desktop/etc/apt/sources.list.d/nvidia.sources)
+[`base/etc/apt/sources.list.d/nvidia.sources`](./base/etc/apt/sources.list.d/nvidia.sources)
 
 ```deb822
 URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
