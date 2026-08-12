@@ -201,45 +201,14 @@ terminal-emulation daemon, and without weakening the machine's recovery path.
 
 ## 7. Consolidate root and HOME into one Btrfs pool
 
-The Samsung system SSD currently has a 976 MiB EFI System Partition, a roughly
-56 GiB ext4 root partition, and a roughly 176 GiB Btrfs HOME partition. Root has
-little free space while HOME has substantially more, but the partition boundary
-prevents either side from using the other's capacity.
+Root is now Btrfs, but its 56 GiB partition and the 176 GiB Btrfs HOME partition
+still divide the SSD's free capacity. The verified offline procedure in
+[`migration/btrfs-consolidation-runbook.md`](./migration/btrfs-consolidation-runbook.md)
+removes that last boundary: preserve the ESP, extend the existing root partition
+to the disk's end, restore HOME as a compressed child subvolume, create a native
+NOCOW swap subvolume, and start a new Snapper history for all of `/home`.
 
-The target layout keeps the EFI partition and replaces the two data partitions
-with one Btrfs partition spanning the rest of the SSD. Use separate subvolumes
-for the operating-system root and `/home/hypr`, so they share free capacity but
-retain distinct administrative and snapshot boundaries. Snapper must continue
-to snapshot only `/home/hypr`; converting root to Btrfs does not imply keeping
-system snapshots. Recreate swap using the Btrfs-supported no-copy-on-write
-layout.
-
-`btrfs-convert` is an optional interim experiment, not the consolidation plan.
-[`migration/convert-root-to-btrfs`](./migration/convert-root-to-btrfs) performs
-that exact-device offline conversion while preserving the filesystem UUID and
-the converter's `ext2_saved` rollback image. By explicit local policy it does
-not create another root backup. It removes the unused ext4 swap file to provide
-conversion workspace, disables swap for the first Btrfs boot, verifies the
-existing EFI GRUB image, and rebuilds the initramfs and GRUB configuration. Do
-not balance the result or delete `ext2_saved` until rollback is intentionally
-abandoned. The prepared live-media procedure and exact boot commands are in
-[`migration/root-btrfs-live-runbook.md`](./migration/root-btrfs-live-runbook.md).
-
-The conversion still leaves root inside the same 56 GiB partition and does not
-combine it with HOME, so it does not solve the capacity problem. HOME follows
-root physically on disk and cannot be grown backward over the old root
-partition with an ordinary filesystem resize.
-
-Perform this only as a planned offline storage rebuild. First create and verify
-a fresh recovery copy of both root and HOME on the archive disk. Boot independent
-live or rescue media, delete the old root and HOME partitions, create and format
-the combined Btrfs partition, create the subvolumes, and restore the existing
-system and user data. Then rebuild `fstab`, the initramfs and GRUB, recreate
-swap, and verify ownership, boot, Codex, Hyprland and Snapper before removing
-the fresh recovery copy. This need not reinstall Debian packages, but it has the
-same destructive storage boundary as an installation and is best implemented
-in the custom installation process when practical.
-
-Completion means root and `/home/hypr` share one Btrfs allocation pool, only
-desktop data is snapshotted, the external recovery archive has been verified,
-and the complete green health audit passes after a cold boot.
+Completion means the migration program has passed from the prepared Debian Live
+USB, the installed system has cold-booted, root and `/home` report the same
+Btrfs UUID, `/home` and `/swap` are the intended child subvolumes, Codex and the
+desktop launch, and the fresh initial HOME snapshot is readable.

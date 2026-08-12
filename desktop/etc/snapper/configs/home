@@ -1,9 +1,9 @@
-SUBVOLUME="/home/hypr"
+SUBVOLUME="/home"
 FSTYPE="btrfs"
 
 QGROUP=""
-SPACE_LIMIT="0.5"
-FREE_LIMIT="0.2"
+SPACE_LIMIT=""
+FREE_LIMIT=""
 
 ALLOW_USERS="hypr"
 ALLOW_GROUPS=""
