@@ -192,5 +192,6 @@ function installGitHubRelease {
 installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 installURL "https://discord.com/api/download?platform=linux&format=deb"
 installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
-installGitHubRelease "junaga/chatgpt" "chatgpt.deb"
+# The official package registers OpenAI's signed APT repository for updates.
+installURL "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb"
 installGitHubRelease "th-ch/youtube-music" "_amd64.deb"
