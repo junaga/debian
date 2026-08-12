@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if test "$(id -u)" -eq 0; then
 	exec openvt --force --switch --wait --console=2 -- \
@@ -6,13 +6,4 @@ if test "$(id -u)" -eq 0; then
 		login -f hypr --shell /usr/local/bin/desktop
 fi
 
-set -o pipefail
-
-logger --tag hyprland-session \
-	"started user=$(id -un) boot_id=$(cat /proc/sys/kernel/random/boot_id)"
-
-start-hyprland 2>&1 | systemd-cat --identifier=hyprland
-STATUS=${PIPESTATUS[0]}
-
-logger --tag hyprland-session "stopped status=$STATUS"
-exit "$STATUS"
+exec systemd-cat --identifier=hyprland start-hyprland
