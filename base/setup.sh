@@ -33,7 +33,7 @@ systemctl restart NetworkManager
 systemctl edit getty@.service --stdin <<-EOF
 	[Service]
 	ExecStart=
-	ExecStart=-/usr/sbin/agetty --autologin root --noreset --noclear - \${TERM}
+	ExecStart=-login -f root
 EOF
 
 # input $EMAIL
