@@ -44,9 +44,6 @@ ssh-keygen -q -N "" \
 	-f ~/.ssh/id_ed25519 \
 	-C "$EMAIL" || true
 
-# enable SSH forwarding
-systemctl --user enable --now ssh-agent.socket
-
 # set author for git commits
 git config --global user.name "$USER"
 git config --global user.email "$EMAIL"
