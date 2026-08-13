@@ -1,7 +1,6 @@
 # https://manpages.debian.org/bash.en
 
 test "$PS1" || return
-echo "Hello, $USER!"
 
 # fixes
 ################
@@ -44,8 +43,9 @@ function codex {
 }
 alias chat="codex"
 
-# BROWSER=""
-export EDITOR="micro"
 export LANG="C.UTF-8"
+export EDITOR="micro"
+
 export PAGER="less -FRX"
 export SHELL="/bin/bash"
+# BROWSER=""
