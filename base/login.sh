@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Local login
+# ==============================================================================
+
 # Autologin Linux virtual terminals.
 LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
 mkdir -p "$LOCAL_LOGIN_SERVICE"
@@ -12,6 +15,9 @@ EOF
 
 # Changes take effect after reboot.
 systemctl daemon-reload
+
+# SSH identity
+# ==============================================================================
 
 # Create SSH keys if missing.
 mkdir -p ~/.ssh
