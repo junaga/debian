@@ -7,9 +7,8 @@ test "$FORCE" || test "$(systemd-detect-virt --container)" = none || {
 set -e
 DIR="$(dirname "$0")"
 
-# Install base system configuration.
-cp -ar "$DIR/etc/." /etc/.
-systemctl daemon-reload
+# Install package sources.
+cp -ar "$DIR/etc/apt/." /etc/apt/.
 
 # run upgrades at boot
 echo '@reboot /bin/bash /usr/local/src/base/upgrade.sh' | crontab -
