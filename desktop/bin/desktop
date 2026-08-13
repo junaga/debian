@@ -6,5 +6,9 @@ if test "$(id -u)" -eq 0; then
 		login -f hypr --shell /usr/local/bin/desktop
 fi
 
+# login(1)'s --shell override leaks this desktop launcher into SHELL.  Keep
+# terminal emulators from trying to run the launcher as an interactive shell.
+export SHELL=/bin/bash
+
 # Hyprland enables detailed stdout logs in its config; journald persists them.
 exec systemd-cat --identifier=hyprland start-hyprland
