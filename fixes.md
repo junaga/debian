@@ -237,58 +237,22 @@ old extents. Unlimited yearly retention therefore requires ordinary capacity
 monitoring because a sufficiently long or high-churn history can eventually
 exhaust the shared filesystem.
 
-## Autologin Linux virtual terminals
+## Autologin on Linux virtual terminals
 
-[`base/etc/systemd/system/getty@.service.d/override.conf`](./base/etc/systemd/system/getty@.service.d/override.conf)
+Debian’s `getty@.service` displays a login prompt and requires credentials.
+This single-administrator system treats the local console as its recovery path
+when the network is unavailable. [`base/login.sh`](./base/login.sh) therefore
+replaces the virtual-terminal prompt with a session for the current user:
 
 ```systemd
 [Service]
 ExecStart=
-ExecStart=-login -f root
+ExecStart=-login -f $USER
 ```
 
-Authority is kept on the web, not in a password stored on every machine. A
-Linux VT therefore starts the root terminal session without authentication.
-
-Autologin makes the VT a recovery interface independent of root-password
-knowledge and network login:
-
-```text
-hardware VT          /dev/ttyN  -> login -f root -> administer
-cloud VGA/VNC VT     /dev/ttyN  -> login -f root -> repair network or SSH
-cloud serial console ttyS*/hvc* -> serial-getty@.service (not covered)
-```
-
-The drop-in inherits the VT scope and TTY lifecycle from `getty@.service`:
-
-```systemd
-ConditionPathExists=/dev/tty0
-StandardInput=tty
-StandardOutput=tty
-TTYPath=/dev/%I
-TTYReset=yes
-TTYVHangup=yes
-TTYVTDisallocate=yes
-```
-
-```text
-getty@ttyN.service -> login -f root -> PAM session -> shell
-```
-
-systemd opens, resets, hangs up, and deallocates the VT. `login -f` skips
-authentication while preserving normal account and session setup. For this
-fixed VT scope, `agetty` mainly adds an `/etc/issue` banner and username prompt
-that autologin does not use.
-
-The fixed `root` argument makes the autologin identity independent of the
-setup environment, and the `-` prefix preserves the vendor unit's ignored-exit
-behavior. The override cannot affect `serial-getty@.service`, SSH, display
-managers, rescue mode, containers, or WSL.
-The reduction to direct `login` is recorded in `833393a`.
-
-Root autologin grants anyone with physical or hypervisor-console access complete
-authority. That is deliberate for this single-user workstation recovery model;
-multi-user or physically untrusted machines must remove the drop-in.
+The override affects only `getty@.service` instances, not serial consoles, SSH,
+or display managers. Anyone with physical or hypervisor-console access receives
+the current user's access.
 
 ## Guarantee an SSH identity
 
