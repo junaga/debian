@@ -254,38 +254,6 @@ The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
 
-## Guarantee an SSH identity
-
-[`base/setup.sh`](./base/setup.sh)
-
-```sh
-set -e
-
-ssh-keygen -q -N "" \
-	-f ~/.ssh/id_ed25519 \
-	-C "$EMAIL" || true
-
-cat ~/.ssh/id_ed25519.pub
-```
-
-```text
-local private key       -> proves identity
-remotely registered key -> grants access
-
-no key                  -> create -> print public key
-existing key + "n"      -> keep   -> print public key
-missing public key      -> cat status 1 -> set -e stops
-```
-
-Setup only needs to guarantee an SSH identity and print its public key for
-remote authorization. `-q` removes generation chatter, `-N ""` removes the
-offline passphrase, and `-f` pins the identity path. The email passed through
-`-C` is a management label, not authentication data.
-
-On a repeat run, declining the destructive overwrite returns status `1`.
-`|| true` accepts that one path while `set -e` remains active everywhere else.
-This interaction was introduced in `0965401`.
-
 ## Set the release policy to Debian Testing
 
 [`base/etc/apt/sources.list.d/debian.sources`](./base/etc/apt/sources.list.d/debian.sources),
