@@ -1,12 +1,14 @@
-#!/usr/bin/env bash
-# Configure console login behavior.
+#!/bin/sh
 set -e
 
-# Log in as root on virtual consoles for local recovery.
-install -d /etc/systemd/system/getty@.service.d
-printf '%s\n' \
-  '[Service]' \
-  'ExecStart=' \
-  'ExecStart=-login -f root' \
-  > /etc/systemd/system/getty@.service.d/override.conf
+# Autologin Linux virtual terminals.
+LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
+mkdir -p "$LOCAL_LOGIN_SERVICE"
+cat > "$LOCAL_LOGIN_SERVICE/override.conf" <<-EOF
+	[Service]
+	ExecStart=
+	ExecStart=-login -f $USER
+EOF
+
+# Changes take effect after reboot.
 systemctl daemon-reload
