@@ -109,7 +109,7 @@ apt install --yes cups;
 # ==============================================================================
 
 # Hyprland desktop
-apt install --yes --allow-downgrades\
+apt install --yes --target-release trixie-backports \
   adwaita-icon-theme\
   hyprland\
   hyprland-backgrounds\
