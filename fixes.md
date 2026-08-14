@@ -36,8 +36,7 @@ to `/`. The complete chain was observed on this installation and recorded in
 
 ## Separate the terminal and desktop identities
 
-[`base/setup.sh`](./base/setup.sh),
-[`desktop/install.sh`](./desktop/install.sh), and
+[`desktop/install.sh`](./desktop/install.sh) and
 [`desktop/bin/desktop`](./desktop/bin/desktop)
 
 Every shell, command, and script runs as `root`. A normal user owns only the
@@ -254,68 +253,20 @@ The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
 
-## Set the release policy to Debian Testing
+## Add Upstream Package Repositories
 
-[`base/etc/apt/sources.list.d/debian.sources`](./base/etc/apt/sources.list.d/debian.sources),
-[`base/upgrade.sh`](./base/upgrade.sh)
+[`base/repos/nvidia.sources`](./base/repos/nvidia.sources),
+[`base/repos/nodejs.sources`](./base/repos/nodejs.sources)
 
-```deb822
-Types: deb
-URIs: http://deb.debian.org/debian
-Suites: testing
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-```
+Debian stable is the base system. Upstream vendor repositories are added only
+when Debian does not provide the required current software.
 
-```sh
-apt update --allow-releaseinfo-change
-apt full-upgrade --yes
-```
-
-An installer, WSL distribution, or cloud image only supplies the initial
-filesystem. The repository supplies the release policy. Replacing
-`debian.sources` makes every installation track the `testing` suite instead of
-the release or codename chosen by its bootstrap.
-
-`testing` is the integrated next Debian release: packages enter it through
-migration from `unstable`. Following the suite alias moves the complete Debian
-package graph across release codenames instead of updating selected applications
-outside APT. That difference includes current development runtimes, not merely
-new desktop applications:
-
-| Runtime | Stable `trixie` | Testing `forky` |
-| --- | ---: | ---: |
-| Node.js | 20.19.2 | 24.18.0 |
-| Go | 1.24.4 | 1.26.3 |
-| Python | 3.13.5 | 3.14.6 |
-
-Package versions were recorded on 2026-07-22.
-
-`--allow-releaseinfo-change` accepts the initial suite change; `full-upgrade`
-resolves its dependency transitions. The source replacement dates to `28274ab`.
-
-## Trust third-party APT sources through HTTPS
-
-[`base/etc/apt/sources.list.d/nvidia.sources`](./base/etc/apt/sources.list.d/nvidia.sources)
-
-```deb822
-URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
-Trusted: yes
-```
-
-HTTPS is the trust boundary for third-party APT sources; no separate repository
-key is required. TLS authenticates the hostname, not a machine, so its publisher
-may change CDN or proxy nodes without changing our configuration.
-
-`Trusted: yes` skips APT's repository-signature check. APT still verifies
-package hashes against the downloaded metadata, but HTTPS is what authenticates
-both. A publisher, CDN, CA, or local trust-store compromise could replace them.
-We accept losing offline verification and untrusted mirrors in exchange for one
-managed trust path. Debian's archive keeps its built-in signed-mirror model.
+These sources use HTTPS-only trust through `Trusted: yes`. APT accepts their
+repository metadata without a separate signing key, so each source extends the
+trust boundary to its publisher, HTTPS delivery path, and the host certificate
+store.
 
 ## Standardize on NetworkManager
-
-[`base/upgrade.sh`](./base/upgrade.sh)
 
 Debian [recommends NetworkManager for desktops but not
 servers](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html#_the_modern_network_configuration_for_desktop).
@@ -330,8 +281,3 @@ servers, hypervisors, container hosts, bonds, bridges, VLANs, routes, VPNs, and
 OpenShift also uses it beneath
 [nmstate](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/observability/networking_operators/index)
 to configure cluster nodes in production.
-
-The upgrade imports `/etc/network/interfaces`, migrates its profiles to native
-NetworkManager keyfiles, stops the old service, and restarts NetworkManager to
-complete the handover. WSL and containers are skipped because their host owns
-their networking.

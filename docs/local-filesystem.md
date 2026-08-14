@@ -33,7 +33,6 @@ loose files.
 | --- | --- |
 | Debian | Operating system and standard filesystem |
 | `base/upgrade.sh` | Release policy, upgrades, and base packages |
-| `base/setup.sh` | Network, login, SSH, and Git host configuration |
 | `base/home/` | Root terminal configuration copied to `/root` |
 | `desktop/` | Optional desktop packages and configuration |
 

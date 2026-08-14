@@ -1,4 +1,6 @@
+# Debian 12 is NVIDIA's all-inclusive driver repository.
 Types: deb
 URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
 Suites: /
+Architectures: amd64
 Trusted: yes
