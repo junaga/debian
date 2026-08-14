@@ -67,8 +67,6 @@ Welcome to the [Terminal](https://www.youtube.com/watch?v=8gw0rXPMMPE);
 
 Install Linux.
 
-_`Ubuntu Stable` updates take 6 months, that's why I recommend `Debian Testing`._
-
 ```cmd
 wsl.exe --install debian
 ```
