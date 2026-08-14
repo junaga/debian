@@ -1,7 +1,7 @@
 -- TODO: Delete this comment after Debian ships a Hyprtoolkit release that
 -- includes https://github.com/hyprwm/hyprtoolkit/commit/bf9219cc53548c119e61d74b210076ceeded1f65
 --
--- Debian Testing currently ships Hyprtoolkit 0.5.4. That version routes
+-- Debian's current Hyprtoolkit package ships 0.5.4. That version routes
 -- keyboard events to Hyprtoolkit's `m_currentWindow`, but it sets and clears
 -- that variable from `wl_pointer.enter` and `wl_pointer.leave`. It does not
 -- track `wl_keyboard.enter` or `wl_keyboard.leave`. As a result,
