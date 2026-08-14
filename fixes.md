@@ -52,6 +52,15 @@ install-steam hypr
 Root scripts resolve that account's HOME from the password database. Graphical
 helpers run as the normal user and use `$HOME` directly.
 
+## Use `/usr/local` as the terminal workspace
+
+[`base/home/.bashrc`](./base/home/.bashrc)
+
+Interactive root shells start in `/usr/local`. HOME remains shell and account
+state; `/usr/local` is the administrator workspace for local programs,
+projects, and the system recipe. Non-interactive shells keep their caller's
+working directory.
+
 ## Make deletion a recoverable state of HOME
 
 [`desktop/format.sh`](./desktop/format.sh),
@@ -265,6 +274,16 @@ These sources use HTTPS-only trust through `Trusted: yes`. APT accepts their
 repository metadata without a separate signing key, so each source extends the
 trust boundary to its publisher, HTTPS delivery path, and the host certificate
 store.
+
+## Check for package updates every 60 seconds
+
+[`base/install.sh`](./base/install.sh) and
+[`base/upgrade.sh`](./base/upgrade.sh)
+
+Cron starts the upgrade script once per minute, its fastest standard schedule.
+The script takes a non-blocking self-lock, so an active upgrade makes the next
+tick exit instead of queuing or overlapping. This minimizes the delay between a
+trusted repository publishing an update and this host beginning installation.
 
 ## Standardize on NetworkManager
 

@@ -2,6 +2,8 @@
 
 test "$PS1" || return
 
+cd /usr/local
+
 # fixes
 ################
 set +h # lookup $PATH every time
