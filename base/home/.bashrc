@@ -2,8 +2,6 @@
 
 test "$PS1" || return
 
-cd /usr/local
-
 # fixes
 ################
 set +h # lookup $PATH every time
@@ -34,16 +32,7 @@ function man { echo "https://manpages.debian.org/$1.en"; }
 alias ls="ls --color --group-directories-first"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
 function rcode { code --remote "ssh-remote+$1" "$2"; }
-# With no arguments, return to the most recent Codex conversation for the
-# current workspace.  Subcommands and flags retain the normal CLI behavior.
-function codex {
-	if (( $# == 0 )); then
-		command codex resume --last --dangerously-bypass-approvals-and-sandbox
-	else
-		command codex "$@"
-	fi
-}
-alias chat="codex"
+alias chat="codex resume --yolo"
 
 export LANG="C.UTF-8"
 export EDITOR="micro"
@@ -51,3 +40,5 @@ export EDITOR="micro"
 export PAGER="less -FRX"
 export SHELL="/bin/bash"
 # BROWSER=""
+
+cd /usr/local
