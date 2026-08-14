@@ -6,7 +6,7 @@ apt update
 apt install --yes ca-certificates
 
 # Install Base repositories.
-cp -ar repos/. /etc/apt/sources.list.d/
+cp -ar repo/. /etc/apt/sources.list.d/
 rm -f /etc/apt/sources.list
 
 # Configure Base.
