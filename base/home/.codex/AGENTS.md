@@ -30,3 +30,7 @@ spawn_agent({
   message: "Read docs/agentic-engineering.md. Is this compact mental model perfect?"
 })
 ```
+
+## Markdown
+
+- Prefer source-readable Markdown tables.
