@@ -37,7 +37,7 @@ alias chat="codex resume --yolo"
 export LANG="C.UTF-8"
 export EDITOR="micro"
 
-export PAGER="less -FRX"
+export PAGER="/bin/less"
 export SHELL="/bin/bash"
 # BROWSER=""
 
