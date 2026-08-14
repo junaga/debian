@@ -38,4 +38,4 @@ export PAGER="/bin/less"
 # export SHELL="/bin/bash"
 # export BROWSER="google-chrome-stable"
 
-cd /usr/local
+# cd /usr/local
