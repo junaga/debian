@@ -262,6 +262,17 @@ The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
 
+## Initialize the terminal identity
+
+[`base/login.sh`](./base/login.sh)
+
+Base configures Git with the local administrator and host identity:
+
+```sh
+git config --global user.name "$USER"
+git config --global user.email "$USER@$HOSTNAME"
+```
+
 ## Add Upstream Package Repositories
 
 [`base/repos/nvidia.sources`](./base/repos/nvidia.sources),

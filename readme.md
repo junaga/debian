@@ -54,13 +54,15 @@ Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 sh ./base/install.sh
 
 codex login
-codex "code a \"Hello, World\" API in JavaScript"
+codex "create a JavaScript CLI that counts the words in a text file"
 ```
 
 Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
 cp -ra ./base/home/. ~/.
+sh ./base/login.sh
+
 source ~/.bashrc
 
 # 1: Download and Install VS Code for Linux or Windows
