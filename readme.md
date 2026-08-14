@@ -4,8 +4,6 @@ I use the Debian operating system almost everywhere; [Desktop GUI](https://www.r
 
 Deliberate improvements to system defaults are documented in
 [fixes.md](./fixes.md).
-The administrator-owned filesystem is documented in
-[base/readme.md](./base/readme.md).
 
 ```sh
 uname #> Linux
@@ -53,7 +51,7 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
-bash ./base/upgrade.sh
+sh ./base/install.sh
 
 codex login
 codex "code a \"Hello, World\" API in JavaScript"
@@ -63,7 +61,6 @@ Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
 cp -ra ./base/home/. ~/.
-bash ./base/setup.sh
 source ~/.bashrc
 
 # 1: Download and Install VS Code for Linux or Windows
