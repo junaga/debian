@@ -33,3 +33,9 @@ test -f ~/.ssh/id_ed25519.pub || ssh-keygen -y \
 
 # Print the public key.
 cat ~/.ssh/id_ed25519.pub
+
+# Git author
+# ==============================================================================
+
+git config --global user.name "$USER"
+git config --global user.email "$USER@$HOSTNAME"

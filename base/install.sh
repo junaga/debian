@@ -11,7 +11,6 @@ rm -f /etc/apt/sources.list
 
 # Configure Base.
 sh ./upgrade.sh
-sh ./login.sh
 
 # Every 60 seconds.
 echo "* * * * * root sh $PWD/upgrade.sh" >> /etc/crontab
