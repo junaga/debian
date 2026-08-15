@@ -66,36 +66,23 @@ store.
 
 ## Install updates every 60 seconds
 
-AI has changed the vulnerability landscape. In late 2025, Google observed the
-gap between vulnerability disclosure and active exploitation collapse from
-weeks to days, alongside AI-assisted attempts to probe targets.
+AI shortens the interval between disclosure and exploitation: Google observed
+it collapse from weeks to days in late 2025, and OpenAI has shown frontier
+models finding previously unknown, high-severity flaws in real-world software.
+Akrites coordinates open-source remediation before that discovery becomes
+exploitation.
 [Google Cloud Threat Horizons H1 2026](https://cloud.google.com/security/report/resources/cloud-threat-horizons-report-h1-2026)
-
-Frontier models can accelerate the other side of that window: OpenAI reports
-that its cyber model found previously unknown, high-severity flaws in V8 and
-other real-world software. The Linux Foundation launched Akrites to coordinate
-open-source remediation before AI-assisted discovery turns into exploitation.
 [OpenAI Daybreak](https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/)
 [Linux Foundation Akrites](https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats)
 
-The threat model is the interval after a trusted publisher releases a fix and
-before this host adopts it. The security objective is to minimize that
-post-fix exposure window without forcibly disrupting active users.
-
-The solution is continuous convergence to the newest trusted, compatible
-package set. Manual patching adds human delay; immutable-image replacement and
-fleet patching require additional infrastructure. Debian's native package
-manager already provides publisher trust, dependency resolution, and safe
-package installation, so it is the smallest solution that meets the objective.
-
-The implementation follows from that choice: scheduled APT convergence provides
-the cadence, and `needrestart` activates patches in eligible system services.
-One update policy covers every configured source, avoiding a second selective
-allow-list alongside the source list. User sessions and kernel reboots remain
-explicit decisions because they are disruptive.
-
-One check per minute is 43,200 requests per month for one host. For comparison,
-npm’s terms describe five million monthly requests as clearly unreasonable.
+The threat is post-fix exposure: the time between a trusted publisher releasing
+a fix and this host installing it. The smallest solution is continuous APT
+convergence to the newest trusted, compatible package set; manual patching adds
+human delay, while image replacement and fleet patching require more infrastructure.
+This host checks every minute across every configured source, and `needrestart`
+activates eligible system services. User sessions and kernel reboots remain
+explicit because they are disruptive. That is 43,200 requests per month for one
+host; npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
 
