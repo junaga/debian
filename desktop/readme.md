@@ -5,7 +5,7 @@
 Run these commands from the repository root.
 
 ```sh
-bash ./base/upgrade.sh
+bash ./base/update.sh
 cp -ra ./base/home/. /root/.
 
 bash ./desktop/format.sh

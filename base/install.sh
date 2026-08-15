@@ -10,7 +10,7 @@ cp -ar repo/. /etc/apt/sources.list.d/
 rm -f /etc/apt/sources.list
 
 # Configure Base.
-sh "$PWD/upgrade.sh"
+sh "$PWD/update.sh"
 
 # Upgrade the system every 60 seconds.
-echo "* * * * * root systemd-cat --identifier=upgrade.sh sh $PWD/upgrade.sh" >> /etc/crontab
+echo "* * * * * root systemd-cat --identifier=update.sh sh $PWD/update.sh" >> /etc/crontab
