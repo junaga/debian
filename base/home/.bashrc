@@ -21,7 +21,13 @@ declare BLUE="\[\e[1;34m\]"
 declare RESET="\[\e[0m\]"
 declare PS1="$BLUE\H\$PWD$RESET "
 
-# initialization
+export LANG="C.UTF-8"
+export PAGER="/bin/less"
+# export SHELL="/bin/bash"
+# export BROWSER="google-chrome-stable"
+export EDITOR="micro"
+
+# tools
 ##########################
 alias ls="ls --color=auto --group-directories-first"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
@@ -31,11 +37,5 @@ function man { echo "https://manpages.debian.org/$1.en"; }
 
 function rcode { code --remote "ssh-remote+$1" "$2"; }
 alias chat="codex resume --yolo"
-
-export LANG="C.UTF-8"
-export EDITOR="micro"
-export PAGER="/bin/less"
-# export SHELL="/bin/bash"
-# export BROWSER="google-chrome-stable"
 
 # cd /usr/local
