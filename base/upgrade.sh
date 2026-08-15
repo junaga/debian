@@ -1,9 +1,12 @@
 set -eu
 
 export DEBIAN_FRONTEND="noninteractive"
+export NEEDRESTART_SUSPEND=1
 
-# Upgrade the full system.
+# Refresh package lists.
 apt update
+
+# Upgrade packages.
 apt full-upgrade --yes
 
 # Base tools
@@ -12,7 +15,7 @@ apt install --yes \
 	git gh ssh kitty-terminfo \
 	curl ca-certificates openssl \
 	fd-find ripgrep tree file crudini jq pup \
-	direnv \
+	direnv needrestart \
 	podman
 
 # Development runtimes and tooling
@@ -20,6 +23,8 @@ apt install --yes \
 	nodejs build-essential pkg-config \
 	python3 python3-venv python3-pip python3-dev pipx \
 	lua5.1 luarocks
+
+needrestart --restart a
 
 # Codex CLI
 npm install --global --no-fund \
