@@ -11,7 +11,8 @@ apt install --yes \
 	cron micro less rsync \
 	git gh ssh kitty-terminfo \
 	curl ca-certificates openssl \
-	fd-find ripgrep tree file crudini jq pup
+	fd-find ripgrep tree file crudini jq pup \
+	podman
 
 # Development runtimes and tooling
 apt install --yes \

@@ -15,6 +15,13 @@ EOF
 # Changes take effect after reboot.
 systemctl daemon-reload
 
+# Rootless containers
+# ==============================================================================
+
+# Containers need users and groups on the shared kernel.
+grep -q "^$USER:" /etc/subuid || usermod --add-subuids 100000-165535 "$USER"
+grep -q "^$USER:" /etc/subgid || usermod --add-subgids 100000-165535 "$USER"
+
 # SSH identity
 # ==============================================================================
 
