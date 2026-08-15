@@ -9,8 +9,9 @@ apt install --yes ca-certificates
 cp -ar repo/. /etc/apt/sources.list.d/
 rm -f /etc/apt/sources.list
 
-# Configure Base.
-sh "$PWD/update.sh"
+# Upgrade.
+sh ./update.sh
 
-# Upgrade the system every 60 seconds.
-echo "* * * * * root systemd-cat --identifier=update.sh sh $PWD/update.sh" >> /etc/crontab
+# Upgrade every 60 seconds.
+cp ./update.sh /etc/apt/update.sh
+echo "* * * * * root systemd-cat --identifier=update.sh sh /etc/apt/update.sh" >> /etc/crontab
