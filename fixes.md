@@ -34,33 +34,6 @@ ESPs instead of assuming a filesystem UUID, partition number, disk, or relation
 to `/`. The complete chain was observed on this installation and recorded in
 `8da3344`.
 
-## Separate the terminal and desktop identities
-
-[`desktop/install.sh`](./desktop/install.sh) and
-[`desktop/bin/desktop`](./desktop/bin/desktop)
-
-Every shell, command, and script runs as `root`. A normal user owns only the
-graphical session, desktop applications, and their data. Commands that enter
-that identity take its account name explicitly:
-
-```sh
-bash ./desktop/install.sh hypr
-desktop
-install-steam hypr
-```
-
-Root scripts resolve that account's HOME from the password database. Graphical
-helpers run as the normal user and use `$HOME` directly.
-
-## Use `/usr/local` as the terminal workspace
-
-[`base/home/.bashrc`](./base/home/.bashrc)
-
-Interactive root shells start in `/usr/local`. HOME remains shell and account
-state; `/usr/local` is the administrator workspace for local programs,
-projects, and the system recipe. Non-interactive shells keep their caller's
-working directory.
-
 ## Autologin on Linux virtual terminals
 
 Debian’s `getty@.service` displays a login prompt and requires credentials.
@@ -77,17 +50,6 @@ ExecStart=-login -f $USER
 The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
-
-## Initialize the terminal identity
-
-[`base/login.sh`](./base/login.sh)
-
-Base configures Git with the local administrator and host identity:
-
-```sh
-git config --global user.name "$USER"
-git config --global user.email "$USER@$HOSTNAME"
-```
 
 ## Add Upstream Package Repositories
 
