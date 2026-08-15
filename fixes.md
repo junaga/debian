@@ -81,20 +81,3 @@ eligible system services; user sessions and kernel reboots remain explicit
 because they are disruptive. That is 43,200 requests per month for one host;
 npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
-
-
-## Standardize on NetworkManager
-
-Debian [recommends NetworkManager for desktops but not
-servers](https://www.debian.org/doc/manuals/debian-reference/ch05.en.html#_the_modern_network_configuration_for_desktop).
-This repository uses it on every host to keep one configuration format and CLI.
-It is preferred over `systemd-networkd` because it also covers interactive
-Wi-Fi, mobile broadband, VPN profiles, secrets, runtime switching, checkpoints,
-and desktop integration.
-
-NetworkManager is production-ready: RHEL uses it for bare-metal and virtual
-servers, hypervisors, container hosts, bonds, bridges, VLANs, routes, VPNs, and
-[fleet automation](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/configuring_and_managing_networking/index).
-OpenShift also uses it beneath
-[nmstate](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/observability/networking_operators/index)
-to configure cluster nodes in production.
