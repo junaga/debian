@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-DIR="$(dirname "$0")"
+cd -- "$(dirname -- "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
 USER_NAME="${1:?usage: $0 USER}"
 
@@ -20,22 +20,22 @@ function asUser {
 
 test "$(findmnt -n -T / -o FSTYPE)" = btrfs
 btrfs subvolume show /home >/dev/null
-apt install --yes btrfs-progs btrbk
+apt install btrfs-progs btrbk --yes
 
 mkdir -p "$USER_HOME"
 chown "$USER_NAME:$USER_NAME" "$USER_HOME"
 for skeleton in /etc/skel/.[!.]*; do
 	test -e "$USER_HOME/${skeleton##*/}" || cp -a "$skeleton" "$USER_HOME/"
 done
-cp -ra "$DIR/home/." "$USER_HOME/."
+cp -ra ./home/. "$USER_HOME/."
 chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
 # Configuration files.
-cp -ar "$DIR/etc/." /etc/.
-systemctl enable --now btrbk.timer
+cp -ar ./etc/. /etc/.
+systemctl enable btrbk.timer --now
 swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
 # Root launches the graphical session for the explicitly named desktop user.
-for PROGRAM in "$DIR"/bin/* "$DIR"/home/bin/*; do
+for PROGRAM in ./bin/* ./home/bin/*; do
 	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 
@@ -49,8 +49,8 @@ efibootmgr --timeout 0
 
 # NVIDIA graphics.
 apt update
-apt install --yes nvidia-driver-pinning-580
-apt install --yes\
+apt install nvidia-driver-pinning-580 --yes
+apt install --yes \
   firmware-misc-nonfree\
   'nvidia-driver=580*'\
   nvidia-settings\
@@ -66,7 +66,7 @@ systemctl disable networking.service --now
 systemctl enable systemd-networkd.service iwd.service --now
 
 # Audio and Bluetooth
-apt install --yes\
+apt install --yes \
   pipewire-audio\
     libspa-0.2-libcamera\
     pulseaudio-utils\
@@ -79,7 +79,7 @@ crudini --set /etc/bluetooth/main.conf General Experimental true
 crudini --set /etc/bluetooth/main.conf General KernelExperimental true
 
 systemctl restart bluetooth.service
-systemctl enable --now upower.service
+systemctl enable upower.service --now
 
 # TODO: Automate Bluetooth device setup.
 # bluetoothctl pair 3C:B0:ED:A7:96:8D
@@ -90,7 +90,7 @@ systemctl enable --now upower.service
 # wpctl set-default 75   # bluez_output... [Audio/Sink]
 
 # Printing: modern driverless printers use IPP.
-apt install --yes cups;
+apt install cups --yes;
 
 # ==============================================================================
 # DESKTOP
@@ -123,7 +123,7 @@ function installCursorTheme {
 
 	install -d -o "$USER_NAME" -g "$USER_GROUP" "$THEME/cursors"
 	install -m 0644 -o "$USER_NAME" -g "$USER_GROUP" \
-		"$DIR/home/.local/share/icons/arrow-on-text/index.theme" \
+		./home/.local/share/icons/arrow-on-text/index.theme \
 		"$THEME/index.theme"
 
 	for SHAPE in text vertical-text xterm; do
@@ -141,7 +141,7 @@ asUser hyprpm enable windows-pointer-linux
 asUser hyprpm reload
 
 # Passwordless desktop credential service.
-apt install --yes gnome-keyring
+apt install gnome-keyring --yes
 asUser mkdir -p "$USER_HOME/.local/share/keyrings"
 asUser crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
 
@@ -150,7 +150,7 @@ asUser crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
 # ==============================================================================
 
 # Desktop utilities
-apt install --yes\
+apt install --yes \
   dolphin\
   wl-clipboard\
     xclip\
@@ -161,7 +161,7 @@ apt install --yes\
   wf-recorder;
 
 # Wayland terminal and fonts
-apt install --yes\
+apt install --yes \
   kitty\
   cargo\
   fonts-firacode\
@@ -179,7 +179,7 @@ function installURL {
 		FILE="$(mktemp --suffix=.deb)"
 		trap 'rm -f "$FILE"' EXIT
 		curl -fL --output "$FILE" "$1"
-		apt install --yes "$FILE"
+		apt install "$FILE" --yes
 	)
 }
 
