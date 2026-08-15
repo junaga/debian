@@ -3,7 +3,7 @@
 I use the Debian operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
 
 Deliberate improvements to system defaults are documented in
-[fixes.md](./fixes.md).
+[DESIGN.md](./DESIGN.md).
 
 ```sh
 uname #> Linux
