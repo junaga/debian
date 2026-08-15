@@ -51,18 +51,11 @@ The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
 
-## Add Upstream Package Repositories
+## Trust HTTPS
 
-[`base/repo/nvidia.sources`](./base/repo/nvidia.sources),
-[`base/repo/nodejs.sources`](./base/repo/nodejs.sources)
-
-Debian stable is the base system. Upstream vendor repositories are added only
-when Debian does not provide the required current software.
-
-These sources use HTTPS-only trust through `Trusted: yes`. APT accepts their
-repository metadata without a separate signing key, so each source extends the
-trust boundary to its publisher, HTTPS delivery path, and the host certificate
-store.
+HTTPS encrypts package delivery and protects its integrity in transit.
+`Trusted: yes` lets APT trust metadata delivered over that connection without a
+separate `.gpg` signing key.
 
 ## Install updates every 60 seconds
 
