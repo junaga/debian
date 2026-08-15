@@ -1,13 +1,11 @@
-# Fixes
+# Debian Design Deviations
 
-Deliberate deviations from Debian defaults are documented here to preserve
-their intent.
+Debian `stable` is a strong baseline, but its best practices may not be perfect.
+This document records intentional deviations from Debian defaults and the
+reasoning behind them. Each deviation is an individual design decision,
+documented in operating-system lifecycle order.
 
-> Start from Debian's defaults. Deviate only when a concrete limitation can be
-> removed while preserving or strengthening the guarantees behind those
-> defaults.
-
-## Follow the booted ESP
+## Mount the Booted ESP Partition
 
 [`desktop/etc/fstab`](./desktop/etc/fstab)
 
@@ -51,7 +49,7 @@ The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
 
-## Trust HTTPS
+## Trust APT Sources Through HTTPS
 
 HTTPS encrypts package delivery and protects its integrity in transit.
 `Trusted: yes` lets APT trust metadata delivered over that connection without a
