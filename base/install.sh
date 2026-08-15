@@ -12,5 +12,5 @@ rm -f /etc/apt/sources.list
 # Configure Base.
 sh ./upgrade.sh
 
-# Every 60 seconds.
-echo "* * * * * root sh $PWD/upgrade.sh" >> /etc/crontab
+# Install security updates every 60 seconds.
+echo "* * * * * root apt update -q && apt -t trixie-security full-upgrade --yes" >> /etc/crontab

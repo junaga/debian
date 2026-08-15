@@ -1,19 +1,8 @@
 set -eu
-LOG=/tmp/upgrade.log
-
-# Skip if this script is already running.
-exec 9<"$0"; flock --nonblock 9 || exit 0
-
-echo "Output redirected to:"
-echo "$LOG"
-
-# Capture output and write failures to the journal.
-exec >"$LOG" 2>&1
-trap '[ $? != 0 ] && logger -t upgrade.sh <"$LOG"' 0
 
 export DEBIAN_FRONTEND="noninteractive"
 
-# Install security and package updates.
+# Upgrade the full system.
 apt update
 apt full-upgrade --yes
 

@@ -64,15 +64,15 @@ repository metadata without a separate signing key, so each source extends the
 trust boundary to its publisher, HTTPS delivery path, and the host certificate
 store.
 
-## Check for package updates every 60 seconds
+## Install security updates every 60 seconds
 
 [`base/install.sh`](./base/install.sh) and
 [`base/upgrade.sh`](./base/upgrade.sh)
 
-Cron starts the upgrade script once per minute, its fastest standard schedule.
-The script takes a non-blocking self-lock, so an active upgrade makes the next
-tick exit instead of queuing or overlapping. This minimizes the delay between a
-trusted repository publishing an update and this host beginning installation.
+Cron refreshes APT metadata and upgrades the `trixie-security` suite once per
+minute. APT may take required Debian dependencies to complete a security fix;
+backports and vendor packages remain manual. `upgrade.sh` remains the manual
+full-system updater.
 
 ## Standardize on NetworkManager
 
