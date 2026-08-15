@@ -13,4 +13,5 @@ rm -f /etc/apt/sources.list
 sh ./upgrade.sh
 
 # Install security updates every 60 seconds.
-echo "* * * * * root apt update -q && apt -t trixie-security full-upgrade --yes" >> /etc/crontab
+SECURITY_UPGRADE='apt -t "$(. /etc/os-release && printf "%s-security" "$VERSION_CODENAME")" full-upgrade --yes'
+echo "* * * * * root apt update && $SECURITY_UPGRADE" >> /etc/crontab
