@@ -12,6 +12,7 @@ apt install --yes \
 	git gh ssh kitty-terminfo \
 	curl ca-certificates openssl \
 	fd-find ripgrep tree file crudini jq pup \
+	direnv \
 	podman
 
 # Development runtimes and tooling
