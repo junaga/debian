@@ -67,22 +67,19 @@ store.
 ## Install updates every 60 seconds
 
 AI shortens the interval between disclosure and exploitation: Google observed
-it collapse from weeks to days in late 2025, and OpenAI has shown frontier
-models finding previously unknown, high-severity flaws in real-world software.
-Akrites coordinates open-source remediation before that discovery becomes
-exploitation.
-[Google Cloud Threat Horizons H1 2026](https://cloud.google.com/security/report/resources/cloud-threat-horizons-report-h1-2026)
+it collapse from weeks to days in late 2025, and OpenAI has demonstrated that
+frontier models can find previously unknown, high-severity flaws in real-world
+software. [Google Cloud Threat Horizons H1 2026](https://cloud.google.com/security/report/resources/cloud-threat-horizons-report-h1-2026)
 [OpenAI Daybreak](https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/)
-[Linux Foundation Akrites](https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats)
+Akrites coordinates open-source remediation before those discoveries become
+exploitation. [Linux Foundation Akrites](https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats)
 
-The threat is post-fix exposure: the time between a trusted publisher releasing
-a fix and this host installing it. The smallest solution is continuous APT
-convergence to the newest trusted, compatible package set; manual patching adds
-human delay, while image replacement and fleet patching require more infrastructure.
-This host checks every minute across every configured source, and `needrestart`
-activates eligible system services. User sessions and kernel reboots remain
-explicit because they are disruptive. That is 43,200 requests per month for one
-host; npm calls five million monthly requests clearly unreasonable.
+The threat is post-fix exposure: the time from a trusted publisher releasing a
+fix to this host installing it. This host minimizes that interval by converging
+every minute across every configured source and using `needrestart` to activate
+eligible system services; user sessions and kernel reboots remain explicit
+because they are disruptive. That is 43,200 requests per month for one host;
+npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
 
