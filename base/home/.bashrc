@@ -14,6 +14,7 @@ declare HISTSIZE="-1" # not 500, unlimited bash history
 
 # interface
 ################
+eval "$(direnv hook bash)" # load .env automatically
 shopt -s autocd # cd directories automatically
 shopt -s globstar # allow recursive globs "**"
 
