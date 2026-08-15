@@ -64,15 +64,21 @@ repository metadata without a separate signing key, so each source extends the
 trust boundary to its publisher, HTTPS delivery path, and the host certificate
 store.
 
-## Install security updates every 60 seconds
+## Install updates every 60 seconds
 
-[`base/install.sh`](./base/install.sh) and
-[`base/upgrade.sh`](./base/upgrade.sh)
+New fixes should take effect as soon as their publishers make them available,
+rather than waiting for a daily maintenance window. We choose one simple update
+policy for every configured source instead of maintaining a second, selective
+allow-list alongside the source list.
 
-Cron refreshes APT metadata and upgrades the `trixie-security` suite once per
-minute. APT may take required Debian dependencies to complete a security fix;
-backports and vendor packages remain manual. `upgrade.sh` remains the manual
-full-system updater.
+One check per minute is 43,200 requests per month for one host. For comparison,
+npm’s terms describe five million monthly requests as clearly unreasonable.
+[npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
+
+Replacing a library on disk does not update processes that already have the old
+library mapped. Eligible system services therefore restart after updates; user
+services and desktop applications remain under their user’s control, and kernel
+updates remain a per-host reboot decision.
 
 ## Standardize on NetworkManager
 
