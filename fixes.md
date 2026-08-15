@@ -66,19 +66,38 @@ store.
 
 ## Install updates every 60 seconds
 
-New fixes should take effect as soon as their publishers make them available,
-rather than waiting for a daily maintenance window. We choose one simple update
-policy for every configured source instead of maintaining a second, selective
-allow-list alongside the source list.
+AI has changed the vulnerability landscape. In late 2025, Google observed the
+gap between vulnerability disclosure and active exploitation collapse from
+weeks to days, alongside AI-assisted attempts to probe targets.
+[Google Cloud Threat Horizons H1 2026](https://cloud.google.com/security/report/resources/cloud-threat-horizons-report-h1-2026)
+
+Frontier models can accelerate the other side of that window: OpenAI reports
+that its cyber model found previously unknown, high-severity flaws in V8 and
+other real-world software. The Linux Foundation launched Akrites to coordinate
+open-source remediation before AI-assisted discovery turns into exploitation.
+[OpenAI Daybreak](https://openai.com/index/expanding-daybreak-as-the-cyber-defense-window-narrows/)
+[Linux Foundation Akrites](https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats)
+
+The threat model is the interval after a trusted publisher releases a fix and
+before this host adopts it. The security objective is to minimize that
+post-fix exposure window without forcibly disrupting active users.
+
+The solution is continuous convergence to the newest trusted, compatible
+package set. Manual patching adds human delay; immutable-image replacement and
+fleet patching require additional infrastructure. Debian's native package
+manager already provides publisher trust, dependency resolution, and safe
+package installation, so it is the smallest solution that meets the objective.
+
+The implementation follows from that choice: scheduled APT convergence provides
+the cadence, and `needrestart` activates patches in eligible system services.
+One update policy covers every configured source, avoiding a second selective
+allow-list alongside the source list. User sessions and kernel reboots remain
+explicit decisions because they are disruptive.
 
 One check per minute is 43,200 requests per month for one host. For comparison,
 npm’s terms describe five million monthly requests as clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
-Replacing a library on disk does not update processes that already have the old
-library mapped. Eligible system services therefore restart after updates; user
-services and desktop applications remain under their user’s control, and kernel
-updates remain a per-host reboot decision.
 
 ## Standardize on NetworkManager
 
