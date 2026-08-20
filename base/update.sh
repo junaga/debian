@@ -16,7 +16,7 @@ apt -qq install --yes \
 	curl ca-certificates openssl \
 	fd-find ripgrep tree file crudini jq pup \
 	direnv needrestart fwupd \
-	podman
+	podman tailscale
 
 # Development runtimes and tooling
 apt -qq install --yes \
