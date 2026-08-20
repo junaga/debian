@@ -14,4 +14,4 @@ sh ./update.sh
 
 # Upgrade every 60 seconds.
 cp ./update.sh /etc/apt/update.sh
-echo "* * * * * root systemd-cat --identifier=update.sh sh /etc/apt/update.sh" >> /etc/crontab
+echo "* * * * * root /bin/bash /etc/apt/update.sh 2>&1 >/dev/null | systemd-cat --identifier=update.sh" >> /etc/crontab

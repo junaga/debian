@@ -4,13 +4,13 @@ export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_SUSPEND=1
 
 # Refresh package lists.
-apt -qq update
+apt update
 
 # Upgrade packages.
-apt -qq full-upgrade --yes
+apt full-upgrade --yes
 
 # Base tools
-apt -qq install --yes \
+apt install --yes \
 	cron micro less rsync \
 	git gh ssh kitty-terminfo \
 	curl ca-certificates openssl \
@@ -19,13 +19,13 @@ apt -qq install --yes \
 	podman tailscale
 
 # Development runtimes and tooling
-apt -qq install --yes \
+apt install --yes \
 	nodejs build-essential pkg-config \
 	python3 python3-venv python3-pip python3-dev pipx \
 	lua5.1 luarocks
 
-needrestart --restart a
+needrestart -r a
 
 # Codex CLI
-npm install --global --no-fund --loglevel=warn \
+npm install --global --no-fund \
 	@openai/codex
