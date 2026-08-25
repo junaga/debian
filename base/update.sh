@@ -24,6 +24,11 @@ apt install --yes \
 	python3 python3-venv python3-pip python3-dev pipx \
 	lua5.1 luarocks
 
+# Hugging Face CLI
+if ! command -v hf >/dev/null 2>&1; then
+	pipx install --global huggingface_hub
+fi
+
 needrestart -r a
 
 # Codex CLI
