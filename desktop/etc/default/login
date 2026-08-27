@@ -1,0 +1,2 @@
+# Create group-writable files and group-searchable directories in login sessions.
+UMASK=002
