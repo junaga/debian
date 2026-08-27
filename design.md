@@ -55,6 +55,13 @@ HTTPS encrypts package delivery and protects its integrity in transit.
 `Trusted: yes` lets APT trust metadata delivered over that connection without a
 separate `.gpg` signing key.
 
+## Rootless local workspace
+
+On a personal workstation, root ownership of `/usr/local` pushes local tools
+and projects toward user home directories. Assign `/usr/local` to a non-root
+maintainer instead, keeping home directories for user state and `/usr/local`
+for local software.
+
 ## Install updates every 60 seconds
 
 AI shortens the interval between disclosure and exploitation: Google observed
