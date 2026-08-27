@@ -62,6 +62,15 @@ and projects toward user home directories. Assign `/usr/local` to a non-root
 maintainer instead, keeping home directories for user state and `/usr/local`
 for local software.
 
+## Collaborative Unix groups
+
+Debian's `022` umask gives group members and other users identical permissions
+on ordinary new paths, so group membership grants no additional access by
+default. This personal workstation uses
+[`UMASK=002`](./desktop/etc/default/login), making new files and directories
+group-writable while withholding write access from others, so trusted Unix
+groups become collaboration boundaries.
+
 ## Install updates every 60 seconds
 
 AI shortens the interval between disclosure and exploitation: Google observed
