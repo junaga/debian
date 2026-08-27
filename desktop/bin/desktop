@@ -1,14 +1,13 @@
 #!/bin/sh
 
-if test "$(id -u)" -eq 0; then
-	exec openvt --force --switch --console=2 -- \
-		systemd-run --wait --collect --pipe \
-		login -f hypr --shell /usr/local/bin/desktop
+cd "$(dirname "$0")"
+
+
+if test "$(id -un)" != desktop; then
+	exec su - root -c "exec login -f desktop --shell $PWD/desktop"
 fi
 
-# login(1)'s --shell override leaks this desktop launcher into SHELL.  Keep
-# terminal emulators from trying to run the launcher as an interactive shell.
+# login --shell overrides $SHELL, so restore Bash for programs that start shells.
 export SHELL=/bin/bash
 
-# Hyprland enables detailed stdout logs in its config; journald persists them.
-exec systemd-cat --identifier=hyprland start-hyprland
+exec start-hyprland
