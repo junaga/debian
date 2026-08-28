@@ -3,11 +3,35 @@ set -e
 
 cd -- "$(dirname -- "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
-USER_NAME="${1:?usage: $0 USER}"
+DEVELOPMENT_USER=junaga
+DESKTOP_USER=hypr
+DEVELOPMENT_GROUP=dev
+DEVELOPMENT_UID=1000
 
-if ! getent passwd "$USER_NAME" >/dev/null; then
-	useradd --no-create-home --user-group --shell /bin/bash "$USER_NAME"
+if ! getent group "$DEVELOPMENT_GROUP" >/dev/null; then
+	groupadd "$DEVELOPMENT_GROUP"
 fi
+if ! getent passwd "$DEVELOPMENT_USER" >/dev/null; then
+	if getent passwd "$DEVELOPMENT_UID" >/dev/null; then
+		printf 'uid %s is already assigned; migrate that account before installing junaga\n' \
+			"$DEVELOPMENT_UID" >&2
+		exit 1
+	fi
+	useradd --uid "$DEVELOPMENT_UID" --create-home --gid "$DEVELOPMENT_GROUP" \
+		--shell /bin/bash "$DEVELOPMENT_USER"
+else
+	test "$(id -u "$DEVELOPMENT_USER")" = "$DEVELOPMENT_UID" || {
+		printf '%s must use uid %s\n' "$DEVELOPMENT_USER" "$DEVELOPMENT_UID" >&2
+		exit 1
+	}
+	usermod --gid "$DEVELOPMENT_GROUP" "$DEVELOPMENT_USER"
+fi
+if ! getent passwd "$DESKTOP_USER" >/dev/null; then
+	useradd --create-home --gid "$DEVELOPMENT_GROUP" --shell /bin/bash "$DESKTOP_USER"
+else
+	usermod --gid "$DEVELOPMENT_GROUP" "$DESKTOP_USER"
+fi
+USER_NAME="$DESKTOP_USER"
 USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
 
 function asUser {
@@ -34,10 +58,14 @@ cp -ar ./etc/. /etc/.
 systemctl enable btrbk.timer --now
 swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
-# Root launches the graphical session for the explicitly named desktop user.
+# Root launches the graphical session for the fixed desktop user.
 for PROGRAM in ./bin/* ./home/bin/*; do
 	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
+
+# The development user owns the local workspace; the shared group preserves
+# access for the desktop user.
+chown -R "$DEVELOPMENT_USER:$DEVELOPMENT_GROUP" /usr/local
 
 # Fast boot: skip the GRUB menu and UEFI delay.
 update-grub
