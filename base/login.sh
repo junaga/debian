@@ -6,7 +6,7 @@ set -e
 # Autologin Linux virtual terminals.
 LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
 mkdir -p "$LOCAL_LOGIN_SERVICE"
-cat > "$LOCAL_LOGIN_SERVICE/override.conf" <<-EOF
+cat > "$LOCAL_LOGIN_SERVICE/10-junaga.conf" <<-EOF
 	[Service]
 	ExecStart=
 	ExecStart=-login -f $USER
