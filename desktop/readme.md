@@ -32,7 +32,7 @@ bash ./base/update.sh
 cp -ra ./base/home/. /root/.
 
 bash ./desktop/format.sh
-bash ./desktop/install.sh hypr
+bash ./desktop/install.sh
 
 reboot 0
 ```
