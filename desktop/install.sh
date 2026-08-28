@@ -68,6 +68,7 @@ done
 # The development user owns the local workspace; the shared group preserves
 # access for the desktop user.
 chown -R "$DEVELOPMENT_USER:$DEVELOPMENT_GROUP" /usr/local
+chmod -R g+rwX /usr/local
 
 # Fast boot: skip the GRUB menu and UEFI delay.
 update-grub
