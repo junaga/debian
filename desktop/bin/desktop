@@ -3,8 +3,8 @@
 cd "$(dirname "$0")"
 
 
-if test "$(id -un)" != desktop; then
-	exec su - root -c "exec login -f desktop --shell $PWD/desktop"
+if test "$(id -un)" != hypr; then
+	exec su - root -c "exec login -f hypr --shell $PWD/desktop"
 fi
 
 # login --shell overrides $SHELL, so restore Bash for programs that start shells.
