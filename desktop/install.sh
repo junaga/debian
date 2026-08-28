@@ -55,6 +55,7 @@ cp -ra ./home/. "$USER_HOME/."
 chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
 # Configuration files.
 cp -ar ./etc/. /etc/.
+systemctl enable getty@tty2.service
 systemctl enable btrbk.timer --now
 swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
