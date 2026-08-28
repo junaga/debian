@@ -35,6 +35,11 @@ elif [[ "$DEVELOPMENT_UID" == 1001 && "$DESKTOP_UID" == 1000 ]]; then
 		exit 1
 	fi
 
+	# Stop the tty2 getty first. Otherwise it can immediately respawn the
+	# desktop login while the UID swap is in progress.
+	echo "stopping the tty2 desktop launcher"
+	systemctl stop getty@tty2.service || true
+
 	echo "terminating the $DESKTOP_USER session"
 	loginctl terminate-user "$DESKTOP_USER" || true
 
