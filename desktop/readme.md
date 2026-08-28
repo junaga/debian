@@ -2,25 +2,25 @@
 
 ## Identity model
 
-| Identity | Role           | User      | Group   | Runtime          | Files           |
-|:---------|:---------------|:----------|:--------|:-----------------|:----------------|
-| Debian   | Administration | `root`    | `root`  | `systemd`        | `/`             |
-| —        | Development    | `dev`     | `local` | —                | `/usr/local`    |
-| Hyprland | Operation      | `desktop` | `local` | `systemd --user` | `/home/desktop` |
+| Environment | Role           | User   | Group  | Runtime          | Files        |
+| :---------- | :------------- | :----- | :----- | :--------------- | :----------- |
+| Debian      | Administration | `root` | `root` | `systemd`        | `/`          |
+| Debian      | Development    | `dev`  | `dev`  | —                | `/usr/local` |
+| Hyprland    | Operation      | `op`   | `dev`  | `systemd --user` | `/home/op`   |
 
-`root` administers Debian. `desktop` exists because common graphical
-applications, including Chrome, refuse to run as root; it owns Hyprland,
-graphical applications, and desktop state.
+`root` administers Debian. `op` exists because common graphical
+applications, including Chrome, refuse to run as root; it owns Hyprland
+and graphical applications in every aspect.
 
 `dev` autologins on the console and owns the `/usr/local` development
-workspace. Keeping development separate from desktop state lets the same
-projects run under replaceable desktop environments, each with its own home
+workspace. Keeping development separate from desktop lets the same
+system run different desktop environments, each with its own home
 directory and dotfiles, without another system, kernel, or partition.
 
-`dev` and `desktop` share the `local` group so graphical tools running as
-`desktop` can work on development files. Kitty is a `desktop` window with a
-`dev` shell; GUI applications run as `desktop` through the application launcher
-or an explicit user switch.
+`dev` and `op` share the `dev` group so graphical tools running as `op` can
+work on development files. A terminal emulator is an `op` window with a `dev`
+shell; that user switch is automatic and always occurs. GUI applications run as
+`op` through the application launcher.
 
 ## NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
