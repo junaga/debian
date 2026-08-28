@@ -26,6 +26,7 @@ else
 	}
 	usermod --gid "$DEVELOPMENT_GROUP" "$DEVELOPMENT_USER"
 fi
+usermod --append --groups sudo "$DEVELOPMENT_USER"
 if ! getent passwd "$DESKTOP_USER" >/dev/null; then
 	useradd --create-home --gid "$DEVELOPMENT_GROUP" --shell /bin/bash "$DESKTOP_USER"
 else
