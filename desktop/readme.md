@@ -17,6 +17,7 @@ workspace; the login script runs as its intended user. Keeping development
 separate from desktop lets the same
 system run different desktop environments, each with its own home
 directory and dotfiles, without another system, kernel, or partition.
+The `dev` user is also in `sudo` for administration.
 
 `dev` and `op` share the `dev` group so graphical tools running as `op` can
 work on development files. A terminal emulator is an `op` window with a `dev`
