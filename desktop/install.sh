@@ -54,6 +54,7 @@ for skeleton in /etc/skel/.[!.]*; do
 done
 cp -ra ./home/. "$USER_HOME/."
 chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
+chmod -R g+rwx "/home/$DEVELOPMENT_USER" "$USER_HOME"
 # Configuration files.
 cp -ar ./etc/. /etc/.
 systemctl enable getty@tty2.service
