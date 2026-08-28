@@ -1,27 +1,27 @@
 # Desktop
 
-## Identity model
+## User model
 
-| User model | Role           | User   | Group  | Runtime          | Files        |
+| Context     | Role           | User   | Group  | Process          | Files        |
 | :---------- | :------------- | :----- | :----- | :--------------- | :----------- |
 | Debian      | Administration | `root` | `root` | `systemd`        | `/`          |
-| —           | Development    | `junaga` | `dev`  | —                | `/usr/local` |
-| Hyprland    | Operation      | `hypr`   | `dev`  | `systemd --user` | `/home/hypr` |
+| —           | Development    | `dev`  | `dev`  | —                | `/usr/local` |
+| Hyprland    | Operation      | `op`   | `dev`  | `systemd --user` | `/home/op`   |
 
-`root` administers Debian. `hypr` exists because common graphical
+`root` administers Debian. `op` exists because common graphical
 applications, including Chrome, refuse to run as root; it owns Hyprland
 and graphical applications in every aspect.
 
-`junaga` autologins on the console and owns the `/usr/local` development
+`dev` autologins on the console and owns the `/usr/local` development
 workspace; the login script runs as its intended user. Keeping development
 separate from desktop lets the same
 system run different desktop environments, each with its own home
 directory and dotfiles, without another system, kernel, or partition.
 
-`junaga` and `hypr` share the `dev` group so graphical tools running as `hypr`
-can work on development files. A terminal emulator is a `hypr` window with a
-`junaga` shell; that user switch is automatic and always occurs. GUI
-applications run as `hypr` through the application launcher.
+`dev` and `op` share the `dev` group so graphical tools running as `op` can
+work on development files. A terminal emulator is an `op` window with a `dev`
+shell; that user switch is automatic and always occurs. GUI applications run as
+`op` through the application launcher.
 
 ## NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
