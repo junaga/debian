@@ -1,6 +1,9 @@
 [init]
 	defaultBranch = main
 
+[safe]
+	directory = *
+
 [pull]
 	rebase = false
 
