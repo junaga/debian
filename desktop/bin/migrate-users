@@ -10,6 +10,9 @@ DEVELOPMENT_USER=junaga
 DESKTOP_USER=hypr
 DEVELOPMENT_GROUP=dev
 TEMP_UID=1002
+OLD_DEVELOPMENT_UID=1001
+OLD_DESKTOP_UID=1000
+SWAPPED=0
 
 getent passwd "$DEVELOPMENT_USER" >/dev/null || {
 	echo "missing user: $DEVELOPMENT_USER" >&2
@@ -52,18 +55,28 @@ elif [[ "$DEVELOPMENT_UID" == 1001 && "$DESKTOP_UID" == 1000 ]]; then
 		exit 1
 	fi
 
+	BACKUP_DIR="/root/user-uid-migration-$(date +%Y%m%d-%H%M%S)"
+	install -d -m 0700 "$BACKUP_DIR"
+	cp -a /etc/passwd /etc/shadow /etc/group /etc/gshadow "$BACKUP_DIR/"
+	echo "account database backup: $BACKUP_DIR"
+
 	echo "swapping UIDs through $TEMP_UID"
 	usermod --uid "$TEMP_UID" "$DESKTOP_USER"
 	usermod --uid 1000 "$DEVELOPMENT_USER"
 	usermod --uid 1001 "$DESKTOP_USER"
+	SWAPPED=1
 else
 	echo "unexpected UID mapping: $DEVELOPMENT_USER=$DEVELOPMENT_UID $DESKTOP_USER=$DESKTOP_UID" >&2
 	exit 1
 fi
 
 echo "repairing ownership"
-chown -R "$DEVELOPMENT_USER:$DEVELOPMENT_GROUP" /usr/local /home/$DEVELOPMENT_USER
-chown -R "$DESKTOP_USER:$DEVELOPMENT_GROUP" /home/$DESKTOP_USER
+if (( SWAPPED )); then
+	find / -xdev -uid "$OLD_DESKTOP_UID" -exec chown -h "$DESKTOP_USER" {} +
+	find / -xdev -uid "$OLD_DEVELOPMENT_UID" -exec chown -h "$DEVELOPMENT_USER" {} +
+fi
+chown -R "$DEVELOPMENT_USER:$DEVELOPMENT_GROUP" /usr/local "/home/$DEVELOPMENT_USER"
+chown -R "$DESKTOP_USER:$DEVELOPMENT_GROUP" "/home/$DESKTOP_USER"
 
 test "$(id -u "$DEVELOPMENT_USER")" = 1000
 test "$(id -u "$DESKTOP_USER")" = 1001
