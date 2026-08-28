@@ -1,0 +1,68 @@
+#!/bin/bash
+set -euo pipefail
+
+if (( EUID != 0 )); then
+	echo "run this script as root" >&2
+	exit 1
+fi
+
+DEVELOPMENT_USER=junaga
+DESKTOP_USER=hypr
+DEVELOPMENT_GROUP=dev
+TEMP_UID=1002
+
+getent passwd "$DEVELOPMENT_USER" >/dev/null || {
+	echo "missing user: $DEVELOPMENT_USER" >&2
+	exit 1
+}
+getent passwd "$DESKTOP_USER" >/dev/null || {
+	echo "missing user: $DESKTOP_USER" >&2
+	exit 1
+}
+getent group "$DEVELOPMENT_GROUP" >/dev/null || {
+	echo "missing group: $DEVELOPMENT_GROUP" >&2
+	exit 1
+}
+
+DEVELOPMENT_UID="$(id -u "$DEVELOPMENT_USER")"
+DESKTOP_UID="$(id -u "$DESKTOP_USER")"
+
+if [[ "$DEVELOPMENT_UID" == 1000 && "$DESKTOP_UID" == 1001 ]]; then
+	echo "UID mapping is already correct"
+elif [[ "$DEVELOPMENT_UID" == 1001 && "$DESKTOP_UID" == 1000 ]]; then
+	if getent passwd "$TEMP_UID" >/dev/null; then
+		echo "temporary UID is already assigned: $TEMP_UID" >&2
+		exit 1
+	fi
+
+	echo "terminating the $DESKTOP_USER session"
+	loginctl terminate-user "$DESKTOP_USER" || true
+
+	for _ in {1..30}; do
+		pgrep -u "$DESKTOP_USER" >/dev/null || break
+		sleep 1
+	done
+	if pgrep -u "$DESKTOP_USER" >/dev/null; then
+		echo "$DESKTOP_USER still has running processes; refusing UID swap" >&2
+		exit 1
+	fi
+
+	echo "swapping UIDs through $TEMP_UID"
+	usermod --uid "$TEMP_UID" "$DESKTOP_USER"
+	usermod --uid 1000 "$DEVELOPMENT_USER"
+	usermod --uid 1001 "$DESKTOP_USER"
+else
+	echo "unexpected UID mapping: $DEVELOPMENT_USER=$DEVELOPMENT_UID $DESKTOP_USER=$DESKTOP_UID" >&2
+	exit 1
+fi
+
+echo "repairing ownership"
+chown -R "$DEVELOPMENT_USER:$DEVELOPMENT_GROUP" /usr/local /home/$DEVELOPMENT_USER
+chown -R "$DESKTOP_USER:$DEVELOPMENT_GROUP" /home/$DESKTOP_USER
+
+test "$(id -u "$DEVELOPMENT_USER")" = 1000
+test "$(id -u "$DESKTOP_USER")" = 1001
+test "$(id -gn "$DEVELOPMENT_USER")" = "$DEVELOPMENT_GROUP"
+test "$(id -gn "$DESKTOP_USER")" = "$DEVELOPMENT_GROUP"
+
+echo "migration complete; reboot to start a fresh $DESKTOP_USER session"
