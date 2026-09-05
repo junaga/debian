@@ -37,17 +37,17 @@ to `/`. The complete chain was observed on this installation and recorded in
 Debian’s `getty@.service` displays a login prompt and requires credentials.
 This single-administrator system treats the local console as its recovery path
 when the network is unavailable. [`base/login.sh`](./base/login.sh) therefore
-replaces the virtual-terminal prompt with a session for `local`:
+replaces the virtual-terminal prompt with a session for the current user:
 
 ```systemd
 [Service]
 ExecStart=
-ExecStart=-/usr/sbin/agetty --autologin local --noclear %I $TERM
+ExecStart=-login -f $USER
 ```
 
 The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
-`local`'s access, including passwordless sudo.
+the current user's access.
 
 ## Trust APT Sources Through HTTPS
 
