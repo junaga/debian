@@ -2,7 +2,7 @@
 
 Scripts and dotfiles that record the system changes needed to run our software on Debian Linux.
 
-This branch contains the [design decisions](./design.md), [base configuration](./base), and [Windows setup](./windows). The desktop configuration lives on the [Hyprland branch](https://github.com/junaga/debian/tree/Hyprland).
+This branch contains the [design decisions](./design.md), [base configuration](./base), and [Windows setup](./windows). The desktop configuration lives on the [hyprland branch](https://github.com/junaga/debian/tree/hyprland).
 
 ```sh
 uname #> Linux
