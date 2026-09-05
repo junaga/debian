@@ -1,6 +1,8 @@
 # Debian [//debian.org](https://debian.org/)
 
-I use the Debian operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
+Scripts and dotfiles that record the system changes needed to run our software on Debian Linux.
+
+This branch contains the [design decisions](./design.md), [base configuration](./base), and [Windows setup](./windows). The desktop configuration lives on the [Hyprland branch](https://github.com/junaga/debian/tree/Hyprland).
 
 ```sh
 uname #> Linux
@@ -23,10 +25,6 @@ wsl.exe --install debian
 
 Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) to install and run 24/7 online apps or games. Sign up with a credit; debit card. Then provision; subscribe; rent any container; server; hardware.
 
-### Hardware (64-Bit-IBM-PC)
-
-For Desktop; Laptop; `x86-64` devices **create a bootable USB drive** (similar to the [windows/](./windows) installation procedure). Boot UEFI, boot the USB, install into a HDD; SSD; M.2, then boot that filesystem. You can also boot from microSD; network; memory. Ask ChatGPT; call me on discord `@junaga` for help.
-
 ## Initialization
 
 Copy & Paste, or download files with `git clone`, `curl`, `wget`.
@@ -45,7 +43,7 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 
 ## Configuration
 
-Base-only systems (containers and VPSs) run as `root`; only the desktop installer creates `local`.
+Base systems (containers and VPSs) run as `root`.
 
 Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 
@@ -90,5 +88,3 @@ code $FILE           # 2015
 micro $FILE          # 2016
 # cursor $FILE         # 2023
 ```
-
-For a graphical workstation, continue with the [desktop/](./desktop/readme.md) readme.

@@ -1,9 +1,0 @@
-# Filesystem table
-# each filesystem UUID is generated when formatting
-# <file system>                                                             <mount>         <type>  <options>                    <dump>  <pass>
-
-# One Btrfs pool; root is the top level and HOME is its child subvolume.
-/dev/disk/by-uuid/66342810-348d-4508-a1c8-2552b6db1339                     /               btrfs  defaults,noatime               0       0
-
-# Boot
-/dev/disk/by-designator/esp                                                /boot/efi       vfat   umask=0077                   0       1

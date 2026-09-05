@@ -5,33 +5,6 @@ This document records intentional deviations from Debian defaults and the
 reasoning behind them. Each deviation is an individual design decision,
 documented in operating-system lifecycle order.
 
-## Mount the Booted ESP Partition
-
-[`desktop/etc/fstab`](./desktop/etc/fstab)
-
-```fstab
-/dev/disk/by-designator/esp  /boot/efi  vfat  umask=0077  0  1
-```
-
-A FAT UUID identifies one formatting of one ESP. The systemd designator
-identifies the ESP that supplied the running bootloader:
-
-```text
-/boot/grub/grub.cfg                  insmod bli
-LoaderDevicePartUUID                 c859eaf4-6adf-49ed-8dce-e20ca5fb6349
-ID_PART_ENTRY_UUID                   c859eaf4-6adf-49ed-8dce-e20ca5fb6349
-ID_DISSECT_PART_DESIGNATOR           esp
-/dev/disk/by-designator/esp       -> /dev/sdb1
-/boot/efi                         -> /dev/sdb1  (ID_FS_UUID=A31E-0712)
-```
-
-GRUB's Boot Loader Interface module writes `LoaderDevicePartUUID`; udev matches
-that GPT partition and creates the semantic link. The mount therefore follows
-the boot path across FAT reformats, device enumeration changes, and multiple
-ESPs instead of assuming a filesystem UUID, partition number, disk, or relation
-to `/`. The complete chain was observed on this installation and recorded in
-`8da3344`.
-
 ## Autologin on Linux virtual terminals
 
 Debian’s `getty@.service` displays a login prompt and requires credentials.
@@ -54,23 +27,6 @@ the current user's access.
 HTTPS encrypts package delivery and protects its integrity in transit.
 `Trusted: yes` lets APT trust metadata delivered over that connection without a
 separate `.gpg` signing key.
-
-## Rootless local workspace
-
-On a personal workstation, root ownership of `/usr/local` pushes local tools
-and projects toward user home directories. Assign `/usr/local` to a non-root
-maintainer instead, keeping home directories for user state and `/usr/local`
-for local software.
-
-## Collaborative Unix groups
-
-Debian's `022` umask gives group members and other users identical permissions
-on ordinary new paths, so group membership grants no additional access by
-default. That protects broad shared groups on multi-user workstations; this
-personal workstation does not need that model. It uses
-[`UMASK=002`](./desktop/etc/default/login), making new files and directories
-group-writable while withholding write access from others, so trusted Unix
-groups become collaboration boundaries.
 
 ## Install updates every 60 seconds
 
