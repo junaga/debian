@@ -45,6 +45,8 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 
 ## Configuration
 
+Base-only systems (containers and VPSs) run as `root`; only the desktop installer creates `local`.
+
 Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 
 ```sh

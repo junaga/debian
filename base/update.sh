@@ -11,7 +11,7 @@ apt full-upgrade --yes
 
 # Base tools
 apt install --yes \
-	cron micro less rsync sudo \
+	cron micro less rsync \
 	git gh ssh kitty-terminfo \
 	curl ca-certificates openssl \
 	fd-find ripgrep tree file crudini jq pup \
