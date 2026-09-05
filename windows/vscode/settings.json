@@ -15,6 +15,10 @@
   "debug.javascript.codelens.npmScripts": "never",
   "workbench.editor.empty.hint": "hidden",
 
+  // Code review
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.hideUnchangedRegions.enabled": true,
+
   // Extensions
   "workbench.iconTheme": "material-icon-theme"
 }
