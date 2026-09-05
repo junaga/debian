@@ -34,3 +34,7 @@ spawn_agent({
 ## Markdown
 
 - Prefer source-readable Markdown tables.
+
+## Task titles
+
+- Use 1-3-word topic titles when creating tasks; prefer one word.
