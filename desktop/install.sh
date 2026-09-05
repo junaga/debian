@@ -3,7 +3,7 @@ set -e
 
 cd -- "$(dirname -- "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
-bash ../base/login.sh
+bash ../base/local-user.sh
 USER_NAME=local
 USER_HOME=/home/local
 
