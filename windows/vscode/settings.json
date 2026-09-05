@@ -3,6 +3,7 @@
 {
   "editor.tabSize": 2,
   "security.workspace.trust.enabled": false,
+  "chat.disableAIFeatures": true,
 
   // Remembered prompts and hints
   "git.enableSmartCommit": true,
