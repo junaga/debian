@@ -37,4 +37,4 @@ spawn_agent({
 
 ## Task titles
 
-- Prefer 1-3-word topic titles when creating tasks, ideally one word.
+- Use `set_thread_title` freely to keep the title relevant. Prefer 1-3 words, ideally one.
