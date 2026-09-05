@@ -1,48 +1,40 @@
-set -e
+#!/bin/bash
+set -euo pipefail
+cd -- "$(dirname -- "$0")"
+bash ./local-user.sh
 
-# Local login
-# ==============================================================================
-
-# Autologin Linux virtual terminals.
+# All virtual terminals start local; SSH authentication is unchanged.
 LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
-mkdir -p "$LOCAL_LOGIN_SERVICE"
-cat > "$LOCAL_LOGIN_SERVICE/10-junaga.conf" <<-EOF
-	[Service]
-	ExecStart=
-	ExecStart=-login -f $USER
+install -d "$LOCAL_LOGIN_SERVICE"
+cat > "$LOCAL_LOGIN_SERVICE/10-local.conf" <<'EOF'
+[Service]
+ExecStart=
+ExecStart=-/usr/sbin/agetty --autologin local --noclear %I $TERM
 EOF
-
-# Changes take effect after reboot.
 systemctl daemon-reload
 
-# Rootless containers
-# ==============================================================================
+# useradd allocates subordinate IDs for new users; preserve migrated mappings.
+for mapping in /etc/subuid /etc/subgid; do
+    if ! grep -q '^local:' "$mapping"; then
+        echo "local needs a non-overlapping subordinate-ID range in $mapping" >&2
+        exit 1
+    fi
+done
 
-# Containers need users and groups on the shared kernel.
-grep -q "^$USER:" /etc/subuid || usermod --add-subuids 100000-165535 "$USER"
-grep -q "^$USER:" /etc/subgid || usermod --add-subgids 100000-165535 "$USER"
-
-# SSH identity
-# ==============================================================================
-
-# Create SSH keys if missing.
-mkdir -p ~/.ssh
-test -f ~/.ssh/id_ed25519 || ssh-keygen -q -N "" \
-	-f ~/.ssh/id_ed25519 \
-	-C "$USER@$HOSTNAME"
-
-# Fix private-key permissions if migrated.
-chmod 600 ~/.ssh/id_ed25519
-
-# Recreate the public key if missing.
-test -f ~/.ssh/id_ed25519.pub || ssh-keygen -y \
-	-f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
-
-# Print the public key.
-cat ~/.ssh/id_ed25519.pub
-
-# Git author
-# ==============================================================================
-
-git config --global user.name "$USER"
-git config --global user.email "$USER@$HOSTNAME"
+runuser -u local -- env HOME=/home/local /bin/bash <<'EOF'
+set -euo pipefail
+umask 077
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
+    ssh-keygen -q -N "" -f "$HOME/.ssh/id_ed25519" -C "local@$(hostname)"
+fi
+chmod 600 "$HOME/.ssh/id_ed25519"
+if [ -f "$HOME/.ssh/config" ]; then chmod 600 "$HOME/.ssh/config"; fi
+if [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
+    ssh-keygen -y -f "$HOME/.ssh/id_ed25519" > "$HOME/.ssh/id_ed25519.pub"
+fi
+# Retain the existing Git author identity when migrating.
+git config --global user.name >/dev/null || git config --global user.name local
+git config --global user.email >/dev/null || git config --global user.email "local@$(hostname)"
+EOF

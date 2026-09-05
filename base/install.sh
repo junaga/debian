@@ -11,6 +11,7 @@ rm -f /etc/apt/sources.list
 
 # Upgrade.
 sh ./update.sh
+bash ./local-user.sh
 
 # Upgrade every 60 seconds.
 cp ./update.sh /etc/apt/update.sh

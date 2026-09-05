@@ -1,13 +1,8 @@
 #!/bin/sh
+set -eu
 
-cd "$(dirname "$0")"
-
-
-if test "$(id -un)" != hypr; then
-	exec su - root -c "exec login -f hypr --shell $PWD/desktop"
+if [ "$(id -un)" != local ]; then
+    exec sudo -H -u local /usr/local/bin/desktop
 fi
-
-# login --shell overrides $SHELL, so restore Bash for programs that start shells.
 export SHELL=/bin/bash
-
 exec start-hyprland
