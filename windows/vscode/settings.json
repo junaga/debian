@@ -2,6 +2,7 @@
 
 {
   "editor.tabSize": 2,
+  "editor.wordWrap": "on",
   "security.workspace.trust.enabled": false,
   "chat.disableAIFeatures": true,
 
