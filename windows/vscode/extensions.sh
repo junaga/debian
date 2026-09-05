@@ -6,6 +6,7 @@ function inst { code --install-extension "$1"; }
 
 inst qwtel.sqlite-viewer # https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer
 inst ms-vscode-remote.remote-ssh # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh
+inst ms-vscode-remote.remote-containers # https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 inst PKief.material-icon-theme # https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme
 inst ozaki.markdown-github-dark # https://marketplace.visualstudio.com/items?itemName=ozaki.markdown-github-dark
 inst GrapeCity.gc-excelviewer # https://marketplace.visualstudio.com/items?itemName=GrapeCity.gc-excelviewer
