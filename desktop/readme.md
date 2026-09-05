@@ -8,7 +8,7 @@
 | `local` | `local` | 1000 | Desktop, development, and `/usr/local` workspace |
 
 `local` runs the desktop and development tools because applications such as Google Chrome do not support running as root.
-`local` has passwordless sudo and is automatically logged in on Linux virtual terminals, with one home at `/home/local` for both graphical and headless work.
+`local` has passwordless sudo and one home at `/home/local` for both graphical and headless work.
 
 ## NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
