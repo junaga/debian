@@ -19,13 +19,14 @@ test "$(findmnt -n -T / -o FSTYPE)" = btrfs
 btrfs subvolume show /home >/dev/null
 apt install btrfs-progs btrbk --yes
 
-mkdir -p "$USER_HOME"
-chown "$USER_NAME:$USER_NAME" "$USER_HOME"
+# Copy as the target user instead of recursively changing unrelated home state.
 for skeleton in /etc/skel/.[!.]*; do
-	test -e "$USER_HOME/${skeleton##*/}" || cp -a "$skeleton" "$USER_HOME/"
+	test -e "$skeleton" || test -L "$skeleton" || continue
+	if ! test -e "$USER_HOME/${skeleton##*/}" && ! test -L "$USER_HOME/${skeleton##*/}"; then
+		asUser cp -r --no-preserve=ownership "$skeleton" "$USER_HOME/"
+	fi
 done
-cp -ra ./home/. "$USER_HOME/."
-find "$USER_HOME" -xdev -uid 0 -exec chown -h "$USER_NAME:$USER_NAME" {} +
+asUser cp -r --no-preserve=ownership ./home/. "$USER_HOME/."
 # Configuration files.
 cp -ar ./etc/. /etc/.
 systemctl enable getty@tty2.service
@@ -142,7 +143,10 @@ asUser hyprpm reload
 # Passwordless desktop credential service.
 apt install gnome-keyring --yes
 asUser mkdir -p "$USER_HOME/.local/share/keyrings"
-asUser crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
+# An existing keyring may be encrypted and contain application credentials.
+if [ ! -e "$USER_HOME/.local/share/keyrings/login.keyring" ]; then
+	asUser crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
+fi
 
 # ==============================================================================
 # APPLICATIONS
