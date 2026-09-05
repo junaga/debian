@@ -21,6 +21,7 @@ open("SUPER + M", music)
 open("SUPER + C", chatgpt)
 
 local function autostart()
+    hl.exec_cmd("hyprpm reload")
     hl.exec_cmd(browser)
     hl.exec_cmd(steam)
     hl.exec_cmd(discord)

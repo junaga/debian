@@ -3,55 +3,48 @@ set -e
 
 cd -- "$(dirname -- "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
-apt install --yes sudo
-bash ./local-user.sh
-USER_NAME=local
-USER_HOME=/home/local
+(( EUID != 0 )) || { echo "run as your desktop user (junaga), without sudo" >&2; exit 1; }
 
-function asUser {
-	runuser --user "$USER_NAME" -- env HOME="$USER_HOME" "$@"
-}
+sudo -v
 
 # ==============================================================================
 # SYSTEM
 # ==============================================================================
 
 test "$(findmnt -n -T / -o FSTYPE)" = btrfs
-btrfs subvolume show /home >/dev/null
-apt install btrfs-progs btrbk --yes
+sudo btrfs subvolume show /home >/dev/null
+sudo apt install btrfs-progs btrbk --yes
 
-# Copy as the target user instead of recursively changing unrelated home state.
-for skeleton in /etc/skel/.[!.]*; do
-	test -e "$skeleton" || test -L "$skeleton" || continue
-	if ! test -e "$USER_HOME/${skeleton##*/}" && ! test -L "$USER_HOME/${skeleton##*/}"; then
-		asUser cp -r --no-preserve=ownership "$skeleton" "$USER_HOME/"
-	fi
-done
-asUser cp -r --no-preserve=ownership ./home/. "$USER_HOME/."
+# Install home configuration as the current user.
+cp -r --no-preserve=ownership ./home/. "$HOME/."
 # Configuration files.
-cp -ar ./etc/. /etc/.
-systemctl enable getty@tty2.service
-systemctl enable btrbk.timer --now
-swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
+sudo visudo -cf ./etc/sudoers.d/desktop
+sudo cp -r --no-preserve=ownership ./etc/. /etc/.
+sudo chmod 0440 /etc/sudoers.d/desktop
+sudo visudo -cf /etc/sudoers.d/desktop
+sudo systemctl enable getty@tty2.service
+sudo install -d -m 0700 /snapshots
+sudo systemctl enable btrbk.timer --now
+swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || sudo swapon /swapfile
 
 # Install the desktop launcher and utilities.
 for PROGRAM in ./bin/* ./home/bin/*; do
-	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
+	sudo install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 
 
 # Fast boot: skip the GRUB menu and UEFI delay.
-update-grub
-efibootmgr --timeout 0
+sudo update-grub
+sudo efibootmgr --timeout 0
 
 # ==============================================================================
 # HARDWARE
 # ==============================================================================
 
 # NVIDIA graphics.
-apt update
-apt install nvidia-driver-pinning-580 --yes
-apt install --yes \
+sudo apt update
+sudo apt install nvidia-driver-pinning-580 --yes
+sudo apt install --yes \
   firmware-misc-nonfree\
   'nvidia-driver=580*'\
   nvidia-settings\
@@ -62,12 +55,12 @@ apt install --yes \
 # ==============================================================================
 
 # systemd-networkd with iwd for Wi-Fi and static Cloudflare DNS.
-apt install iwd --yes
-systemctl disable networking.service --now
-systemctl enable systemd-networkd.service iwd.service --now
+sudo apt install iwd --yes
+sudo systemctl disable networking.service --now
+sudo systemctl enable systemd-networkd.service iwd.service --now
 
 # Audio and Bluetooth
-apt install --yes \
+sudo apt install --yes \
   pipewire-audio\
     libspa-0.2-libcamera\
     pulseaudio-utils\
@@ -76,11 +69,11 @@ apt install --yes \
   upower;
 
 # Enable BlueZ battery-provider and LE Audio support.
-crudini --set /etc/bluetooth/main.conf General Experimental true
-crudini --set /etc/bluetooth/main.conf General KernelExperimental true
+sudo crudini --set /etc/bluetooth/main.conf General Experimental true
+sudo crudini --set /etc/bluetooth/main.conf General KernelExperimental true
 
-systemctl restart bluetooth.service
-systemctl enable upower.service --now
+sudo systemctl restart bluetooth.service
+sudo systemctl enable upower.service --now
 
 # TODO: Automate Bluetooth device setup.
 # bluetoothctl pair 3C:B0:ED:A7:96:8D
@@ -91,14 +84,14 @@ systemctl enable upower.service --now
 # wpctl set-default 75   # bluez_output... [Audio/Sink]
 
 # Printing: modern driverless printers use IPP.
-apt install cups --yes;
+sudo apt install cups --yes;
 
 # ==============================================================================
 # DESKTOP
 # ==============================================================================
 
 # Hyprland desktop
-apt install --yes --target-release trixie-backports \
+sudo apt install --yes --target-release trixie-backports \
   adwaita-icon-theme\
   hyprland\
   hyprland-backgrounds\
@@ -115,38 +108,32 @@ apt install --yes --target-release trixie-backports \
   xwayland;
 
 # Replace text-selection cursors with the default pointer.
-function installCursorTheme {
-	local USER_GROUP
-	local THEME
-
-	USER_GROUP="$(id -gn "$USER_NAME")"
-	THEME="$USER_HOME/.local/share/icons/arrow-on-text"
-
-	install -d -o "$USER_NAME" -g "$USER_GROUP" "$THEME/cursors"
-	install -m 0644 -o "$USER_NAME" -g "$USER_GROUP" \
-		./home/.local/share/icons/arrow-on-text/index.theme \
-		"$THEME/index.theme"
-
-	for SHAPE in text vertical-text xterm; do
-		ln -sfn /usr/share/icons/Adwaita/cursors/default "$THEME/cursors/$SHAPE"
-		chown -h "$USER_NAME:$USER_GROUP" "$THEME/cursors/$SHAPE"
-	done
-}
-
-installCursorTheme
+mkdir -p "$HOME/.local/share/icons/arrow-on-text/cursors"
+for SHAPE in text vertical-text xterm; do
+	ln -sfn /usr/share/icons/Adwaita/cursors/default \
+		"$HOME/.local/share/icons/arrow-on-text/cursors/$SHAPE"
+done
 
 # Hyprland cursor-shape plugin.
-asUser hyprpm add https://github.com/junaga/windows-pointer-linux
-asUser hyprpm update
-asUser hyprpm enable windows-pointer-linux
-asUser hyprpm reload
+hyprpm add https://github.com/junaga/windows-pointer-linux
+hyprpm update
+hyprpm enable windows-pointer-linux
+
+# Debian PAM warns when vendor profiles are loaded directly from /usr/lib/pam.d.
+# Preserve administrator profiles and keep links following package updates.
+for SERVICE in systemd-user polkit-1; do
+	if [ -f "/usr/lib/pam.d/$SERVICE" ] &&
+		[ ! -e "/etc/pam.d/$SERVICE" ] && [ ! -L "/etc/pam.d/$SERVICE" ]; then
+		sudo ln -s "/usr/lib/pam.d/$SERVICE" "/etc/pam.d/$SERVICE"
+	fi
+done
 
 # Passwordless desktop credential service.
-apt install gnome-keyring --yes
-asUser mkdir -p "$USER_HOME/.local/share/keyrings"
+sudo apt install gnome-keyring --yes
+mkdir -p "$HOME/.local/share/keyrings"
 # An existing keyring may be encrypted and contain application credentials.
-if [ ! -e "$USER_HOME/.local/share/keyrings/login.keyring" ]; then
-	asUser crudini --set "$USER_HOME/.local/share/keyrings/login.keyring" keyring
+if [ ! -e "$HOME/.local/share/keyrings/login.keyring" ]; then
+	crudini --set "$HOME/.local/share/keyrings/login.keyring" keyring
 fi
 
 # ==============================================================================
@@ -154,7 +141,8 @@ fi
 # ==============================================================================
 
 # Desktop utilities
-apt install --yes \
+sudo apt install --yes \
+  fuzzel\
   dolphin\
   wl-clipboard\
     xclip\
@@ -165,7 +153,7 @@ apt install --yes \
   wf-recorder;
 
 # Wayland terminal and fonts
-apt install --yes \
+sudo apt install --yes \
   kitty\
   cargo\
   fonts-firacode\
@@ -183,7 +171,7 @@ function installURL {
 		FILE="$(mktemp --suffix=.deb)"
 		trap 'rm -f "$FILE"' EXIT
 		curl -fL --output "$FILE" "$1"
-		apt install "$FILE" --yes
+		sudo apt install "$FILE" --yes
 	)
 }
 
@@ -215,7 +203,7 @@ function installGitHubReleaseBinary {
 		curl -fL --output "$DIRECTORY/$ASSET.sha256" "$URL.sha256"
 		(cd "$DIRECTORY" && sha256sum --check "$ASSET.sha256")
 		tar -xJf "$DIRECTORY/$ASSET" -C "$DIRECTORY"
-		install -m 0755 "$DIRECTORY/${ASSET%.tar.xz}/$BINARY" "/usr/local/bin/$BINARY"
+		sudo install -m 0755 "$DIRECTORY/${ASSET%.tar.xz}/$BINARY" "/usr/local/bin/$BINARY"
 	)
 }
 

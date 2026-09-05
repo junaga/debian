@@ -1,5 +1,7 @@
 # Keycast
 
+Status: proposed specification; no implementation is included in this repository.
+
 A small always-visible overlay showing recent keys without stealing focus,
 pointer events, or shortcuts from the window underneath.
 
