@@ -18,6 +18,8 @@
   // Code review
   "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.hideUnchangedRegions.enabled": true,
+  "diffEditor.hideUnchangedRegions.contextLineCount": 5,
+  "diffEditor.experimental.showMoves": true,
 
   // Extensions
   "workbench.iconTheme": "material-icon-theme"
