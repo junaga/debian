@@ -2,35 +2,47 @@
 
 set -e
 
-USER_NAME="${1:?usage: $0 USER}"
-USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
-USER_GROUP="$(id -gn "$USER_NAME")"
-
-apt update
-apt install steam-libs steam-libs-i386:i386
+(( EUID != 0 )) || { echo "run as your desktop user, without sudo" >&2; exit 1; }
 
 URL=https://repo.steampowered.com/steam/archive/stable/steam_latest.tar.gz
-STEAM_DIR="$USER_HOME/.local/share/Steam"
+STEAM_DIR="$HOME/.local/share/Steam"
+
+# Refuse to abandon a different client tree or overwrite real user directories.
+for LINK in "$HOME/.steam/root" "$HOME/.steam/steam"; do
+	if [ -e "$LINK" ] || [ -L "$LINK" ]; then
+		if [ ! -L "$LINK" ] || [ "$(readlink -m "$LINK")" != "$(readlink -m "$STEAM_DIR")" ]; then
+			printf 'Migrate the existing Steam location before installing: %s\n' "$LINK" >&2
+			exit 1
+		fi
+	fi
+done
+
+sudo apt update
+sudo apt install steam-libs steam-libs-i386:i386
 
 # install
-mkdir -p "$STEAM_DIR" "$USER_HOME/bin"
+mkdir -p "$STEAM_DIR" "$HOME/bin"
 cd "$STEAM_DIR"
-curl "$URL" -o steam.tar
-tar xf steam.tar --strip-components=1 steam-launcher/{bin_steam.sh,bootstraplinux_ubuntu12_32.tar.xz}
-rm steam.tar
+ARCHIVE="$(mktemp)"
+trap 'rm -f "$ARCHIVE"' EXIT
+curl -fL "$URL" -o "$ARCHIVE"
+tar xf "$ARCHIVE" --strip-components=1 steam-launcher/{bin_steam.sh,bootstraplinux_ubuntu12_32.tar.xz}
+
+# The vendor launcher follows these links when choosing its installation.
+mkdir -p "$HOME/.steam"
+ln -sfnT "$STEAM_DIR" "$HOME/.steam/root"
+ln -sfnT "$STEAM_DIR" "$HOME/.steam/steam"
 
 # launcher
-cat > "$USER_HOME/bin/steam" <<EOF
+cat > "$HOME/bin/steam" <<'EOF'
 #!/bin/bash
 set -e
-exec "$STEAM_DIR/bin_steam.sh" "\$@"
+exec "$HOME/.local/share/Steam/bin_steam.sh" "$@"
 EOF
-chmod +x "$USER_HOME/bin/steam"
+chmod +x "$HOME/bin/steam"
 
 # Factorio (prefer native Wayland)
-mkdir -p "$USER_HOME/.factorio/config"
-crudini --set "$USER_HOME/.factorio/config/config.ini" \
+mkdir -p "$HOME/.factorio/config"
+crudini --set "$HOME/.factorio/config/config.ini" \
 	graphics \
 	linux-preferred-video-driver wayland
-chown -R "$USER_NAME:$USER_GROUP" \
-	"$STEAM_DIR" "$USER_HOME/bin/steam" "$USER_HOME/.factorio"
