@@ -3,37 +3,9 @@ set -e
 
 cd -- "$(dirname -- "$0")"
 KERNEL_HEADERS="linux-headers-$(uname -r)"
-DEVELOPMENT_USER=junaga
-DESKTOP_USER=hypr
-DEVELOPMENT_GROUP=dev
-DEVELOPMENT_UID=1000
-
-if ! getent group "$DEVELOPMENT_GROUP" >/dev/null; then
-	groupadd "$DEVELOPMENT_GROUP"
-fi
-if ! getent passwd "$DEVELOPMENT_USER" >/dev/null; then
-	if getent passwd "$DEVELOPMENT_UID" >/dev/null; then
-		printf 'uid %s is already assigned; migrate that account before installing junaga\n' \
-			"$DEVELOPMENT_UID" >&2
-		exit 1
-	fi
-	useradd --uid "$DEVELOPMENT_UID" --create-home --gid "$DEVELOPMENT_GROUP" \
-		--shell /bin/bash "$DEVELOPMENT_USER"
-else
-	test "$(id -u "$DEVELOPMENT_USER")" = "$DEVELOPMENT_UID" || {
-		printf '%s must use uid %s\n' "$DEVELOPMENT_USER" "$DEVELOPMENT_UID" >&2
-		exit 1
-	}
-	usermod --gid "$DEVELOPMENT_GROUP" "$DEVELOPMENT_USER"
-fi
-usermod --append --groups sudo "$DEVELOPMENT_USER"
-if ! getent passwd "$DESKTOP_USER" >/dev/null; then
-	useradd --create-home --gid "$DEVELOPMENT_GROUP" --shell /bin/bash "$DESKTOP_USER"
-else
-	usermod --gid "$DEVELOPMENT_GROUP" "$DESKTOP_USER"
-fi
-USER_NAME="$DESKTOP_USER"
-USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+bash ../base/login.sh
+USER_NAME=local
+USER_HOME=/home/local
 
 function asUser {
 	runuser --user "$USER_NAME" -- env HOME="$USER_HOME" "$@"
@@ -53,23 +25,18 @@ for skeleton in /etc/skel/.[!.]*; do
 	test -e "$USER_HOME/${skeleton##*/}" || cp -a "$skeleton" "$USER_HOME/"
 done
 cp -ra ./home/. "$USER_HOME/."
-chown -R "$USER_NAME:$USER_NAME" "$USER_HOME"
-chmod -R g+rwx "/home/$DEVELOPMENT_USER" "$USER_HOME"
+find "$USER_HOME" -xdev -uid 0 -exec chown -h "$USER_NAME:$USER_NAME" {} +
 # Configuration files.
 cp -ar ./etc/. /etc/.
 systemctl enable getty@tty2.service
 systemctl enable btrbk.timer --now
 swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || swapon /swapfile
 
-# Root launches the graphical session for the fixed desktop user.
+# Install the desktop launcher and utilities.
 for PROGRAM in ./bin/* ./home/bin/*; do
 	install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 
-# The development user owns the local workspace; the shared group preserves
-# access for the desktop user.
-chown -R "$DEVELOPMENT_USER:$DEVELOPMENT_GROUP" /usr/local
-chmod -R g+rwX /usr/local
 
 # Fast boot: skip the GRUB menu and UEFI delay.
 update-grub

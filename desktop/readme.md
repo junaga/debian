@@ -2,27 +2,13 @@
 
 ## User model
 
-| Context     | Role           | User   | Group  | Process          | Files        |
-| :---------- | :------------- | :----- | :----- | :--------------- | :----------- |
-| Debian      | Administration | `root` | `root` | `systemd`        | `/`          |
-| —           | Development    | `dev`  | `dev`  | —                | `/usr/local` |
-| Hyprland    | Operation      | `op`   | `dev`  | `systemd --user` | `/home/op`   |
+| User | Primary group | UID | Role |
+| :-- | :-- | :-- | :-- |
+| `root` | `root` | 0 | System administration |
+| `local` | `local` | 1000 | Desktop, development, and `/usr/local` workspace |
 
-`root` administers Debian. `op` exists because common graphical
-applications, including Chrome, refuse to run as root; it owns Hyprland
-and graphical applications in every aspect.
-
-`dev` autologins on the console and owns the `/usr/local` development
-workspace; the login script runs as its intended user. Keeping development
-separate from desktop lets the same
-system run different desktop environments, each with its own home
-directory and dotfiles, without another system, kernel, or partition.
-The `dev` user is also in `sudo` for administration.
-
-`dev` and `op` share the `dev` group so graphical tools running as `op` can
-work on development files. A terminal emulator is an `op` window with a `dev`
-shell; that user switch is automatic and always occurs. GUI applications run as
-`op` through the application launcher.
+`local` runs the desktop and development tools because applications such as Google Chrome do not support running as root.
+`local` has passwordless sudo and is automatically logged in on Linux virtual terminals, with one home at `/home/local` for both graphical and headless work.
 
 ## NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
