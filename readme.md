@@ -1,6 +1,4 @@
-# Debian [//debian.org](https://debian.org/)
-
-Scripts and dotfiles that record the system changes needed to run our software on Debian Linux.
+# Debian 13 [//debian.org](https://debian.org/)
 
 This branch contains the [design decisions](./design.md), [base configuration](./base), and [Windows setup](./windows). The desktop configuration lives on the [hyprland branch](https://github.com/junaga/debian/tree/hyprland).
 
