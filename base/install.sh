@@ -1,4 +1,6 @@
 set -e
+test "$USER" = root || exec sudo sh "$0"
+
 cd "$(dirname "$0")"
 
 # Bootstrap HTTPS with the existing Debian source.

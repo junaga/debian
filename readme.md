@@ -39,9 +39,7 @@ Copy & Paste, or download files with `git clone`, `curl`, `wget`.
 
 In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were added by Windows _19_-95 supplementing the IBM PC keys. Normally the key `CTRL+C` sends byte `3` which is `"End of Text"` in [ASCII and Unicode](https://en.wikipedia.org/wiki/C0_and_C1_control_codes), desktop systems like `explorer.exe` override this. Finally in 2020 `wt.exe` the [Windows Terminal](https://www.youtube.com/watch?v=8gw0rXPMMPE) added common Linux Terminal key combinations.
 
-## Configuration
-
-Base systems (containers and VPSs) run as `root`.
+## Administration
 
 Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 
