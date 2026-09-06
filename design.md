@@ -55,12 +55,19 @@ HTTPS encrypts package delivery and protects its integrity in transit.
 `Trusted: yes` lets APT trust metadata delivered over that connection without a
 separate `.gpg` signing key.
 
-## Rootless local workspace
+## Shared local workspace
 
-On a personal workstation, root ownership of `/usr/local` pushes local tools
-and projects toward user home directories. Assign `/usr/local` to a non-root
-maintainer instead, keeping home directories for user state and `/usr/local`
-for local software.
+One person uses separate Unix accounts for desktop configurations, with one
+active desktop at a time. A non-root maintainer owns `/usr/local`, consolidating
+local software and intentionally shared application profiles. Bind-mount it at
+`~/.local` and link `~/bin` to `.local/bin`; homes retain documents and dotfiles.
+The bind mount preserves home paths inside Steam containers. Cross-account
+permissions and profile compatibility still require validation.
+
+Shared profiles can contain personal saves and credentials: sharing does not
+make them disposable. Home Btrfs snapshots exclude the mounted tree, so its
+retention policy is separate. Open issue: exclude personal installations from
+root's PATH and system-wide library/resource discovery.
 
 ## Collaborative Unix groups
 
