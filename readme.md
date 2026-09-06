@@ -56,7 +56,7 @@ Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
 cp -ra ./base/home/. ~/.
-sh ./base/login.sh
+sh ./base/init.sh
 
 source ~/.bashrc
 

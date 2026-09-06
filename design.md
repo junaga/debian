@@ -9,7 +9,7 @@ documented in operating-system lifecycle order.
 
 Debian’s `getty@.service` displays a login prompt and requires credentials.
 This single-administrator system treats the local console as its recovery path
-when the network is unavailable. [`base/login.sh`](./base/login.sh) therefore
+when the network is unavailable. [`base/init.sh`](./base/init.sh) therefore
 replaces the virtual-terminal prompt with a session for the current user:
 
 ```systemd
