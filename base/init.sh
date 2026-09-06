@@ -5,11 +5,11 @@ set -e
 
 # Autologin Linux virtual terminals.
 LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
-sudo mkdir -p "$LOCAL_LOGIN_SERVICE"
-sudo tee "$LOCAL_LOGIN_SERVICE/10-local.conf" <<-EOF
+sudo mkdir -p $LOCAL_LOGIN_SERVICE
+sudo tee $LOCAL_LOGIN_SERVICE/10-local.conf <<-EOF
 	[Service]
 	ExecStart=
-	ExecStart=-login -f $USER
+	ExecStart=-login -f $(whoami)
 EOF
 
 # Changes take effect after reboot.
@@ -19,17 +19,17 @@ sudo systemctl daemon-reload
 # ==============================================================================
 
 # Containers need users and groups on the shared kernel.
-grep -q "^$USER:" /etc/subuid || sudo usermod --add-subuids 100000-165535 "$USER"
-grep -q "^$USER:" /etc/subgid || sudo usermod --add-subgids 100000-165535 "$USER"
+grep -q ^$(whoami): /etc/subuid || sudo usermod --add-subuids 100000-165535 $(whoami)
+grep -q ^$(whoami): /etc/subgid || sudo usermod --add-subgids 100000-165535 $(whoami)
 
 # SSH identity
 # ==============================================================================
 
 # Create SSH keys if missing.
 mkdir -p ~/.ssh
-test -f ~/.ssh/id_ed25519 || ssh-keygen -q -N "" \
+test -f ~/.ssh/id_ed25519 || ssh-keygen -q -N '' \
 	-f ~/.ssh/id_ed25519 \
-	-C "$USER@$HOSTNAME"
+	-C $(whoami)@$(hostname)
 
 # Fix private-key permissions if migrated.
 chmod 600 ~/.ssh/id_ed25519
@@ -44,5 +44,5 @@ cat ~/.ssh/id_ed25519.pub
 # Git author
 # ==============================================================================
 
-git config --global user.name "$USER"
-git config --global user.email "$USER@$HOSTNAME"
+git config --global user.name $(whoami)
+git config --global user.email $(whoami)@$(hostname)
