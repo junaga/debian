@@ -36,4 +36,4 @@ spawn_agent({
 
 ## Task titles
 
-- Keep the task title relevant. Use `set_thread_title` when the main subject changes, not for routine follow-ups. Prefer 1-3 words, ideally one.
+- Keep titles relevant with `set_thread_title`: 1-3 words, ideally one.
