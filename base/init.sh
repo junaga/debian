@@ -5,22 +5,22 @@ set -e
 
 # Autologin Linux virtual terminals.
 LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
-mkdir -p "$LOCAL_LOGIN_SERVICE"
-cat > "$LOCAL_LOGIN_SERVICE/10-local.conf" <<-EOF
+sudo mkdir -p "$LOCAL_LOGIN_SERVICE"
+sudo tee "$LOCAL_LOGIN_SERVICE/10-local.conf" <<-EOF
 	[Service]
 	ExecStart=
 	ExecStart=-login -f $USER
 EOF
 
 # Changes take effect after reboot.
-systemctl daemon-reload
+sudo systemctl daemon-reload
 
 # Rootless containers
 # ==============================================================================
 
 # Containers need users and groups on the shared kernel.
-grep -q "^$USER:" /etc/subuid || usermod --add-subuids 100000-165535 "$USER"
-grep -q "^$USER:" /etc/subgid || usermod --add-subgids 100000-165535 "$USER"
+grep -q "^$USER:" /etc/subuid || sudo usermod --add-subuids 100000-165535 "$USER"
+grep -q "^$USER:" /etc/subgid || sudo usermod --add-subgids 100000-165535 "$USER"
 
 # SSH identity
 # ==============================================================================

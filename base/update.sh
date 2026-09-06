@@ -1,4 +1,5 @@
 set -eu
+test "$USER" = root || exec sudo sh "$0"
 
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_SUSPEND=1
