@@ -104,6 +104,7 @@ sudo apt install --yes --target-release trixie-backports \
   nwg-look\
   hyprshutdown\
   systemd-timesyncd\
+  xdg-desktop-portal-gtk\
   xdg-desktop-portal-hyprland\
   xwayland;
 

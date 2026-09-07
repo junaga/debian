@@ -66,6 +66,25 @@ sudo reboot
 desktop
 ```
 
+## Dark mode
+
+The [desktop launcher](./bin/desktop) sets the current user's dark appearance
+preference before starting Hyprland. `xdg-desktop-portal-gtk` publishes it through
+the XDG Settings portal; Hyprland's packaged portal configuration already selects
+GTK for this interface. The launcher also selects `Adwaita-dark` for native
+Wayland GTK apps that use theme names. Applications with their own appearance
+settings should use their system/default option; some applications may need
+restarting. Legacy X11 apps may need separate theme configuration.
+
+This belongs to the desktop session configuration, alongside Hyprland, rather
+than Debian's base configuration or a system-wide `/etc` override. Apply the
+same preference to an existing session without restarting the compositor:
+
+```sh
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+```
+
 ## Recover a stuck desktop
 
 Magic SysRq is handled by the kernel, so it can recover the keyboard even when
