@@ -166,6 +166,9 @@ sudo apt install --yes \
     fonts-noto-cjk-extra\
   fonts-noto-color-emoji;
 
+# 3D creation
+sudo apt install blender --yes
+
 # Third-party desktop applications
 function installURL {
 	(
