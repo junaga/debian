@@ -1,5 +1,2 @@
 #!/bin/sh
-# Publish the desktop preference before Hyprland starts applications.
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 exec start-hyprland "$@"

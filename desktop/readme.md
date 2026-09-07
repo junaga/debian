@@ -47,8 +47,8 @@ before installing on a fresh system. Run the following as `junaga` from the
 repository root. Keep `base/login.sh` and `desktop/install.sh` in the user's
 session; they request privileges internally. The base home copy is for a fresh
 home only; merge existing files while preserving SSH configuration and Codex
-project, plugin, and MCP settings. The desktop installer also copies its home
-configuration, so review those files before rerunning it:
+project, plugin, and MCP settings. The desktop home configuration and dconf
+database are installed only when initializing a fresh desktop home.
 
 ```sh
 sudo sh ./base/install.sh
@@ -68,22 +68,16 @@ desktop
 
 ## Dark mode
 
-The [desktop launcher](./bin/desktop) sets the current user's dark appearance
-preference before starting Hyprland. `xdg-desktop-portal-gtk` publishes it through
-the XDG Settings portal; Hyprland's packaged portal configuration already selects
-GTK for this interface. The launcher also selects `Adwaita-dark` for native
-Wayland GTK apps that use theme names. Applications with their own appearance
-settings should use their system/default option; some applications may need
-restarting. Legacy X11 apps may need separate theme configuration.
+The readable [appearance settings](./dconf.d/appearance) select dark mode and
+`Adwaita-dark` for native Wayland GTK apps. During fresh desktop creation, the
+installer uses `dconf compile` from `dconf-cli` to build `~/.config/dconf/user`.
+Only the source is tracked; the binary database is generated during installation.
+The desktop launcher does not reset preferences at startup.
 
-This belongs to the desktop session configuration, alongside Hyprland, rather
-than Debian's base configuration or a system-wide `/etc` override. Apply the
-same preference to an existing session without restarting the compositor:
-
-```sh
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
-```
+`xdg-desktop-portal-gtk` publishes the preference through the XDG Settings portal;
+Hyprland's packaged portal configuration selects GTK for this interface.
+Applications with their own appearance settings should use their system/default
+option. Legacy X11 apps may need separate theme configuration.
 
 ## Recover a stuck desktop
 

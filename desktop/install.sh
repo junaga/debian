@@ -13,10 +13,12 @@ sudo -v
 
 test "$(findmnt -n -T / -o FSTYPE)" = btrfs
 sudo btrfs subvolume show /home >/dev/null
-sudo apt install btrfs-progs btrbk --yes
+sudo apt install btrfs-progs btrbk dconf-cli --yes
 
 # Install home configuration as the current user.
 cp -r --no-preserve=ownership ./home/. "$HOME/."
+mkdir -p "$HOME/.config/dconf"
+dconf compile "$HOME/.config/dconf/user" ./dconf.d
 # Configuration files.
 sudo visudo -cf ./etc/sudoers.d/desktop
 sudo cp -r --no-preserve=ownership ./etc/. /etc/.
