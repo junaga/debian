@@ -37,3 +37,7 @@ spawn_agent({
 ## Codex
 
 - Use `set_thread_title` on the first prompt and each subject change: 1-3 words, ideally one.
+
+## Human
+
+- When I say I’m "AFK", remain silent until I explicitly announce my return.
