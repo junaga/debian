@@ -22,6 +22,30 @@ workspace ownership. The current workspace directories are owned by
 `junaga:dev`. See [design.md](../design.md#rootless-local-workspace) for the
 ownership and shared-group policy.
 
+## Archive disk
+
+The exFAT disk labeled `archive1` mounts at `/mnt/archive1`. Its entry in
+[`etc/fstab`](./etc/fstab) identifies the filesystem by UUID `06AA-08E8`, so the
+path survives changes to Linux device names. Systemd mounts it on first access;
+`nofail` lets the workstation boot when the disk is disconnected, with a
+five-second device timeout for access while absent.
+
+Files appear as `junaga:dev` (UID 1000, GID 1001), with writable group access,
+non-executable regular files, and `nosuid,nodev`. exFAT does not retain Unix
+ownership, permissions, or symlinks; keep active Git worktrees in
+`/usr/local/dev` and use this disk for archives. Check the numeric IDs before
+reusing this configuration on another workstation.
+
+To apply this entry after merging it into `/etc/fstab`:
+
+```sh
+sudo mkdir -p /mnt/archive1
+sudo systemctl daemon-reload
+sudo systemctl start mnt-archive1.automount
+ls /mnt/archive1
+findmnt /mnt/archive1
+```
+
 ## NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
 
 On a fresh Btrfs installation, prepare the empty `/home` as root before creating
