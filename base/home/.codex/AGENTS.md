@@ -32,8 +32,8 @@ spawn_agent({
 
 ## Markdown
 
-- Prefer source-readable Markdown tables.
+- Align Markdown table source columns with spaces.
 
-## Task titles
+## Codex
 
-- Keep titles relevant with `set_thread_title`: 1-3 words, ideally one.
+- Use `set_thread_title` on the first prompt and each subject change: 1-3 words, ideally one.
