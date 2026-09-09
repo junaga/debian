@@ -22,6 +22,7 @@ dconf compile "$HOME/.config/dconf/user" ./dconf.d
 # Configuration files.
 sudo visudo -cf ./etc/sudoers.d/desktop
 sudo cp -r --no-preserve=ownership ./etc/. /etc/.
+sudo systemd-tmpfiles --create /etc/tmpfiles.d/archive.conf
 sudo chmod 0440 /etc/sudoers.d/desktop
 sudo visudo -cf /etc/sudoers.d/desktop
 sudo systemctl enable getty@tty2.service

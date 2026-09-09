@@ -27,9 +27,14 @@ ownership and shared-group policy.
 The current 1.8 TB ext4 archive mounts at `/mnt/archive`, identified by UUID
 `44db4ead-1413-4041-b963-33e5c634c381`. It preserves Unix ownership, permissions,
 and symlinks. This is the permanent location for archived development projects
-and workstation backups. The older exFAT archive remains separate.
+and workstation backups. `/usr/local/archive` is a symlink to this mount, giving
+it a convenient path beside `/usr/local/src` and `/usr/local/dev`.
+[`etc/tmpfiles.d/archive.conf`](./etc/tmpfiles.d/archive.conf) recreates the link
+at boot if missing; the desktop installer also applies it immediately.
 
-The exFAT disk labeled `archive1` mounts at `/mnt/archive1`. Its entry in
+The older 223.6 GB exFAT disk labeled `archive1` mounts at `/mnt/archive1`.
+These are two separate physical disks, not duplicate mounts of one archive.
+Its entry in
 [`etc/fstab`](./etc/fstab) identifies the filesystem by UUID `06AA-08E8`, so the
 path survives changes to Linux device names. Systemd mounts it on first access;
 `nofail` lets the workstation boot when the disk is disconnected, with a
@@ -46,6 +51,8 @@ them into `/etc/fstab`:
 
 ```sh
 sudo mkdir -p /mnt/archive /mnt/archive1
+sudo install -D -m 0644 desktop/etc/tmpfiles.d/archive.conf /etc/tmpfiles.d/archive.conf
+sudo systemd-tmpfiles --create /etc/tmpfiles.d/archive.conf
 sudo systemctl daemon-reload
 sudo systemctl start mnt-archive.automount mnt-archive1.automount
 ls /mnt/archive /mnt/archive1
