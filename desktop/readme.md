@@ -22,7 +22,12 @@ workspace ownership. The current workspace directories are owned by
 `junaga:dev`. See [design.md](../design.md#rootless-local-workspace) for the
 ownership and shared-group policy.
 
-## Archive disk
+## Archive disks
+
+The current 1.8 TB ext4 archive mounts at `/mnt/archive`, identified by UUID
+`44db4ead-1413-4041-b963-33e5c634c381`. It preserves Unix ownership, permissions,
+and symlinks. This is the permanent location for archived development projects
+and workstation backups. The older exFAT archive remains separate.
 
 The exFAT disk labeled `archive1` mounts at `/mnt/archive1`. Its entry in
 [`etc/fstab`](./etc/fstab) identifies the filesystem by UUID `06AA-08E8`, so the
@@ -36,13 +41,15 @@ ownership, permissions, or symlinks; keep active Git worktrees in
 `/usr/local/dev` and use this disk for archives. Check the numeric IDs before
 reusing this configuration on another workstation.
 
-To apply this entry after merging it into `/etc/fstab`:
+Both archives use UUID-based automounts. To apply these entries after merging
+them into `/etc/fstab`:
 
 ```sh
-sudo mkdir -p /mnt/archive1
+sudo mkdir -p /mnt/archive /mnt/archive1
 sudo systemctl daemon-reload
-sudo systemctl start mnt-archive1.automount
-ls /mnt/archive1
+sudo systemctl start mnt-archive.automount mnt-archive1.automount
+ls /mnt/archive /mnt/archive1
+findmnt /mnt/archive
 findmnt /mnt/archive1
 ```
 

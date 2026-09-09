@@ -10,3 +10,6 @@
 
 # Archive disk: stable path; boot continues when the removable disk is absent.
 UUID=06AA-08E8 /mnt/archive1 exfat nofail,x-systemd.automount,x-systemd.device-timeout=5s,uid=1000,gid=1001,dmask=0002,fmask=0113,nosuid,nodev 0 0
+
+# Current archive: ext4 preserves Unix metadata for archived development trees.
+UUID=44db4ead-1413-4041-b963-33e5c634c381 /mnt/archive ext4 nofail,x-systemd.automount,x-systemd.device-timeout=5s,nosuid,nodev 0 2
