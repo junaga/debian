@@ -23,9 +23,21 @@ wsl.exe --install debian
 
 Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) to install and run 24/7 online apps or games. Sign up with a credit; debit card. Then provision; subscribe; rent any container; server; hardware.
 
-### Hardware (64-Bit-IBM-PC)
+### Hardware (Live USB)
 
-For Desktop; Laptop; `x86-64` devices **create a bootable USB drive** (similar to the [windows/](./windows) installation procedure). Boot UEFI, boot the USB, install into a HDD; SSD; M.2, then boot that filesystem. You can also boot from microSD; network; memory. Ask ChatGPT; call me on discord `@junaga` for help.
+For `x86-64`, flash a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB) and boot that system. **Back up the USB first, everything will be deleted.** Ask ChatGPT and call `@junaga` on Discord for help.
+
+```sh
+# On Linux or macOS
+
+# Debian on a ≥ 2.1 GiB USB
+export VERSION="13.6.0" # https://en.wikipedia.org/wiki/Debian
+export ISO="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-${VERSION}-amd64-standard.iso"
+export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"; for macOS: USB="/dev/diskN"
+sh base/flash.sh
+```
+
+From the USB, install onto a **fast disk** (`M.2`; `SSD`; `HDD`; another `USB`; `microSD`; etc), then shut down, unplug the live USB, and boot the installed system.
 
 ## Initialization
 
