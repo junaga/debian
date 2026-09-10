@@ -24,9 +24,10 @@ declare PS1="$BLUE\H\$PWD$RESET "
 
 export LANG="C.UTF-8"
 export PAGER="/bin/less"
+export EDITOR="micro"
 # export SHELL="/bin/bash"
 # export BROWSER="google-chrome-stable"
-export EDITOR="micro"
+export AGENT="codex"
 
 # tools
 ##########################
@@ -35,8 +36,6 @@ alias rcp="rsync -azP --filter=\":- .gitignore\""
 alias date="date +%Y-%m-%d"
 alias datetime="command date +%Y-%m-%d-%H-%M-%S"
 function man { echo "https://manpages.debian.org/$1.en"; }
-
 function rcode { code --remote "ssh-remote+$1" "$2"; }
-alias chat="codex resume --yolo"
 
-# cd /usr/local
+# cd /usr/local/dev

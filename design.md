@@ -5,38 +5,11 @@ This document records intentional deviations from Debian defaults and the
 reasoning behind them. Each deviation is an individual design decision,
 documented in operating-system lifecycle order.
 
-## Mount the Booted ESP Partition
-
-[`desktop/etc/fstab`](./desktop/etc/fstab)
-
-```fstab
-/dev/disk/by-designator/esp  /boot/efi  vfat  umask=0077  0  1
-```
-
-A FAT UUID identifies one formatting of one ESP. The systemd designator
-identifies the ESP that supplied the running bootloader:
-
-```text
-/boot/grub/grub.cfg                  insmod bli
-LoaderDevicePartUUID                 c859eaf4-6adf-49ed-8dce-e20ca5fb6349
-ID_PART_ENTRY_UUID                   c859eaf4-6adf-49ed-8dce-e20ca5fb6349
-ID_DISSECT_PART_DESIGNATOR           esp
-/dev/disk/by-designator/esp       -> /dev/sdb1
-/boot/efi                         -> /dev/sdb1  (ID_FS_UUID=A31E-0712)
-```
-
-GRUB's Boot Loader Interface module writes `LoaderDevicePartUUID`; udev matches
-that GPT partition and creates the semantic link. The mount therefore follows
-the boot path across FAT reformats, device enumeration changes, and multiple
-ESPs instead of assuming a filesystem UUID, partition number, disk, or relation
-to `/`. The complete chain was observed on this installation and recorded in
-`8da3344`.
-
 ## Autologin on Linux virtual terminals
 
 Debian’s `getty@.service` displays a login prompt and requires credentials.
 This single-administrator system treats the local console as its recovery path
-when the network is unavailable. [`base/login.sh`](./base/login.sh) therefore
+when the network is unavailable. [`base/init.sh`](./base/init.sh) therefore
 replaces the virtual-terminal prompt with a session for the current user:
 
 ```systemd

@@ -6,7 +6,7 @@
   "CtrlW": "ForceQuit",
 
   // 1987 IBM CUA
-  "CtrlInsert": "Copy|CopyLine",
+  "CtrlInsert": "CopyLine|Copy",
   "ShiftInsert": "Paste",
   "ShiftDelete": "Cut|CutLine",
 

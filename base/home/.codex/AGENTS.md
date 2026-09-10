@@ -6,7 +6,6 @@ Agents use context and tools to complete work.
 
 - Prefer the `gh` CLI over GitHub skills.
 - Add `Co-authored-by: Codex <codex@openai.com>` to completed commits.
-- Push directly to `main` in repositories under `/usr/local/dev/$USER`.
 
 ## Subagent
 
@@ -33,8 +32,12 @@ spawn_agent({
 
 ## Markdown
 
-- Prefer source-readable Markdown tables.
+- Align Markdown table source columns with spaces.
 
-## Task titles
+## Codex
 
-- Use `set_thread_title` freely to keep the title relevant. Prefer 1-3 words, ideally one.
+- Use `set_thread_title` on the first prompt and each subject change: 1-3 words, ideally one.
+
+## Human
+
+- When I say I’m "AFK", remain silent until I explicitly announce my return.

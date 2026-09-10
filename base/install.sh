@@ -1,5 +1,7 @@
 set -e
-cd "$(dirname "$0")"
+test $(whoami) = root || exec sudo sh $0
+
+cd $(dirname $0)
 
 # Bootstrap HTTPS with the existing Debian source.
 apt update
