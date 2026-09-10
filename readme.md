@@ -28,7 +28,7 @@ Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) t
 For `x86-64`, flash a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB) and boot that system. **Back up the USB first, everything will be deleted.** Ask ChatGPT and call `@junaga` on Discord for help.
 
 ```sh
-# On Linux or macOS
+# On macOS or Linux
 
 # Debian on a ≥ 2.1 GiB USB
 export VERSION="13.6.0" # https://en.wikipedia.org/wiki/Debian
@@ -36,6 +36,8 @@ export ISO="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/d
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"; for macOS: USB="/dev/diskN"
 sh base/flash.sh
 ```
+
+On WSL2, first [set up USB passthrough](windows/usb.md).
 
 From the USB, install onto a **fast disk** (`M.2`; `SSD`; `HDD`; another `USB`; `microSD`; etc), then shut down, unplug the live USB, and boot the installed system.
 

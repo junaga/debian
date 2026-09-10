@@ -24,3 +24,4 @@ fi
 # Copy ISO to USB
 sudo cp -v "$file" "$USB_2_0"
 sudo sync
+echo "Done"
