@@ -42,16 +42,6 @@ make them disposable. Home Btrfs snapshots exclude the mounted tree, so its
 retention policy is separate. Open issue: exclude personal installations from
 root's PATH and system-wide library/resource discovery.
 
-## Collaborative Unix groups
-
-Debian's `022` umask gives group members and other users identical permissions
-on ordinary new paths, so group membership grants no additional access by
-default. That protects broad shared groups on multi-user workstations; this
-personal workstation does not need that model. It uses
-[`UMASK=002`](./desktop/etc/default/login), making new files and directories
-group-writable while withholding write access from others, so trusted Unix
-groups become collaboration boundaries.
-
 ## Install updates every 60 seconds
 
 AI shortens the interval between disclosure and exploitation: Google observed
