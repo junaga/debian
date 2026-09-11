@@ -4,7 +4,6 @@ DIR=$PWD/$(dirname $0)
 cd /var/tmp
 
 # Download
-URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-${VERSION}-amd64-standard.iso"
 curl -fL $URL > debian.iso
 
 # Unpack
