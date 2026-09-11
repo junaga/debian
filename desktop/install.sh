@@ -44,8 +44,7 @@ sudo efibootmgr --timeout 0
 # HARDWARE
 # ==============================================================================
 
-# Motherboard temperature/RPM readings and ASUS native fan policy control.
-# The hardware installer board-gates nct6775 and builds the ASUS WMI helper.
+# Motherboard temperature/RPM readings and temperature-based fan control tools.
 sudo bash ./install-hardware-control.sh
 
 # NVIDIA graphics.

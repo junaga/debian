@@ -106,44 +106,16 @@ desktop
 
 ## Motherboard monitoring and fans
 
-The desktop installer installs Debian's `lm-sensors` for temperature and fan RPM
-readings and `fancontrol` for temperature-based fan curves. On the ASUS PRIME
-Z370-P it also installs the board-gated `asus-fan` WMI helper. The helper is
-built against the running kernel and stored with its source at
-`/usr/local/lib/asus-fan`; `/usr/local/bin/asus-fan` loads it only when explicitly
-used. It reads and applies the ASUS `SILENT` or `STANDARD` policy for the two
-firmware fan-policy groups (IDs 0 and 1), preserving `AUTO` mode and each
-group's low limit, then
-verifies the result and rolls back failed changes. The installer does not
-request `nct6775` at boot on this board because its ACPI resource is actively
-claimed by firmware. Other boards retain the generic
-[`etc/modules-load.d/nct6775.conf`](./etc/modules-load.d/nct6775.conf) path.
-Firmware updates use `fwupd`, already included in `base/update.sh`, for devices
-with supported updates. These tools do not provide general firmware editing or
-LED control.
+The desktop installer installs Debian's `lm-sensors` for temperature and fan
+readings and `fancontrol` for temperature-based fan curves. It does not change
+fan profiles or configure a fan curve.
 
-To install only these tools and the boot configuration on an existing system,
-run from the repository root:
+To install these packages on an existing system, run from the repository root:
 
 ```sh
 sudo bash desktop/install-hardware-control.sh
-sudo /usr/local/bin/asus-fan read       # ASUS PRIME Z370-P only
-# sudo /usr/local/bin/asus-fan silent    # explicit, verified policy change
 sensors
 ```
-
-On this workstation, the September 2026 diagnostic identified the NCT6793D but
-the driver reported an ACPI OpRegion resource conflict and did not register its
-hardware-monitoring interface. Installing packages and requesting the module
-does not resolve that conflict: motherboard RPM and PWM controls remain
-unavailable through `nct6775`. The board-gated WMI helper uses ASUS's native
-policy method instead and does not override ACPI resource ownership.
-
-The helper has verified native `SILENT` and `STANDARD` policy changes while
-preserving the board's `AUTO` mode and low limits. It does not configure a
-userspace `fancontrol` service or manual PWM curves. RPM mapping, long-term
-profile persistence, and LED control remain unverified; `pwmconfig` can stop
-fans during calibration and is not run by the installer.
 
 ## Dark mode
 
@@ -170,7 +142,3 @@ when the entire graphical session should be terminated.
 `K` operation intentionally terminates the entire graphical session.
 
 ![Hyprland Desktop Screenshot](./hypr.webp)
-
-The physical header mapping and persistence across reboot are unverified.
-After a kernel upgrade, rerun the focused installer to rebuild the module for
-the running kernel.
