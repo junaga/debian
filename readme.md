@@ -25,7 +25,7 @@ Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) t
 
 ### Hardware (Live USB)
 
-For `x86-64` devices, flash a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB) large enough for the ISO. **Back up and unmount the USB first; everything will be deleted.** On WSL use [USB passthrough](windows/linux/usb.md). Ask ChatGPT and call `@junaga` on Discord for help.
+For `x86-64`, flash the `.iso` to a sufficiently large USB drive to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). **Back up and unmount the drive first; flashing erases it.** With WSL, use [USB passthrough](windows/linux/usb.md). For help, ask ChatGPT or call `@junaga` on Discord.
 
 ```sh
 # version 13.6.0
@@ -35,7 +35,7 @@ export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" 
 sh ./base/flash.sh
 ```
 
-Boot the USB and install onto a **fast disk** `M.2`; `SSD`; `HDD`; another `USB`; `microSD`; etc, then shut down, unplug the USB, and boot the installed system.
+Boot from the USB and install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc). Then shut down, remove the USB, and boot the installed system.
 
 ## Initialization
 
