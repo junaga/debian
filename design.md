@@ -1,26 +1,8 @@
-# Debian Design Deviations
+# Debian Design Deviations `DDD`
 
-Debian `stable` is a strong baseline, but its best practices may not be perfect.
-This document records intentional deviations from Debian defaults and the
-reasoning behind them. Each deviation is an individual design decision,
-documented in operating-system lifecycle order.
-
-## Autologin on Linux virtual terminals
-
-Debian’s `getty@.service` displays a login prompt and requires credentials.
-This single-administrator system treats the local console as its recovery path
-when the network is unavailable. [`base/init.sh`](./base/init.sh) therefore
-replaces the virtual-terminal prompt with a session for the current user:
-
-```systemd
-[Service]
-ExecStart=
-ExecStart=-login -f $USER
-```
-
-The override affects only `getty@.service` instances, not serial consoles, SSH,
-or display managers. Anyone with physical or hypervisor-console access receives
-the current user's access.
+Debian 13 `trixie` is the baseline. We deviate from its defaults only when
+doing so significantly improves the system. This document records each
+decision and its rationale.
 
 ## Replace `apt-secure` with HTTPS
 
@@ -48,3 +30,20 @@ eligible system services; user sessions and kernel reboots remain explicit
 because they are disruptive. That is 43,200 requests per month for one host;
 npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
+
+## Autologin on Linux virtual terminals
+
+Debian’s `getty@.service` displays a login prompt and requires credentials.
+This single-administrator system treats the local console as its recovery path
+when the network is unavailable. [`base/init.sh`](./base/init.sh) therefore
+replaces the virtual-terminal prompt with a session for the current user:
+
+```systemd
+[Service]
+ExecStart=
+ExecStart=-login -f $USER
+```
+
+The override affects only `getty@.service` instances, not serial consoles, SSH,
+or display managers. Anyone with physical or hypervisor-console access receives
+the current user's access.
