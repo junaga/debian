@@ -104,6 +104,39 @@ sudo reboot
 desktop
 ```
 
+## Motherboard monitoring and fans
+
+The desktop installer installs Debian's `lm-sensors` for temperature and fan RPM
+readings and `fancontrol` for temperature-based fan curves. The ASUS PRIME Z370-P
+has a Nuvoton NCT6793D controller, supported by the stock kernel's `nct6775`
+module. [`etc/modules-load.d/nct6775.conf`](./etc/modules-load.d/nct6775.conf)
+requests this driver at boot; no separate driver package or DKMS build is needed.
+Firmware updates use `fwupd`, already included in `base/update.sh`, for devices
+with supported updates. These tools do not provide general firmware editing or
+LED control.
+
+To install only these tools and the boot configuration on an existing system,
+run from the repository root:
+
+```sh
+sudo bash desktop/install-hardware-control.sh
+sudo modprobe nct6775
+sensors
+```
+
+On this workstation, the September 2026 diagnostic identified the NCT6793D but
+the driver reported an ACPI OpRegion resource conflict and did not register its
+hardware-monitoring interface. Installing packages and requesting the module
+does not resolve that conflict: motherboard RPM and PWM controls remain
+unavailable until the driver can register. This configuration does not override
+ACPI resource ownership.
+
+No fan curve or `fancontrol` service is configured yet. Once the controller is
+accessible, map each PWM channel to its physical fan and establish a reliable
+minimum running speed before enabling a temperature curve. `pwmconfig` can stop
+fans during calibration; do not run it unattended or from the installer. Keep
+automatic motherboard cooling active until a verified curve is ready.
+
 ## Dark mode
 
 The readable [appearance settings](./dconf.d/appearance) select dark mode and

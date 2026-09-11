@@ -44,6 +44,11 @@ sudo efibootmgr --timeout 0
 # HARDWARE
 # ==============================================================================
 
+# Motherboard temperature/RPM readings and configurable fan curves.
+# nct6775 ships with Debian's kernel; modules-load.d requests it at boot.
+# Configure fancontrol only after the controller exposes verified PWM channels.
+sudo bash ./install-hardware-control.sh
+
 # NVIDIA graphics.
 sudo apt update
 sudo apt install nvidia-driver-pinning-580 --yes
