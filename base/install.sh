@@ -5,14 +5,13 @@ cd $(dirname $0)
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_SUSPEND="1"
 
-# Bootstrap HTTPS from signed Debian HTTP repositories
-rm -f /etc/apt/sources.list
-cp repo/debian.sources /etc/apt/sources.list.d/
+# Bootstrap HTTPS
 apt update
 apt install --yes ca-certificates
 
-# Add third-party HTTPS repositories
-cp -r repo/. /etc/apt/sources.list.d/
+# Install HTTPS repositories
+cp -r --preserve=timestamps apt/. /etc/apt/
+rm -f /etc/apt/sources.list
 
 # Install packages
 apt update
@@ -27,10 +26,9 @@ apt install --yes \
 	python3 python3-venv python3-pip python3-dev pipx \
 	lua5.1 luarocks
 
-# Install global tools
+# Install packages
 pipx install --global huggingface_hub
 npm install --global --no-fund @openai/codex
 
 # Update every minute
-cp update.sh /etc/apt/update.sh
 echo "* * * * * root sh /etc/apt/update.sh" >> /etc/crontab
