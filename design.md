@@ -22,11 +22,14 @@ The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
 
-## Trust APT Sources Through HTTPS
+## Replace `apt-secure` with HTTPS
 
-HTTPS encrypts package delivery and protects its integrity in transit.
-`Trusted: yes` lets APT trust metadata delivered over that connection without a
-separate `.gpg` signing key.
+All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
+(`.gpg`) keys. [`base/apt/apt.conf`](./base/apt/apt.conf) disables `apt-secure`
+enforcement for "unauthenticated" repositories and packages.
+
+If a repository serves signed `InRelease` without a `.gpg` key, APT warns but
+continues.
 
 ## Shared local workspace
 

@@ -1,27 +1,29 @@
 set -eu
-URL_ISO="${ISO:?Set ISO to a download URL}"
-USB_2_0="${USB:?Set USB to a whole drive}"
+test $(whoami) != "root" && exec sudo -E sh $0
+DIR=$PWD/$(dirname $0)
+cd /var/tmp
 
-# Download ISO
-cd /tmp
-file="${URL_ISO##*/}"
-curl -vfL "$URL_ISO" > "$file"
+# Download
+URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-${VERSION}-amd64-standard.iso"
+curl -fL $URL > debian.iso
 
-# Unmount macOS USB
-if test "$(uname)" = Darwin; then
-	sudo diskutil unmountDisk "$USB_2_0"
-fi
+# Unpack
+osirrox -indev debian.iso -extract /live/filesystem.squashfs fs
+unsquashfs -d debian fs
 
-# Unmount Linux USB
-if test "$(uname)" = Linux; then
-	partitions=$(lsblk -nro PATH "$USB_2_0")
-	for partition in $partitions; do
-		findmnt -S "$partition" || continue
-		sudo umount --all-targets "$partition"
-	done
-fi
+# Copy dotfiles
+cp -r --preserve=timestamps $DIR/home/. debian/etc/skel/
 
-# Copy ISO to USB
-sudo cp -v "$file" "$USB_2_0"
-sudo sync
-echo "Done"
+# Install packages
+systemd-nspawn -D debian -a \
+	--bind-ro=$DIR:/mnt \
+	-E SYSTEMD_OFFLINE=1 sh /mnt/install.sh
+
+# Repack
+mksquashfs debian fs -noappend
+xorriso -dev debian.iso -map fs /live/filesystem.squashfs \
+	-rm /md5sum.txt /sha256sum.txt /live/filesystem.packages -- \
+	-boot_image any replay -end
+
+# Flash
+cp debian.iso $USB

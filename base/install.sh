@@ -1,19 +1,34 @@
-set -e
-test $(whoami) = root || exec sudo sh $0
-
+set -eu
+test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
 
-# Bootstrap HTTPS with the existing Debian source.
+export DEBIAN_FRONTEND="noninteractive"
+export NEEDRESTART_SUSPEND="1"
+
+# Bootstrap HTTPS
 apt update
 apt install --yes ca-certificates
 
-# Install Base repositories.
-cp -ar repo/. /etc/apt/sources.list.d/
+# Install HTTPS repositories
+cp -r --preserve=timestamps apt/. /etc/apt/
 rm -f /etc/apt/sources.list
 
-# Upgrade.
-sh ./update.sh
+# Install packages
+apt update
+apt install --yes \
+	cron micro less rsync \
+	git gh ssh kitty-terminfo \
+	curl openssl \
+	fd-find ripgrep tree file crudini jq pup \
+	direnv needrestart fwupd xorriso squashfs-tools systemd-container \
+	podman tailscale \
+	nodejs build-essential pkg-config \
+	python3 python3-venv python3-pip python3-dev pipx \
+	lua5.1 luarocks
 
-# Upgrade every 60 seconds.
-cp ./update.sh /etc/apt/update.sh
-echo "* * * * * root systemd-cat --identifier=update.sh /bin/sh -c '/bin/sh /etc/apt/update.sh >/dev/null'" >> /etc/crontab
+# Install packages
+pipx install --global huggingface_hub
+npm install --global --no-fund @openai/codex
+
+# Update every minute
+echo "* * * * * root sh /etc/apt/update.sh" >> /etc/crontab
