@@ -1,19 +1,19 @@
-# Debian 13 [//debian.org](https://debian.org/)
+# [Debian](https://github.com/junaga/debian) -- [debian.org](https://debian.org/)
 
-I use the Debian operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
+We use the [Debian](https://en.wikipedia.org/wiki/Debian) [Linux distribution](https://en.wikipedia.org/wiki/List_of_Linux_distributions) operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
 
 ```sh
 uname #> Linux
 hostnamectl #> Debian
 ```
 
-## Installation
+Contributors and agents: see [design decisions](./design.md).
 
-It is highly recommended to install Debian on Windows WSL. Do not waste your time installing it on PC hardware.
+## Installation
 
 ### Windows
 
-On Windows 11 use the [windows/linux/](./windows/linux) subsystem.
+**Recommended:** Windows 11 with the [windows/linux/](./windows/linux) subsystem.
 
 ```sh
 wsl.exe --install debian
@@ -25,16 +25,17 @@ Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) t
 
 ### Hardware (Live USB)
 
-For `x86-64` devices, flash a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB) large enough for the ISO. **Back up and unmount the USB first; everything will be deleted.** On Windows use WSL2 with [USB passthrough](windows/linux/usb.md). Ask ChatGPT and call `@junaga` on Discord for help.
+For `x86-64` devices, flash a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB) large enough for the ISO. **Back up and unmount the USB first; everything will be deleted.** On WSL use [USB passthrough](windows/linux/usb.md). Ask ChatGPT and call `@junaga` on Discord for help.
 
 ```sh
-export VERSION="13.6.0" # https://en.wikipedia.org/wiki/Debian
+# version 13.6.0
+export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.6.0-amd64-standard.iso"
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"
 
 sh ./base/flash.sh
 ```
 
-Boot the USB and install onto a **fast disk** (`M.2`; `SSD`; `HDD`; another `USB`; `microSD`; etc), then shut down, unplug the USB, and boot the installed system.
+Boot the USB and install onto a **fast disk** `M.2`; `SSD`; `HDD`; another `USB`; `microSD`; etc, then shut down, unplug the USB, and boot the installed system.
 
 ## Initialization
 
