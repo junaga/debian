@@ -1,5 +1,5 @@
 set -eu
-test $(whoami) = root || exec sudo sh $0
+test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
 
 export DEBIAN_FRONTEND="noninteractive"
