@@ -1,0 +1,59 @@
+#!/bin/sh
+set -eu
+
+BASE=${ASUS_Z370_WMI_CONTROL_DIR:-/usr/local/lib/asus-fan}
+KO="$BASE/asus_z370_wmi_control.ko"
+DBG=/sys/kernel/debug/asus-z370-wmi-control
+
+if [ "$(id -u)" -ne 0 ]; then
+	echo "asus-fan: run as root" >&2
+	exit 1
+fi
+
+if [ ! -d "$DBG" ]; then
+	[ -r "$KO" ] || {
+		echo "asus-fan: build module first: $KO" >&2
+		exit 1
+	}
+	insmod "$KO"
+fi
+
+show_status() {
+	status=$(cat "$DBG/status") || return 1
+	printf '%s\n' "$status"
+	case "$status" in
+		read\ failed:*) return 1 ;;
+	esac
+}
+
+write_action() {
+	action=$1
+	if printf '%s\n' "$action" > "$DBG/apply_profile"; then
+		return 0
+	else
+		rc=$?
+	fi
+	echo "asus-fan: $action failed ($rc)" >&2
+	cat "$DBG/last_result" 2>/dev/null || true
+	return "$rc"
+}
+
+case "${1:-status}" in
+	status)
+		show_status
+		;;
+	read)
+		write_action READ
+		cat "$DBG/snapshot"
+		cat "$DBG/last_result"
+		;;
+	silent|standard)
+		write_action "$(printf '%s' "$1" | tr '[:lower:]' '[:upper:]')"
+		show_status
+		cat "$DBG/last_result"
+		;;
+	*)
+		echo "usage: asus-fan {status|read|silent|standard}" >&2
+		exit 2
+		;;
+esac

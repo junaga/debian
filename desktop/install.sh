@@ -44,9 +44,8 @@ sudo efibootmgr --timeout 0
 # HARDWARE
 # ==============================================================================
 
-# Motherboard temperature/RPM readings and configurable fan curves.
-# nct6775 ships with Debian's kernel; modules-load.d requests it at boot.
-# Configure fancontrol only after the controller exposes verified PWM channels.
+# Motherboard temperature/RPM readings and ASUS native fan policy control.
+# The hardware installer board-gates nct6775 and builds the ASUS WMI helper.
 sudo bash ./install-hardware-control.sh
 
 # NVIDIA graphics.
