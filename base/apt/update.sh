@@ -1,4 +1,5 @@
 set -eu
+test $(whoami) != "root" && exec sudo -E sh $0
 
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_MODE="a"
