@@ -22,7 +22,7 @@ apt install --yes \
 	curl openssl \
 	fd-find ripgrep tree file crudini jq pup \
 	direnv needrestart fwupd xorriso squashfs-tools systemd-container \
-	podman tailscale \
+	podman \
 	nodejs build-essential pkg-config \
 	python3 python3-venv python3-pip python3-dev pipx \
 	lua5.1 luarocks
