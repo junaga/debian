@@ -10,7 +10,7 @@ apt update
 apt install --yes ca-certificates
 
 # Install HTTPS repositories
-cp -r --preserve=timestamps apt/. /etc/apt/
+cp -r --preserve=timestamps repo/. /etc/apt/
 rm -f /etc/apt/sources.list
 
 # Install packages
@@ -18,6 +18,7 @@ apt update
 apt install --yes \
 	cron micro less rsync \
 	git gh ssh kitty-terminfo \
+	1password-cli \
 	curl openssl \
 	fd-find ripgrep tree file crudini jq pup \
 	direnv needrestart fwupd xorriso squashfs-tools systemd-container \
