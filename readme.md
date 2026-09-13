@@ -9,6 +9,9 @@ hostnamectl #> Debian
 
 Contributors and agents: see [design decisions](./design.md).
 
+For resource-bounded parallel agent development, see
+[the agent-development doctrine](./base/prompt/readme.md).
+
 ## Installation
 
 ### Windows

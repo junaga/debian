@@ -7,7 +7,7 @@ decision and its rationale.
 ## Replace `apt-secure` with HTTPS
 
 All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
-(`.gpg`) keys. [`base/apt/apt.conf`](./base/apt/apt.conf) disables `apt-secure`
+(`.gpg`) keys. [`base/repo/apt.conf`](./base/repo/apt.conf) disables `apt-secure`
 enforcement for "unauthenticated" repositories and packages.
 
 If a repository serves signed `InRelease` without a `.gpg` key, APT warns but
@@ -27,7 +27,7 @@ make them disposable. Home Btrfs snapshots exclude the mounted tree, so its
 retention policy is separate. Open issue: exclude personal installations from
 root's PATH and system-wide library/resource discovery.
 
-## Install updates every 60 seconds
+## Install updates every two minutes
 
 AI shortens the interval between disclosure and exploitation: Google observed
 it collapse from weeks to days in late 2025, and OpenAI has demonstrated that
@@ -39,9 +39,9 @@ exploitation. [Linux Foundation Akrites](https://www.linuxfoundation.org/press/l
 
 The threat is post-fix exposure: the time from a trusted publisher releasing a
 fix to this host installing it. This host minimizes that interval by converging
-every minute across every configured source and using `needrestart` to activate
+every two minutes across every configured source and using `needrestart` to activate
 eligible system services; user sessions and kernel reboots remain explicit
-because they are disruptive. That is 43,200 requests per month for one host;
+because they are disruptive. That is 21,600 requests per month for one host;
 npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
@@ -61,3 +61,9 @@ ExecStart=-login -f $USER
 The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
+
+## Agent development
+
+The agent-development doctrine is kept in
+[`base/prompt/readme.md`](./base/prompt/readme.md). It describes principles and
+standard Linux tools rather than imposing a project-specific orchestrator.
