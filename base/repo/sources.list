@@ -1,0 +1,14 @@
+# NVIDIA (including 580 drivers)
+deb https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /
+
+# `node` Node.js 24
+deb https://deb.nodesource.com/node_24.x nodistro main
+
+# `gh` GitHub CLI
+deb https://cli.github.com/packages stable main
+
+# `op` 1Password CLI
+deb https://downloads.1password.com/linux/debian/amd64 stable main
+
+# Tailscale
+deb https://pkgs.tailscale.com/stable/debian trixie main

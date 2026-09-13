@@ -1,5 +1,0 @@
-# GitHub CLI's official APT repository. It follows current upstream releases.
-URIs: https://cli.github.com/packages
-Types: deb
-Suites: stable
-Components: main

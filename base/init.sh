@@ -1,48 +1,36 @@
 set -e
 
+USER=$(whoami)
+EMAIL=${EMAIL:-$USER@$(hostname)}
+
 # Local login
 # ==============================================================================
 
 # Autologin Linux virtual terminals.
-LOCAL_LOGIN_SERVICE=/etc/systemd/system/getty@.service.d
-sudo mkdir -p $LOCAL_LOGIN_SERVICE
-sudo tee $LOCAL_LOGIN_SERVICE/10-local.conf <<-EOF
+sudo systemctl edit --stdin getty@.service <<-ESC
 	[Service]
 	ExecStart=
-	ExecStart=-login -f $(whoami)
-EOF
+	ExecStart=-login -f $USER
+ESC
 
-# Changes take effect after reboot.
-sudo systemctl daemon-reload
-
-# Rootless containers
+# User containers
 # ==============================================================================
 
 # Containers need users and groups on the shared kernel.
-grep -q ^$(whoami): /etc/subuid || sudo usermod --add-subuids 100000-165535 $(whoami)
-grep -q ^$(whoami): /etc/subgid || sudo usermod --add-subgids 100000-165535 $(whoami)
+grep -q ^$USER: /etc/subuid || sudo usermod --add-subuids 100000-165535 $USER
+grep -q ^$USER: /etc/subgid || sudo usermod --add-subgids 100000-165535 $USER
 
 # SSH identity
 # ==============================================================================
 
-# Create SSH keys if missing.
+# Create an SSH identity if missing.
 mkdir -p ~/.ssh
-test -f ~/.ssh/id_ed25519 || ssh-keygen -q -N '' \
+test -f ~/.ssh/id_ed25519 || ssh-keygen -N '' \
 	-f ~/.ssh/id_ed25519 \
-	-C $(whoami)@$(hostname)
-
-# Fix private-key permissions if migrated.
-chmod 600 ~/.ssh/id_ed25519
-
-# Recreate the public key if missing.
-test -f ~/.ssh/id_ed25519.pub || ssh-keygen -y \
-	-f ~/.ssh/id_ed25519 > ~/.ssh/id_ed25519.pub
-
-# Print the public key.
-cat ~/.ssh/id_ed25519.pub
+	-C $EMAIL
 
 # Git author
 # ==============================================================================
 
-git config --global user.name $(whoami)
-git config --global user.email $(whoami)@$(hostname)
+git config --global user.name $USER
+git config --global user.email $EMAIL
