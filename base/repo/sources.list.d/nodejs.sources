@@ -1,5 +1,0 @@
-# Node 24 is the ecosystem default.
-URIs: https://deb.nodesource.com/node_24.x
-Types: deb
-Suites: nodistro
-Components: main

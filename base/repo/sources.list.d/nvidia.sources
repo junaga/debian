@@ -1,4 +1,0 @@
-# Debian 12 provides the 580 driver for our GTX 1070 (Pascal).
-URIs: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/
-Types: deb
-Suites: /
