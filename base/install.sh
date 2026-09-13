@@ -30,6 +30,7 @@ apt install --yes \
 curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bash -s install deb-get
 
 # Install packages
+deb-get install tailcat
 pipx install --global huggingface_hub
 npm install --global --no-fund @openai/codex
 
