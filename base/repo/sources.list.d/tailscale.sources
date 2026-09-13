@@ -1,5 +1,0 @@
-# Tailscale stable packages.
-URIs: https://pkgs.tailscale.com/stable/debian
-Types: deb
-Suites: trixie
-Components: main

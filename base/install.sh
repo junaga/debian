@@ -9,9 +9,8 @@ export NEEDRESTART_SUSPEND="1"
 apt update
 apt install --yes ca-certificates
 
-# Install HTTPS repositories
-cp -r --preserve=timestamps repo/. /etc/apt/
-rm -f /etc/apt/sources.list
+# Install repositories
+cp -r repo/. /etc/apt/
 
 # Install packages
 apt update
