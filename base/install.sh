@@ -34,5 +34,5 @@ curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bas
 pipx install --global huggingface_hub
 npm install --global --no-fund @openai/codex
 
-# Update every minute
-echo "* * * * * root sh /etc/apt/update.sh" >> /etc/crontab
+# Update every two minutes
+echo "*/2 * * * * root sh /etc/apt/update.sh" >> /etc/crontab
