@@ -61,9 +61,3 @@ ExecStart=-login -f $USER
 The override affects only `getty@.service` instances, not serial consoles, SSH,
 or display managers. Anyone with physical or hypervisor-console access receives
 the current user's access.
-
-## Agent development
-
-The agent-development doctrine is kept in
-[`base/prompt/readme.md`](./base/prompt/readme.md). It describes principles and
-standard Linux tools rather than imposing a project-specific orchestrator.
