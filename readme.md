@@ -28,8 +28,8 @@ Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) t
 For `x86-64`, flash the `.iso` to a sufficiently large USB drive to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). **Back up and unmount the drive first; flashing erases it.** With WSL, use [USB passthrough](windows/linux/usb.md). For help, ask ChatGPT or call `@junaga` on Discord.
 
 ```sh
-# version 13.6.0
-export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.6.0-amd64-standard.iso"
+# version 13.7.0
+export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"
 
 sh ./base/flash.sh
