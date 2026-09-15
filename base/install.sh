@@ -35,7 +35,13 @@ curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bas
 # Install packages
 deb-get install tailcat
 pipx install --global huggingface_hub
-npm install --global --no-fund @openai/codex
+
+# Install the Codex CLI from OpenAI's signed release channel.
+curl -fsSL https://chatgpt.com/codex/install.sh | \
+	CODEX_HOME=/usr/local/lib/codex \
+	CODEX_INSTALL_DIR=/usr/local/bin \
+	CODEX_NON_INTERACTIVE=1 \
+	sh
 
 # Update every two minutes
 echo "*/2 * * * * root sh /etc/apt/update.sh" >> /etc/crontab
