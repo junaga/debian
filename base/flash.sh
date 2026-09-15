@@ -11,18 +11,16 @@ osirrox -indev debian.iso -extract /live/filesystem.squashfs fs
 unsquashfs -d debian fs
 
 # Copy dotfiles
-cp -r --preserve=timestamps $DIR/home/. debian/etc/skel/
+cp -r $DIR/home/. debian/etc/skel/
 
-# The Live ISO's source list refers to its boot medium, which is not mounted
-# inside the build container. Keep Debian available for the bootstrap step.
+# Remove the live-medium source.
 sed -i '\|file:/run/live/medium|d' debian/etc/apt/sources.list
-echo 'deb http://deb.debian.org/debian/ trixie main non-free-firmware' \
-	>> debian/etc/apt/sources.list
 
 # Install packages
 systemd-nspawn -D debian -a \
 	--bind-ro=$DIR:/mnt \
-	-E SYSTEMD_OFFLINE=1 sh /mnt/install.sh
+	-E SYSTEMD_OFFLINE=1 \
+	sh /mnt/install.sh
 
 # Repack
 mksquashfs debian fs -noappend

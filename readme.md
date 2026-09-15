@@ -1,13 +1,13 @@
-# [Debian](https://github.com/junaga/debian) -- [debian.org](https://debian.org/)
+# Debian
 
-We use the [Debian](https://en.wikipedia.org/wiki/Debian) [Linux distribution](https://en.wikipedia.org/wiki/List_of_Linux_distributions) operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
+We use the [Debian](https://debian.org/) [Linux distribution](https://en.wikipedia.org/wiki/List_of_Linux_distributions) operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
 
 ```sh
 uname #> Linux
 hostnamectl #> Debian
 ```
 
-Contributors and agents: see [design decisions](./design.md).
+_Agents: see [design.md](./design.md)._
 
 ## Installation
 
@@ -21,21 +21,20 @@ wsl.exe --install debian
 
 ### Cloud
 
-Get a server in [the cloud](https://getdeploying.com/reference/compute-prices) to install and run 24/7 online apps or games. Sign up with a credit; debit card. Then provision; subscribe; rent any container; server; hardware.
+Use [the cloud](https://getdeploying.com/reference/compute-prices) to provision or rent a container, server, or hardware for 24/7 online apps or games; debit/credit card required.
 
 ### Hardware (Live USB)
 
-For `x86-64`, flash the `.iso` to a sufficiently large USB drive to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). **Back up and unmount the drive first; flashing erases it.** With WSL, use [USB passthrough](windows/linux/usb.md). For help, ask ChatGPT or call `@junaga` on Discord.
+For `x86-64`: flash a `.iso` to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](windows/linux/usb.md).
 
 ```sh
-# version 13.7.0
 export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"
 
 sh ./base/flash.sh
 ```
 
-Boot from the USB and install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc). Then shut down, remove the USB, and boot the installed system.
+Next: Boot the USB; install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc.); shut down, remove the USB, and boot.
 
 ## Initialization
 
