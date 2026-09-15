@@ -66,9 +66,7 @@ codex "create a JavaScript CLI that counts the words in a text file"
 Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-cp -a .bashrc ~/
-mkdir -p ~/.config
-cp -a config/. ~/.config/
+cp -a base/skel/. ~/
 sh ./init.sh
 
 source ~/.bashrc
