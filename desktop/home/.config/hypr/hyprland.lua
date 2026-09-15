@@ -19,6 +19,7 @@ open("SUPER + E", explorer)
 open("SUPER + B", browser)
 open("SUPER + M", music)
 open("SUPER + C", chatgpt)
+open("SUPER + L", "performance-event mark")
 
 local function autostart()
     hl.exec_cmd("hyprpm reload")

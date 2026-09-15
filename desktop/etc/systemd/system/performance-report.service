@@ -1,0 +1,19 @@
+[Unit]
+Description=Automatically identify resource trouble in recent Atop history
+After=atop.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/performance-event report
+TimeoutStartSec=100s
+Nice=15
+IOSchedulingClass=idle
+MemoryMax=256M
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+LogsDirectory=atop
+LogsDirectoryMode=0700
+StandardOutput=append:/var/log/atop/incidents.jsonl

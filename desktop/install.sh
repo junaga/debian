@@ -13,7 +13,7 @@ sudo -v
 
 test "$(findmnt -n -T / -o FSTYPE)" = btrfs
 sudo btrfs subvolume show /home >/dev/null
-sudo apt install btrfs-progs btrbk dconf-cli --yes
+sudo apt install btrfs-progs btrbk dconf-cli atop --yes
 
 # Install home configuration as the current user.
 cp -r --no-preserve=ownership ./home/. "$HOME/."
@@ -23,6 +23,7 @@ dconf compile "$HOME/.config/dconf/user" ./dconf.d
 sudo visudo -cf ./etc/sudoers.d/desktop
 sudo cp -r --no-preserve=ownership ./etc/. /etc/.
 sudo systemd-tmpfiles --create /etc/tmpfiles.d/archive.conf
+sudo install -d -m 0700 /var/log/atop
 sudo chmod 0440 /etc/sudoers.d/desktop
 sudo visudo -cf /etc/sudoers.d/desktop
 sudo systemctl enable getty@tty2.service
@@ -34,6 +35,10 @@ swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || sudo swapon /
 for PROGRAM in ./bin/* ./home/bin/*; do
 	sudo install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now atop.service atop-rotate.timer performance-gpu.timer performance-report.timer
+sudo systemctl restart atop.service
 
 
 # Fast boot: skip the GRUB menu and UEFI delay.

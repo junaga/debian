@@ -1,0 +1,9 @@
+/var/log/atop/gpu.jsonl /var/log/atop/incidents.jsonl {
+    daily
+    maxsize 16M
+    rotate 7
+    compress
+    missingok
+    notifempty
+    create 0600 root root
+}

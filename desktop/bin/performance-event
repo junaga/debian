@@ -1,0 +1,166 @@
+#!/usr/bin/python3
+"""Supplement Atop history with GPU samples, markers and unattended reports."""
+import ctypes as C
+import datetime as dt
+import gzip
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+
+def stamp():
+    return dt.datetime.now().astimezone().isoformat(timespec="seconds")
+
+
+def gpu():
+    # systemd runs each query in a separate process with a three-second timeout.
+    result = {"timestamp": stamp(), "kind": "gpu", "devices": [], "disk_counters": {},
+              "boot_id": Path("/proc/sys/kernel/random/boot_id").read_text().strip()}
+    # Keep request-duration counters: Atop's busy-time estimate is not await.
+    for line in Path("/proc/diskstats").read_text().splitlines():
+        fields = line.split()
+        name = fields[2]
+        if name.startswith(("loop", "ram")) or Path(f"/sys/class/block/{name}/partition").exists():
+            continue
+        result["disk_counters"][name] = [int(fields[i]) for i in (3, 7, 6, 10)]
+    class Util(C.Structure):
+        _fields_ = [("gpu", C.c_uint), ("memory", C.c_uint)]
+    class Memory(C.Structure):
+        _fields_ = [("total", C.c_ulonglong), ("free", C.c_ulonglong), ("used", C.c_ulonglong)]
+    try:
+        lib = C.CDLL("libnvidia-ml.so.1")
+        status = lib.nvmlInit_v2()
+        if status:
+            raise RuntimeError(f"NVML initialization status {status}")
+        try:
+            count = C.c_uint()
+            status = lib.nvmlDeviceGetCount_v2(C.byref(count))
+            if status:
+                raise RuntimeError(f"NVML device count status {status}")
+            for index in range(min(count.value, 16)):
+                handle = C.c_void_p()
+                if lib.nvmlDeviceGetHandleByIndex_v2(index, C.byref(handle)):
+                    continue
+                util, memory, temp = Util(), Memory(), C.c_uint()
+                entry = {"index": index}
+                if lib.nvmlDeviceGetUtilizationRates(handle, C.byref(util)) == 0:
+                    entry.update(gpu_pct=util.gpu, memory_activity_pct=util.memory)
+                if lib.nvmlDeviceGetMemoryInfo(handle, C.byref(memory)) == 0:
+                    entry.update(vram_used_bytes=memory.used, vram_total_bytes=memory.total)
+                if lib.nvmlDeviceGetTemperature(handle, 0, C.byref(temp)) == 0:
+                    entry["temperature_c"] = temp.value
+                result["devices"].append(entry)
+        finally:
+            lib.nvmlShutdown()
+    except (OSError, AttributeError, RuntimeError) as error:
+        result["unavailable"] = str(error)
+    return result
+
+
+def interval_statistics(start):
+    records = []
+    for path in (Path("/var/log/atop/gpu.jsonl.1.gz"), Path("/var/log/atop/gpu.jsonl")):
+        if not path.exists():
+            continue
+        opener = gzip.open if path.suffix == ".gz" else open
+        try:
+            with opener(path, "rt") as stream:
+                for line in stream:
+                    try:
+                        record = json.loads(line)
+                        if dt.datetime.fromisoformat(record["timestamp"]) >= start:
+                            records.append(record)
+                    except (ValueError, KeyError, TypeError):
+                        continue
+        except (OSError, EOFError, UnicodeError):
+            # Rotation may replace or temporarily leave a partial gzip file.
+            continue
+    records.sort(key=lambda row: dt.datetime.fromisoformat(row["timestamp"]).timestamp())
+    latencies, activity = {}, {}
+    for record in records:
+        for device in record.get("devices", []):
+            if "gpu_pct" in device:
+                activity.setdefault(str(device["index"]), []).append(device["gpu_pct"])
+    for before, after in zip(records, records[1:]):
+        if before.get("boot_id") != after.get("boot_id"):
+            continue
+        for disk, counters in after.get("disk_counters", {}).items():
+            old = before.get("disk_counters", {}).get(disk)
+            if old is None or any(n < o for n, o in zip(counters, old)):
+                continue
+            reads, writes, read_ms, write_ms = [n - o for n, o in zip(counters, old)]
+            if reads + writes:
+                latencies.setdefault(disk, []).append((read_ms + write_ms) / (reads + writes))
+    def stats(values):
+        values = sorted(values)
+        return {"samples": len(values), "p99": values[math.ceil(.99 * len(values)) - 1], "max": values[-1]}
+    return {"disk_await_interval_ms": {k: stats(v) for k, v in latencies.items()},
+            "gpu_activity_pct": {k: stats(v) for k, v in activity.items()}}
+
+
+def report():
+    now = dt.datetime.now().astimezone()
+    start = now - dt.timedelta(minutes=16)
+    # The one-minute overlap prevents timer jitter from leaving holes.
+    results = []
+    for day in sorted({start.date(), now.date()}):
+        raw = Path("/var/log/atop") / ("atop_" + day.strftime("%Y%m%d"))
+        if not raw.exists():
+            continue
+        command = ["atopsar", "-cspmdBOGD", "-MxS", "-r", str(raw),
+                   "-b", start.strftime("%Y%m%d%H%M%S"),
+                   "-e", now.strftime("%Y%m%d%H%M%S")]
+        output = subprocess.run(command, capture_output=True, text=True, timeout=45,
+                                env={**os.environ, "LC_ALL": "C"})
+        if output.returncode:
+            results.append({"file": raw.name, "error": output.stderr[-2000:]})
+            continue
+        lines = output.stdout.splitlines()
+        # Native Atop markers identify critical (*) and near-critical (+) rows.
+        # Keep the complete short report too, including top CPU/memory processes,
+        # so the resource flags can be interpreted with process context later.
+        flags = [line for line in lines if line.rstrip().endswith(("*", "+"))]
+        results.append({"file": raw.name, "flagged_rows": flags,
+                        "context": output.stdout[-500000:]})
+    journal = subprocess.run(["journalctl", "-t", "performance-event", "--since", start.isoformat(),
+                              "--until", now.isoformat(), "-n", "200", "-o", "cat", "--no-pager"],
+                             capture_output=True, text=True, timeout=5)
+    markers = []
+    for line in journal.stdout.splitlines():
+        try:
+            markers.append(json.loads(line))
+        except ValueError:
+            continue
+    return {"timestamp": stamp(), "kind": "automatic_report", "from": start.isoformat(),
+            "to": now.isoformat(), "reports": results,
+            "manual_markers": markers,
+            "interval_statistics": interval_statistics(start),
+            "interpretation": "Resource flags identify investigation candidates, not proven causes. "
+                              "disk_await_interval_ms is the percentile of interval-average request durations, "
+                              "not individual-I/O or UI P99. Atop avserv is its busy-time-based estimate."}
+
+
+def main():
+    command = sys.argv[1] if len(sys.argv) > 1 else ""
+    if command == "mark":
+        message = " ".join(sys.argv[2:])[:240] or "slowdown started now"
+        event = json.dumps({"timestamp": stamp(), "kind": "manual", "message": message})
+        subprocess.run(["logger", "-t", "performance-event", "--", event], check=True, timeout=3)
+        try:
+            subprocess.run(["notify-send", "-t", "1800", "Slowdown marked",
+                            "Performance history is already recording."], timeout=3,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+        print(event)
+    elif command in ("gpu", "report"):
+        print(json.dumps(gpu() if command == "gpu" else report()), flush=True)
+    else:
+        raise SystemExit("usage: performance-event {mark [description]|gpu|report}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,6 @@
+# Collect the raw system and process history used for later investigations.
+# Five-second samples are intentionally unattended; this is not a live UI.
+LOGOPTS=""
+LOGINTERVAL=5
+LOGGENERATIONS=7
+LOGPATH=/var/log/atop

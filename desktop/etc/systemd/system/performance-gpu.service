@@ -1,0 +1,17 @@
+[Unit]
+Description=Record NVIDIA activity alongside Atop history
+After=atop.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/performance-event gpu
+TimeoutStartSec=3s
+Nice=10
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+LogsDirectory=atop
+LogsDirectoryMode=0700
+StandardOutput=append:/var/log/atop/gpu.jsonl

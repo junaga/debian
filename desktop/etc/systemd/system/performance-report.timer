@@ -1,0 +1,10 @@
+[Unit]
+Description=Analyze recent performance history without user intervention
+
+[Timer]
+OnCalendar=*-*-* *:00/15:00
+Persistent=true
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
