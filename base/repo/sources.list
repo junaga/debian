@@ -12,3 +12,6 @@ deb https://downloads.1password.com/linux/debian/amd64 stable main
 
 # Tailscale
 deb https://pkgs.tailscale.com/stable/debian trixie main
+
+# ChatGPT and Codex
+deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
