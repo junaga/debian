@@ -178,8 +178,11 @@ sudo apt install --yes \
 # 3D creation
 sudo apt install blender --yes
 
+# Chrome and VS Code use the official repositories declared by the base system.
+sudo apt install --yes google-chrome-stable code
+
 # Third-party desktop applications.
-deb-get install google-chrome-stable discord code chatgpt youtube-music
+deb-get install discord chatgpt youtube-music
 
 # CSVLens is not published as a .deb, so install it from crates.io.
 cargo install --locked --root "$HOME/.local" csvlens
