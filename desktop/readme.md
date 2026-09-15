@@ -1,144 +1,111 @@
 # Desktop
 
-## User model
+Hyprland workstation configuration for the existing `junaga` account. Run
+`desktop` from a local virtual terminal to start the graphical session.
+Workspace ownership and the `dev` group are described in
+[design.md](../design.md#shared-local-workspace).
 
-Use the existing `junaga` account for graphical sessions, terminals, SSH, and
-development. `desktop` starts Hyprland as the current user; applications share
-that user's home and credentials.
+## Installation
 
-| Identity or path | Purpose |
-| ---------------- | ------- |
-| `junaga` | Primary workstation account; home `/home/junaga`. |
-| `dev` | Primary group for shared workspace access; not a login account. |
-| `sudo` | Administration group; desktop policy grants its members passwordless sudo. |
-| `quant` | Separate retained account; not used to launch the desktop. |
-| `/usr/local/src` | This system configuration repository. |
-| `/usr/local/dev` | Development workspaces. |
-| `/home/junaga` | Personal configuration, credentials, and application state. |
+This configuration contains this workstation’s disk identifiers and hardware
+settings. Review [fstab](./etc/fstab) and [install.sh](./install.sh) before using
+it on another machine.
 
-The installer uses the current account and sudo for system changes. It does not
-create or rename accounts, change group membership, or recursively transfer
-workspace ownership. The current workspace directories are owned by
-`junaga:dev`. See [design.md](../design.md#rootless-local-workspace) for the
-ownership and shared-group policy.
-
-## Archive disks
-
-The current 1.8 TB ext4 archive mounts at `/mnt/archive`, identified by UUID
-`44db4ead-1413-4041-b963-33e5c634c381`. It preserves Unix ownership, permissions,
-and symlinks. This is the permanent location for archived development projects
-and workstation backups. `/usr/local/archive` is a symlink to this mount, giving
-it a convenient path beside `/usr/local/src` and `/usr/local/dev`.
-[`etc/tmpfiles.d/archive.conf`](./etc/tmpfiles.d/archive.conf) recreates the link
-at boot if missing; the desktop installer also applies it immediately.
-
-The older 223.6 GB exFAT disk labeled `archive1` mounts at `/mnt/archive1`.
-These are two separate physical disks, not duplicate mounts of one archive.
-Its entry in
-[`etc/fstab`](./etc/fstab) identifies the filesystem by UUID `06AA-08E8`, so the
-path survives changes to Linux device names. Systemd mounts it on first access;
-`nofail` lets the workstation boot when the disk is disconnected, with a
-five-second device timeout for access while absent.
-
-Files appear as `junaga:dev` (UID 1000, GID 1001), with writable group access,
-non-executable regular files, and `nosuid,nodev`. exFAT does not retain Unix
-ownership, permissions, or symlinks; keep active Git worktrees in
-`/usr/local/dev` and use this disk for archives. Check the numeric IDs before
-reusing this configuration on another workstation.
-
-Both archives use UUID-based automounts. To apply these entries after merging
-them into `/etc/fstab`:
+The installer requires Btrfs for `/` and a Btrfs subvolume at `/home`. On a fresh
+installation with an empty `/home`, prepare it as root before creating the user:
 
 ```sh
-sudo mkdir -p /mnt/archive /mnt/archive1
-sudo install -D -m 0644 desktop/etc/tmpfiles.d/archive.conf /etc/tmpfiles.d/archive.conf
-sudo systemd-tmpfiles --create /etc/tmpfiles.d/archive.conf
-sudo systemctl daemon-reload
-sudo systemctl start mnt-archive.automount mnt-archive1.automount
-ls /mnt/archive /mnt/archive1
-findmnt /mnt/archive
-findmnt /mnt/archive1
+sudo bash desktop/format.sh
 ```
 
-## NVIDIA GPU, [hypr.land](https://hypr.land) and Google Chrome
-
-On a fresh Btrfs installation, prepare the empty `/home` as root before creating
-`junaga`:
+After creating the user with the required `dev` and `sudo` memberships, run from
+the repository root:
 
 ```sh
-bash ./desktop/format.sh
+sudo sh base/install.sh
+# Fresh home only:
+cp -r base/home/. ~/.
+sh base/init.sh
+bash desktop/install.sh
 ```
 
-For an existing workstation, `/` must use Btrfs and `/home` must already be a
-Btrfs subvolume. This installer contains this host's filesystem UUID and hardware
-configuration; review `desktop/etc/fstab` and the other system files before
-installing on another machine. It also expects a prepared `/swapfile`. Review
-[known source/live differences](../plan.md#source-and-live-differences) before a
-rerun on this workstation. The desktop installer copies system configuration,
-installs iwd, disables `networking.service`, and enables systemd-networkd and iwd.
-It installs static Cloudflare DNS. A live migration must transfer interface
-ownership with recovery prepared. Package installation and automatic updates can
-also restart services.
+**The desktop installer copies home configuration and rebuilds the dconf database
+on every run.** On an existing workstation, apply individual changes rather than
+rerunning it indiscriminately. It also changes networking, installs packages,
+and enables services. The swap unit expects the existing swap file at
+`/var/lib/solidus/solidus.swap`; it does not create that file.
 
-Create the intended account and grant its required `dev` and `sudo` membership
-before installing on a fresh system. Run the following as `junaga` from the
-repository root. Keep `base/login.sh` and `desktop/install.sh` in the user's
-session; they request privileges internally. The base home copy is for a fresh
-home only; merge existing files while preserving SSH configuration and Codex
-project, plugin, and MCP settings. The desktop home configuration and dconf
-database are installed only when initializing a fresh desktop home.
+## Performance
 
-```sh
-sudo sh ./base/install.sh
-# Fresh home only; merge individual files when updating an existing home.
-cp -r ./base/home/. ~/.
-sh ./base/login.sh
+Performance history runs automatically in the background. No dashboard or manual
+capture is required. **Win+L** marks “slowdown started now” and briefly confirms
+it; recording continues whether or not you press the shortcut.
 
-bash ./desktop/install.sh
+Data stays locally in the root-only `/var/log/atop/` directory:
 
-sudo reboot
-```
+| File                | Contents                                                      |
+| ------------------- | ------------------------------------------------------------- |
+| `atop_YYYYMMDD`     | System and process activity, sampled every five seconds.      |
+| `gpu.jsonl`         | GPU activity, VRAM, temperature and disk I/O counters.        |
+| `incidents.jsonl`   | Automatic reports every 15 minutes, including manual markers. |
 
-```sh
-# From your local VT:
-desktop
-```
+Reports examine the preceding 16 minutes, flag resource pressure, and include
+process context and GPU/disk percentiles. CPU, paging, disk activity and pressure
+stall information are retained in the raw history. Win+L markers also appear in
+the system journal under `performance-event`. Nothing is uploaded.
 
-## Motherboard monitoring and fans
+### Retention and interpretation
 
-The desktop installer installs Debian's `lm-sensors` for temperature and fan
-readings and `fancontrol` for temperature-based fan curves. It does not change
-fan profiles or configure a fan curve.
+Raw history has seven-day cleanup. GPU and report logs rotate daily, retain seven
+compressed archives, and request earlier rotation above 16 MiB when logrotate
+runs. **These are time/rotation limits, not a hard disk-space cap.** Storage use
+varies with process activity; the 16 MiB setting is not an enforced file quota.
 
-To install these packages on an existing system, run from the repository root:
+The reports identify investigation candidates, not proven causes. Disk P99 is
+the percentile of interval-average request durations, not the latency of
+individual requests or clicks. Background history can still help if a freeze
+prevents the shortcut from executing.
 
-```sh
-sudo bash desktop/install-hardware-control.sh
-sensors
-```
+Configuration: [Atop](./etc/default/atop),
+[log rotation](./etc/logrotate.d/performance-event), and
+[report helper](./bin/performance-event). Implementation and later findings are
+tracked in [issue #22](https://github.com/junaga/debian/issues/22); deferred tuning
+is in [issue #21](https://github.com/junaga/debian/issues/21).
 
-## Dark mode
+## Removable storage
 
-The readable [appearance settings](./dconf.d/appearance) select dark mode and
-`Adwaita-dark` for native Wayland GTK apps. During fresh desktop creation, the
-installer uses `dconf compile` from `dconf-cli` to build `~/.config/dconf/user`.
-Only the source is tracked; the binary database is generated during installation.
-The desktop launcher does not reset preferences at startup.
+[Filesystem configuration](./etc/fstab) identifies disks by UUID and mounts them
+on demand. Missing removable disks do not block boot.
 
-`xdg-desktop-portal-gtk` publishes the preference through the XDG Settings portal;
-Hyprland's packaged portal configuration selects GTK for this interface.
-Applications with their own appearance settings should use their system/default
-option. Legacy X11 apps may need separate theme configuration.
+| Mount          | Filesystem | Purpose                              |
+| -------------- | ---------- | ------------------------------------ |
+| `/mnt/archive` | exFAT      | File archives; no Unix metadata.     |
+| `/mnt/backup`  | Btrfs      | Backups that preserve Unix metadata. |
+| `/mnt/stick`   | VFAT       | Removable USB storage.               |
+
+Keep active development workspaces in `/usr/local/dev`. The FAT/exFAT ownership
+options assume UID 1000 and GID 1001; check these before reusing the configuration.
+
+## Temperature and fans
+
+The installer adds `lm-sensors` and `fancontrol`; it does not configure a fan
+curve. Use `sensors` to read temperatures and fan speeds. Existing systems can
+install these tools with `sudo bash desktop/install-hardware-control.sh`.
+
+## Appearance
+
+[Appearance settings](./dconf.d/appearance) select dark mode for GTK applications.
+The installer compiles them into the user’s dconf database. Applications with
+independent theme settings should use their system/default option.
 
 ## Recover a stuck desktop
 
-Magic SysRq is handled by the kernel, so it can recover the keyboard even when
-Hyprland no longer processes input. On the broken desktop VT, press
-`Alt+Print Screen+R` to return the keyboard to console mode, then press
-`Ctrl+Alt+F1` to reach the console shell. Use `Alt+Print Screen+K` on tty2 only
-when the entire graphical session should be terminated.
+On the desktop virtual terminal, press **Alt+Print Screen+R** to return the
+keyboard to console mode, then **Ctrl+Alt+F1** to reach the console shell.
+Magic SysRq is handled by the kernel and can work when Hyprland stops responding.
+Release the keys between combinations.
 
-`Print Screen` is the `SysRq` key. Release the keys between combinations. The
-`K` operation intentionally terminates the entire graphical session.
+**Alt+Print Screen+K** on tty2 terminates the entire graphical session; use it
+only when that is intended. `Print Screen` is the `SysRq` key.
 
-![Hyprland Desktop Screenshot](./hypr.webp)
+![Hyprland desktop](./hypr.webp)
