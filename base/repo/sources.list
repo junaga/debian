@@ -1,28 +1,28 @@
 # NVIDIA (including 580 drivers)
 deb https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /
 
-# `node` Node.js 24
+# NodeSource: `nodejs`, `nsolid`
 deb https://deb.nodesource.com/node_24.x nodistro main
 
-# `gh` GitHub CLI
+# GitHub: `gh`
 deb https://cli.github.com/packages stable main
 
-# `op` 1Password CLI
+# 1Password: `1password`, `1password-cli`
 deb https://downloads.1password.com/linux/debian/amd64 stable main
 
-# Tailscale
+# Tailscale: `tailscale`, `tailscale-nginx-auth`
 deb https://pkgs.tailscale.com/stable/debian trixie main
 
-# ChatGPT and Codex
+# OpenAI: `chatgpt`
 deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
 
 # Microsoft: .NET, PowerShell, Azure CLI, SQL Server, and related tools
 deb https://packages.microsoft.com/debian/13/prod trixie main
 
-# Visual Studio Code
+# Visual Studio Code: `code`, `code-exploration`, `code-insiders`
 deb https://packages.microsoft.com/repos/code stable main
 
-# Google Chrome
+# Google Chrome: `google-chrome-beta`, `google-chrome-canary`, `google-chrome-repo`, `google-chrome-stable`, `google-chrome-unstable`
 deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
 
 # Google Cloud CLI: gcloud, gsutil, and bq
