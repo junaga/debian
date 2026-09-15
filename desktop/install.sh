@@ -13,7 +13,7 @@ sudo -v
 
 test "$(findmnt -n -T / -o FSTYPE)" = btrfs
 sudo btrfs subvolume show /home >/dev/null
-sudo apt install btrfs-progs btrbk dconf-cli atop --yes
+sudo apt install btrfs-progs btrbk dconf-cli atop smartmontools --yes
 
 # Install home configuration as the current user.
 cp -r --no-preserve=ownership ./home/. "$HOME/."
