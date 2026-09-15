@@ -49,8 +49,8 @@ sudo efibootmgr --timeout 0
 # HARDWARE
 # ==============================================================================
 
-# Motherboard temperature/RPM readings and temperature-based fan control tools.
-sudo bash ./install-hardware-control.sh
+# Temperature monitoring. This hardware exposes no Linux fan-control interface.
+sudo apt install --yes --no-install-recommends lm-sensors
 
 # NVIDIA graphics.
 sudo apt update

@@ -96,9 +96,10 @@ options assume UID 1000 and GID 1001; check these before reusing the configurati
 
 ## Temperature and fans
 
-The installer adds `lm-sensors` and `fancontrol`; it does not configure a fan
-curve. Use `sensors` to read temperatures and fan speeds. Existing systems can
-install these tools with `sudo bash desktop/install-hardware-control.sh`.
+The installer adds `lm-sensors` for temperature monitoring. This workstation
+does not expose fan-speed or PWM controls to Linux, so it does not install
+`fancontrol`. Use `sensors` to read temperatures. Set a fan curve through the
+ASUS firmware's Q-Fan controls.
 
 ## Appearance
 
