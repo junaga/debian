@@ -1,6 +1,7 @@
 # Collect the raw system and process history used for later investigations.
-# Five-second samples are intentionally unattended; this is not a live UI.
+# Full inventories once per minute; the small resource timeline remains at 5s.
+# performance-event requests bounded extra snapshots around incidents.
 LOGOPTS=""
-LOGINTERVAL=5
+LOGINTERVAL=60
 LOGGENERATIONS=7
 LOGPATH=/var/log/atop

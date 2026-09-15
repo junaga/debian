@@ -43,18 +43,26 @@ it; recording continues whether or not you press the shortcut.
 
 Data stays locally in the root-only `/var/log/atop/` directory:
 
-| File                | Contents                                                      |
-| ------------------- | ------------------------------------------------------------- |
-| `atop_YYYYMMDD`     | System and process activity, sampled every five seconds.      |
-| `gpu.jsonl`         | GPU activity, VRAM, temperature and disk I/O counters.        |
-| `incidents.jsonl`   | Automatic reports every 15 minutes, including manual markers. |
+| File                | Contents                                                        |
+| ------------------- | --------------------------------------------------------------- |
+| `atop_YYYYMMDD`     | Full process inventories every minute, plus incident snapshots. |
+| `gpu.jsonl`         | Five-second CPU, paging, pressure, GPU and disk counters.       |
+| `incidents.jsonl`   | Automatic reports every 15 minutes, including manual markers.   |
 
 Reports examine the preceding 16 minutes, flag resource pressure, and include
-process context and GPU/disk percentiles. CPU, paging, disk activity and pressure
-stall information are retained in the raw history. Win+L markers also appear in
+process context and GPU/disk percentiles. Resource-pressure spikes and Win+L
+markers trigger extra process snapshots, limited to 120 extra samples per day.
+The five-second resource timeline continues after that burst allowance is used.
+Win+L markers also appear in
 the system journal under `performance-event`. Nothing is uploaded.
 
 ### Retention and interpretation
+
+The storage target is roughly **200 MB/day**. Routine full inventories run once
+a minute instead of every five seconds; reports omit repeated full text. Brief
+resource spikes remain visible in the five-second timeline, but full thread
+detail between incidents is less frequent. Extra snapshots are skipped once the
+day's raw file reaches 160 MB to reserve space for the routine history.
 
 Raw history has seven-day cleanup. GPU and report logs rotate daily, retain seven
 compressed archives, and request earlier rotation above 16 MiB when logrotate
