@@ -177,55 +177,8 @@ sudo apt install --yes \
 # 3D creation
 sudo apt install blender --yes
 
-# Third-party desktop applications
-function installURL {
-	(
-		local FILE
+# Third-party desktop applications.
+deb-get install google-chrome-stable discord code chatgpt youtube-music
 
-		FILE="$(mktemp --suffix=.deb)"
-		trap 'rm -f "$FILE"' EXIT
-		curl -fL --output "$FILE" "$1"
-		sudo apt install "$FILE" --yes
-	)
-}
-
-function installGitHubRelease {
-	local REPOSITORY="$1"
-	local SUFFIX="$2"
-	local URL
-
-	URL="$(curl -fsSL "https://api.github.com/repos/$REPOSITORY/releases/latest" |
-		jq -er --arg suffix "$SUFFIX" \
-		'.assets | map(select(.name | endswith($suffix))) | first | .browser_download_url')"
-	installURL "$URL"
-}
-
-function installGitHubReleaseBinary {
-	(
-		local REPOSITORY="$1"
-		local ASSET="$2"
-		local BINARY="$3"
-		local DIRECTORY
-		local URL
-
-		DIRECTORY="$(mktemp -d)"
-		trap 'rm -rf "$DIRECTORY"' EXIT
-		URL="$(curl -fsSL "https://api.github.com/repos/$REPOSITORY/releases/latest" |
-			jq -er --arg asset "$ASSET" \
-			'.assets | map(select(.name == $asset)) | first | .browser_download_url')"
-		curl -fL --output "$DIRECTORY/$ASSET" "$URL"
-		curl -fL --output "$DIRECTORY/$ASSET.sha256" "$URL.sha256"
-		(cd "$DIRECTORY" && sha256sum --check "$ASSET.sha256")
-		tar -xJf "$DIRECTORY/$ASSET" -C "$DIRECTORY"
-		sudo install -m 0755 "$DIRECTORY/${ASSET%.tar.xz}/$BINARY" "/usr/local/bin/$BINARY"
-	)
-}
-
-installURL "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-installURL "https://discord.com/api/download?platform=linux&format=deb"
-installURL "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"
-# The official package registers OpenAI's signed APT repository for updates.
-installURL "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb"
-installGitHubRelease "th-ch/youtube-music" "_amd64.deb"
-installGitHubReleaseBinary "YS-L/csvlens" \
-	"csvlens-x86_64-unknown-linux-gnu.tar.xz" "csvlens"
+# CSVLens is not published as a .deb, so install it from crates.io.
+cargo install --locked --root "$HOME/.local" csvlens
