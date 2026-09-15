@@ -35,6 +35,14 @@ an existing workstation, apply individual changes instead. It also changes
 networking, installs packages, and enables services. The swap file at
 `/var/lib/solidus/solidus.swap` must already exist.
 
+## SSH
+
+Install the stock OpenSSH server and enable its default service:
+
+```sh
+sudo bash desktop/install-ssh.sh
+```
+
 ## Performance
 
 Performance history runs automatically in the background. No dashboard or manual
