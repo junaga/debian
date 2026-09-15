@@ -8,4 +8,8 @@ apt full-upgrade --yes
 deb-get update
 deb-get upgrade --dg-only
 pipx upgrade-all --global
-npm update --global --no-fund
+curl -fsSL https://chatgpt.com/codex/install.sh | \
+	CODEX_HOME=/usr/local/lib/codex \
+	CODEX_INSTALL_DIR=/usr/local/bin \
+	CODEX_NON_INTERACTIVE=1 \
+	sh
