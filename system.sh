@@ -38,4 +38,4 @@ pipx install --global huggingface_hub
 npm install --global --no-fund @openai/codex
 
 # Update every two minutes
-echo "*/2 * * * * root sh /etc/apt/update.sh" >> /etc/crontab
+echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab
