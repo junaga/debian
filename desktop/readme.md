@@ -1,25 +1,26 @@
 # Desktop
 
-Hyprland workstation configuration for the existing `junaga` account. Run
-`desktop` from a local virtual terminal to start the graphical session.
-Workspace ownership and the `dev` group are described in
-[design.md](../design.md#shared-local-workspace).
+## Source fidelity
+
+`desktop/` describes the desired live workstation. Package defaults, including
+their enabled services, are part of that state. Keep them unless this directory
+records a deliberate replacement or disablement; an idle default service is not
+by itself a reason to remove it.
 
 ## Installation
 
-This configuration contains this workstation’s disk identifiers and hardware
-settings. Review [fstab](./etc/fstab) and [install.sh](./install.sh) before using
-it on another machine.
+Hyprland configuration for the existing `junaga` account. It contains this
+workstation's disk identifiers and hardware settings, so review
+[fstab](./etc/fstab) and [install.sh](./install.sh) before using it elsewhere.
 
-The installer requires Btrfs for `/` and a Btrfs subvolume at `/home`. On a fresh
-installation with an empty `/home`, prepare it as root before creating the user:
+The installer requires Btrfs for `/` and a Btrfs subvolume at `/home`. On a
+fresh installation with an empty `/home`, prepare it before creating the user:
 
 ```sh
 sudo bash desktop/format.sh
 ```
 
-After creating the user with the required `dev` and `sudo` memberships, run from
-the repository root:
+After creating the user in `dev` and `sudo`, run from the repository root:
 
 ```sh
 sudo sh base/install.sh
@@ -29,11 +30,10 @@ sh base/init.sh
 bash desktop/install.sh
 ```
 
-**The desktop installer copies home configuration and rebuilds the dconf database
-on every run.** On an existing workstation, apply individual changes rather than
-rerunning it indiscriminately. It also changes networking, installs packages,
-and enables services. The swap unit expects the existing swap file at
-`/var/lib/solidus/solidus.swap`; it does not create that file.
+The installer replaces home configuration and rebuilds dconf on every run. On
+an existing workstation, apply individual changes instead. It also changes
+networking, installs packages, and enables services. The swap file at
+`/var/lib/solidus/solidus.swap` must already exist.
 
 ## Performance
 
