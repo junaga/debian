@@ -32,6 +32,27 @@ deb https://packages.cloud.google.com/apt cloud-sdk main
 # Mozilla Firefox
 deb https://packages.mozilla.org/apt mozilla main
 
+# Proton VPN
+deb https://repo.protonvpn.com/debian stable main
+
+# Signal Desktop: `signal-desktop`, `signal-desktop-beta`
+deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
+
+# Brave Browser: `brave-browser`, `brave-keyring`, `brave-origin`
+deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com stable main
+
+# MongoDB Community 8.0 for Bookworm
+deb https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main
+
+# PostgreSQL and extensions
+deb https://apt.postgresql.org/pub/repos/apt trixie-pgdg main
+
+# GitLab CE: `gitlab-ce`
+deb https://packages.gitlab.com/gitlab/gitlab-ce/debian trixie main
+
+# GitLab Runner: `gitlab-runner`, `gitlab-runner-helper-images`
+deb https://packages.gitlab.com/runner/gitlab-runner/debian trixie main
+
 # Single CLI repositories
 
 # GitHub: `gh`
