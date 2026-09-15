@@ -1,3 +1,5 @@
+# Build and flash a customized Debian live USB.
+# Environments: WSL, PC
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
 DIR=$PWD/$(dirname $0)
