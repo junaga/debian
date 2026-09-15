@@ -13,7 +13,7 @@ _Agents: see [design.md](./design.md)._
 
 ### Windows
 
-**Recommended:** Windows 11 with the [windows/linux/](./windows/linux) subsystem.
+**Recommended:** Windows 11 with the [Windows/Linux](./Windows/linux) subsystem.
 
 ```sh
 wsl.exe --install debian
@@ -25,7 +25,7 @@ Use [the cloud](https://getdeploying.com/reference/compute-prices) to provision 
 
 ### Hardware (Live USB)
 
-For `x86-64`: flash a `.iso` to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](windows/linux/usb.md).
+For `x86-64`: flash a `.iso` to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](Windows/linux/usb.md).
 
 ```sh
 export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
@@ -66,7 +66,9 @@ codex "create a JavaScript CLI that counts the words in a text file"
 Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-cp -ra ./home/. ~/
+cp -a .bashrc ~/
+mkdir -p ~/.config
+cp -a config/. ~/.config/
 sh ./init.sh
 
 source ~/.bashrc

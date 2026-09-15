@@ -7,7 +7,7 @@ decision and its rationale.
 ## Replace `apt-secure` with HTTPS
 
 All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
-(`.gpg`) keys. [`etc/apt/apt.conf`](./etc/apt/apt.conf) disables `apt-secure`
+(`.gpg`) keys. [`repo/apt/apt.conf`](./repo/apt/apt.conf) disables `apt-secure`
 enforcement for "unauthenticated" repositories and packages.
 
 If a repository serves signed `InRelease` without a `.gpg` key, APT warns but

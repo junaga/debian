@@ -10,8 +10,10 @@ curl -fL $URL > debian.iso
 osirrox -indev debian.iso -extract /live/filesystem.squashfs fs
 unsquashfs -d debian fs
 
-# Copy dotfiles
-cp -r $DIR/home/. debian/etc/skel/
+# Copy user configuration
+install -Dm644 $DIR/.bashrc debian/etc/skel/.bashrc
+mkdir -p debian/etc/skel/.config
+cp -r $DIR/config/. debian/etc/skel/.config/
 
 # Remove the live-medium source.
 sed -i '\|file:/run/live/medium|d' debian/etc/apt/sources.list
