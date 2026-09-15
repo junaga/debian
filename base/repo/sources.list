@@ -15,3 +15,18 @@ deb https://pkgs.tailscale.com/stable/debian trixie main
 
 # ChatGPT and Codex
 deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
+
+# Microsoft: .NET, PowerShell, Azure CLI, SQL Server, and related tools
+deb https://packages.microsoft.com/debian/13/prod trixie main
+
+# Visual Studio Code
+deb https://packages.microsoft.com/repos/code stable main
+
+# Google Chrome
+deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+
+# Google Cloud CLI: gcloud, gsutil, and bq
+deb https://packages.cloud.google.com/apt cloud-sdk main
+
+# Mozilla Firefox
+deb https://packages.mozilla.org/apt mozilla main
