@@ -1,11 +1,15 @@
-# NVIDIA (including 580 drivers)
+# Company repositories
+
+# NVIDIA
 deb https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /
+
+# Microsoft
+deb https://packages.microsoft.com/debian/13/prod trixie main
+
+# Product repositories
 
 # NodeSource: `nodejs`, `nsolid`
 deb https://deb.nodesource.com/node_24.x nodistro main
-
-# GitHub: `gh`
-deb https://cli.github.com/packages stable main
 
 # 1Password: `1password`, `1password-cli`
 deb https://downloads.1password.com/linux/debian/amd64 stable main
@@ -15,9 +19,6 @@ deb https://pkgs.tailscale.com/stable/debian trixie main
 
 # OpenAI: `chatgpt`
 deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
-
-# Microsoft: .NET, PowerShell, Azure CLI, SQL Server, and related tools
-deb https://packages.microsoft.com/debian/13/prod trixie main
 
 # Visual Studio Code: `code`, `code-exploration`, `code-insiders`
 deb https://packages.microsoft.com/repos/code stable main
@@ -30,3 +31,8 @@ deb https://packages.cloud.google.com/apt cloud-sdk main
 
 # Mozilla Firefox
 deb https://packages.mozilla.org/apt mozilla main
+
+# Single CLI repositories
+
+# GitHub: `gh`
+deb https://cli.github.com/packages stable main
