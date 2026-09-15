@@ -1,0 +1,61 @@
+###############################################################################
+# REPOS
+###############################################################################
+
+# Microsoft
+deb https://packages.microsoft.com/debian/13/prod trixie main
+
+# NVIDIA
+deb https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /
+
+# Google Cloud
+deb https://packages.cloud.google.com/apt cloud-sdk main
+
+# GitLab
+deb https://packages.gitlab.com/gitlab/gitlab-ce/debian trixie main
+
+
+###############################################################################
+# TOOLS
+###############################################################################
+
+# `node`, `npm`, `npx`
+deb https://deb.nodesource.com/node_24.x nodistro main
+
+# `mongosh`
+deb https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main
+
+# `gh`
+deb https://cli.github.com/packages stable main
+
+# `tailscale`
+deb https://pkgs.tailscale.com/stable/debian trixie main
+
+# `protonvpn` and Proton VPN
+deb https://repo.protonvpn.com/debian stable main
+
+# `op` and 1Password
+deb https://downloads.1password.com/linux/debian/amd64 stable main
+
+
+###############################################################################
+# APPS
+###############################################################################
+
+# Google Chrome
+deb https://dl.google.com/linux/chrome/deb/ stable main
+
+# ChatGPT
+deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
+
+# Firefox
+deb https://packages.mozilla.org/apt mozilla main
+
+# Brave Browser
+deb https://brave-browser-apt-release.s3.brave.com stable main
+
+# Signal
+deb https://updates.signal.org/desktop/apt xenial main
+
+# Visual Studio Code
+deb https://packages.microsoft.com/repos/code stable main
