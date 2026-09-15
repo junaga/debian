@@ -12,8 +12,10 @@ apt modernize-sources --assume-yes
 apt update
 apt install --yes ca-certificates
 
-# Install repositories
-cp -r repo/. /etc/apt/
+# Install configuration
+cp -r etc/apt/. /etc/apt/
+install -Dm644 etc/npmrc /etc/npmrc
+install -Dm644 etc/pip.conf /etc/pip.conf
 
 # Install packages
 apt update
