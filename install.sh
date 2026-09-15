@@ -2,8 +2,7 @@ set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
 
-export DEBIAN_FRONTEND="noninteractive"
-export NEEDRESTART_SUSPEND="1"
+export DEBIAN_FRONTEND="noninteractive" NEEDRESTART_SUSPEND="1"
 
 # Modernize APT sources.
 apt modernize-sources --assume-yes
