@@ -32,7 +32,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now var-lib-solidus-solidus.swap.swap
 
 # Install desktop launchers and utilities.
-for PROGRAM in ./bin/*; do
+for PROGRAM in ./bin/[^.]*; do
+	[ -f "$PROGRAM" ] && [ -x "$PROGRAM" ] || continue
 	sudo install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 
