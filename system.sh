@@ -1,3 +1,5 @@
+# Initialize Debian system packages and shared configuration.
+# Environments: container, WSL, VPS, PC
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
