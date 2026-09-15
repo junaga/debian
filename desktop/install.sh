@@ -31,8 +31,8 @@ sudo systemctl enable btrbk.timer --now
 sudo systemctl daemon-reload
 sudo systemctl enable --now var-lib-solidus-solidus.swap.swap
 
-# Install the desktop launcher and utilities.
-for PROGRAM in ./bin/* ./home/bin/*; do
+# Install desktop launchers and utilities.
+for PROGRAM in ./bin/*; do
 	sudo install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 

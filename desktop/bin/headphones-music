@@ -5,7 +5,7 @@ set -euo pipefail
 # The headset microphone is unavailable in this profile; use another mic.
 CARD="bluez_card.3C_B0_ED_A7_96_8D"
 SINK="bluez_output.3C_B0_ED_A7_96_8D.1"
-BRIO_SOURCE="alsa_input.usb-046d_Brio_100_2610APBJEMJ8-02.mono-fallback"
+BRIO_SOURCE="alsa_input.usb-046d_Brio_100_2610APBJEMJ8-02.pro-input-0"
 
 pactl set-card-profile "$CARD" a2dp-sink
 pactl set-default-sink "$SINK"
