@@ -54,20 +54,20 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 
 ## Administration
 
-Install packages; and login to OpenAI [Codex](https://openai.com/codex).
+Set up the system; and login to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
-sh ./install.sh
+sh ./system.sh
 
 codex login
 codex "create a JavaScript CLI that counts the words in a text file"
 ```
 
-Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
+Set up the user; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
 cp -a base/skel/. ~/
-sh ./init.sh
+sh ./user.sh
 
 source ~/.bashrc
 

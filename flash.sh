@@ -17,7 +17,7 @@ sed -i '\|file:/run/live/medium|d' debian/etc/apt/sources.list
 systemd-nspawn -D debian -a \
 	--bind-ro=$DIR:/mnt \
 	-E SYSTEMD_OFFLINE=1 \
-	sh /mnt/install.sh
+	sh /mnt/system.sh
 
 # Repack
 mksquashfs debian fs -noappend
