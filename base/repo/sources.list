@@ -1,59 +1,66 @@
-# Company repositories
+###############################################################################
+# REPOSITORIES
+###############################################################################
 
-# NVIDIA
+
+# COMPANIES
+
+# `nvcc`
 deb https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /
 
-# Microsoft
+# `az`, `bicep`, `dotnet`, `kubectl`, `pwsh`, `sqlcmd`
 deb https://packages.microsoft.com/debian/13/prod trixie main
 
-# Product repositories
 
-# NodeSource: `nodejs`, `nsolid`
+# CLIS
+
+# `node`, `npm`, `npx`
 deb https://deb.nodesource.com/node_24.x nodistro main
 
-# 1Password: `1password`, `1password-cli`
-deb https://downloads.1password.com/linux/debian/amd64 stable main
-
-# Tailscale: `tailscale`, `tailscale-nginx-auth`
+# `tailscale`
 deb https://pkgs.tailscale.com/stable/debian trixie main
 
-# OpenAI: `chatgpt`
-deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
-
-# Visual Studio Code: `code`, `code-exploration`, `code-insiders`
-deb https://packages.microsoft.com/repos/code stable main
-
-# Google Chrome: `google-chrome-beta`, `google-chrome-canary`, `google-chrome-repo`, `google-chrome-stable`, `google-chrome-unstable`
-deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
-
-# Google Cloud CLI: gcloud, gsutil, and bq
+# `gcloud`, `gsutil`, `bq`
 deb https://packages.cloud.google.com/apt cloud-sdk main
 
-# Mozilla Firefox
-deb https://packages.mozilla.org/apt mozilla main
-
-# Proton VPN
-deb https://repo.protonvpn.com/debian stable main
-
-# Signal Desktop: `signal-desktop`, `signal-desktop-beta`
-deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
-
-# Brave Browser: `brave-browser`, `brave-keyring`, `brave-origin`
-deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com stable main
-
-# MongoDB Community 8.0 for Bookworm
+# `mongod`, `mongos`, `mongosh`
 deb https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main
 
-# PostgreSQL and extensions
+# `psql`, `pg_dump`, `pg_restore`
 deb https://apt.postgresql.org/pub/repos/apt trixie-pgdg main
 
-# GitLab CE: `gitlab-ce`
-deb https://packages.gitlab.com/gitlab/gitlab-ce/debian trixie main
-
-# GitLab Runner: `gitlab-runner`, `gitlab-runner-helper-images`
+# `gitlab-runner`
 deb https://packages.gitlab.com/runner/gitlab-runner/debian trixie main
 
-# Single CLI repositories
-
-# GitHub: `gh`
+# `gh`
 deb https://cli.github.com/packages stable main
+
+
+# APPS
+
+# `1password`, `op`
+deb https://downloads.1password.com/linux/debian/amd64 stable main
+
+# `chatgpt`
+deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
+
+# `code`, `code-insiders`
+deb https://packages.microsoft.com/repos/code stable main
+
+# `google-chrome`
+deb https://dl.google.com/linux/chrome/deb/ stable main
+
+# `firefox`
+deb https://packages.mozilla.org/apt mozilla main
+
+# `proton-vpn-gnome-desktop`
+deb https://repo.protonvpn.com/debian stable main
+
+# `signal-desktop`
+deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
+
+# `brave-browser`
+deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com stable main
+
+# `gitlab-ctl`
+deb https://packages.gitlab.com/gitlab/gitlab-ce/debian trixie main
