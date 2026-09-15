@@ -1,0 +1,8 @@
+[Unit]
+Description=Solidus research swap reserve
+
+[Swap]
+What=/var/lib/solidus/solidus.swap
+
+[Install]
+WantedBy=swap.target

@@ -22,14 +22,14 @@ dconf compile "$HOME/.config/dconf/user" ./dconf.d
 # Configuration files.
 sudo visudo -cf ./etc/sudoers.d/desktop
 sudo cp -r --no-preserve=ownership ./etc/. /etc/.
-sudo systemd-tmpfiles --create /etc/tmpfiles.d/archive.conf
 sudo install -d -m 0700 /var/log/atop
 sudo chmod 0440 /etc/sudoers.d/desktop
 sudo visudo -cf /etc/sudoers.d/desktop
 sudo systemctl enable getty@tty2.service
 sudo install -d -m 0700 /snapshots
 sudo systemctl enable btrbk.timer --now
-swapon --show=NAME --noheadings | grep -Fx /swapfile >/dev/null || sudo swapon /swapfile
+sudo systemctl daemon-reload
+sudo systemctl enable --now var-lib-solidus-solidus.swap.swap
 
 # Install the desktop launcher and utilities.
 for PROGRAM in ./bin/* ./home/bin/*; do

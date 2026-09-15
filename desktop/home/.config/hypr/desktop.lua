@@ -49,7 +49,7 @@ hl.config({
     },
     decoration = {
     		-- motion_blur = true,
-        blur = { size = 3 },
+        blur = { size = 1 },
         rounding = 10,
 
         -- The focused window stays bright and elevated while inactive windows recede.

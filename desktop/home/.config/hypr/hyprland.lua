@@ -5,7 +5,8 @@ local open = require("core.keys")
 require("desktop")
 
 local screenshot = [[grim -g "$(slurp -d)" - | wl-copy]]
-local terminal = "kitty --single-instance"
+-- Phosphor is the session terminal. Kitty remains installed as a manual fallback.
+local terminal = "/usr/bin/phosphor"
 local explorer = "dolphin"
 local browser = "google-chrome-stable"
 local music = "youtube-music"
