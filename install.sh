@@ -13,9 +13,7 @@ apt update
 apt install --yes ca-certificates
 
 # Install configuration
-cp -r repo/apt/. /etc/apt/
-install -Dm644 repo/npmrc /etc/npmrc
-install -Dm644 repo/pip.conf /etc/pip.conf
+cp -r repo/. /etc/
 
 # Install packages
 apt update
