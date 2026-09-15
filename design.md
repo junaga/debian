@@ -49,7 +49,7 @@ npm calls five million monthly requests clearly unreasonable.
 
 Debian’s `getty@.service` displays a login prompt and requires credentials.
 This single-administrator system treats the local console as its recovery path
-when the network is unavailable. [`init.sh`](./init.sh) therefore
+when the network is unavailable. [`user.sh`](./user.sh) therefore
 replaces the virtual-terminal prompt with a session for the current user:
 
 ```systemd
