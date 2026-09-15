@@ -30,3 +30,7 @@ xorriso -dev debian.iso -map fs /live/filesystem.squashfs \
 
 # Flash
 cp debian.iso $USB
+sync
+
+# Clean up
+rm debian.iso fs
