@@ -1,66 +1,14 @@
-###############################################################################
-# REPOSITORIES
-###############################################################################
-
-
-# COMPANIES
-
-# `nvcc`
+# NVIDIA (including 580 drivers)
 deb https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/ /
 
-# `az`, `bicep`, `dotnet`, `kubectl`, `pwsh`, `sqlcmd`
-deb https://packages.microsoft.com/debian/13/prod trixie main
-
-
-# CLIS
-
-# `node`, `npm`, `npx`
+# `node` Node.js 24
 deb https://deb.nodesource.com/node_24.x nodistro main
 
-# `tailscale`
-deb https://pkgs.tailscale.com/stable/debian trixie main
-
-# `gcloud`, `gsutil`, `bq`
-deb https://packages.cloud.google.com/apt cloud-sdk main
-
-# `mongod`, `mongos`, `mongosh`
-deb https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main
-
-# `psql`, `pg_dump`, `pg_restore`
-deb https://apt.postgresql.org/pub/repos/apt trixie-pgdg main
-
-# `gitlab-runner`
-deb https://packages.gitlab.com/runner/gitlab-runner/debian trixie main
-
-# `gh`
+# `gh` GitHub CLI
 deb https://cli.github.com/packages stable main
 
-
-# APPS
-
-# `1password`, `op`
+# `op` 1Password CLI
 deb https://downloads.1password.com/linux/debian/amd64 stable main
 
-# `chatgpt`
-deb https://persistent.oaistatic.com/codex-app-prod/linux/deb stable main
-
-# `code`, `code-insiders`
-deb https://packages.microsoft.com/repos/code stable main
-
-# `google-chrome`
-deb https://dl.google.com/linux/chrome/deb/ stable main
-
-# `firefox`
-deb https://packages.mozilla.org/apt mozilla main
-
-# `proton-vpn-gnome-desktop`
-deb https://repo.protonvpn.com/debian stable main
-
-# `signal-desktop`
-deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
-
-# `brave-browser`
-deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com stable main
-
-# `gitlab-ctl`
-deb https://packages.gitlab.com/gitlab/gitlab-ce/debian trixie main
+# Tailscale
+deb https://pkgs.tailscale.com/stable/debian trixie main
