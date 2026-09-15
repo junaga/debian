@@ -5,6 +5,9 @@ cd $(dirname $0)
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_SUSPEND="1"
 
+# Modernize APT sources.
+apt modernize-sources --assume-yes
+
 # Bootstrap HTTPS
 apt update
 apt install --yes ca-certificates
