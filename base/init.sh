@@ -1,5 +1,6 @@
 set -e
 
+# Not for WSL or systemd-less systems.
 USER=$(whoami)
 EMAIL=${EMAIL:-$USER@$(hostname)}
 
@@ -13,7 +14,7 @@ sudo systemctl edit --stdin getty@.service <<-ESC
 	ExecStart=-login -f $USER
 ESC
 
-# User containers
+# Rootless containers
 # ==============================================================================
 
 # Containers need users and groups on the shared kernel.
