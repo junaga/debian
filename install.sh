@@ -12,7 +12,7 @@ apt update
 apt install --yes ca-certificates
 
 # Install configuration
-cp -r repo/. /etc/
+cp -r base/. /etc/
 
 # Install packages
 apt update
