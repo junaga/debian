@@ -7,7 +7,7 @@ decision and its rationale.
 ## Replace `apt-secure` with HTTPS
 
 All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
-(`.gpg`) keys. [`base/repo/apt.conf`](./base/repo/apt.conf) disables `apt-secure`
+(`.gpg`) keys. [`repo/apt.conf`](./repo/apt.conf) disables `apt-secure`
 enforcement for "unauthenticated" repositories and packages.
 
 If a repository serves signed `InRelease` without a `.gpg` key, APT warns but
@@ -35,7 +35,7 @@ npm calls five million monthly requests clearly unreasonable.
 
 Debian’s `getty@.service` displays a login prompt and requires credentials.
 This single-administrator system treats the local console as its recovery path
-when the network is unavailable. [`base/init.sh`](./base/init.sh) therefore
+when the network is unavailable. [`init.sh`](./init.sh) therefore
 replaces the virtual-terminal prompt with a session for the current user:
 
 ```systemd

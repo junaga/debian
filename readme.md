@@ -31,7 +31,7 @@ For `x86-64`: flash a `.iso` to create a [bootable live USB](https://en.wikipedi
 export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"
 
-sh ./base/flash.sh
+sh ./flash.sh
 ```
 
 Next: Boot the USB; install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc.); shut down, remove the USB, and boot.
@@ -57,7 +57,7 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 Install packages; and login to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
-sh ./base/install.sh
+sh ./install.sh
 
 codex login
 codex "create a JavaScript CLI that counts the words in a text file"
@@ -66,8 +66,8 @@ codex "create a JavaScript CLI that counts the words in a text file"
 Copy configs; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-cp -ra ./base/home/. ~/
-sh ./base/init.sh
+cp -ra ./home/. ~/
+sh ./init.sh
 
 source ~/.bashrc
 
