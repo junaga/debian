@@ -36,7 +36,6 @@ for PROGRAM in ./bin/*; do
 	sudo install -m 0755 "$PROGRAM" "/usr/local/bin/${PROGRAM##*/}"
 done
 
-sudo systemctl daemon-reload
 sudo systemctl enable --now atop.service atop-rotate.timer performance-gpu.timer performance-report.timer
 sudo systemctl restart atop.service
 
