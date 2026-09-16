@@ -67,7 +67,7 @@ Set up the user; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
 cp -a base/skel/. ~/
-sh ./user.sh
+EMAIL=$(whoami)@$(hostname) sh ./user.sh
 
 source ~/.bashrc
 
