@@ -9,7 +9,7 @@ Agents use context and tools to complete work.
 
 ## Markdown
 
-- Align Markdown tables.
+- Markdown tables you write must be source-readable.
 
 ## Codex
 
