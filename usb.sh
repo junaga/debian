@@ -6,8 +6,8 @@ set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
 
-: "${URL:?Set URL to the source Debian live ISO}"
-: "${USB:?Set USB to the destination device}"
+URL=${URL:?Set URL to the source Debian live ISO}
+USB=${USB:?Set USB to the destination device}
 
 
 # Download
