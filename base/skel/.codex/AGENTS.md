@@ -9,7 +9,7 @@ Agents use context and tools to complete work.
 
 ## Markdown
 
-- Format every Markdown table before sending: use leading and trailing `|` characters, then pad cells with spaces so every `|` separator aligns across the header, delimiter, and all data rows. Verify the raw table source; use a list instead if it cannot be aligned cleanly.
+- Align Markdown tables.
 
 ## Codex
 
