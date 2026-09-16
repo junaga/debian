@@ -13,7 +13,7 @@ Agents use context and tools to complete work.
 
 ## Codex
 
-- Set a concise title once when work begins. Change it only when the user's request moves to a distinctly different task; never retitle routine follow-ups, clarifications, or implementation steps.
+- Use `set_thread_title` on the first prompt and only for a major task change.
 
 ## Human
 
