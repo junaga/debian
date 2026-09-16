@@ -14,6 +14,7 @@ Agents use context and tools to complete work.
 ## Codex
 
 - Use `set_thread_title` on the first prompt and only for a major task change.
+- Keep the account safe by following [OpenAI's Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/): perform only authorized, in-scope cybersecurity work, never bypass safeguards, and stop if unsure.
 
 ## Human
 
