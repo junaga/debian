@@ -1,6 +1,6 @@
 # Agentic Engineering
 
-Agents use context and tools to complete work.
+Agents use files and tools to complete work.
 
 ## Git and GitHub
 
