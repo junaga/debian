@@ -1,15 +1,22 @@
-set -e
+# Configure the Debian account that will use this machine.
+# Run this after system.sh.
+# It sets up Git and SSH.
 
-# Not for WSL or systemd-less systems.
+set -eu
 USER=$(whoami)
-EMAIL=${EMAIL:-$USER@$(hostname)}
+
+# GitHub finds your commits by email, not Git user name.
+# SSH uses EMAIL only as a label for the public key.
+EMAIL=${EMAIL:?Set EMAIL for Git and SSH}
 
 # Autologin Linux virtual terminals.
-sudo systemctl edit --stdin getty@.service <<-ESC
-	[Service]
-	ExecStart=
-	ExecStart=-login -f $USER
-ESC
+if ! grep -qi microsoft /proc/sys/kernel/osrelease && test -d /run/systemd/system; then
+	sudo systemctl edit --stdin getty@.service <<-ESC
+		[Service]
+		ExecStart=
+		ExecStart=-login -f $USER
+	ESC
+fi
 
 # Containers need users and groups on the shared kernel.
 grep -q ^$USER: /etc/subuid || sudo usermod --add-subuids 100000-165535 $USER
