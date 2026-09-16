@@ -1,10 +1,12 @@
 # Configure the Debian account that will use this machine.
-# Run this after system.sh, passing USER and EMAIL for that account.
+# Run this after system.sh.
 # It sets up Git and SSH.
 
 set -eu
+USER=$(whoami)
 
-USER=${USER:?Set USER for Git and SSH}
+# GitHub finds your commits by email, not Git user name.
+# SSH uses EMAIL only as a label for the public key.
 EMAIL=${EMAIL:?Set EMAIL for Git and SSH}
 
 # Autologin Linux virtual terminals.
