@@ -1,10 +1,13 @@
-# Initialize Debian system packages and shared configuration.
-# Environments: container, WSL, VPS, PC
+# Set up a Debian machine with the shared configuration and tools used in this repository.
+# Run it after a fresh Debian install, whether that is a container, WSL environment, VPS, or PC.
+# It makes system-wide changes and arranges for the machine to stay updated afterward.
+
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
 
-export DEBIAN_FRONTEND="noninteractive" NEEDRESTART_SUSPEND="1"
+export DEBIAN_FRONTEND="noninteractive"
+export NEEDRESTART_SUSPEND="1"
 
 # Modernize APT sources.
 apt modernize-sources --assume-yes

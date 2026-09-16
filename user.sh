@@ -1,10 +1,11 @@
-# Configure the current Debian user.
-# Environments: WSL, VPS, PC
-set -e
+# Configure the Debian account that will use this machine.
+# Run this after system.sh, passing USER and EMAIL for that account.
+# It sets up Git and SSH.
 
-# Linux virtual-terminal autologin is not available on WSL or systemd-less systems.
-USER=$(whoami)
-EMAIL=${EMAIL:-$USER@$(hostname)}
+set -eu
+
+USER=${USER:?Set USER for Git and SSH}
+EMAIL=${EMAIL:?Set EMAIL for Git and SSH}
 
 # Autologin Linux virtual terminals.
 if ! grep -qi microsoft /proc/sys/kernel/osrelease && test -d /run/systemd/system; then
