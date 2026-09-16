@@ -1,7 +1,14 @@
+# Build a Debian live USB that starts with this repository's system setup already applied.
+# Set URL to the Debian image to use and USB to the drive to write, then run this on WSL or a PC.
+# It overwrites the selected drive, so check USB carefully before starting.
+
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
-DIR=$PWD/$(dirname $0)
-cd /var/tmp
+cd $(dirname $0)
+
+URL=${URL:?Set URL to the source Debian live ISO}
+USB=${USB:?Set USB to the destination device}
+
 
 # Download
 curl -fL $URL > debian.iso
@@ -10,17 +17,14 @@ curl -fL $URL > debian.iso
 osirrox -indev debian.iso -extract /live/filesystem.squashfs fs
 unsquashfs -d debian fs
 
-# Copy dotfiles
-cp -r $DIR/home/. debian/etc/skel/
-
 # Remove the live-medium source.
 sed -i '\|file:/run/live/medium|d' debian/etc/apt/sources.list
 
 # Install packages
 systemd-nspawn -D debian -a \
-	--bind-ro=$DIR:/mnt \
+	--bind-ro=$PWD:/mnt \
 	-E SYSTEMD_OFFLINE=1 \
-	sh /mnt/install.sh
+	sh /mnt/system.sh
 
 # Repack
 mksquashfs debian fs -noappend

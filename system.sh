@@ -1,3 +1,7 @@
+# Set up a Debian machine with the shared configuration and tools used in this repository.
+# Run it after a fresh Debian install, whether that is a container, WSL environment, VPS, or PC.
+# It makes system-wide changes and arranges for the machine to stay updated afterward.
+
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
 cd $(dirname $0)
@@ -12,8 +16,8 @@ apt modernize-sources --assume-yes
 apt update
 apt install --yes ca-certificates
 
-# Install repositories
-cp -r repo/. /etc/apt/
+# Install configuration
+cp -r base/. /etc/
 
 # Install packages
 apt update
@@ -35,7 +39,8 @@ curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bas
 # Install packages
 deb-get install tailcat
 pipx install --global huggingface_hub
+
 npm install --global --no-fund @openai/codex
 
 # Update every two minutes
-echo "*/2 * * * * root sh /etc/apt/update.sh" >> /etc/crontab
+echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab
