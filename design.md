@@ -33,17 +33,7 @@ npm calls five million monthly requests clearly unreasonable.
 
 ## Autologin on Linux virtual terminals
 
-Debian’s `getty@.service` displays a login prompt and requires credentials.
-This single-administrator system treats the local console as its recovery path
-when the network is unavailable. [`initacc.sh`](./initacc.sh) therefore
-replaces the virtual-terminal prompt with a session for the current user:
-
-```systemd
-[Service]
-ExecStart=
-ExecStart=-login -f $USER
-```
-
-The override affects only `getty@.service` instances, not serial consoles, SSH,
-or display managers. Anyone with physical or hypervisor-console access receives
-the current user's access.
+[`initacc.sh`](./initacc.sh) enables autologin for the account running setup on
+Linux virtual terminals, providing recovery access without a network connection.
+Physical or hypervisor-console access grants access to that account. Serial
+consoles, SSH, and display managers retain their own login settings.
