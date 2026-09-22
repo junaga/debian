@@ -1,6 +1,5 @@
-# Build a Debian live USB that starts with this repository's system setup already applied.
-# Set URL to the Debian image to use and USB to the drive to write, then run this on WSL or a PC.
-# It overwrites the selected drive, so check USB carefully before starting.
+# Build and flash a Debian live USB with this repository's system setup.
+# Set URL to the live ISO and USB to the destination device; USB is overwritten.
 
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
@@ -24,7 +23,7 @@ sed -i '\|file:/run/live/medium|d' debian/etc/apt/sources.list
 systemd-nspawn -D debian -a \
 	--bind-ro=$PWD:/mnt \
 	-E SYSTEMD_OFFLINE=1 \
-	sh /mnt/system.sh
+	sh /mnt/instpkg.sh
 
 # Repack
 mksquashfs debian fs -noappend
