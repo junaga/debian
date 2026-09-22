@@ -14,10 +14,6 @@ if test -c /dev/tty0; then
 	ESC
 fi
 
-# Containers need users and groups on the shared kernel.
-grep -q ^$USER: /etc/subuid || sudo usermod --add-subuids 100000-165535 $USER
-grep -q ^$USER: /etc/subgid || sudo usermod --add-subgids 100000-165535 $USER
-
 # Create an SSH public/private key pair if missing.
 # Use EMAIL as the public key comment to simplify administration.
 mkdir -p ~/.ssh
