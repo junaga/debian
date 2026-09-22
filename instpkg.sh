@@ -1,6 +1,5 @@
-# Set up a Debian machine with the shared configuration and tools used in this repository.
-# Run it after a fresh Debian install, whether that is a container, WSL environment, VPS, or PC.
-# It makes system-wide changes and arranges for the machine to stay updated afterward.
+# Install shared system configuration and packages, then enable automatic updates.
+# Run after installing Debian; elevates to root when needed.
 
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0

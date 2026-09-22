@@ -1,6 +1,5 @@
-# Configure the Debian account that will use this machine.
-# Run this after system.sh.
-# It sets up Git and SSH.
+# Initialize this user's Git, SSH, container IDs, and console autologin.
+# Run after instpkg.sh with EMAIL set; uses sudo for system settings.
 
 set -eu
 USER=$(whoami)
