@@ -1,5 +1,5 @@
-# Initialize this user's Git, SSH, container IDs, and console autologin.
-# Run after instpkg.sh with EMAIL set; uses sudo for system settings.
+# Initialize the current Unix account's Git, SSH, container IDs, and console autologin.
+# Run after instpkg.sh with EMAIL set.
 
 set -eu
 USER=$(whoami)

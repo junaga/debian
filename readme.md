@@ -23,18 +23,18 @@ wsl.exe --install debian
 
 Use [the cloud](https://getdeploying.com/reference/compute-prices) to provision or rent a container, server, or hardware for 24/7 online apps or games; debit/credit card required.
 
-### Hardware (Live USB)
+### Hardware (Live image)
 
-For `x86-64`: flash a `.iso` to create a [bootable live USB](https://en.wikipedia.org/wiki/Live_USB). Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](Windows/linux/usb.md).
+For `x86-64`: flash a Debian live `.iso` to a storage device, such as a USB drive. Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](Windows/linux/usb.md).
 
 ```sh
 export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"
 
-sh ./flshsys.sh
+sh ./loadsys.sh
 ```
 
-Next: Boot the USB; install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc.); shut down, remove the USB, and boot.
+Next: Boot the flashed device; install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc.); then boot the installed system.
 
 ## Initialization
 
@@ -67,7 +67,7 @@ Set up the user; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
 cp -a base/skel/. ~/
-EMAIL=$(whoami)@$(hostname) sh ./initusr.sh
+EMAIL=$(whoami)@$(hostname) sh ./initacc.sh
 
 source ~/.bashrc
 

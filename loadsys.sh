@@ -1,5 +1,5 @@
-# Build and flash a Debian live USB with this repository's system setup.
-# Set URL to the live ISO and USB to the destination device; USB is overwritten.
+# Download and customize a Debian live image, then flash it to a storage device.
+# Set URL to the ISO and USB to the target device; overwrites the target.
 
 set -eu
 test $(whoami) != "root" && exec sudo -E sh $0
