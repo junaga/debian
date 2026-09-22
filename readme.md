@@ -77,26 +77,6 @@ code --install-extension ms-vscode-remote.remote-ssh
 rcode sosdan ./dev
 ```
 
-### Environment
-
-Edit `~/.env` for user preferences such as `LANG`, `EDITOR` and `PAGER`.
-[`base/skel/.env`](./base/skel/.env) supplies public defaults; keep credentials
-out of this tracked file. `WORK`, `REPO` and `AGENT` are our own conventions and
-only affect tools that explicitly read them.
-
-Interactive Bash loads `~/.env` and exports its assignments to child processes.
-Use `EDITOR=vim command` to override a preference for one command. Starting a
-new interactive shell or sourcing `~/.bashrc` reapplies `~/.env`; it can replace
-inherited values. Project `.env` files are loaded by direnv after authorization.
-This does not configure already-running processes, graphical sessions, cron or
-systemd services; those need their own launch-time environment.
-
-Keep stable behavior in native configuration files: Bash history in `.bashrc`,
-npm defaults in `/etc/npmrc`, and desktop application associations in
-`mimeapps.list`. Environment overrides work only where the application supports
-them. `BROWSER` is supported by some launchers; `EXPLORER` is not a standard
-XDG preference. Changing `SHELL` does not change the account's login shell.
-
 ### History of Editors
 
 ```sh
