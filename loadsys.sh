@@ -36,4 +36,4 @@ cp debian.iso $USB
 sync
 
 # Clean up
-rm debian.iso fs
+rm -r debian.iso fs debian
