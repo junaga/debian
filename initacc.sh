@@ -6,13 +6,12 @@ USER=$(whoami)
 EMAIL=${EMAIL:-$USER@$(hostname)}
 
 # Enable Linux virtual terminal autologin.
-if test -c /dev/tty0; then
+test -c /dev/tty0 && \
 	sudo systemctl edit --stdin getty@.service <<-ESC
 		[Service]
 		ExecStart=
 		ExecStart=-login -f $USER
 	ESC
-fi
 
 # Create an SSH public/private key pair if missing.
 # Use EMAIL as the public key comment to simplify administration.
