@@ -1,3 +1,5 @@
+_Agents see [design.md](./design.md), this readme is for human children._
+
 # Debian
 
 We use the [Debian](https://debian.org/) [Linux distribution](https://en.wikipedia.org/wiki/List_of_Linux_distributions) operating system almost everywhere; [Desktop GUI](https://www.reddit.com/r/unixporn/top/?t=year) and [Terminal CLI](https://en.wikipedia.org/wiki/Terminal_emulator).
@@ -6,8 +8,6 @@ We use the [Debian](https://debian.org/) [Linux distribution](https://en.wikiped
 uname #> Linux
 hostnamectl #> Debian
 ```
-
-_Agents: see [design.md](./design.md)._
 
 ## Installation
 
