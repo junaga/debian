@@ -22,13 +22,6 @@ declare BLUE="\[\e[1;34m\]"
 declare RESET="\[\e[0m\]"
 declare PS1="$BLUE\H\$PWD$RESET "
 
-export LANG="C.UTF-8"
-export PAGER="/bin/less"
-export EDITOR="micro"
-# export SHELL="/bin/bash"
-# export BROWSER="google-chrome-stable"
-export AGENT="codex"
-
 # tools
 ##########################
 alias ls="ls --color=auto --group-directories-first"
@@ -38,4 +31,11 @@ alias datetime="command date +%Y-%m-%d-%H-%M-%S"
 function man { echo "https://manpages.debian.org/$1.en"; }
 function rcode { code --remote "ssh-remote+$1" "$2"; }
 
-# cd /usr/local/dev
+# environment
+##########################
+if [[ -r "$HOME/.env" ]]; then
+    case $- in
+        *a*) source "$HOME/.env" ;;
+        *) set -a; source "$HOME/.env"; set +a ;;
+    esac
+fi

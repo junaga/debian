@@ -1,2 +1,2 @@
-# protect against supply-chain attacks
+# Delay new releases by one day; reduces exposure but also delays fresh fixes.
 min-release-age = 1
