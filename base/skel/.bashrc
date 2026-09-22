@@ -30,12 +30,3 @@ alias date="date +%Y-%m-%d"
 alias datetime="command date +%Y-%m-%d-%H-%M-%S"
 function man { echo "https://manpages.debian.org/$1.en"; }
 function rcode { code --remote "ssh-remote+$1" "$2"; }
-
-# environment
-##########################
-if [[ -r "$HOME/.env" ]]; then
-    case $- in
-        *a*) source "$HOME/.env" ;;
-        *) set -a; source "$HOME/.env"; set +a ;;
-    esac
-fi
