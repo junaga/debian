@@ -32,5 +32,6 @@ alias ls="ls --color=auto --group-directories-first"
 alias rcp="rsync -azP --filter=\":- .gitignore\""
 alias date="date +%Y-%m-%d"
 alias datetime="command date +%Y-%m-%d-%H-%M-%S"
+alias deploy="wrangler pages deploy"
 function man { echo "https://manpages.debian.org/$1.en"; }
 function rcode { code --remote "ssh-remote+$1" "$2"; }

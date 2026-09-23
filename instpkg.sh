@@ -42,6 +42,7 @@ deb-get install tailcat
 pipx install --global huggingface_hub
 
 npm install --global --no-fund @openai/codex
+npm install --global --no-fund wrangler
 
 # Update every two minutes
 echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab
