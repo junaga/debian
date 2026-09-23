@@ -19,8 +19,8 @@ apt install --yes ca-certificates
 cp -r base/. /etc/
 
 # Install packages
-# Clear stale package indexes.
-find /var/lib/apt/lists -maxdepth 1 -type f ! -name lock -delete
+# Clear stale signed indexes.
+rm -f /var/lib/apt/lists/*_InRelease
 apt update
 apt install --yes \
 	cron lsb-release micro less rsync \
