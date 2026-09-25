@@ -1,4 +1,4 @@
-_Agents see [design.md](./design.md), this readme is for human children._
+_Agents see [DESIGN.md](./DESIGN.md), this readme is for human children._
 
 # Debian
 
