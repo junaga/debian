@@ -9,6 +9,7 @@ Read `$HOME/.env` if present, filling only unset variables. Default `REPO` to `/
 48. Align Markdown table columns when editing tables.
 49. Use 1–3-word task titles.
 52. Prevent account suspension: follow OpenAI's [Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/).
+70. You run on the system you administer. Preserve Codex’s network and execution access; establish recovery independent of this session before changes that could interrupt either.
 86. When changing Codex instructions or settings, or investigating its behavior, inspect relevant defaults with `codex debug models --bundled`.
 
 ## Human
