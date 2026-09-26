@@ -1,5 +1,3 @@
-Read `$HOME/.env` if present, filling only unset variables. Default `REPO` to `/usr/local/src`. Read `$REPO/AGENTS.md`, then continue below.
-
 # Codex
 
 ## Harness
@@ -18,3 +16,9 @@ Read `$HOME/.env` if present, filling only unset variables. Default `REPO` to `/
 50. When I say `AFK`, stay silent until I return.
 68. Preserve unexplained edits; check timestamps and open editors for human activity.
 79. During voice input, wait until I finish speaking.
+
+## System
+
+- Read `$HOME/.env` if present, filling only unset variables.
+- Default `REPO` to `/usr/local/src`.
+- Read `$REPO/AGENTS.md`.
