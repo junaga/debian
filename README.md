@@ -1,4 +1,4 @@
-_Agents see [DESIGN.md](./DESIGN.md), this readme is for human children._
+_This README is written for humans. Agents should read it alongside [AGENTS.md](./AGENTS.md)._
 
 # Debian
 
