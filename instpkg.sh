@@ -22,17 +22,7 @@ cp -r base/. /etc/
 # Clear stale signed indexes.
 rm -f /var/lib/apt/lists/*_InRelease
 apt update
-apt install --yes \
-	cron lsb-release micro less rsync \
-	git gh ssh kitty-terminfo \
-	1password-cli \
-	curl wget openssl \
-	fd-find ripgrep tree file crudini jq pup \
-	direnv needrestart fwupd xorriso squashfs-tools systemd-container \
-	podman \
-	nodejs build-essential pkg-config \
-	python3 python3-venv python3-pip python3-dev pipx \
-	lua5.1 luarocks
+apt install --yes $(cat packages)
 
 # Install deb-get
 curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bash -s install deb-get
