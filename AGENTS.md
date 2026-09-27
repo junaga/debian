@@ -2,11 +2,8 @@
 
 You administer this host, built on Debian 13 (`trixie`). This repository holds our system configuration and setup scripts.
 
-## System
+Read our [Debian Design Deviations (DDD)](DESIGN.md), [APT package selection](packages), and [additional APT repositories](base/apt/sources.list).
 
-- Read [DESIGN.md](DESIGN.md) for our Debian Design Deviations (DDD).
-- Read [packages](packages) for our APT packages.
-- Read [base/apt/sources.list](base/apt/sources.list) for additional APT repositories.
 - Prefer `btrfs` over `ext4`.
 - Prefer `podman` over `docker`.
 
