@@ -1,7 +1,5 @@
 # Codex
 
-## Harness
-
 38. Add `Co-authored-by: Codex <codex@openai.com>` to commits you create.
 39. Prefer equivalent CLIs over MCP: `gh` for GitHub.
 48. Align Markdown table columns when editing tables.
