@@ -19,7 +19,7 @@ RUN apt-get update \
     && apt-get install -y $(cat /opt/debian/packages) \
     && cp -a /etc/skel/. /root/ \
     && pipx install --global huggingface_hub \
-    && npm install --global --no-fund @openai/codex @pnp/cli-microsoft365 wrangler \
+    && npm install --global --no-fund @openai/codex @pnp/cli-microsoft365 @railway/cli wrangler \
     && echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab \
     && rm -rf /var/lib/apt/lists/*
 
