@@ -32,6 +32,7 @@ deb-get install tailcat
 pipx install --global huggingface_hub
 
 npm install --global --no-fund @openai/codex
+npm install --global --no-fund @pnp/cli-microsoft365
 npm install --global --no-fund wrangler
 
 # Update every two minutes
