@@ -34,5 +34,5 @@ npm install --global --no-fund @pnp/cli-microsoft365
 npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli
 npm install --global --no-fund --allow-scripts=esbuild,workerd wrangler
 
-# Update every two minutes
-echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab
+# Update daily at 02:20 UTC
+echo "20 2 * * * root sh /etc/update.sh" >> /etc/crontab
