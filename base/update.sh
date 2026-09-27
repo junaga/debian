@@ -8,4 +8,4 @@ apt full-upgrade --yes
 deb-get update
 deb-get upgrade --dg-only
 pipx upgrade-all --global
-npm update --global --no-fund
+npm update --global --no-fund --allow-scripts=@railway/cli,esbuild,workerd

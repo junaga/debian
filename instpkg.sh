@@ -31,8 +31,8 @@ pipx install --global huggingface_hub
 
 npm install --global --no-fund @openai/codex
 npm install --global --no-fund @pnp/cli-microsoft365
-npm install --global --no-fund @railway/cli
-npm install --global --no-fund wrangler
+npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli
+npm install --global --no-fund --allow-scripts=esbuild,workerd wrangler
 
 # Update every two minutes
 echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab
