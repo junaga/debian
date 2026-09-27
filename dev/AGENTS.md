@@ -10,4 +10,4 @@ $WORK/dev/lib/
 $WORK/dev/doc/
 ```
 
-Put packages and system configuration in `$REPO` (default `/usr/local/src`) so the next image contains them.
+Use `$REPO` (default `/usr/local/src`) as the image source reference. Commit package and system configuration changes to the upstream repository, then build and deploy a new image.
