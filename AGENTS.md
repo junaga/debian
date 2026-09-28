@@ -25,9 +25,3 @@ You administer this host, built on Debian 13 (`trixie`). This repository holds o
 - Use `/usr/local/dev` for persistent projects and working data. Mount the Railway volume there. Keep `/usr/local/src` out of the volume so the image supplies the repository on every deployment.
 - Keep secrets out of Git. Use service variables or protected persistent storage for credentials that must survive a redeploy.
 - This Railway dev service has one replica because Railway volumes cannot be attached to replicated services. Deploy scalable services separately with shared external storage when needed.
-
-## Workspace
-
-- Read `$HOME/.env` if present, filling only unset variables.
-- Default `WORK` to `$HOME`.
-- Read `$WORK/AGENTS.md`.

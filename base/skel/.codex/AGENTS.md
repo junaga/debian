@@ -20,3 +20,5 @@
 - Read `$HOME/.env` if present, filling only unset variables.
 - Default `REPO` to `/usr/local/src`.
 - Read `$REPO/AGENTS.md`.
+- Default `WORK` to `$HOME`.
+- Read `$WORK/AGENTS.md`.
