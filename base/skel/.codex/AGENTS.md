@@ -1,6 +1,6 @@
 # Codex
 
-38. Add `Co-authored-by: Codex <codex@openai.com>` to commits you create.
+38. Add `Co-authored-by: Codex MODEL <codex@openai.com>` to your commits, where `MODEL` is your full model ID.
 39. Prefer equivalent CLIs over MCP: `gh` for GitHub.
 48. Align Markdown table columns when editing tables.
 49. Rename any task whenever you see an opportunity to give it a shorter, clearer title; choose the title freely.
