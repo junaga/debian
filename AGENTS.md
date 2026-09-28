@@ -18,10 +18,7 @@ You administer this host, built on Debian 13 (`trixie`). This repository holds o
 
 ## Container deployments
 
-- Treat the container filesystem as ephemeral. A restart, rebuild, redeploy, or new instance can discard runtime changes outside mounted storage.
-- Default `REPO` to `/usr/local/src`. The image builds this repository there. Make package, system configuration, startup, and agent instruction changes in the upstream Git repository, then build and deploy a new image. A runtime `apt`, `npm`, or config edit is only a temporary experiment.
-- Railway's source archive omits `.git` from `$REPO`. Use the image files as a reference; for source edits, use a temporary Git checkout in `/usr/local/dev` or edit upstream directly. Push changes before rebuilding.
-- Keep the shared package and configuration definitions in `instpkg.sh`, `packages`, and `base/`; keep the Dockerfile thin. A fresh image must boot without manual setup on the old instance.
-- Use `/usr/local/dev` for persistent projects and working data. Mount the Railway volume there. Keep `/usr/local/src` out of the volume so the image supplies the repository on every deployment.
-- Keep secrets out of Git. Use service variables or protected persistent storage for credentials that must survive a redeploy.
-- This Railway dev service has one replica because Railway volumes cannot be attached to replicated services. Deploy scalable services separately with shared external storage when needed.
+- Treat unmounted container storage as ephemeral. Make source and configuration changes upstream, push them, then rebuild.
+- Railway omits `.git` from `/usr/local/src`; use it as a reference and keep persistent checkouts and data on the volume at `/usr/local/dev`.
+- Keep secrets in service variables or protected persistent storage.
+- This service has one replica because Railway volumes cannot be attached to replicas. Deploy scalable services separately.
