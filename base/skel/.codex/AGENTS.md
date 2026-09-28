@@ -18,7 +18,7 @@
 
 ## System
 
-- Read `$HOME/.env` if present, filling only unset variables.
+- Read `$HOME/.env` without sourcing it, filling only unset variables.
 - Default `REPO` to `/usr/local/src`.
 - Read `$REPO/AGENTS.md`.
 - Default `WORK` to `$HOME`.
