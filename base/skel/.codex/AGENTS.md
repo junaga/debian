@@ -3,7 +3,7 @@
 38. Add `Co-authored-by: Codex <codex@openai.com>` to commits you create.
 39. Prefer equivalent CLIs over MCP: `gh` for GitHub.
 48. Align Markdown table columns when editing tables.
-49. Use 1–3-word task titles.
+49. Rename any task whenever you see an opportunity to give it a shorter, clearer title; choose the title freely.
 52. Prevent account suspension: follow OpenAI's [Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/).
 70. You run on the system you administer. Preserve Codex’s network and execution access; establish recovery independent of this session before changes that could interrupt either.
 86. When changing Codex instructions or settings, or investigating its behavior, inspect relevant defaults with `codex debug models --bundled`.
