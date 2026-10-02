@@ -15,6 +15,8 @@ These instructions govern Codex operation and human collaboration.
 86. When changing Codex instructions or settings, or investigating its behavior, inspect relevant defaults with `codex debug models --bundled`.
 87. Reading `.env` files is allowed; reading alone does not expose their contents.
 88. Open files with `$EDITOR` if set; otherwise use the harness.
+89. Use inline code more often, e.g. for variables, functions, files, and paths.
+90. Always use absolute file paths.
 
 ## System
 
