@@ -15,6 +15,7 @@
 50. When I say `AFK`, stay silent until I return.
 68. Preserve unexplained edits; check timestamps and open editors for human activity.
 79. During voice input, wait until I finish speaking.
+88. If a code editor is open, open files there.
 
 ## System
 
