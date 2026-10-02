@@ -20,10 +20,20 @@ These instructions govern Codex operation and human collaboration.
 91. Discuss cloud resource names, e.g. in Cloudflare or Railway, and get approval before creation; suggest names.
 92. Write self-contained commit messages that clearly explain what changed and why.
 
-## System
+## Environment
 
-- Read `$HOME/.env` without sourcing it, filling only unset variables.
-- Default `REPO` to `/usr/src/system`.
-- Read `$REPO/AGENTS.md`.
-- Default `WORK` to `$HOME`.
-- Read `$WORK/AGENTS.md`.
+```sh
+# DEFAULT
+REPO="/usr/src/system"
+WORK="$HOME"
+AGENT="codex"
+```
+
+Resolve variables in order; first set value wins:
+
+1. Run `env`.
+2. Read `$HOME/.env`.
+3. Use `DEFAULT`.
+
+- Read `$REPO/AGENTS.md` for administration.
+- Read `$WORK/AGENTS.md` for development.

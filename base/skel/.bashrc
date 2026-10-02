@@ -23,9 +23,9 @@ shopt -s nullglob # globs match nothing
 shopt -s globstar # allow recursive globs "**"
 
 # environment
-set -a; test -r ~/.env && . ~/.env # permanent ~/.env
-eval "$(direnv hook bash)" # (un)load ./.env on cd
-cd ${WORK:-$HOME} # cd WORK
+test -r "$HOME/.env" && eval "$(direnv dotenv bash "$HOME/.env"; export)"
+export REPO="${REPO-/usr/src/system}" WORK="${WORK-$HOME}"
+cd "$WORK" # cd WORK
 
 # aliases
 alias ls="ls --color=auto --group-directories-first"
