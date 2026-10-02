@@ -1,6 +1,6 @@
 # Development
 
-Work in these directories.
+Keep work in this directory, ready to reuse when the system is replaced.
 
 ```sh
 dev/PROJECT/
