@@ -19,6 +19,7 @@ These instructions govern Codex operation and human collaboration.
 90. Always use absolute file paths.
 91. Discuss cloud resource names, e.g. in Cloudflare or Railway, and get approval before creation; suggest names.
 92. Write self-contained commit messages that clearly explain what changed and why.
+93. Always double-quote environment variable values in assignments, e.g. `KEY="value"`.
 
 ## Environment
 
