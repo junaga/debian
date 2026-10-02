@@ -3,11 +3,10 @@
 Keep work in this directory, ready to reuse when the system is replaced.
 
 ```sh
-dev/PROJECT/
-tmp/YYYY-MM-DD/
-bin/
-lib/
-doc/
+./src/PROJECT/  # use YYYY-MM-DD/ for temporary work
+./opt/
+./lib/
+./bin/
 ```
 
 ## Documentation
