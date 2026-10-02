@@ -11,12 +11,13 @@ Keep work in this directory, ready to reuse when the system is replaced.
 
 ## Documentation
 
-Start with `AGENTS.md`. Split large sections into child files.
+Start with `README.md`. Split large sections into child files.
 
 ```text
-AGENTS.md
+README.md
 ├── PROMPT.md — thoughts
 ├── PLAN.md — implementation delta
-└── DESIGN.md — shape
-    └── SPEC.md — specification
+├── DESIGN.md — shape
+│   └── SPEC.md — specification
+└── RESOURCES.md — external accounts and services
 ```
