@@ -1,7 +1,7 @@
 # Debian Design Deviations `DDD`
 
-Debian 13 `trixie` is the baseline. We deviate from its defaults only when
-doing so significantly improves the system. This document records each
+Unix, Linux, and Debian 13 (`trixie`) conventions are the baseline. We deviate from them
+only when doing so significantly improves the system. This document records each
 decision and its rationale. Numbers follow first documentation; removed decisions
 leave gaps.
 
