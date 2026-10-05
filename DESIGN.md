@@ -4,17 +4,10 @@ Unix, Linux, and Debian 13 (`trixie`) conventions are the baseline. We deviate f
 only when doing so significantly improves the system. This document records each
 decision and its rationale.
 
-## 2. Autologin on Linux virtual terminals
-
-[`initacc.sh`](./initacc.sh) enables autologin for the account running setup on
-Linux virtual terminals, providing recovery access without a network connection.
-Physical or hypervisor-console access grants access to that account. Serial
-consoles, SSH, and display managers retain their own login settings.
-
 ## 9. Replace `apt-secure` with HTTPS
 
 All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
-(`.gpg`) keys. [`base/apt/apt.conf`](./base/apt/apt.conf) disables `apt-secure`
+(`.gpg`) keys. [`base/etc/apt/apt.conf`](./base/etc/apt/apt.conf) disables `apt-secure`
 enforcement for "unauthenticated" repositories and packages.
 
 If a repository serves signed `InRelease` without a `.gpg` key, APT warns but

@@ -14,7 +14,7 @@ apt install --yes ca-certificates
 apt modernize-sources --assume-yes
 
 # Install configuration
-cp -r base/. /etc/
+cp -r base/etc/. /etc/
 rm -f /etc/npmrc /etc/pip.conf
 set -a; . /etc/environment; set +a
 
@@ -37,4 +37,4 @@ npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli
 npm install --global --no-fund --allow-scripts=esbuild,workerd cf
 
 # Update every two minutes
-echo "*/2 * * * * root sh /etc/update.sh" >> /etc/crontab
+echo "*/2 * * * * root sh /etc/upgrade.sh" >> /etc/crontab

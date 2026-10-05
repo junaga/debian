@@ -4,7 +4,7 @@ You administer this host, built on Debian 13 (`trixie`). This repository holds o
 
 - [DESIGN.md](DESIGN.md) explains our Debian Design Deviations (DDD).
 - [packages](packages) are already installed APT packages.
-- [base/apt/sources.list](base/apt/sources.list) defines our additional APT repositories.
+- [base/etc/apt/sources.list](base/etc/apt/sources.list) defines our additional APT repositories.
 - Prefer `btrfs` over `ext4`.
 - Prefer `podman` over `docker`.
 
