@@ -36,3 +36,4 @@ systemd-container
 1password-cli
 lsb-release
 distro-info-data
+efibootmgr
