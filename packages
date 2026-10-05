@@ -17,6 +17,7 @@ pup
 ripgrep
 rsync
 kitty-terminfo
+seatd
 openssl
 fd-find
 less
