@@ -37,3 +37,9 @@ systemd-container
 lsb-release
 distro-info-data
 efibootmgr
+ntfs-3g
+dosfstools
+cryptsetup-bin
+partclone
+fdisk
+smartmontools
