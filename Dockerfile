@@ -1,8 +1,9 @@
+# https://hub.docker.com/_/debian/tags?name=trixie
 FROM debian:trixie
-ENV SHELL=/bin/bash
+ENV SHELL="/bin/bash"
 
+COPY . /usr/src/system/
 WORKDIR /usr/src/system
-COPY . .
 
 RUN sh ./instpkg.sh \
     && cp -a /etc/skel/. /root/ \
