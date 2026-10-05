@@ -28,8 +28,9 @@ Use [the cloud](https://getdeploying.com/reference/compute-prices) to provision 
 For `x86-64`: flash a Debian live `.iso` to a storage device, such as a USB drive. Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](Windows/linux/usb.md).
 
 ```sh
+# Debian standard live ISO (~2 GB, no desktop environment).
 export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
-export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0" # no "-partN"
+export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0"
 
 sh ./loadsys.sh
 ```

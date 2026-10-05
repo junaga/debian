@@ -10,10 +10,10 @@ USB="${USB:?Set USB to the destination device}"
 
 
 # Download
-curl -fL "$URL" > debian.iso
+curl -fL "$URL" > source.iso
 
 # Unpack
-osirrox -indev debian.iso -extract /live/filesystem.squashfs fs
+osirrox -indev source.iso -extract /live/filesystem.squashfs fs
 unsquashfs -d debian fs
 
 # Remove the live-medium source.
@@ -27,7 +27,7 @@ systemd-nspawn -D debian -a \
 
 # Repack
 mksquashfs debian fs -noappend
-xorriso -dev debian.iso -map fs /live/filesystem.squashfs \
+xorriso -indev source.iso -outdev debian.iso -map fs /live/filesystem.squashfs \
 	-rm /md5sum.txt /sha256sum.txt /live/filesystem.packages -- \
 	-boot_image any replay -end
 
@@ -36,4 +36,4 @@ cp debian.iso "$USB"
 sync
 
 # Clean up
-rm -r debian.iso fs debian
+rm -r source.iso debian.iso fs debian
