@@ -1,0 +1,19 @@
+Package: nodejs
+Pin: origin deb.nodesource.com
+Pin-Priority: 600
+
+Package: firefox firefox-esr firefox-l10n-* firefox-esr-l10n-*
+Pin: origin packages.mozilla.org
+Pin-Priority: 600
+
+Package: procdump
+Pin: origin packages.microsoft.com
+Pin-Priority: 600
+
+Package: proton-vpn-cli proton-vpn-gtk-app
+Pin: origin repo.protonvpn.com
+Pin-Priority: 600
+
+Package: azure-cli
+Pin: origin packages.microsoft.com
+Pin-Priority: 600

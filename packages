@@ -34,6 +34,9 @@ xorriso
 squashfs-tools
 systemd-container
 1password-cli
+google-cloud-cli
+azure-cli
+awscli
 lsb-release
 distro-info-data
 efibootmgr

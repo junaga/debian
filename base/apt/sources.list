@@ -22,6 +22,9 @@ deb https://packages.gitlab.com/gitlab/gitlab-ce/debian trixie main
 # `node`, `npm`, `npx`
 deb https://deb.nodesource.com/node_24.x nodistro main
 
+# `az` (Azure CLI)
+deb https://packages.microsoft.com/repos/azure-cli/ bookworm main
+
 # `mongosh`
 deb https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main
 
