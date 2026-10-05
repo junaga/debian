@@ -15,6 +15,8 @@ apt modernize-sources --assume-yes
 
 # Install configuration
 cp -r base/. /etc/
+rm -f /etc/npmrc /etc/pip.conf
+set -a; . /etc/environment; set +a
 
 # Install packages
 # Clear stale signed indexes.

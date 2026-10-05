@@ -1,4 +1,5 @@
 set -eu
+set -a; . /etc/environment; set +a
 
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_MODE="a"

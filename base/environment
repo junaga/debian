@@ -1,0 +1,3 @@
+# Reduce supply-chain risk.
+NPM_CONFIG_MIN_RELEASE_AGE="1"
+PIP_UPLOADED_PRIOR_TO="P1D"
