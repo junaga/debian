@@ -1,4 +1,6 @@
 set -eu
+exec 9>/run/lock/system-update.lock
+flock -n 9 || exit 0
 set -a; . /etc/environment; set +a
 
 export DEBIAN_FRONTEND="noninteractive"
