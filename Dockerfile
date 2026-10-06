@@ -5,9 +5,8 @@ ENV SHELL="/bin/bash"
 COPY . /usr/src/system/
 WORKDIR /usr/src/system
 
-RUN sh ./instpkg.sh \
-    && cp -a /etc/skel/. /root/ \
-    && cp .env /root/.env \
+RUN sh ./base/install.sh \
+    && cp -a ./base/home/. /root/ \
     && mkdir -p /usr/local/dev \
     && rm -rf /var/lib/apt/lists/*
 

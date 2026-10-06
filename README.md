@@ -13,7 +13,7 @@ hostnamectl #> Debian
 
 ### Windows
 
-**Recommended:** Windows 11 with the [Windows/Linux](./Windows/linux) subsystem.
+**Recommended:** Windows 11 with the [Windows/Linux](./windows/linux) subsystem.
 
 ```sh
 wsl.exe --install debian
@@ -25,14 +25,14 @@ Use [the cloud](https://getdeploying.com/reference/compute-prices) to provision 
 
 ### Hardware (Live image)
 
-For `x86-64`: flash a Debian live `.iso` to a storage device, such as a USB drive. Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](Windows/linux/usb.md).
+For `x86-64`: flash a Debian live `.iso` to a storage device, such as a USB drive. Needs ≥4 GB. Back up and unmount first, **flashing deletes all data.** On WSL use [USB passthrough](windows/linux/usb.md).
 
 ```sh
 # Debian standard live ISO (~2 GB, no desktop environment).
 export URL="https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/debian-live-13.7.0-amd64-standard.iso"
 export USB="/dev/disk/by-id/usb-SanDisk_Ultra_USB_3.0_4C530000310806116320-0:0"
 
-sh ./loadsys.sh
+sh ./flash-usb.sh
 ```
 
 Next: Boot the flashed device; install Debian on a **fast disk** (`M.2`, `SSD`, `HDD`, `USB`, `microSD`, etc.); then boot the installed system.
@@ -58,7 +58,7 @@ In 1983 Apple pioneered `C` copy `V` paste `X` cut `Z` undo. Similar keys were a
 Set up the system; and login to OpenAI [Codex](https://openai.com/codex).
 
 ```sh
-sh ./instpkg.sh
+sh ./base/install.sh
 
 codex login
 codex "create a JavaScript CLI that counts the words in a text file"
@@ -67,7 +67,7 @@ codex "create a JavaScript CLI that counts the words in a text file"
 Set up the user; and setup Microsoft [VS Code](https://code.visualstudio.com/).
 
 ```sh
-cp -a base/etc/skel/. ~/
+cp -a base/home/. ~/
 EMAIL=$(whoami)@$(hostname) sh ./base/iam.sh
 
 source ~/.bashrc

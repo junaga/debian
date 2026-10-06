@@ -1,5 +1,5 @@
 # Initialize this Unix account's git and ssh.
-# Run after instpkg.sh; EMAIL defaults to $USER@$HOSTNAME.
+# Run after base/install.sh; EMAIL defaults to $USER@$HOSTNAME.
 
 set -eu
 USER=$(whoami)

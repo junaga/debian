@@ -2,8 +2,8 @@
 # Run after installing Debian; elevates to root when needed.
 
 set -eu
-test $(whoami) != "root" && exec sudo -E sh $0
-cd $(dirname $0)
+test "$(whoami)" != "root" && exec sudo -E sh "$0"
+cd "$(dirname "$0")"
 
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_SUSPEND="1"
@@ -14,7 +14,8 @@ apt install --yes ca-certificates
 apt modernize-sources --assume-yes
 
 # Install configuration
-cp -r base/etc/. /etc/
+cp -r etc/. /etc/
+cp -a home/. /etc/skel/
 rm -f /etc/npmrc /etc/pip.conf
 set -a; . /etc/environment; set +a
 
