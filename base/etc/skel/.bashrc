@@ -33,6 +33,6 @@ alias rcp="rsync -azP --filter=\":- .gitignore\""
 alias date="date +%Y-%m-%d"
 alias datetime="command date +%Y-%m-%d-%H-%M-%S"
 alias deploy="wrangler pages deploy"
-function desktop { exec run0 -u "${1-1000}" "${DESKTOP-hyprland}"; }
+function desktop { exec run0 --pipe -u "${1-1000}" "${DESKTOP-hyprland}"; }
 function man { echo "https://manpages.debian.org/$1.en"; }
 function rcode { code --remote "ssh-remote+$1" "$2"; }
