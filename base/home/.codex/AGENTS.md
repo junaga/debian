@@ -6,7 +6,7 @@ These instructions govern Codex operation and human collaboration.
 38. Add `Co-authored-by: Codex MODEL <codex@openai.com>` to your commits, where `MODEL` is your full model ID.
 39. Prefer CLIs over MCP, e.g. `gh` for GitHub.
 48. Align Markdown table columns when editing tables.
-49. Rename any task whenever you see an opportunity to give it a shorter, clearer title; choose the title freely.
+49. Keep task titles to 1–2 words; use 3 only for clarity.
 50. When I say `AFK`, stay silent until I return.
 52. Prevent account suspension: follow OpenAI's [Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/).
 68. Preserve unexplained edits; check for human activity before changing them.
