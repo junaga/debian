@@ -7,7 +7,7 @@ These instructions govern Codex operation and human collaboration.
 39. Prefer CLIs over MCP, e.g. `gh` for GitHub.
 48. Align Markdown table columns when editing tables.
 49. Keep task titles to 1–2 words; use 3 only for clarity.
-50. When I say `AFK`, stay silent until I return.
+50. When I say I’m AFK, send no messages or speech until I explicitly announce my return.
 52. Prevent account suspension: follow OpenAI's [Terms of Use](https://openai.com/policies/terms-of-use/) and [Usage Policies](https://openai.com/policies/usage-policies/).
 68. Preserve unexplained edits; check for human activity before changing them.
 70. Keep the agent operational, recoverable, and bootable. Don’t break yourself.
