@@ -24,7 +24,7 @@ shopt -s globstar # allow recursive globs "**"
 
 # environment
 test -r "$HOME/.env" && eval "$(direnv dotenv bash "$HOME/.env"; export)"
-export REPO="${REPO-/usr/src/system}" WORK="${WORK-$HOME}"
+export REPO="${REPO-/usr/src/local}" WORK="${WORK-$HOME}"
 cd "$WORK" # cd WORK
 
 # aliases

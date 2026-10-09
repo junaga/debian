@@ -2,8 +2,8 @@
 FROM debian:trixie
 ENV SHELL="/bin/bash"
 
-COPY . /usr/src/system/
-WORKDIR /usr/src/system
+COPY . /usr/src/local/
+WORKDIR /usr/src/local
 
 RUN sh ./base/install.sh \
     && cp -a ./base/home/. /root/ \
