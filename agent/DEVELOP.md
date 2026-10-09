@@ -1,12 +1,12 @@
-# Development
+# Develop
 
 Keep work in this directory, ready to reuse when the system is replaced.
 
 ```sh
-./src/PROJECT/  # use YYYY-MM-DD/ for temporary work
-./opt/
+./src/PROJECT/  # or use YYYY-MM-DD/
 ./lib/
 ./bin/
+./opt/
 ```
 
 ## Documentation
