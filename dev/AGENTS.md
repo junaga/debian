@@ -21,3 +21,21 @@ README.md
 │   └── SPEC.md — specification
 └── RESOURCES.md — external accounts and services
 ```
+
+## Ignore
+
+Reference `.gitignore`.
+
+```ignore
+tmp/
+*.log*
+dist/
+
+# for WSL projects
+desktop.ini
+*Zone.Identifier
+
+# for Apple container projects
+.DS_Store
+__MACOSX/
+```
