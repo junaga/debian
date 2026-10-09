@@ -30,12 +30,4 @@ Reference `.gitignore`.
 tmp/
 *.log*
 dist/
-
-# for WSL projects
-desktop.ini
-*Zone.Identifier
-
-# for Apple container projects
-.DS_Store
-__MACOSX/
 ```
