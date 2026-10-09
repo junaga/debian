@@ -19,7 +19,8 @@ README.md
 ├── PLAN.md — implementation delta
 ├── DESIGN.md — shape
 │   └── SPEC.md — specification
-└── RESOURCES.md — external accounts and services
+├── RESOURCES.md — external accounts and services
+└── BACKLOG.md — issues, improvements, questions
 ```
 
 ## Ignore
