@@ -5,7 +5,8 @@ ENV SHELL="/bin/bash"
 COPY . /usr/src/local/
 WORKDIR /usr/src/local
 
-RUN sh ./base/install.sh \
+RUN touch /run/.containerenv \
+    && sh ./base/install.sh \
     && cp -a ./base/home/. /root/ \
     && mkdir -p /usr/local/dev \
     && rm -rf /var/lib/apt/lists/*
