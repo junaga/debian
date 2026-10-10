@@ -8,7 +8,7 @@ WORKDIR /usr/src/local
 RUN touch /run/.containerenv \
     && sh ./base/install.sh \
     && cp -a ./base/home/. /root/ \
-    && mkdir -p /usr/local/dev \
+    && mkdir -p /usr/local/src \
     && rm -rf /var/lib/apt/lists/*
 
 ARG RAILWAY_GIT_COMMIT_SHA

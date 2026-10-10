@@ -19,6 +19,6 @@ You administer this host, built on Debian 13 (`trixie`). This repository holds o
 ## Container deployments
 
 - Treat unmounted container storage as ephemeral. Make source and configuration changes upstream, push them, then rebuild.
-- Keep persistent checkouts and data on the volume at `/usr/local/dev`.
+- Keep persistent checkouts and data on the volume at `/usr/local/src`.
 - Keep secrets in service variables or protected persistent storage.
 - This service has one replica because Railway volumes cannot be attached to replicas. Deploy scalable services separately.
