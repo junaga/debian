@@ -30,3 +30,7 @@ eligible system services; user sessions and kernel reboots remain explicit
 because they are disruptive. That is 21,600 requests per month for one host;
 npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
+
+Containers install packages when the image is built and receive updates through
+image rebuilds. Skip the automatic update cron registration when `/.dockerenv`
+or `/run/.containerenv` is present.
