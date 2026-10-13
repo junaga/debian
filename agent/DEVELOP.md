@@ -1,6 +1,6 @@
 # Develop
 
-Keep work in this directory, ready to reuse when the system is replaced.
+Contain work in your working directory.
 
 ```sh
 ./dev/PROJECT/  # or use YYYY-MM-DD/
@@ -10,19 +10,39 @@ Keep work in this directory, ready to reuse when the system is replaced.
 ./data/
 ```
 
+## Source code
+
+You own all source code. Humans must not write or read source code.
+
+```
+       Humans     <-->     AI agents
+      /      \            /         \
+ Product     Documentation       Source code
+```
+
 ## Documentation
 
-Start with `README.md`. Split large sections into child files.
-
-```text
-README.md
-├── PROMPT.md — thoughts
-├── PLAN.md — implementation delta
-├── DESIGN.md — shape
-│   └── SPEC.md — specification
-├── RESOURCES.md — external accounts and services
-└── BACKLOG.md — issues, improvements, questions
 ```
+AGENTS.md / README.md — project
+├── PROMPT.md — description
+│   └── DESIGN.md — definition
+│       └── SPEC.md — specification
+│           └── IMPL.md — implementation
+├── RESOURCES.md — external accounts and services
+├── PLAN.md — unimplemented changes
+└── BACKLOG.md — unresolved issues
+```
+
+- Number `BACKLOG.md` issues in order.
+- Remove completed work from `PLAN.md` and `BACKLOG.md`.
+- `SPEC.md` must not omit any requirements.
+- `README.md` must be human-written.
+- Not every project needs an `AGENTS.md`.
+- Prefer less documentation and fewer files.
+
+<!--
+`SKILL.md` defines an instruction package, not a document like `AGENTS.md` instructions.
+-->
 
 ## Ignore
 
