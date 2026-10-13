@@ -25,9 +25,9 @@ These instructions govern Codex operation and human collaboration.
 
 ```sh
 # DEFAULT
-REPO="/usr/src/local"
-AGENT="codex"
 WORK="$HOME"
+REPO="$WORK/dev/debian"
+AGENT="codex"
 ```
 
 Resolve variables in order; first set value wins:

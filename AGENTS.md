@@ -1,6 +1,6 @@
 # Debian
 
-You administer this host, built on Debian 13 (`trixie`). This repository holds our system configuration and setup scripts.
+You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` contains the configuration and setup scripts used to build this system.
 
 - [DESIGN.md](DESIGN.md) explains our Debian Design Deviations (DDD).
 - [base/packages](base/packages) are already installed APT packages.
@@ -14,6 +14,7 @@ You administer this host, built on Debian 13 (`trixie`). This repository holds o
 - Research and propose useful `apt`, `uv`, or `npm` packages.
 - Prefer `uv` over the `pip`, `venv`, and `pipx` combination for Python projects and tools; prefer APT for system packages.
 - Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
+- Make system changes in the persistent Git checkout at `/usr/local/dev/debian`; `/usr/src/system` is the installed source reference.
 - Before changing DESIGN.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
 - Show the diff and commit message for human approval.
 
