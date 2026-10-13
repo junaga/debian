@@ -11,7 +11,8 @@ You administer this host, built on Debian 13 (`trixie`). This repository holds o
 ## Repository
 
 - Do one thing well. Compose small tools. Keep the system understandable.
-- Research and propose useful `apt`, `pip`, or `npm` packages.
+- Research and propose useful `apt`, `uv`, or `npm` packages.
+- Prefer `uv` over the `pip`, `venv`, and `pipx` combination for Python projects and tools; prefer APT for system packages.
 - Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
 - Before changing DESIGN.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
 - Show the diff and commit message for human approval.

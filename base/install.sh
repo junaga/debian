@@ -30,7 +30,8 @@ curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bas
 
 # Install packages
 deb-get install tailcat glab
-pipx install --global huggingface_hub
+curl -fL https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/bin" sh
+uv tool install huggingface_hub
 
 npm install --global --no-fund @openai/codex
 npm install --global --no-fund @pnp/cli-microsoft365

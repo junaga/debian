@@ -10,5 +10,6 @@ apt update
 apt full-upgrade --yes
 deb-get update
 deb-get upgrade --dg-only
-pipx upgrade-all --global
+uv self update
+uv tool upgrade --all
 npm update --global --no-fund --allow-scripts=@railway/cli,esbuild,workerd
