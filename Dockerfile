@@ -1,23 +1,12 @@
 # https://hub.docker.com/_/debian/tags?name=trixie
 FROM debian:trixie
+
+WORKDIR /usr
+COPY . src/local/
+RUN sh src/local/base/install.sh container
+RUN rm -rf /root
+RUN ln -s /usr/local/data /root
+
+WORKDIR /usr/local
 ENV SHELL="/bin/bash"
-
-COPY . /usr/src/local/
-WORKDIR /usr/src/local
-
-RUN touch /run/.containerenv \
-    && sh ./base/install.sh \
-    && cp -a ./base/home/. /root/ \
-    && mkdir -p /usr/local/src \
-    && rm -rf /var/lib/apt/lists/*
-
-ARG RAILWAY_GIT_COMMIT_SHA
-RUN if [ ! -d .git ]; then \
-        git init --initial-branch=master \
-        && git remote add origin https://github.com/junaga/debian.git \
-        && git fetch origin master \
-        && git reset --mixed "${RAILWAY_GIT_COMMIT_SHA:-origin/master}" \
-        && git branch --set-upstream-to=origin/master master; \
-    fi
-
-CMD ["cron", "-f"]
+CMD mkdir -p dev data && exec sleep infinity

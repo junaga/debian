@@ -3,10 +3,11 @@
 Keep work in this directory, ready to reuse when the system is replaced.
 
 ```sh
-./src/PROJECT/  # or use YYYY-MM-DD/
+./dev/PROJECT/  # or use YYYY-MM-DD/
 ./lib/
 ./bin/
 ./opt/
+./data/
 ```
 
 ## Documentation

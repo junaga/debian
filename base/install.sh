@@ -1,8 +1,8 @@
 # Install shared system configuration and packages, then enable automatic updates.
-# Run after installing Debian; elevates to root when needed.
+# Run after installing Debian; container skips automatic update registration.
 
 set -eu
-test "$(whoami)" != "root" && exec sudo -E sh "$0"
+test "$(whoami)" != "root" && exec sudo -E sh "$0" "$@"
 cd "$(dirname "$0")"
 
 export DEBIAN_FRONTEND="noninteractive"
@@ -38,6 +38,4 @@ npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli
 npm install --global --no-fund --allow-scripts=esbuild,workerd cf
 
 # Update every two minutes on hosts; rebuild containers to update packages.
-if [ ! -f /.dockerenv ] && [ ! -f /run/.containerenv ]; then
-    echo "*/2 * * * * root sh /etc/upgrade.sh" >> /etc/crontab
-fi
+test "${1-}" = "container" || echo "*/2 * * * * root sh /etc/upgrade.sh" >> /etc/crontab

@@ -32,5 +32,24 @@ npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
 Containers install packages when the image is built and receive updates through
-image rebuilds. Skip the automatic update cron registration when `/.dockerenv`
-or `/run/.containerenv` is present.
+image rebuilds. Omit the host automatic-update cron job from container builds.
+
+## 12. Keep administration state below the local workspace
+
+Preserve directory roles: `/` anchors the system and its mount points, `/usr`
+holds system resources, and `/usr/local` contains our local administration and
+development files.
+
+Keep projects in `dev` and root's home directory in `data`, below the workspace
+and easy to inspect alongside local work. Treat
+`/usr/local` as the persistence boundary between our own files and the replaceable
+operating system: retaining or mounting it lets us reinstall the OS or replace a
+container while preserving projects and the administration environment.
+The default `PATH` already includes `/usr/local/bin`, so local commands fit this
+workspace without adding a home-specific `bin` directory to the search path.
+
+Keep `/root` as a compatibility symlink to `/usr/local/data`, preserving existing
+home paths and account settings without changing `/etc` solely to relocate
+storage. This follows the [usr merge](https://systemd.io/THE_CASE_FOR_THE_USR_MERGE/)
+pattern of retaining old paths as symlinks; this home relocation is our own
+convention.
