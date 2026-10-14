@@ -202,6 +202,6 @@ ability to reconnect and create new work items on demand.
 
 ## 8. Cloud skill selection
 
-Bug observed on 2026-10-14: Codex selected the managed cloud runtime skill while initializing an ordinary SSH development container, using cloud-provider environment variables as the trigger. A remote connection or cloud-hosted container does not establish that a Codex-managed cloud environment is attached.
+Bug observed on 2026-10-14: Codex selected the managed cloud runtime skill while initializing an ordinary SSH development container, using cloud-provider environment variables as the trigger. A remote connection or cloud-hosted container does not establish that a Codex-managed cloud environment is attached. The user confirmed submitting this through Codex feedback as a bug on 2026-10-14.
 
 A Codex agent instruction now requires explicit session evidence of an attached Codex-managed environment before using managed cloud skills. Fix skill selection to enforce this distinction across providers and verify ordinary SSH remotes and Codex-managed cloud sessions separately; the instruction is a mitigation, not a verified harness fix.
