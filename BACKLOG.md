@@ -168,3 +168,34 @@ Expected behavior: discover and read applicable remote workspace and ancestor
 `AGENTS.md` files before remote mutations, then load any more specific
 instructions for the target directory. Add regression coverage comparing direct
 workspace execution with entry through SSH, including a projectless local chat.
+
+## 7. Remote memory
+
+Source: user report and memory-chart screenshot, 2026-10-14.
+
+Registering an SSH remote in the desktop app's connection settings reportedly
+raises the remote container's memory usage immediately from roughly 300 KB to
+500 MB, even without active work. The attached chart shows usage around
+350–440 MB, falling near zero before returning to roughly 440 MB; it does not
+identify the responsible processes or establish the cause.
+
+This is a serious resource-cost issue for the user's preferred workflow:
+containers stay online with minimal idle resource use, accept SSH connections
+for work, and are restarted afterward to clear processes and memory. A desktop
+remote connection that keeps hundreds of megabytes resident prevents returning
+to that inexpensive idle state.
+
+Current workaround, reported by the user: turn off the remote connection in the
+desktop app before restarting the container so it can return to minimal idle
+memory usage.
+
+Working theory, unverified: the desktop app starts a persistent Codex CLI or
+related remote process as soon as the SSH remote is registered. The user
+suspects a heavy JavaScript application remains in memory; neither the process
+identity, implementation language, nor source of the memory usage is confirmed.
+
+Investigate which processes start on remote registration and reconnection,
+measure their idle memory, and determine whether they persist or restart after
+disconnecting or restarting the container. Find a way to release remote Codex
+resources when no work is active while preserving SSH availability and the
+ability to reconnect and create new work items on demand.
