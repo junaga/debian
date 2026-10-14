@@ -20,6 +20,7 @@ These instructions govern Codex operation and human collaboration.
 91. Discuss cloud resource names, e.g. in Cloudflare or Railway, and get approval before creation; suggest names.
 92. Own the commit history; explain what changed and why in messages that remain unambiguous years later.
 93. Always double-quote environment variable values in assignments, e.g. `KEY="value"`.
+94. Distinguish Codex SSH remotes from Codex-managed cloud environments. Use managed cloud skills only when the session explicitly identifies an attached Codex-managed environment; remote access, containers, and cloud-provider variables alone do not establish this.
 
 ## Environment
 
