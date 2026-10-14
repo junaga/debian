@@ -1,10 +1,22 @@
-# Debian Design Deviations `DDD`
+# DDD Debian Design Deviations
 
-Unix, Linux, and Debian 13 (`trixie`) conventions are the baseline. We deviate from them
-only when doing so significantly improves the system. This document records each
-decision and its rationale.
+Linux Debian 13 conventions are the system baseline.
+We deviate from them only when doing so significantly improves the system.
+This document records each decision and its rationale.
 
-## 9. Replace `apt-secure` with HTTPS
+## Defaults
+
+Historical foundations: operating system abstractions that sparked paradigm shifts
+in the computer industry.
+
+| Paradigm  | Release | Implementation     | Siblings       |
+| --------- | ------- | ------------------ | -------------- |
+| `file`    | 1971    | First Edition Unix | —              |
+| `socket`  | 1983    | 4.2BSD             | macOS, Windows |
+| `package` | 1996    | Debian 1.1 Buzz    | Ubuntu         |
+| `service` | 2015    | Debian 8.0 Jessie  | Arch, NixOS    |
+
+## DDD 9. Replace `apt-secure` with HTTPS
 
 All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
 (`.gpg`) keys. [`base/etc/apt/apt.conf`](./base/etc/apt/apt.conf) disables `apt-secure`
@@ -13,7 +25,7 @@ enforcement for "unauthenticated" repositories and packages.
 If a repository serves signed `InRelease` without a `.gpg` key, APT warns but
 continues.
 
-## 11. Install updates every two minutes
+## DDD 11. Install updates every two minutes
 
 AI shortens the interval between disclosure and exploitation: Google observed
 it collapse from weeks to days in late 2025, and OpenAI has demonstrated that
@@ -31,10 +43,12 @@ because they are disruptive. That is 21,600 requests per month for one host;
 npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
+The host update procedure is defined in [base/etc/upgrade.sh](base/etc/upgrade.sh).
+
 Containers install packages when the image is built and receive updates through
 image rebuilds. Omit the host automatic-update cron job from container builds.
 
-## 12. Keep administration state below the local workspace
+## DDD 12. Keep administration state below the local workspace
 
 Preserve directory roles: `/` anchors the system and its mount points, `/usr`
 holds system resources, and `/usr/local` contains our local administration and
