@@ -35,6 +35,7 @@ uv tool install huggingface_hub
 
 npm install --global --no-fund @openai/codex
 npm install --global --no-fund @pnp/cli-microsoft365
+npm install --global --no-fund --allow-scripts=@stripe/cli @stripe/cli
 npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli
 npm install --global --no-fund --allow-scripts=esbuild,workerd cf
 
