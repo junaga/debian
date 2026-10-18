@@ -205,3 +205,11 @@ ability to reconnect and create new work items on demand.
 Bug observed on 2026-10-14: Codex selected the managed cloud runtime skill while initializing an ordinary SSH development container, using cloud-provider environment variables as the trigger. A remote connection or cloud-hosted container does not establish that a Codex-managed cloud environment is attached. The user confirmed submitting this through Codex feedback as a bug on 2026-10-14.
 
 A Codex agent instruction now requires explicit session evidence of an attached Codex-managed environment before using managed cloud skills. Fix skill selection to enforce this distinction across providers and verify ordinary SSH remotes and Codex-managed cloud sessions separately; the instruction is a mitigation, not a verified harness fix.
+
+## 9. Clarify human review of source-code diffs
+
+`agent/DEVELOP.md` says humans must not write or read source code, while
+`AGENTS.md` requires showing the diff and commit message for human approval.
+The review instruction does not distinguish documentation diffs from source
+code diffs. Decide whether human review must be limited to documentation or
+whether source-code review is an explicit exception, then align the rules.
