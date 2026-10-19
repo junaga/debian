@@ -1,8 +1,8 @@
 # Hardware inventory
 
-Write one lowercase `$HOSTNAME.env`, named for the inventoried device. Use non-destructive administrator/root inspection and authoritative sources. Document hardware only.
+Write one lowercase `$HOSTNAME.env`, named for the inventoried device. Use non-destructive administrator/root inspection and authoritative sources. Document hardware and network connectivity.
 
-The administrator is responsible for a concise, accurate, unambiguous account of the device's hardware, dependencies, and condition. Use the example below as a guide; include only hardware present in the device. Keep section comments and put dated metadata on the first line; inline field comments below explain their meaning.
+The administrator is responsible for a concise, accurate, unambiguous account of the device's hardware, dependencies, and condition. Use the example below as a guide; include only components present in the device and applicable network fields. Keep section comments and put dated metadata on the first line; inline field comments below explain their meaning.
 
 ```dotenv
 # updated=YYYY-MM-DD | status=... | evidence=...
@@ -15,6 +15,14 @@ CPU_VENDOR_HQ_COUNTRY=""
 # Device
 HW=""
 HW_VENDOR_HQ_COUNTRY=""
+
+# WAN: internet connection
+WAN="" # Observed connection technology, e.g. 4G LTE.
+WAN_OPERATOR="" # Device-reported operator label; may differ from the plan provider.
+
+# Wi-Fi
+WIFI="" # Network name (SSID).
+WIFI_PASSWORD=""
 
 # Components: models, physical capacities with units, condition
 RAM=""
@@ -32,6 +40,8 @@ BATTERY=""
 BATTERY_SIZE="" # Design capacity, rounded to whole Wh.
 BATTERY_HEALTH="" # Percentage: 100 * full-charge/design capacity, using unrounded readings in matching units.
 ```
+
+Use `WAN` for the observed internet connection technology; omit redundant `WAN_TYPE` and `WAN_TECHNOLOGY` fields. Keep `WIFI` for the local wireless network. Record network observations with dated evidence; a device-reported operator label does not establish the SIM or plan provider.
 
 Group identical components with a quantity. When components need separate entries, use existing names or labels (prefer volume labels for storage); if none exist, ask the operator to name them—for example, `SYSTEM_SSD` and `BACKUP_SSD` instead of `SSD1` and `SSD2`.
 
