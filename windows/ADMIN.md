@@ -1,0 +1,1 @@
+- When changing Windows registry settings from Codex, check for MSIX registry virtualization.
