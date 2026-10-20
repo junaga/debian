@@ -213,3 +213,7 @@ A Codex agent instruction now requires explicit session evidence of an attached 
 The review instruction does not distinguish documentation diffs from source
 code diffs. Decide whether human review must be limited to documentation or
 whether source-code review is an explicit exception, then align the rules.
+
+## 10. Browser control
+
+During Stripe setup on 2026-10-20, Codex repeatedly triggered Chrome remote-debugging approval prompts, interrupting work in the existing signed-in profile. Investigate and provide reliable external-browser control without repeated approval prompts or requiring a separate profile. Cause unverified.
