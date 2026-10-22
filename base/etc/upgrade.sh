@@ -12,4 +12,4 @@ deb-get update
 deb-get upgrade --dg-only
 uv self update
 uv tool upgrade --all
-npm update --global --no-fund --allow-scripts=@railway/cli,esbuild,workerd
+npm update --global --no-fund --allow-scripts=@railway/cli,@stripe/cli,esbuild,workerd
