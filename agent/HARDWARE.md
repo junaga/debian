@@ -1,52 +1,74 @@
-# Hardware inventory
+# `HRR` - Hardware Resource Record
 
-Write one lowercase `$HOSTNAME.env`, named for the inventoried device. Use non-destructive administrator/root inspection and authoritative sources. Document hardware and network connectivity.
+Understand the system, verify assumptions and investigate uncertainty. Produce a dated record of its hardware and condition.
 
-The administrator is responsible for a concise, accurate, unambiguous account of the device's hardware, dependencies, and condition. Use the example below as a guide; include only components present in the device and applicable network fields. Keep section comments and put dated metadata on the first line; inline field comments below explain their meaning.
+- Communicate any concerning `HEALTH` or `USAGE` readings.
+- Record names and stats, not serial numbers.
+    - Group duplicate components with `Nx` (e.g. `2x memory`).
+    - Request labels for naming conflicts (e.g. `HDD` -> `BACKUP_HDD`).
+        - Assume, and confirm, the [`RPL`](#rpl---recommended-partition-layout).
 
-```dotenv
-# updated=YYYY-MM-DD | status=... | evidence=...
+## Example `HRR`
 
-# Processor
-CPU=""
-CPU_ARCH_YEAR="" # First commercial year of the core microarchitecture, not ISA or model launch.
-CPU_VENDOR_HQ_COUNTRY=""
+- `./doc/host/$HOSTNAME.env`
 
-# Device
-HW=""
-HW_VENDOR_HQ_COUNTRY=""
+```sh
+# Hardware Resource Record
+HRR="2026-10-22"
 
-# WAN: internet connection
-WAN="" # Observed connection technology, e.g. 4G LTE.
-WAN_OPERATOR="" # Device-reported operator label; may differ from the plan provider.
+# --------------------
+# Storage
+# --------------------
+SSD="Micron 2450"
+SSD_SIZE="475.7 GiB" # Filesystem capacity.
+SSD_USAGE="29.4%" # Filesystem usage.
+SSD_HEALTH="100%" # Drive endurance remaining.
 
-# Wi-Fi
-WIFI="" # Network name (SSID).
-WIFI_PASSWORD=""
+HDD="Second Disk"
+HDD_HEALTH="passed" # SMART result.
+BACKUP_HDD="Third Disk"
 
-# Components: models, physical capacities with units, condition
-RAM=""
-RAM_SIZE=""
+# --------------------
+# Computer
+# --------------------
+CPU="Intel Core i5-1235U"
+CPU_ARCH_YEAR="2021" # Microarchitecture debut.
+CPU_VENDOR_HQ_COUNTRY="US"
 
-SSD=""
-SSD_SIZE=""
-SSD_HEALTH="" # Percentage of estimated endurance remaining.
+RAM="2x HMAA1GS6CJR6N-XN" # Module part number.
+RAM_SIZE="2x 8 GiB"
+RAM_TYPE="DDR4"
 
-HDD=""
-HDD_SIZE=""
-HDD_SMART="" # Reported overall SMART result: passed or failed; not a numeric score.
+HW="Acer Aspire A515-57"
+HW_VENDOR_HQ_COUNTRY="TW"
 
-BATTERY=""
-BATTERY_SIZE="" # Design capacity, rounded to whole Wh.
-BATTERY_HEALTH="" # Percentage: 100 * full-charge/design capacity, using unrounded readings in matching units.
+# --------------------
+# Components
+# --------------------
+WAN="4G LTE"
+WAN_OPERATOR="E-Plus"
+
+BTT="Panasonic AP19B5L"
+BTT_SIZE="53 Wh"
+BTT_HEALTH="72.6%" # Full charge ÷ design capacity.
 ```
 
-Use `WAN` for the observed internet connection technology; omit redundant `WAN_TYPE` and `WAN_TECHNOLOGY` fields. Keep `WIFI` for the local wireless network. Record network observations with dated evidence; a device-reported operator label does not establish the SIM or plan provider.
+# `RPL` - Recommended Partition Layout
 
-Group identical components with a quantity. When components need separate entries, use existing names or labels (prefer volume labels for storage); if none exist, ask the operator to name them—for example, `SYSTEM_SSD` and `BACKUP_SSD` instead of `SSD1` and `SSD2`.
+- Prefer one filesystem per drive.
+    - Filesystems must contain a `UUID`.
+- Where supported, use subvolumes instead of partitions.
+    - Any volume should have a unique `label`.
+        - `BACKUP` volumes must be on separate drives.
 
-For hybrid CPUs with different microarchitecture debut years, identify each design and year. Keep HEALTH values percentage-only. Preserve individual health readings; record material faults separately and omit redundant healthy/OK text from percentage fields. Use `absent` only for confirmed absence and `not applicable` only where no value applies.
-
-Make the evidence basis and unresolved facts clear in the file. Distinguish product makers from designers, foundries, and assemblers. Consider remotely initiated attacks, including remotely delivered code; exclude software, filesystem, and firmware details.
-
-Resolve missing readings and conflicting evidence rather than guessing or omitting relevant facts. If a relevant required reading cannot be obtained, the file is incomplete and not final.
+```
+GPT
+├─ MBR
+├─ ESP / MSR / WinRE / …
+├─ PART
+│  └─ FS
+│     ├─ ROOT
+│     ├─ HOME
+│     └─ WORK
+└─ LBA_LAST
+```
