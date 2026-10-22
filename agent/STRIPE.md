@@ -1,9 +1,30 @@
 # Stripe
 
-[Stripe](https://stripe.com/) is financial infrastructure for businesses. The financial operating system.
+[stripe.com](https://stripe.com/) is financial infrastructure for businesses.
 
-- Stripe CLI uses npm package `@stripe/cli`.
-- [Stripe LLM entrypoint](https://docs.stripe.com/llms.txt).
+> Your ... financial operating system. [_--quote_](https://stripe.com/#:~:text=operating%20system)
+
+## Operation
+
+Prefer using the `stripe` CLI.
+
+```sh
+# install or update
+stripe --version
+npm view @stripe/cli version
+npm --global install @stripe/cli
+
+# manage login
+stripe whoami
+stripe login
+
+# discover commands
+stripe --help
+stripe --map
+
+# explore documentation
+stripe docs --help
+```
 
 ## Services
 
@@ -27,4 +48,13 @@ Bank settlement → card network → link checkout.
 
 2011 — Stripe launched its **payment cloud** for online checkout ([history](https://stripe.dev/blog/payment-api-design)). Its 2025 payment volume equaled **1.6% of global GDP** ([annual letter](https://stripe.com/annual-updates/2025)).
 
-<!-- Payment volume is not GDP contribution. -->
+<!--
+Visa estimate: $14.2T FY2025 payments volume / $118.485328T calendar-year 2025
+world nominal GDP * 100 = 11.98%, rounded to approximately 12%.
+Sources checked 2026-10-22:
+- Visa FY2025 statistics: https://annualreport.visa.com/financials/default.aspx
+- IMF DataMapper, NGDPD / WEOWORLD / 2025: 118485.328 billion current US dollars.
+  https://www.imf.org/external/datamapper/api/v1/NGDPD/WEOWORLD?periods=2025
+Visa's fiscal year ended 2025-09-30; the GDP figure covers the calendar year.
+Payment volume is not GDP contribution.
+-->
