@@ -23,7 +23,7 @@ set -a; . /etc/environment; set +a
 # Clear stale signed indexes.
 rm -f /var/lib/apt/lists/*_InRelease
 apt update
-apt install --yes $(cat packages)
+apt install --yes $(cat packages) tini
 
 # Install deb-get
 curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bash -s install deb-get

@@ -137,13 +137,22 @@ realtime voice start as the only known difference.
 
 ## 5. Understand the shell environment required by Railway SSH
 
-The Dockerfile exports `SHELL=/bin/bash`, introduced by "Export login shell for
-Codex SSH", but the original failure and why this setting was required are not
-recorded. Railway handles SSH outside the container; root's account shell,
-shell startup files, and the environment supplied to a remotely launched process
-are separate mechanisms. Reproduce the behavior with and without this variable,
-trace how Railway and Codex select the shell, and determine whether to retain or
-replace the declaration; the missing-environment explanation remains a hypothesis.
+The container build exports `SHELL="/bin/bash"`, introduced by commit `39a1bbe`
+("Export login shell for Codex SSH"); the original failure was not recorded.
+
+Investigated 2026-10-23: Codex CLI `0.164.0` selects the shell through the account
+database, where root uses `/bin/bash`, rather than through `$SHELL`. Disassembly
+of the running Railway SSH helper (`49c490e613`) shows `main.findShell` searches
+`PATH` for `bash`, then `sh`, before checking `/bin/bash`, `/usr/bin/bash`,
+`/bin/sh`, and `/usr/bin/sh`. This helper contains no literal `SHELL`.
+Local tests with `env -u SHELL` confirm Bash still starts; it initializes a shell
+variable named `SHELL` but does not export it to child processes.
+
+The declaration appears redundant for these shell selectors, but the original
+desktop SSH connection has not been reproduced without it. Fresh Railway SSH
+testing was blocked by rejected configured credentials and an expired saved
+login. Retain the declaration until the desktop connection can be tested;
+`tini` does not replace shell environment configuration.
 
 ## 6. Load workspace instructions when Codex enters a directory over SSH
 

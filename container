@@ -1,0 +1,14 @@
+# https://hub.docker.com/_/debian/tags?name=trixie
+FROM debian:trixie
+
+WORKDIR /usr
+COPY . src/system/
+WORKDIR /usr/src/system/
+RUN sh base/install.sh container
+
+WORKDIR /usr/local/data
+RUN rm -rf /root && ln -s $PWD /root
+# runc/crun create missing WORKDIR after volume mounts.
+
+ENV SHELL="/bin/bash"
+ENTRYPOINT ["tini", "sleep", "infinity"]
