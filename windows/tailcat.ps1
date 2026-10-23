@@ -7,7 +7,7 @@ $ErrorActionPreference = 'Stop'
 $admin = 'nodekey:1168236a8fd1d12a98156b0c08626cc33bcf0892fd4620b06e8ddd7b3f4e0d42'
 $principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { throw 'Run PowerShell as Administrator.' }
-if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) { throw "Scheduled task '$TaskName' already exists; no changes made." }
+if (-not (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue)) {
 
 New-Item -ItemType Directory -Path $Directory -Force | Out-Null
 $acl = New-Object Security.AccessControl.DirectorySecurity
@@ -46,4 +46,10 @@ $action = New-ScheduledTaskAction -Execute $shell -Argument "-NoProfile -NonInte
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 999 -RestartInterval (New-TimeSpan -Minutes 1)
 Register-ScheduledTask -TaskName $TaskName -User SYSTEM -RunLevel Highest -Action $action -Trigger (New-ScheduledTaskTrigger -AtStartup) -Settings $settings | Out-Null
 Start-ScheduledTask -TaskName $TaskName
-Write-Output "Tailcat address: $address"
+}
+$address = (Get-Content -LiteralPath (Join-Path $Directory 'address.txt') -Raw).Trim()
+$body = @{ hostname = $env:COMPUTERNAME; address = $address } | ConvertTo-Json -Compress
+try {
+    Invoke-RestMethod 'https://dev-master.up.railway.app/register' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 15 | Out-Null
+    Write-Output 'SSH installed. Address sent to the Linux server.'
+} catch { Write-Warning "SSH installed; address report failed: $($_.Exception.Message)" }
