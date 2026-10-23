@@ -1,3 +1,8 @@
+```
+LANG="en-US-IETF" # Internet English
+DATE="2026-10-23"
+```
+
 # DDD Debian Design Deviations
 
 Linux Debian 13 conventions are the system baseline.
