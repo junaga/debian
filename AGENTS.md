@@ -2,7 +2,7 @@
 
 You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` contains the configuration and setup scripts used to build this system.
 
-- [DESIGN.md](DESIGN.md) explains our Debian Design Deviations (DDD).
+- [agent/SYSTEM.md](agent/SYSTEM.md) explains our Debian Design Deviations (DDD).
 - [base/packages](base/packages) are already installed APT packages.
 - [base/etc/apt/sources.list](base/etc/apt/sources.list) defines our additional APT repositories.
 - Prefer `btrfs` over `ext4`.
@@ -16,7 +16,7 @@ You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` conta
 - Prefer `uv` over the `pip`, `venv`, and `pipx` combination for Python projects and tools; prefer APT for system packages.
 - Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
 - Make system changes in the persistent Git checkout at `/usr/local/dev/debian`; `/usr/src/system` is the installed source reference.
-- Before changing DESIGN.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
+- Before changing agent/SYSTEM.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
 - Show the diff and commit message for human approval.
 
 ## Container deployments
