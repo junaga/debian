@@ -1,3 +1,9 @@
+# System paths and workspace.
+# PATH="/usr/local/bin:/usr/bin:/bin"
+# HOME="/home/$USER"
+WORK="/usr/local"
+# REPO="$WORK/dev/debian"
+
 # Reduce supply-chain risk.
 NPM_CONFIG_MIN_RELEASE_AGE="1"
 UV_EXCLUDE_NEWER="P1D"

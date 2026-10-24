@@ -25,6 +25,7 @@ shopt -s globstar # allow recursive globs "**"
 # environment
 test -r "$HOME/.env" && eval "$(direnv dotenv bash "$HOME/.env"; export)"
 export WORK="${WORK-$HOME}"
+test -r "$WORK/.env" && eval "$(direnv dotenv bash "$WORK/.env"; export)"
 export REPO="${REPO-$WORK/dev/debian}"
 cd "$WORK" # cd WORK
 
