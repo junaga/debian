@@ -1,9 +1,10 @@
-# Develop
+# Development
 
 Contain work in your working directory.
 
 ```sh
-./dev/PROJECT/  # or use YYYY-MM-DD/
+./dev/$PROJECT/
+./job/YYYY-MM-DD/$TASK/
 ./lib/
 ./bin/
 ./opt/

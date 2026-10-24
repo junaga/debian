@@ -10,7 +10,7 @@ You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` conta
 
 ## Repository
 
-- Follow the [documentation conventions](agent/DEVELOP.md#documentation).
+- Follow the [documentation conventions](agent/DEV.md#documentation).
 - Do one thing well. Compose small tools. Keep the system understandable.
 - Research and propose useful `apt`, `uv`, or `npm` packages.
 - Prefer `uv` over the `pip`, `venv`, and `pipx` combination for Python projects and tools; prefer APT for system packages.
