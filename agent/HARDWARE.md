@@ -72,3 +72,20 @@ GPT
 │     └─ WORK
 └─ LBA_LAST
 ```
+
+# `BRS` - Batch Resource Share
+
+Batch workloads run unattended. System and desktop workloads take priority across all hardware resources.
+
+- Share all hardware resources, including the GPU.
+    - On routers you control, consider deprioritizing batch traffic during congestion.
+- Preserve headroom for the system and desktop to stay responsive and start new work.
+    - Keep free disk space available.
+- Use `systemd-run` for quick operations.
+
+```ini
+[Slice]
+CPUWeight=10
+IOWeight=10
+MemoryHigh=50%
+```
