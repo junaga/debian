@@ -73,15 +73,14 @@ GPT
 └─ LBA_LAST
 ```
 
-# `BRS` - Batch Resource Share
+# `LPB` - Low Priority Batch
 
-Batch workloads run unattended. System and desktop workloads take priority across all hardware resources.
+Batches run unattended across all hardware. System and desktop processes take priority.
 
-- Share all hardware resources, including the GPU.
-    - On routers you control, consider deprioritizing batch traffic during congestion.
-- Preserve headroom for the system and desktop to stay responsive and start new work.
-    - Keep free disk space available.
-- Use `systemd-run` for quick operations.
+- Keep headroom for responsive system and desktop use, including free disk space.
+    - Reduce the combined LPB allowance as foreground demand grows.
+- On routers you control, prioritize foreground traffic over batches.
+- Use `systemd-run` for quick batches.
 
 ```ini
 [Slice]
