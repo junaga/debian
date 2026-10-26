@@ -226,3 +226,20 @@ whether source-code review is an explicit exception, then align the rules.
 ## 10. Browser control
 
 During Stripe setup on 2026-10-20, Codex repeatedly triggered Chrome remote-debugging approval prompts, interrupting work in the existing signed-in profile. Investigate and provide reliable external-browser control without repeated approval prompts or requiring a separate profile. Cause unverified.
+
+## 12. Responses evaluation
+
+Evaluate the official [`openai` CLI](https://developers.openai.com/api/reference/cli)
+and the [Open Responses specification](https://www.openresponses.org/specification)
+for repeatable shell workflows and interoperable access to model providers.
+
+- Assess CLI installation and updates on Debian, authentication, structured
+  output, streaming, exit codes, and suitability for unattended batch work.
+- Review the specification's request and response schemas, tool calls,
+  streaming events, provider extensions, and acceptance tests.
+- Test whether the CLI can use an Open Responses provider through a custom
+  base URL; record supported operations and compatibility gaps rather than
+  assuming that a shared Responses API foundation guarantees interoperability.
+
+Record tested versions, reproducible examples, operational costs, and an
+adoption recommendation before adding either to the system configuration.
