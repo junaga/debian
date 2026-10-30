@@ -12,3 +12,6 @@ UV_EXCLUDE_NEWER="P1D"
 UV_TOOL_DIR="/usr/lib/uv/tools"
 UV_TOOL_BIN_DIR="/usr/bin"
 UV_CACHE_DIR="/var/cache/uv"
+
+# Codex state.
+CODEX_HOME="/var/lib/codex"
