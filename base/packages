@@ -38,6 +38,7 @@ awscli
 lsb-release
 distro-info-data
 efibootmgr
+systemd-boot
 ntfs-3g
 dosfstools
 cryptsetup-bin

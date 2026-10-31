@@ -74,3 +74,12 @@ home paths and account settings without changing `/etc` solely to relocate
 storage. This follows the [usr merge](https://systemd.io/THE_CASE_FOR_THE_USR_MERGE/)
 pattern of retaining old paths as symlinks; this home relocation is our own
 convention.
+
+## DDD 13: Use systemd-boot on UEFI hosts
+
+Use Debian's `systemd-boot` package instead of GRUB. Each installation publishes
+uniquely named boot entries, kernels, and initramfs images to the shared EFI
+partition through Debian's kernel hooks. System roots may remain Btrfs subvolumes;
+boot selection uses EFI variables instead of scanning root filesystems.
+
+Enable zswap when the [desktop function](../base/home/.bashrc) starts a session.

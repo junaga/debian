@@ -56,10 +56,12 @@ BTT_HEALTH="72.6%" # Full charge ÷ design capacity.
 # `RPL` - Recommended Partition Layout
 
 - Prefer one filesystem per drive.
-    - Filesystems must contain a `UUID`.
-- Where supported, use subvolumes instead of partitions.
-    - Any volume should have a unique `label`.
-        - `BACKUP` volumes must be on separate drives.
+  - Filesystems must contain a `UUID`.
+- Where supported, prefer subvolumes over partitions.
+  - Every volume should have a unique `label`.
+    - `BACKUP` volumes must be on separate drives.
+- Avoid Windows/Linux/etc `HDD` installs.
+  - Default `SWAP` to `RAM / 2` with zswap.
 
 ```
 GPT
@@ -70,6 +72,7 @@ GPT
 │     ├─ ROOT
 │     ├─ HOME
 │     └─ WORK
+├─ SWAP
 └─ LBA_LAST
 ```
 
