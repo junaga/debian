@@ -1,8 +1,7 @@
-# System paths and workspace.
 # PATH="/usr/local/bin:/usr/bin:/bin"
 # HOME="/home/$USER"
 WORK="/usr/local"
-# REPO="$WORK/dev/debian"
+# REPO="$WORK/src"
 
 # Reduce supply-chain risk.
 NPM_CONFIG_MIN_RELEASE_AGE="1"
@@ -12,6 +11,3 @@ UV_EXCLUDE_NEWER="P1D"
 UV_TOOL_DIR="/usr/lib/uv/tools"
 UV_TOOL_BIN_DIR="/usr/bin"
 UV_CACHE_DIR="/var/cache/uv"
-
-# Codex state.
-CODEX_HOME="/var/lib/codex"
