@@ -45,3 +45,4 @@ cryptsetup-bin
 partclone
 fdisk
 smartmontools
+nvidia-driver-cuda

@@ -38,6 +38,8 @@ npm install --global --no-fund @pnp/cli-microsoft365
 npm install --global --no-fund --allow-scripts=@stripe/cli @stripe/cli
 npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli
 npm install --global --no-fund --allow-scripts=esbuild,workerd cf
+npm install --global --prefix /usr --no-fund @cloudflare/speedtest@1.14.2 playwright-core@1.64.1
+install -m 755 speedtest.mjs /usr/bin/cloudflare-speedtest
 
 # Update every two minutes on hosts; rebuild containers to update packages.
 test "${1-}" = "container" || echo "*/2 * * * * root sh /etc/upgrade.sh" >> /etc/crontab

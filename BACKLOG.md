@@ -243,3 +243,28 @@ for repeatable shell workflows and interoperable access to model providers.
 
 Record tested versions, reproducible examples, operational costs, and an
 adoption recommendation before adding either to the system configuration.
+
+## 13. Cloudflare CAPTCHA fails in headless browsers
+
+Observed during HRR runs on 2026-10-31: Cloudflare Speed Test's Turnstile
+checkbox repeatedly returned "Verification failed" and "TRY AGAIN" in automated
+Chrome sessions, including headless mode. An isolated headed session also failed.
+The test could not start. Challenge requests occurred, but no diagnostic code
+established the cause; an immediate unconditional rejection is not confirmed.
+
+[Cloudflare documents automated browsers as unsupported for production challenges](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/).
+Determine whether these failures reflect that restriction or an additional
+browser/network problem; compare with a manual supported-browser session and
+capture any error code and Ray ID. Do not generalize this observation to every
+CAPTCHA or report a fabricated WAN score.
+
+HRR uses `cloudflare-speedtest <turn-key-id> <turn-key>` with Cloudflare's
+official measurement engine and scoring API. Full packet-loss measurement
+requires our own Cloudflare TURN key: the website's credentials endpoint rejects
+standalone requests. The agent explicitly passes the key ID and secret stored
+in `$WORK/.env`; the script requests five-minute credentials for each run.
+
+Resolve the CAPTCHA failure in a supported headless-browser workflow so HRR
+can use the website's complete test and remove this temporary script, TURN key,
+and associated dependencies. Verify packet loss and all three quality scores
+against a manual browser run before removing the workaround.
