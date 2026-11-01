@@ -1,0 +1,2 @@
+Defaults env_file="/etc/environment"
+%sudo ALL=(ALL:ALL) NOPASSWD: ALL

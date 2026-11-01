@@ -9,6 +9,7 @@ python3
 file
 micro
 ssh
+sudo
 build-essential
 crudini
 pup
