@@ -1,10 +1,12 @@
 # AIOS
 
-A Debian-based operating system for **agentic engineering**. This repository defines system setup, configuration, agent instructions, and workspace conventions.
+- [tree/unix](https://github.com/junaga/debian/tree/unix) theoretical operating system for an abstract world without AI or NET.
+  - [tree/linux](https://github.com/junaga/debian/tree/linux) operating system for **agentic engineering**.
 
-- [`linux`](https://github.com/junaga/debian/tree/linux): the practical system we use.
-- [`unix`](https://github.com/junaga/debian/tree/unix): a theoretical operating system for a world without AI or NET.
+**Application Preference Defaults** are documented in [base/.env](base/.env).
 
-WSL/Bash toolbox → portable Debian dev box → agent-operated workstation → repository-administered system.
+## History
 
-Current milestone: **v0.7**. Earlier milestones are recorded as [annotated Git tags](https://github.com/junaga/debian/tags).
+Started as a WSL/Bash toolbox in 2021, grew into a portable Debian development environment, then an agent-operated workstation.
+
+Milestones are recorded as annotated Git tags, from `v0.1` to the current `v0.7`.
