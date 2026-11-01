@@ -33,10 +33,10 @@ export DATE=$(date --iso)
 
 alias ls="ls --color=auto --group-directories-first"
 alias rcp="rsync -azP"
+alias chat="codex --yolo agents"
 
-alias date="date +%Y-%m-%d"
-alias datetime="command date +%Y-%m-%d-%H-%M-%S"
-alias deploy="wrangler pages deploy"
+function man { echo "https://manpages.debian.org/$1.en"; }
+function rcode { code --remote "ssh-remote+$1" "$2"; }
 function desktop {
     run0 --pipe sh -c 'echo 1 > /sys/module/zswap/parameters/enabled' || return
     local target
@@ -46,5 +46,3 @@ function desktop {
     fi
     exec run0 --pipe -u "$target" "${DESKTOP-/usr/libexec/labwc-session}"
 }
-function man { echo "https://manpages.debian.org/$1.en"; }
-function rcode { code --remote "ssh-remote+$1" "$2"; }
