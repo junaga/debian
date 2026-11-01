@@ -15,10 +15,9 @@ apt modernize-sources --assume-yes
 
 # Install configuration
 cp -r etc/. /etc/
-rm -f /etc/skel/.bashrc /etc/skel/.bash_profile /etc/skel/.bash_login /etc/skel/.profile /etc/skel/.env /etc/skel/.codex/AGENTS.md
+rm -f /etc/skel/.bashrc /etc/skel/.bash_profile /etc/skel/.bash_login /etc/skel/.profile /etc/skel/.codex/AGENTS.md
 rm -f /etc/skel/.config/git/config /etc/skel/.config/lesskey /etc/skel/.config/direnv/direnv.toml /etc/skel/.config/micro/settings.json /etc/skel/.config/micro/bindings.json
 rm -f /etc/npmrc /etc/pip.conf
-set -a; . /etc/environment; set +a
 
 # Install packages
 # Clear stale signed indexes.

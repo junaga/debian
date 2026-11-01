@@ -3,7 +3,7 @@
 - [tree/unix](https://github.com/junaga/debian/tree/unix) theoretical operating system for an abstract world without AI or NET.
   - [tree/linux](https://github.com/junaga/debian/tree/linux) operating system for **agentic engineering**.
 
-**Application Preference Defaults** are documented in [base/.env](base/.env).
+**Application Preference Defaults** are documented in [base/.env](base/.env). I prefer `google-chrome`|`codex` for Android|ChatGPT login and sync.
 
 ## History
 
