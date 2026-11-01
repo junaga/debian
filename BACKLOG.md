@@ -268,3 +268,7 @@ Resolve the CAPTCHA failure in a supported headless-browser workflow so HRR
 can use the website's complete test and remove this temporary script, TURN key,
 and associated dependencies. Verify packet loss and all three quality scores
 against a manual browser run before removing the workaround.
+
+## 14. Secure Boot and duplicate firmware entries
+
+Decide whether to use Secure Boot and resolve the confusing duplicate shim and direct systemd-boot firmware entries.
