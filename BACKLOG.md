@@ -272,3 +272,7 @@ against a manual browser run before removing the workaround.
 ## 14. Secure Boot and duplicate firmware entries
 
 Decide whether to use Secure Boot and resolve the confusing duplicate shim and direct systemd-boot firmware entries.
+
+## 15. Permanent browser history without losing passkeys
+
+Chrome deletes local browsing history older than roughly 90 days; find a browser setup that retains native history indefinitely and supports passkeys without Flatpak. Google Password Manager is optional, so evaluate independent passkey providers alongside browsers with configurable history retention. Verify a path for existing passkeys and reliable browser updates before migrating.
