@@ -26,7 +26,7 @@ shopt -s globstar # allow recursive globs "**"
 test -r "$HOME/.env" && eval "$(direnv dotenv bash "$HOME/.env"; export)"
 export WORK="${WORK-$HOME}"
 test -r "$WORK/.env" && eval "$(direnv dotenv bash "$WORK/.env"; export)"
-export REPO="${REPO-$WORK/dev/debian}"
+export REPO="${REPO-$WORK/src}"
 cd "$WORK" # cd WORK
 
 # aliases
@@ -37,7 +37,12 @@ alias datetime="command date +%Y-%m-%d-%H-%M-%S"
 alias deploy="wrangler pages deploy"
 function desktop {
     run0 --pipe sh -c 'echo 1 > /sys/module/zswap/parameters/enabled' || return
-    exec run0 --pipe -u "${1-1000}" "${DESKTOP-hyprland}"
+    local target
+    target="$(id -u "${1-1000}")" || return
+    if [ "$target" = "$UID" ]; then
+        exec "${DESKTOP-/usr/libexec/labwc-session}"
+    fi
+    exec run0 --pipe -u "$target" "${DESKTOP-/usr/libexec/labwc-session}"
 }
 function man { echo "https://manpages.debian.org/$1.en"; }
 function rcode { code --remote "ssh-remote+$1" "$2"; }

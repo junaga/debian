@@ -16,6 +16,7 @@ apt modernize-sources --assume-yes
 # Install configuration
 cp -r etc/. /etc/
 cp -a home/. /etc/skel/
+rm -f /etc/skel/.bashrc /etc/skel/.bash_profile /etc/skel/.bash_login /etc/skel/.profile
 rm -f /etc/npmrc /etc/pip.conf
 set -a; . /etc/environment; set +a
 

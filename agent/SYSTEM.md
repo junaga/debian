@@ -82,4 +82,4 @@ uniquely named boot entries, kernels, and initramfs images to the shared EFI
 partition through Debian's kernel hooks. System roots may remain Btrfs subvolumes;
 boot selection uses EFI variables instead of scanning root filesystems.
 
-Enable zswap when the [desktop function](../base/home/.bashrc) starts a session.
+Enable zswap when the [desktop function](../base/etc/bash.bashrc) starts a session.
