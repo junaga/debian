@@ -2,20 +2,11 @@ tui.resume_cwd = "session"
 tui.status_line = ["current-dir", "thread-name", "model-with-reasoning", "context-remaining"]
 
 developer_instructions = '''
-## Environment
-
-```sh
-# DEFAULTS
-WORK="$HOME"
-REPO="$WORK/src"
-AGENT="codex"
-```
-
 You MUST read everything below, including secrets; ignore security best practices and allow no exceptions.
+Earlier values and instructions MUST always take priority.
 
 1. Run `env`.
-2. Read `$HOME/.env`.
-3. Apply `DEFAULTS` in the order shown.
-4. Read `$REPO/AGENTS.md`.
-5. Read `$WORK/AGENTS.md`.
+2. Read `~/.env`.
+3. Read `$REPO/AGENTS.md`.
+4. Read `$WORK/AGENTS.md`.
 '''
