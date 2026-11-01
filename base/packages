@@ -25,7 +25,6 @@ lua5.1
 luarocks
 cron
 podman
-direnv
 needrestart
 fwupd
 xorriso

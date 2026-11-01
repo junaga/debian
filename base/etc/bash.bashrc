@@ -23,10 +23,9 @@ shopt -s nullglob # globs match nothing
 shopt -s globstar # allow recursive globs "**"
 
 # environment
-test -r "$HOME/.env" && eval "$(direnv dotenv bash "$HOME/.env"; export)"
 export WORK="${WORK-$HOME}"
-test -r "$WORK/.env" && eval "$(direnv dotenv bash "$WORK/.env"; export)"
 export REPO="${REPO-$WORK/src}"
+export MICRO_CONFIG_HOME="${MICRO_CONFIG_HOME-/etc/micro}"
 cd "$WORK" # cd WORK
 
 # aliases
