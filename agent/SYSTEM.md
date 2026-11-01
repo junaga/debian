@@ -50,7 +50,7 @@ because they are disruptive. That is 21,600 requests per month for one host;
 npm calls five million monthly requests clearly unreasonable.
 [npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
 
-The host update procedure is defined in [base/etc/upgrade.sh](../base/etc/upgrade.sh).
+The host update procedure is defined in [base/upgrade.sh](../base/upgrade.sh).
 
 Containers install packages when the image is built and receive updates through
 image rebuilds. Omit the host automatic-update cron job from container builds.

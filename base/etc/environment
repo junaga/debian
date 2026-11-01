@@ -1,7 +1,7 @@
 # PATH="/usr/local/bin:/usr/bin:/bin"
 # HOME="/home/$USER"
 WORK="/usr/local"
-# REPO="$WORK/src"
+REPO="/usr/local/src"
 
 # Reduce supply-chain risk.
 NPM_CONFIG_MIN_RELEASE_AGE="1"

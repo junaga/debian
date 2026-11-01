@@ -43,4 +43,4 @@ npm install --global --prefix /usr --no-fund @cloudflare/speedtest@1.14.2 playwr
 install -m 755 speedtest.mjs /usr/bin/cloudflare-speedtest
 
 # Update every two minutes on hosts; rebuild containers to update packages.
-test "${1-}" = "container" || echo "*/2 * * * * root sh /etc/upgrade.sh" >> /etc/crontab
+test "${1-}" = "container" || echo '*/2 * * * * root . /etc/environment; sh "$REPO/base/upgrade.sh"' >> /etc/crontab
