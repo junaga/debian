@@ -1,1 +1,20 @@
+developer_instructions = '''
+## Environment
+
+```sh
+# DEFAULTS
+WORK="$HOME"
+REPO="$WORK/src"
+AGENT="codex"
+```
+
+Resolve variables in order; first set value wins:
+
+1. Run `env`.
+2. Read `$HOME/.env`.
+3. Apply `DEFAULTS` in the order shown.
+4. Read `$REPO/AGENTS.md`.
+5. Read `$WORK/AGENTS.md`.
+'''
+
 tui.resume_cwd = "session"

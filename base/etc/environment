@@ -3,6 +3,14 @@
 WORK="/usr/local"
 REPO="/usr/local/src"
 
+LANG="C.UTF-8"
+PAGER="less"
+EDITOR="micro"
+SHELL="bash"
+# EXPLORER=
+# BROWSER=
+AGENT="codex"
+
 # Reduce supply-chain risk.
 NPM_CONFIG_MIN_RELEASE_AGE="1"
 UV_EXCLUDE_NEWER="P1D"
