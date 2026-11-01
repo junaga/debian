@@ -1,3 +1,6 @@
+tui.resume_cwd = "session"
+tui.status_line = ["current-dir", "thread-name", "model-with-reasoning", "context-remaining"]
+
 developer_instructions = '''
 ## Environment
 
@@ -16,5 +19,3 @@ Resolve variables in order; first set value wins:
 4. Read `$REPO/AGENTS.md`.
 5. Read `$WORK/AGENTS.md`.
 '''
-
-tui.resume_cwd = "session"
