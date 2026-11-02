@@ -46,3 +46,4 @@ partclone
 fdisk
 smartmontools
 nvidia-driver-cuda
+apache2
