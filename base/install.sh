@@ -34,6 +34,7 @@ curl -fL https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/bin" sh
 UV_TOOL_DIR="/usr/lib/uv/tools" UV_TOOL_BIN_DIR="/usr/bin" uv tool install huggingface_hub
 
 npm install --global --no-fund @openai/codex
+npm install --global --no-fund --allow-scripts=agent-browser agent-browser
 npm install --global --no-fund @pnp/cli-microsoft365
 npm install --global --no-fund --allow-scripts=@stripe/cli @stripe/cli
 npm install --global --no-fund --allow-scripts=@railway/cli @railway/cli

@@ -20,3 +20,16 @@ Use a `systemd` timer to run `$AGENT` with a saved task in
 `$WORK/job/YYYY-MM-DD/TASK/`. Keep instructions, logs, and results there. Use
 `Persistent=true` to catch up after a missed run. One-shot tasks remove their
 own `.timer` and `.service` after completing and recording the result.
+
+## `ABC` - Agent Browser CLI
+
+Use `agent-browser` directly from Codex. In Chrome, enable
+`chrome://inspect/#remote-debugging` and approve the connection. The default
+profile needs this manual toggle; debugging flags require a separate profile.
+Chrome asks again for each new connection; keep the session open while working.
+
+```sh
+export AGENT_BROWSER_SESSION="$CODEX_THREAD_ID"
+agent-browser --auto-connect --pin-tab open http://localhost/
+agent-browser snapshot -i
+```
