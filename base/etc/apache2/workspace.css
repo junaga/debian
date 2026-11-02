@@ -1,0 +1,20 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+a:any-link {
+  color: inherit;
+}
+body > table img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+body > table td img:not([data-ready]) {
+  visibility: hidden;
+}
+#indextitle {
+  min-height: 1.2em;
+}
+

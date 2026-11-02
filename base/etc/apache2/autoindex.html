@@ -1,0 +1,87 @@
+<link rel="stylesheet" href="/_workspace.css">
+<noscript><style>body > table td img { visibility: visible !important; }</style></noscript>
+<h1 id="indextitle"></h1>
+<script type="module">
+const scheme = matchMedia("(prefers-color-scheme: dark)");
+const icons = new Map();
+const theme = (async () => {
+  try {
+    const saved = sessionStorage.getItem("material-icons");
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  const { generateManifest } = await import("https://esm.unpkg.com/material-icon-theme");
+  const manifest = generateManifest();
+  try { sessionStorage.setItem("material-icons", JSON.stringify(manifest)); } catch {}
+  return manifest;
+})().catch(() => null);
+
+async function render() {
+  const heading = document.querySelector("#indextitle");
+  heading.replaceChildren();
+  let path = "/";
+  for (const part of ["", ...location.pathname.split("/").filter(Boolean)]) {
+    const link = document.createElement("a");
+    link.href = part ? path += part + "/" : path;
+    link.textContent = part ? decodeURIComponent(part) + "/" : "Index of /";
+    heading.append(link);
+  }
+  const manifest = await theme;
+  if (!manifest) {
+    document.querySelectorAll("body > table td img").forEach(image => image.dataset.ready = "");
+    return;
+  }
+  const light = scheme.matches ? null : manifest.light;
+  const lookup = (group, name) => light?.[group]?.[name] ?? manifest[group]?.[name];
+  for (const link of document.querySelectorAll("body > table td:nth-child(2) a")) {
+    const image = link.closest("tr").querySelector("img");
+    const name = link.textContent.trim().replace(/\/$/, "").toLowerCase();
+    const id = link.pathname.endsWith("/")
+      ? lookup("folderNames", name) ?? manifest.folder
+      : lookup("fileNames", name) ?? lookup("fileExtensions", name.split(".").pop()) ?? manifest.file;
+    const source = new URL(manifest.iconDefinitions[id].iconPath, "https://unpkg.com/material-icon-theme/dist/").href;
+    image.dataset.icon = source;
+    if (!icons.has(source)) {
+      const icon = new Image();
+      icon.src = source;
+      icons.set(source, icon.decode().then(() => source).catch(() => null));
+    }
+    icons.get(source).then(src => {
+      if (image.dataset.icon !== source) return;
+      if (src) image.src = src;
+      image.dataset.ready = "";
+    });
+  }
+}
+
+let navigation = 0;
+async function navigate(url, push = true) {
+  const current = ++navigation;
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) throw new Error("Directory unavailable");
+    const page = new DOMParser().parseFromString(await response.text(), "text/html");
+    const listing = page.querySelector("body > table");
+    if (!listing) throw new Error("Not a directory listing");
+    if (current !== navigation) return;
+    if (push) history.pushState(null, "", response.url);
+    document.querySelector("body > table").replaceWith(listing);
+    document.title = page.title;
+    render();
+    scrollTo(0, 0);
+  } catch {
+    if (current === navigation) location.assign(url);
+  }
+}
+
+document.addEventListener("click", event => {
+  const link = event.target.closest("a");
+  if (!link || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || link.target || link.hasAttribute("download")) return;
+  const url = new URL(link.href);
+  if (url.origin !== location.origin || !url.pathname.endsWith("/") || url.hash) return;
+  event.preventDefault();
+  navigate(url);
+});
+addEventListener("popstate", () => navigate(new URL(location.href), false));
+scheme.addEventListener("change", render);
+render();
+</script>
