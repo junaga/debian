@@ -1,7 +1,7 @@
 # Initialize this Unix account
 # Run after base/install.sh
 # EMAIL defaults to $USER@$HOSTNAME.
-# Pass --login to login CLIs.
+# Pass --online to login CLIs.
 
 set -eu
 USER=$(whoami)
@@ -22,7 +22,7 @@ git config --global user.name $USER
 git config --global user.email $EMAIL
 
 # Log into service CLIs
-test "${1-}" = "--login" || exit 0
+test "${1-}" = "--online" || exit 0
 
 gh auth login   # github.com
 hf auth login   # huggingface.co
