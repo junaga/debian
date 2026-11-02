@@ -1,5 +1,7 @@
-# Initialize this Unix account's preferences, git, and ssh.
-# Run after base/install.sh; EMAIL defaults to $USER@$HOSTNAME.
+# Initialize this Unix account
+# Run after base/install.sh
+# EMAIL defaults to $USER@$HOSTNAME.
+# Pass --login to login CLIs.
 
 set -eu
 USER=$(whoami)
@@ -18,3 +20,13 @@ test -f ~/.ssh/id_ed25519 || ssh-keygen -N '' \
 # GitHub uses the email to associate commits with your account.
 git config --global user.name $USER
 git config --global user.email $EMAIL
+
+# Log into service CLIs
+test "${1-}" = "--login" || exit 0
+
+gh auth login   # github.com
+hf auth login   # huggingface.co
+cf login        # cloudflare.com
+stripe login    # stripe.com
+railway login   # railway.com
+codex login     # chatgpt.com
