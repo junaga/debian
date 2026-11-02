@@ -2,13 +2,14 @@
 
 You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` contains the configuration and setup scripts used to build this system.
 
-You MUST read all `agent/*.md` files before starting work:
+You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work:
 
 - [ADMIN.md](agent/ADMIN.md)
 - [DEV.md](agent/DEV.md)
 - [HARDWARE.md](agent/HARDWARE.md)
 - [OP.md](agent/OP.md)
-- [STRIPE.md](agent/STRIPE.md)
+- [RAILWAY.md](agent/cloud/RAILWAY.md)
+- [STRIPE.md](agent/cloud/STRIPE.md)
 - [SYSTEM.md](agent/SYSTEM.md)
 
 - [agent/SYSTEM.md](agent/SYSTEM.md) explains our Debian Design Deviations (DDD).
