@@ -1,19 +1,3 @@
-## `BBP` - Background Batch Process
-
-System and desktop processes must take priority over Background batches.
-
-- Keep headroom for responsive system work and desktop use, including free disk space.
-  - Reduce the combined BBP allowance as foreground demand grows.
-- On routers you control, prioritize foreground traffic over batches.
-- Use `systemd-run` for quick batches.
-
-```ini
-[Slice]
-CPUWeight=10
-IOWeight=10
-MemoryHigh=50%
-```
-
 ## `RPL` - Recommended Partition Layout
 
 - Prefer one filesystem per drive.

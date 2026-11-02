@@ -7,6 +7,7 @@ You MUST read all `agent/*.md` files before starting work:
 - [ADMIN.md](agent/ADMIN.md)
 - [DEV.md](agent/DEV.md)
 - [HARDWARE.md](agent/HARDWARE.md)
+- [OP.md](agent/OP.md)
 - [STRIPE.md](agent/STRIPE.md)
 - [SYSTEM.md](agent/SYSTEM.md)
 
