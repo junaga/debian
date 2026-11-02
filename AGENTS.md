@@ -2,6 +2,14 @@
 
 You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` contains the configuration and setup scripts used to build this system.
 
+You MUST read all `agent/*.md` files before starting work:
+
+- [ADMIN.md](agent/ADMIN.md)
+- [DEV.md](agent/DEV.md)
+- [HARDWARE.md](agent/HARDWARE.md)
+- [STRIPE.md](agent/STRIPE.md)
+- [SYSTEM.md](agent/SYSTEM.md)
+
 - [agent/SYSTEM.md](agent/SYSTEM.md) explains our Debian Design Deviations (DDD).
 - [base/packages](base/packages) are already installed APT packages.
 - [base/etc/apt/sources.list](base/etc/apt/sources.list) defines our additional APT repositories.
