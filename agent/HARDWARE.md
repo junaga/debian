@@ -37,7 +37,7 @@ GPT
 └─ LBA_LAST
 ```
 
-### `OSM` - Optional Subvolume Mounts
+### `OSV` - Optional Subvolumes
 
 These additional subvolumes usually make sense and simplify administration.
 
@@ -58,7 +58,9 @@ Produce a dated record of system hardware and conditions, including HIDs, and dr
 - Investigate as `root` or use `sudo`.
   - Report measured values, never advertised specifications.
 - Check all drives against [`RPL`](#rpl---recommended-partition-layout)
+- Require fresh extended SMART self-tests and full scrubs or supported filesystem integrity checks for every drive; mark untested results `unknown`.
 - For `WAN_HEALTH`, run `node base/speedtest.mjs "$CLOUDFLARE_TURN_KEY_ID" "$CLOUDFLARE_TURN_KEY"`
+- Keep log files in `job/$HRR/hardware-checks/`; use results from that date.
 - Communicate any concerning `HEALTH` or `USAGE` readings.
 
 ### Example `HRR`
@@ -100,13 +102,14 @@ SSD="Samsung SSD 850 EVO mSATA 250GB"
 SSD_SIZE="232.89 GiB"
 SSD_ESP="976 MiB"
 SSD_SWAP="8 GiB"
-SSD_HEALTH="92%" # Drive endurance remaining.
+SSD_HEALTH="92%" # Estimated SSD endurance remaining.
 SSD_FS="btrfs"
+SSD_FS_HEALTH="passed" # Filesystem integrity check, such as a Btrfs scrub.
 SSD_FS_USAGE="63%"
 SSD_FS_UUID="9e156fe2-a8a0-47d8-bce4-03ce6cebc920"
 
 # HDD="Second Disk"
-# HDD_HEALTH="passed" # SMART result.
+# HDD_HEALTH="passed" # SMART/self-test status.
 # BACKUP_HDD="Third Disk"
 # ...
 
