@@ -18,7 +18,7 @@ approach and validate a small end-to-end task before adopting it.
 Codex Settings → General includes a **Projectless task folder** setting with a
 **Change** button. It selects where tasks started outside projects store their
 data by default. Record this existing feature as an input to the container and
-workspace design; this chat currently uses `/home/junaga/Documents/Codex`.
+workspace design.
 
 Motivation for eventual agent containers: an archived agent's stale checkout
 kept `master` reserved; include reliable checkout cleanup and recovery.
@@ -217,15 +217,11 @@ A Codex agent instruction now requires explicit session evidence of an attached 
 
 ## 9. Clarify human review of source-code diffs
 
-`agent/DEVELOP.md` says humans must not write or read source code, while
+`agent/DEV.md` says humans must not write or read source code, while
 `AGENTS.md` requires showing the diff and commit message for human approval.
 The review instruction does not distinguish documentation diffs from source
 code diffs. Decide whether human review must be limited to documentation or
 whether source-code review is an explicit exception, then align the rules.
-
-## 10. Browser control
-
-During Stripe setup on 2026-10-20, Codex repeatedly triggered Chrome remote-debugging approval prompts, interrupting work in the existing signed-in profile. Investigate and provide reliable external-browser control without repeated approval prompts or requiring a separate profile. Cause unverified.
 
 ## 12. Responses evaluation
 
@@ -243,31 +239,6 @@ for repeatable shell workflows and interoperable access to model providers.
 
 Record tested versions, reproducible examples, operational costs, and an
 adoption recommendation before adding either to the system configuration.
-
-## 13. Cloudflare CAPTCHA fails in headless browsers
-
-Observed during HRR runs on 2026-10-31: Cloudflare Speed Test's Turnstile
-checkbox repeatedly returned "Verification failed" and "TRY AGAIN" in automated
-Chrome sessions, including headless mode. An isolated headed session also failed.
-The test could not start. Challenge requests occurred, but no diagnostic code
-established the cause; an immediate unconditional rejection is not confirmed.
-
-[Cloudflare documents automated browsers as unsupported for production challenges](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/).
-Determine whether these failures reflect that restriction or an additional
-browser/network problem; compare with a manual supported-browser session and
-capture any error code and Ray ID. Do not generalize this observation to every
-CAPTCHA or report a fabricated WAN score.
-
-HRR uses `cloudflare-speedtest <turn-key-id> <turn-key>` with Cloudflare's
-official measurement engine and scoring API. Full packet-loss measurement
-requires our own Cloudflare TURN key: the website's credentials endpoint rejects
-standalone requests. The agent explicitly passes the key ID and secret stored
-in `$WORK/.env`; the script requests five-minute credentials for each run.
-
-Resolve the CAPTCHA failure in a supported headless-browser workflow so HRR
-can use the website's complete test and remove this temporary script, TURN key,
-and associated dependencies. Verify packet loss and all three quality scores
-against a manual browser run before removing the workaround.
 
 ## 14. Secure Boot and duplicate firmware entries
 

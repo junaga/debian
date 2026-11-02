@@ -24,7 +24,7 @@ You MUST read all `agent/*.md` files before starting work:
 - Research and propose useful `apt`, `uv`, or `npm` packages.
 - Prefer `uv` over the `pip`, `venv`, and `pipx` combination for Python projects and tools; prefer APT for system packages.
 - Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
-- Make system changes in the persistent Git checkout at `/usr/local/dev/debian`; `/usr/src/system` is the installed source reference.
+- Make system changes in the persistent Git checkout at `$REPO`; `/usr/src/system` is the installed source reference.
 - Before changing agent/SYSTEM.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
 - Show the diff and commit message for human approval.
 
