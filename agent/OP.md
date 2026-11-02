@@ -18,5 +18,5 @@ MemoryHigh=50%
 
 Use a `systemd` timer to run `$AGENT` with a saved task in
 `$WORK/job/YYYY-MM-DD/TASK/`. Keep instructions, logs, and results there. Use
-`Persistent=true` to catch up after a missed run. For one-shot tasks, remove
-the `.timer` and `.service` after reviewing the result.
+`Persistent=true` to catch up after a missed run. One-shot tasks remove their
+own `.timer` and `.service` after completing and recording the result.
