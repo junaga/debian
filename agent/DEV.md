@@ -1,10 +1,12 @@
 # Development
 
 Contain work in your working directory.
+Keep host jobs in `$WORK/job/YYYY-MM-DD/TASK/`; never create undated entries in `job/`.
 
 ```sh
 ./dev/$PROJECT/
 ./job/YYYY-MM-DD/$TASK/
+./tmp/
 ./lib/
 ./bin/
 ./opt/
@@ -20,6 +22,13 @@ You own all source code. Humans must not write or read source code.
       /      \            /         \
  Product     Documentation       Source code
 ```
+
+## Branches
+
+Commit documentation on dev branches and generated source on build branches.
+AIOS work uses `linux`; AIOSDE docs use `desktop`, and builds use
+`desktop-<model>-<effort>-YYYY-MM-DD-HH-MM`.
+Record the exact dev commit in each build.
 
 ## Documentation
 
