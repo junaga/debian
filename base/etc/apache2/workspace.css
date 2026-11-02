@@ -18,3 +18,75 @@ body > table td img:not([data-ready]) {
   min-height: 1.2em;
 }
 
+.markdown {
+  font: 16px/1.6 system-ui, sans-serif;
+  max-width: 80ch;
+  margin: auto;
+  padding: 24px;
+  overflow-wrap: anywhere;
+}
+.markdown a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.markdown h1, .markdown h2, .markdown h3 {
+  line-height: 1.3;
+  margin-top: 1.5em;
+}
+.markdown article > :first-child {
+  margin-top: 0;
+}
+.markdown h1, .markdown h2 {
+  border-bottom: 1px solid color-mix(in srgb, CanvasText 20%, Canvas);
+  padding-bottom: .3em;
+}
+.markdown pre, .markdown code {
+  font-family: ui-monospace, monospace;
+  tab-size: 2;
+}
+.markdown code {
+  background: color-mix(in srgb, CanvasText 6%, Canvas);
+  border-radius: 3px;
+  padding: .1em .25em;
+  font-size: .875em;
+}
+.markdown pre {
+  background: color-mix(in srgb, CanvasText 6%, Canvas);
+  padding: 16px;
+  border-radius: 5px;
+  overflow: auto;
+}
+.markdown pre code {
+  padding: 0;
+}
+.markdown ul, .markdown ol {
+  padding-inline-start: 2ch;
+}
+.markdown blockquote {
+  margin-inline: 0;
+  padding-inline-start: 16px;
+  border-left: 3px solid color-mix(in srgb, CanvasText 35%, Canvas);
+  color: color-mix(in srgb, CanvasText 70%, Canvas);
+}
+.markdown table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.markdown th, .markdown td {
+  border: 1px solid color-mix(in srgb, CanvasText 20%, Canvas);
+  padding: 8px 12px;
+  text-align: left;
+}
+.markdown th {
+  background: color-mix(in srgb, CanvasText 6%, Canvas);
+}
+.markdown img, .markdown video {
+  max-width: 100%;
+  height: auto;
+}
+.markdown hr {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, CanvasText 20%, Canvas);
+}
