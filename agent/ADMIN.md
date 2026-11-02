@@ -17,3 +17,10 @@ BACKUP/
 
 Use `rsync -aHAXx` without `--delete`; exclude `tmp/`, `dist/`, and
 `node_modules/`. Stop and report failures or free space below 20%.
+
+## `AAA` - Automatic Agent Action
+
+Use a systemd timer to run an agent with a saved task in `job/YYYY-MM-DD/TASK/`.
+Keep instructions, logs, and results there. Use `Persistent=true` to catch up
+after a missed run. For one-shot tasks, remove the timer and service after
+reviewing the result.
