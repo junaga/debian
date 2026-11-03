@@ -28,6 +28,7 @@ These additional subvolumes usually make sense and simplify administration.
 | Subvolume | Mountpoint                        |
 | --------- | --------------------------------- |
 | `CACHE`   | `/var/cache`                      |
+| `CODEX`   | `$HOME/.codex`                    |
 | `STEAM`   | `$HOME/.steam/debian-installation` |
 
 ## `HRR` - Hardware Resource Record
