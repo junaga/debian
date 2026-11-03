@@ -27,7 +27,6 @@ You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work
 - Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
 - Make system changes in the persistent Git checkout at `$REPO`; `/usr/src/system` is the installed source reference.
 - Before changing agent/SYSTEM.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
-- Show the diff and commit message for human approval.
 
 ## Container deployments
 
