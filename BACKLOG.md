@@ -247,3 +247,9 @@ Decide whether to use Secure Boot and resolve the confusing duplicate shim and d
 ## 15. Permanent browser history without losing passkeys
 
 Chrome deletes local browsing history older than roughly 90 days; find a browser setup that retains native history indefinitely and supports passkeys without Flatpak. Google Password Manager is optional, so evaluate independent passkey providers alongside browsers with configurable history retention. Verify a path for existing passkeys and reliable browser updates before migrating.
+
+## 16. Railway volume usage accounting
+
+Investigate why Railway volume usage can remain high after files are deleted, and document how to verify and reclaim space safely.
+
+Reference: [Railway staff discussion](https://station.railway.com/questions/volume-usage-metric-still-inflated-after-0f7b9674).
