@@ -24,6 +24,11 @@ agent-browser get url
 agent-browser close
 ```
 
+For signups or failed headless flows, use `--auto-connect --pin-tab` with the
+instructor's running `$BROWSER`. Use a desktop control tool (e.g., `wlrctl`) to
+generate passwords in the browser and accept any Save prompt. Never pass
+passwords to ABC or store separate copies.
+
 ## `BBP` - Background Batch Process
 
 System and desktop processes must take priority over Background batches.
