@@ -7,15 +7,21 @@ own `.timer` and `.service` after completing and recording the result.
 
 ## `ABC` - Agent Browser CLI
 
-Use `agent-browser` directly from Codex. In Chrome, enable
-`chrome://inspect/#remote-debugging` and approve the connection. The default
-profile needs this manual toggle; debugging flags require a separate profile.
-Chrome asks again for each new connection; keep the session open while working.
+Set `$BROWSER` to a Chromium browser. ABC runs it headlessly. List profiles:
+ask the instructor if there is more than one; otherwise use `Default`.
+Snapshot refs can change.
 
 ```sh
 export AGENT_BROWSER_SESSION="$CODEX_THREAD_ID"
-agent-browser --auto-connect --pin-tab open http://localhost/
+export AGENT_BROWSER_EXECUTABLE_PATH="${BROWSER:?}"
+agent-browser profiles
+agent-browser --profile Default open https://www.wikipedia.org/
 agent-browser snapshot -i
+agent-browser fill @e34 Berlin
+agent-browser press Enter
+agent-browser snapshot -i
+agent-browser get url
+agent-browser close
 ```
 
 ## `BBP` - Background Batch Process
