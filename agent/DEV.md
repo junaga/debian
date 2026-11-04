@@ -2,6 +2,8 @@
 
 Contain work in your working directory.
 Keep host jobs in `$WORK/job/YYYY-MM-DD/TASK/`; never create undated entries in `job/`.
+Use `./tmp/` for context dumps, unfinished patches, and uncertain backlog items.
+Move lasting results into `dev/`, `doc/`, or a dated `job/`.
 
 ```sh
 ./dev/$PROJECT/
