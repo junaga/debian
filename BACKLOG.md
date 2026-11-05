@@ -253,3 +253,18 @@ Chrome deletes local browsing history older than roughly 90 days; find a browser
 Investigate why Railway volume usage can remain high after files are deleted, and document how to verify and reclaim space safely.
 
 Reference: [Railway staff discussion](https://station.railway.com/questions/volume-usage-metric-still-inflated-after-0f7b9674).
+
+## 18. Terminal releases
+
+Stay on Windows Terminal Preview: SSH discovery and `Shift+Enter` work there,
+confirmed 2026-11-05; the installed Preview version has not been recorded.
+
+- **SSH discovery:** [merged 2025-05-31 (#18814)](https://github.com/microsoft/terminal/pull/18814),
+  available in [Preview 1.26.2734.0 (2026-10-02)](https://github.com/microsoft/terminal/releases/tag/v1.26.2734.0),
+  but [still disabled in stable 1.25.2733.0](https://github.com/microsoft/terminal/blob/v1.25.2733.0/src/features.xml#L105-L111).
+- **Kitty keyboard protocol:** [merged 2026-02-17 (#19817)](https://github.com/microsoft/terminal/pull/19817),
+  shipped in [stable 1.25.2733.0 (2026-10-02)](https://github.com/microsoft/terminal/releases/tag/v1.25.2733.0);
+  preserves key modifiers so applications can distinguish `Shift+Enter`.
+
+Track subsequent stable releases and reconsider switching when both features ship;
+verify SSH discovery and `Shift+Enter` over SSH before changing channels.
