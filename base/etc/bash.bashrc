@@ -8,6 +8,9 @@ test "$PS1" || return # no human == exit
 set +h # lookup $PATH every time
 shopt -s checkwinsize # update $LINES and $COLUMNS every time
 
+# Windows Terminal sends Ctrl+Backspace as Ctrl+H.
+bind '"\C-h": backward-kill-word'
+
 shopt -s histappend # dont override, append ~/.bash_history
 declare HISTFILESIZE="-1" # not 500, unlimited ~/.bash_history
 declare HISTSIZE="-1" # not 500, unlimited bash history
