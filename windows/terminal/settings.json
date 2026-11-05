@@ -1,0 +1,47 @@
+{
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "language": "en-US",
+  "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+  "disabledProfileSources": ["Windows.Terminal.Azure"],
+  "tabSwitcherMode": "disabled",
+  "profiles": {
+    "defaults": {
+      "font": { "face": "Cascadia Code", "size": 12 },
+      "cursorShape": "filledBox",
+      "padding": "10"
+    },
+    "list": [
+      {
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "name": "Command Prompt",
+        "commandline": "%SystemRoot%\\System32\\cmd.exe",
+        "elevate": false,
+        "hidden": false
+      },
+      {
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "name": "PowerShell",
+        "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "elevate": false,
+        "hidden": false
+      },
+      {
+        "guid": "{31e4bc59-216c-5b74-a4b4-6d4323889530}",
+        "name": "js-bau-debian",
+        "source": "Windows.Terminal.SSH",
+        "hidden": false
+      }
+    ]
+  },
+  "schemes": [],
+  "newTabMenu": [
+    { "type": "profile", "profile": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}" },
+    { "type": "profile", "profile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}" },
+    { "type": "separator" },
+    { "type": "matchProfiles", "source": "Windows.Terminal.SSH" }
+  ],
+  "keybindings": [
+    { "keys": "ctrl+pageup", "id": "Terminal.PrevTab" },
+    { "keys": "ctrl+pagedown", "id": "Terminal.NextTab" }
+  ]
+}
