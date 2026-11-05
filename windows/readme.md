@@ -1,3 +1,15 @@
+# Windows
+
+Windows administration: half configuration, half collecting evidence that you
+changed the configuration.
+
+Deleted Terminal profiles [could reappear](https://github.com/microsoft/terminal/issues/8270)
+despite being removed from `settings.json`; Microsoft
+[fixed that behavior in 2021](https://github.com/microsoft/terminal/pull/10910),
+and our config disables Azure's profile generator explicitly.
+
+For a predictable development environment, prefer [Debian in WSL](linux/readme.md).
+
 This tutorial is for Windows 11, but it works the same with `debian.iso` files
 
 # Create bootable USB Drive
