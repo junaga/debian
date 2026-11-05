@@ -28,7 +28,10 @@ shopt -s globstar # allow recursive globs "**"
 # env variables, aliases, and functions
 # ====================================================
 
-set -a; . ~/.env; set +a
+set -a
+. /etc/environment # Railway containers start shells without PAM.
+. ~/.env
+set +a
 export DATE=$(date --iso)
 
 alias ls="ls --color=auto --group-directories-first"
