@@ -24,12 +24,6 @@
         "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
         "elevate": false,
         "hidden": false
-      },
-      {
-        "guid": "{31e4bc59-216c-5b74-a4b4-6d4323889530}",
-        "name": "js-bau-debian",
-        "source": "Windows.Terminal.SSH",
-        "hidden": false
       }
     ]
   },
