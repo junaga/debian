@@ -7,6 +7,9 @@ REPO="/usr/local/src"
 NPM_CONFIG_MIN_RELEASE_AGE="1"
 UV_EXCLUDE_NEWER="P1D"
 
+# Keep npm downloads outside the persistent home directory.
+NPM_CONFIG_CACHE="/var/cache/npm"
+
 # UV installations
 UV_TOOL_DIR="/usr/lib/uv/tools"
 UV_TOOL_BIN_DIR="/usr/bin"
