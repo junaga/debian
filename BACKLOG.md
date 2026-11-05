@@ -254,6 +254,18 @@ Investigate why Railway volume usage can remain high after files are deleted, an
 
 Reference: [Railway staff discussion](https://station.railway.com/questions/volume-usage-metric-still-inflated-after-0f7b9674).
 
+## 17. Micro clipboard
+
+Reported 2026-11-05: copying from Micro on a remote Debian host through SSH in
+Windows Terminal on Windows 11 reports success in Micro, but the Windows clipboard
+does not receive the copied text. Terminal Preview was installed during this
+session; the affected Terminal version and exact copy shortcut are unconfirmed.
+
+Investigate Micro's clipboard backend and the path through the remote environment,
+SSH, Windows Terminal, and the Windows clipboard. Record the relevant versions,
+copy binding, and clipboard settings, and compare editor copy with Terminal copy.
+The user suspects Micro or SSH; the cause has not been established.
+
 ## 18. Terminal releases
 
 Stay on Windows Terminal Preview: SSH discovery and `Shift+Enter` work there,
@@ -268,3 +280,15 @@ confirmed 2026-11-05; the installed Preview version has not been recorded.
 
 Track subsequent stable releases and reconsider switching when both features ship;
 verify SSH discovery and `Shift+Enter` over SSH before changing channels.
+
+## 19. SSH directory
+
+Reported 2026-11-05: opening VS Code and selecting the Railway container through
+Remote - SSH lands in `/root` instead of `$WORK` (`/usr/local`). This is a minor
+annoyance. `/root` remains the account's home path despite being a symlink, and
+the shell startup `cd` into `$WORK` does not produce the expected starting
+directory in this workflow.
+
+Investigate how VS Code chooses the initial remote folder and Bash working
+directory, and why the existing startup `cd` does not take effect here. Make
+fresh connections start in `$WORK` while preserving explicitly selected folders.
