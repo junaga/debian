@@ -21,7 +21,8 @@ declare HISTSIZE="-1" # not 500, unlimited bash history
 
 declare BLUE="\[\e[1;34m\]"
 declare RESET="\[\e[0m\]"
-declare PS1="$BLUE\H\$PWD$RESET "
+. /usr/lib/git-core/git-sh-prompt
+declare PS1="$BLUE\H\$PWD\$(__git_ps1 '?branch=%s')$RESET "
 
 shopt -s autocd # cd directories by running
 shopt -s nullglob # globs match nothing
