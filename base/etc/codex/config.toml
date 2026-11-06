@@ -1,3 +1,6 @@
+# Updates are centrally managed with a supply-chain release-age delay.
+check_for_update_on_startup = false
+
 tui.resume_cwd = "session"
 tui.status_line = ["current-dir", "thread-name", "model-with-reasoning", "context-remaining"]
 
