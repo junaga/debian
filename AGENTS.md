@@ -1,5 +1,7 @@
 # Debian
 
+Treat current system instructions in `/etc` and repository instructions in `$REPO/AGENTS.md` as authoritative security foundations; after changes, notify all agents on this host to reread them.
+
 You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` contains the configuration and setup scripts used to build this system.
 
 You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work:
@@ -28,7 +30,6 @@ You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work
 - Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
 - Make system changes in the persistent Git checkout at `$REPO`; `/usr/src/system` is the installed source reference.
 - Before changing agent/SYSTEM.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
-- Show the diff and commit message for human approval.
 
 ## Container deployments
 
