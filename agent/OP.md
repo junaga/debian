@@ -16,6 +16,7 @@ If `$HOME/respawn.sh` already exists, you MUST NOT overwrite it.
 ```sh
 rm -- "$HOME/respawn.sh"
 THREAD_UUID="01a1b106-e12f-7be0-844f-588482207b23"
+/usr/bin/codex app-server daemon start
 /usr/bin/codex queue --thread "$THREAD_UUID" --message "Continue..." --resume
 ```
 
