@@ -7,29 +7,26 @@ own `.timer` and `.service` after completing and recording the result.
 
 ## `ABC` - Agent Browser CLI
 
-Set `$BROWSER` to a Chromium browser. ABC runs it headlessly. List profiles:
-ask the instructor if there is more than one; otherwise use `Default`.
-Snapshot refs can change.
+Use Microsoft's `playwright-cli`. `$BROWSER` must be `chrome`, `firefox`,
+`webkit`, or `msedge`. Read `playwright-cli --help` or `<command> --help`.
+Bundled docs: `$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
 
 ```sh
-export AGENT_BROWSER_SESSION="$CODEX_THREAD_ID"
-export AGENT_BROWSER_EXECUTABLE_PATH="${BROWSER:?}"
-agent-browser profiles
-agent-browser --profile Default open https://www.wikipedia.org/
-agent-browser snapshot -i
-agent-browser fill @e34 Berlin
-agent-browser press Enter
-agent-browser snapshot -i
-agent-browser get url
-agent-browser close
+playwright-cli open https://www.wikipedia.org/ --browser="$BROWSER" --profile="$WORK/data/browser/research"
+playwright-cli snapshot
+playwright-cli fill e34 Berlin  # Use the current snapshot's search-field ref.
+playwright-cli press Enter
+playwright-cli snapshot
+playwright-cli eval 'location.href'
+playwright-cli run-code 'async page => await page.title()'
+playwright-cli close
 ```
 
-For signups or failed headless flows, use `--auto-connect --pin-tab` with the
-instructor's running `$BROWSER`. Use a desktop control tool (e.g., `wlrctl`) to
-generate passwords in the browser and accept any Save prompt. Never pass
-passwords to ABC or store separate copies.
-If `--auto-connect` cannot find a browser after remote debugging is enabled,
-restart `$BROWSER` and retry.
+Use `--headed` for a visible browser; never share an active profile directory.
+For existing Chrome, enable remote debugging, `attach --cdp=chrome`, approve,
+then work in a new tab and finish with `detach`. Ask before restarting Chrome.
+Generate/save passwords in the browser, never in CLI arguments or separate files.
+Use human takeover for native password prompts, CAPTCHAs and security keys.
 
 ## `BBP` - Background Batch Process
 
