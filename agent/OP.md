@@ -28,6 +28,8 @@ For signups or failed headless flows, use `--auto-connect --pin-tab` with the
 instructor's running `$BROWSER`. Use a desktop control tool (e.g., `wlrctl`) to
 generate passwords in the browser and accept any Save prompt. Never pass
 passwords to ABC or store separate copies.
+If `--auto-connect` cannot find a browser after remote debugging is enabled,
+restart `$BROWSER` and retry.
 
 ## `BBP` - Background Batch Process
 
