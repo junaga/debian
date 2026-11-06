@@ -1,6 +1,6 @@
 tui.resume_cwd = "session"
 tui.show_tooltips = false
-tui.status_line = ["current-dir", "thread-name", "context-remaining"]
+tui.status_line = ["hostname", "current-dir", "thread-name", "context-remaining"]
 # Disable keyboard shortcuts for changing reasoning effort.
 tui.keymap.chat.decrease_reasoning_effort = []
 tui.keymap.chat.increase_reasoning_effort = []
