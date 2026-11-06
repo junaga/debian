@@ -292,3 +292,45 @@ directory in this workflow.
 Investigate how VS Code chooses the initial remote folder and Bash working
 directory, and why the existing startup `cd` does not take effect here. Make
 fresh connections start in `$WORK` while preserving explicitly selected folders.
+
+## 20. Codex clipboard
+
+Investigated 2026-11-06: pasting an image into Codex running in the Railway
+container fails with `clipboard unavailable` and an unreachable X11 server.
+The desktop uses `foot` and connects with `ssh jsbee-dev`, whose endpoint is
+`ssh.railway.com`. Codex reads the clipboard on the TUI host; this connection
+does not expose the desktop clipboard. The endpoint rejected an X11 forwarding
+request and a dynamic reverse-port forwarding probe.
+
+Defer adoption of the experimental remote TUI mode. Run the TUI locally on the
+desktop so it can read the desktop clipboard, and connect it to an app-server
+in the container through an SSH local port forward. Codex encodes local image
+attachments for transport; files, tools, and sessions remain on the remote.
+
+For a future test, start the backend inside the container:
+
+```sh
+codex app-server --listen ws://127.0.0.1:4500
+```
+
+On the desktop, keep the tunnel running in one terminal tab:
+
+```sh
+ssh -N -L 4500:127.0.0.1:4500 jsbee-dev
+```
+
+Run the local TUI in another desktop tab:
+
+```sh
+codex agents --remote ws://127.0.0.1:4500 -C /usr/local/src
+```
+
+With Codex CLI `0.166.0`, the temporary backend passed its readiness probe,
+WebSocket initialization, and session listing. Desktop clipboard image paste
+has not been verified. Before adoption, test image paste, session resume, and
+reconnection, and define startup and shutdown without adding idle resource use.
+The temporary test server was stopped; no permanent listener was configured.
+
+References: [OpenAI remote TUI documentation](https://learn.chatgpt.com/docs/app-server#connect-the-cli-terminal-ui),
+[Codex image transport implementation](https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/tui/src/chatwidget/image_submission.rs),
+[Railway local port forwarding](https://docs.railway.com/cli/ssh#forward-a-port-with-ssh--l).
