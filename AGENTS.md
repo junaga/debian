@@ -11,6 +11,7 @@ You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work
 - [RAILWAY.md](agent/cloud/RAILWAY.md)
 - [STRIPE.md](agent/cloud/STRIPE.md)
 - [SYSTEM.md](agent/SYSTEM.md)
+- [WINDOWS.md](agent/WINDOWS.md)
 
 - [agent/SYSTEM.md](agent/SYSTEM.md) explains our Debian Design Deviations (DDD).
 - [base/packages](base/packages) are already installed APT packages.
