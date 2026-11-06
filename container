@@ -11,4 +11,4 @@ RUN rm -rf /root && ln -s $PWD /root
 # runc/crun create missing WORKDIR after volume mounts.
 
 ENV SHELL="/bin/bash"
-ENTRYPOINT ["tini", "sleep", "infinity"]
+ENTRYPOINT ["tini", "--", "cron", "-f"]

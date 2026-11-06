@@ -1,9 +1,23 @@
 ## `AAI` - Automatic Agent Instruction
 
-Use a `systemd` timer to run `$AGENT` with a saved task in
-`$WORK/job/YYYY-MM-DD/TASK/`. Keep instructions, logs, and results there. Use
-`Persistent=true` to catch up after a missed run. One-shot tasks remove their
-own `.timer` and `.service` after completing and recording the result.
+Use `cron` to schedule your own tasks or another AI `$AGENT`.
+
+### Respawn
+
+The default `/etc/crontab` entry runs `$HOME/respawn.sh` when cron starts.
+Use it to automatically invoke yourself across system reinstallation, reboot,
+or container redeployment by hardcoding the agent command and chat ID in the script.
+If `$HOME/respawn.sh` already exists, you MUST NOT overwrite it.
+
+#### Codex example
+
+- `$HOME/respawn.sh`
+
+```sh
+rm -- "$HOME/respawn.sh"
+THREAD_UUID="01a1b106-e12f-7be0-844f-588482207b23"
+/usr/bin/codex queue --thread "$THREAD_UUID" --message "Continue..." --resume
+```
 
 ## `ABC` - Agent Browser CLI
 
