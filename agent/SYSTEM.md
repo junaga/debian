@@ -55,25 +55,24 @@ The host update procedure is defined in [base/upgrade.sh](../base/upgrade.sh).
 Containers install packages when the image is built and receive updates through
 image rebuilds. Omit the host automatic-update cron job from container builds.
 
-## DDD 12: Keep administration state below the local workspace
+## DDD 12: The `WORK` Environment Variable
 
-Preserve directory roles: `/` anchors the system and its mount points, `/usr`
-holds system resources, and `/usr/local` contains our local administration and
-development files.
+The `WORK` directory is our workspace. It separates intentionally created files from `HOME` artifacts, simplifying development and agentic engineering.
 
-Keep projects in `dev`, below the workspace and easy to inspect alongside local
-work. Treat
-`/usr/local` as the persistence boundary between our own files and the replaceable
-operating system: retaining or mounting it lets us reinstall the OS or replace a
-container while preserving projects and the administration environment.
-The default `PATH` already includes `/usr/local/bin`, so local commands fit this
-workspace without adding a home-specific `bin` directory to the search path.
+### The default `WORK="/usr/local"`
 
-Keep `/root` as a compatibility symlink to `/usr/root`, preserving existing
-home paths and account settings without changing `/etc` solely to relocate
-storage. This follows the [usr merge](https://systemd.io/THE_CASE_FOR_THE_USR_MERGE/)
-pattern of retaining old paths as symlinks; this home relocation is our own
-convention.
+`WORK` can be any directory, such as `$HOME` or `$HOME/work`.
+Our [`/etc/environment`](../base/etc/environment) defaults to `/usr/local`.
+
+```
+/                 root (kernel space)
+└── usr/          user space
+    └── local/    work space
+```
+
+- `/usr/local/bin` is already on `PATH`.
+- The [FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s09.html) reserves it.
+- Our [web server](../base/etc/apache2/apache2.conf) serves it at `http://localhost/`.
 
 ## DDD 13: Use systemd-boot on UEFI hosts
 
