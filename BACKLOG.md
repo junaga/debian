@@ -350,3 +350,28 @@ References: [OpenAI remote TUI documentation](https://learn.chatgpt.com/docs/app
 [Codex browser launcher](https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/tui/src/app/history_ui.rs#L280),
 [Foot URL mode](https://manpages.debian.org/trixie/foot/foot.ini.5.en.html),
 [Railway local port forwarding](https://docs.railway.com/cli/ssh#forward-a-port-with-ssh--l).
+
+## 21. Lookup permissions
+
+Confirmed 2026-11-07 with Codex TUI `0.166.0` and shared daemon `0.167.0`
+in the Debian container: `git-branch` is configured but omitted from the footer.
+The background Git lookup uses daemon defaults instead of the active thread's
+`--yolo` permissions. Bubblewrap fails before Git starts with
+`Creating new namespace failed: Permission denied`; replaying the same lookup
+with explicit full access returns the branch.
+
+Upstream: [openai/codex#53579](https://github.com/openai/codex/issues/53579),
+with our [Git branch reproduction](https://github.com/openai/codex/issues/53579#issuecomment-6704359665).
+
+Temporary workaround: set `sandbox_mode = "danger-full-access"` in
+[`base/etc/codex/config.toml`](base/etc/codex/config.toml), apply it to
+`/etc/codex/config.toml`, and restart with `codex app-server daemon restart`.
+This makes full access the host's default, including daemon background commands;
+it does not make those commands inherit each thread's restrictions. Activated
+and verified 2026-11-07: daemon PID changed from `2658` to `15108`, and its
+`command/exec` returns branch `linux` without permission overrides. The user
+also confirmed that the branch now appears in the footer.
+
+Remove the setting and restart the daemon once an upstream fix is installed.
+Verify that branch and PR lookups follow the active thread's permissions with
+normal daemon defaults, including after switching to a restricted thread.

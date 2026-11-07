@@ -1,6 +1,9 @@
 # Updates are centrally managed with a supply-chain release-age delay.
 check_for_update_on_startup = false
 
+# Temporary daemon lookup workaround; see BACKLOG.md issue 21.
+sandbox_mode = "danger-full-access"
+
 tui.resume_cwd = "session"
 tui.show_tooltips = false
 tui.status_line = ["hostname", "current-dir", "git-branch", "thread-name", "context-remaining"]
