@@ -43,7 +43,7 @@ npm install --global --no-fund --allow-scripts=esbuild,workerd cf
 npm install --global --prefix /usr --no-fund @cloudflare/speedtest@1.14.2 playwright-core@1.64.1
 install -m 755 speedtest.mjs /usr/bin/cloudflare-speedtest
 
-# Resume an armed agent thread when cron starts.
+# Resume an armed agent thread at boot.
 echo '@reboot root set -a; . /etc/environment; exec /bin/sh "$HOME/respawn.sh"' >> /etc/crontab
 
 # Update every two minutes on hosts; rebuild containers to update packages.

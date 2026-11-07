@@ -293,19 +293,32 @@ Investigate how VS Code chooses the initial remote folder and Bash working
 directory, and why the existing startup `cd` does not take effect here. Make
 fresh connections start in `$WORK` while preserving explicitly selected folders.
 
-## 20. Codex clipboard
+## 20. Codex remote
 
-Investigated 2026-11-06: pasting an image into Codex running in the Railway
-container fails with `clipboard unavailable` and an unreachable X11 server.
+Make desktop browser launching and image clipboard access work while Codex
+executes in the remote container.
+
+**Browser launching:** clicking a web link in the remote Codex TUI produces an
+in-harness browser-opening error. Codex launches the browser on the TUI host,
+which is the headless container. Opening a remote development web server page
+also needs a desktop browser and a forwarded port; a container's loopback URL
+does not reach that server from the desktop. In `foot`, `Ctrl+Shift+O` opens URL
+mode and launches the selected link locally; remote web servers still need
+their ports forwarded.
+
+**Image clipboard:** investigated 2026-11-06, pasting an image into Codex running
+in the Railway container fails with `clipboard unavailable` and an unreachable
+X11 server.
 The desktop uses `foot` and connects with `ssh jsbee-dev`, whose endpoint is
 `ssh.railway.com`. Codex reads the clipboard on the TUI host; this connection
 does not expose the desktop clipboard. The endpoint rejected an X11 forwarding
 request and a dynamic reverse-port forwarding probe.
 
 Defer adoption of the experimental remote TUI mode. Run the TUI locally on the
-desktop so it can read the desktop clipboard, and connect it to an app-server
-in the container through an SSH local port forward. Codex encodes local image
-attachments for transport; files, tools, and sessions remain on the remote.
+desktop so it can launch the desktop browser and read the desktop clipboard,
+and connect it to an app-server in the container through an SSH local port
+forward. Codex encodes local image attachments for transport; files, tools, and
+sessions remain on the remote.
 
 For a future test, start the backend inside the container:
 
@@ -326,11 +339,14 @@ codex agents --remote ws://127.0.0.1:4500 -C /usr/local/src
 ```
 
 With Codex CLI `0.166.0`, the temporary backend passed its readiness probe,
-WebSocket initialization, and session listing. Desktop clipboard image paste
-has not been verified. Before adoption, test image paste, session resume, and
-reconnection, and define startup and shutdown without adding idle resource use.
-The temporary test server was stopped; no permanent listener was configured.
+WebSocket initialization, and session listing. Desktop browser launching,
+opening a remote web server through a forwarded port, and clipboard image paste
+have not been verified. Before adoption, test these alongside session resume
+and reconnection, and define startup and shutdown without adding idle resource
+use. The temporary test server was stopped; no permanent listener was configured.
 
 References: [OpenAI remote TUI documentation](https://learn.chatgpt.com/docs/app-server#connect-the-cli-terminal-ui),
 [Codex image transport implementation](https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/tui/src/chatwidget/image_submission.rs),
+[Codex browser launcher](https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/tui/src/app/history_ui.rs#L280),
+[Foot URL mode](https://manpages.debian.org/trixie/foot/foot.ini.5.en.html),
 [Railway local port forwarding](https://docs.railway.com/cli/ssh#forward-a-port-with-ssh--l).

@@ -4,7 +4,7 @@ Use `cron` to schedule your own tasks or another AI `$AGENT`.
 
 ### Respawn
 
-The default `/etc/crontab` entry runs `$HOME/respawn.sh` when cron starts.
+The default `/etc/crontab` entry runs `$HOME/respawn.sh` at boot.
 Use it to automatically invoke yourself across system reinstallation, reboot,
 or container redeployment by hardcoding the agent command and chat ID in the script.
 If `$HOME/respawn.sh` already exists, you MUST NOT overwrite it.
