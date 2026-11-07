@@ -404,3 +404,12 @@ https://github.com/openai/codex/issues/53410 for using the smaller published ser
 package instead of another full CLI bundle. Do not replace the current remote
 workflow or run experiments until requested. Only daemon release `0.167.0`
 remains after cleanup; retain the active runtime.
+
+## 24. Home relocation
+
+Deferred at the user's request. Document home relocation in its own DDD and
+implement it in `base/usr-merge2.sh`, replacing the inline container setup.
+Keep `/root` as a compatibility symlink and preserve existing home data and
+account settings. The old DDD proposed `/usr/root`; the current container uses
+`/usr/local/data`. Resolve the destination before implementation. Keep this
+separate from DDD 12 and the `WORK` environment variable.
