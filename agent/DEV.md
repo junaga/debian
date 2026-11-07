@@ -2,8 +2,14 @@
 
 Contain work in your working directory.
 Keep host jobs in `$WORK/job/YYYY-MM-DD/TASK/`; never create undated entries in `job/`.
-Use `./tmp/` for context dumps, unfinished patches, and uncertain backlog items.
-Move lasting results into `dev/`, `doc/`, or a dated `job/`.
+Keep artifacts for tasks belonging to this workspace in the task's job directory,
+including scratch files, inputs, evidence, context, unfinished patches, and results.
+Use `$WORK/tmp/` for context and files that don't belong in this workspace.
+They need to be migrated elsewhere.
+Choose by where the files belong, regardless of age or completion.
+Check ownership and active use before moving or cleaning existing files.
+Keep ongoing projects in `$WORK/dev/`, lasting subject records in `$WORK/doc/`,
+and unresolved issues in the relevant `BACKLOG.md`, linking job evidence as needed.
 
 ```sh
 ./dev/$PROJECT/
