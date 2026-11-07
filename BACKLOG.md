@@ -209,6 +209,13 @@ disconnecting or restarting the container. Find a way to release remote Codex
 resources when no work is active while preserving SSH availability and the
 ability to reconnect and create new work items on demand.
 
+### Railway cleanup
+
+After work, stop unneeded task processes to free memory and CPU.
+Restart the current Railway container with the existing image only when needed
+to reclaim resources. Save work and let necessary tasks finish gracefully before
+restarting. Do not rebuild or redeploy for resource cleanup.
+
 ## 8. Cloud skill selection
 
 Bug observed on 2026-10-14: Codex selected the managed cloud runtime skill while initializing an ordinary SSH development container, using cloud-provider environment variables as the trigger. A remote connection or cloud-hosted container does not establish that a Codex-managed cloud environment is attached. The user confirmed submitting this through Codex feedback as a bug on 2026-10-14.
@@ -375,3 +382,25 @@ also confirmed that the branch now appears in the footer.
 Remove the setting and restart the daemon once an upstream fix is installed.
 Verify that branch and PR lookups follow the active thread's permissions with
 normal daemon defaults, including after switching to a restricted thread.
+
+## 22. Host admins
+
+Deferred at the user's request on 2026-11-06. Create one persistent admin agent
+for each reachable host (`jsbeew2`, `jsbeew3`), with one directory under
+`/usr/local/doc/host/$HOSTNAME/`, one host task directory, and one HRR per host
+following `/usr/local/src/agent/HARDWARE.md`. The coordinating admin sends
+future host issues and work to the corresponding agent; no monitoring. Do not
+start this setup until requested again.
+
+## 23. Codex packaging
+
+Deferred at the user's request on 2026-11-06. The global npm CLI under `/usr`
+and Codex's managed daemon under `/usr/local/data/.codex/packages/app-server-daemon`
+duplicate the full runtime and update independently. Prefer one package-manager-owned
+installation for CLI and server, with executables outside the home directory.
+Track https://github.com/openai/codex/issues/41188 for external executable support;
+OpenAI's proposed `CODEX_DAEMON_EXECUTABLE` is not an available setting. Track
+https://github.com/openai/codex/issues/53410 for using the smaller published server
+package instead of another full CLI bundle. Do not replace the current remote
+workflow or run experiments until requested. Only daemon release `0.167.0`
+remains after cleanup; retain the active runtime.
