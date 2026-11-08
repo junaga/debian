@@ -32,6 +32,8 @@ Use human takeover for native password prompts, CAPTCHAs and security keys.
 
 System and desktop processes must take priority over Background batches.
 
+- Use all idle resources at lower priority. Do not impose fixed quotas or
+  concurrency limits unless needed to keep foreground work responsive.
 - Keep headroom for responsive system work and desktop use, including free disk space.
   - Reduce the combined BBP allowance as foreground demand grows.
 - On routers you control, prioritize foreground traffic over batches.
