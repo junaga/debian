@@ -22,6 +22,8 @@ You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work
 
 ## Repository
 
+- Show the exact proposed diff and obtain explicit instructor approval before applying or committing any repository change.
+- Keep changes short, deliberate, and useful.
 - Follow the [documentation conventions](agent/DEV.md#documentation).
 - Do one thing well. Compose small tools. Keep the system understandable.
 - Research and propose useful `apt`, `uv`, or `npm` packages.
