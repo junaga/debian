@@ -9,6 +9,7 @@ You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work
 - [ADMIN.md](agent/ADMIN.md)
 - [DEV.md](agent/DEV.md)
 - [HARDWARE.md](agent/HARDWARE.md)
+- [DOMAIN.md](agent/DOMAIN.md)
 - [LANG.md](agent/LANG.md)
 - [OP.md](agent/OP.md)
 - [RAILWAY.md](agent/cloud/RAILWAY.md)
