@@ -11,4 +11,20 @@ RUN rm -rf /root && ln -s $PWD /root
 # runc/crun create missing WORKDIR after volume mounts.
 
 ENV SHELL="/bin/bash"
+
+# ============================================================================
+# Mirrored from base/etc/environment.
+# ============================================================================
+ENV WORK="/usr/local" \
+    REPO="/usr/local/src" \
+    NPM_CONFIG_MIN_RELEASE_AGE="1" \
+    UV_EXCLUDE_NEWER="P1D" \
+    NPM_CONFIG_CACHE="/var/cache/npm" \
+    UV_TOOL_DIR="/usr/lib/uv/tools" \
+    UV_TOOL_BIN_DIR="/usr/bin" \
+    UV_CACHE_DIR="/var/cache/uv"
+# ============================================================================
+# End mirror of base/etc/environment.
+# ============================================================================
+
 ENTRYPOINT ["tini", "--", "cron", "-f"]

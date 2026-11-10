@@ -33,7 +33,6 @@ shopt -s globstar # allow recursive globs "**"
 # ====================================================
 
 set -a
-. /etc/environment # Railway containers start shells without PAM.
 . ~/.env
 set +a
 export DATE=$(date --iso)

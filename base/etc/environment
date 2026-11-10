@@ -1,3 +1,4 @@
+# Mirrored in ../../container (image ENV).
 # PATH="/usr/local/bin:/usr/bin:/bin"
 # HOME="/home/$USER"
 WORK="/usr/local"
