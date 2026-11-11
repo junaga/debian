@@ -12,6 +12,11 @@ critically, continually challenge complexity, and validate feasibility.
 
 `DESIGN.md` is recommended; `SPEC.md` is optional.
 
+### Branches
+
+Name new branches `<model>-YYYY-MM-DD`, using the model name and ISO date
+when the branch is created; for example, `gpt-6.1-sol-2026-11-11`.
+
 ## `RWL` - Recommended Workspace Layout
 
 The `WORK` variable is defined in [DDD 12](SYSTEM.md#ddd-12-the-work-environment-variable).
