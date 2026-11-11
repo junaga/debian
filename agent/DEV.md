@@ -56,6 +56,5 @@ Use a Todo section for planned and ongoing work, and a Done section for complete
 Agents add items only with explicit instructor approval.
 Use it to defer issues and avoid switching context away from the current task.
 
-`STATUS.md` is a workspace dashboard showing the current state of agents, tasks,
-and system resources, including progress and blockers. Keep it concise, structured,
-and timestamped.
+`STATUS.md` is a workspace dashboard showing agents and tasks, including their
+current state, progress, and blockers. Keep it concise, structured, and timestamped.
