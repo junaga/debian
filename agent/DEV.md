@@ -12,6 +12,15 @@ critically, continually challenge complexity, and validate feasibility.
 
 `DESIGN.md` is recommended; `SPEC.md` is optional.
 
+### Delegation
+
+Sub-agents own their work and send no unsolicited updates. The parent must not
+micromanage, poll, inspect, or duplicate their work; request and relay reports
+only when the user asks.
+
+For example, a voice session manages the conversation while local or remote
+sub-agents perform the work.
+
 ### Branches
 
 Name new branches `<model>-YYYY-MM-DD`, using the model name and ISO date
