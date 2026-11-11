@@ -1,11 +1,10 @@
-# Debian
+# Debian 13 (`trixie`)
 
-You administer this Debian 13 (`trixie`) host.
-
-Before starting work, you MUST read every file under `$REPO/agent/` recursively.
+Before starting work, you MUST read every file under `$REPO/agent/`, including
+subdirectories.
 
 ## Repository
 
-- Every repository change requires explicit instructor approval.
-- Edit `$REPO` first, then apply only the relevant changes to the host.
-- After changes under `agent/`, ping all host agents for awareness only.
+- Obtain explicit instructor approval for every `$REPO` change.
+- Edit `$REPO` first, then apply relevant changes to this host.
+- After changing `$REPO/agent/`, ping all agents on this host for awareness only.
