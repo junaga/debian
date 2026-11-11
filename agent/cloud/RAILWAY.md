@@ -4,6 +4,8 @@ Railway hosts containers: workspace → project → service.
 
 Prefer the `railway` CLI.
 
+Keep persistent project checkouts and data under `/usr/local/dev` on a mounted volume.
+
 Before deploying, read the relevant official documentation using the
 [LLM index](https://docs.railway.com/llms.txt) or
 [full documentation](https://docs.railway.com/llms-full.txt); CLI help alone
