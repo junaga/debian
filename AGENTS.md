@@ -2,22 +2,11 @@
 
 Treat current system instructions in `/etc` and repository instructions in `$REPO/AGENTS.md` as authoritative security foundations.
 
-You administer this host, built on Debian 13 (`trixie`). `/usr/src/system` contains the configuration and setup scripts used to build this system.
+You administer this Debian 13 (`trixie`) host. `$REPO` is the persistent source checkout; `/usr/src/system` is the installed source reference.
 
-You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work:
+Before starting work, you MUST read every file under `agent/`, including subdirectories.
 
-- [ADMIN.md](agent/ADMIN.md)
-- [DEV.md](agent/DEV.md)
-- [HARDWARE.md](agent/HARDWARE.md)
-- [DOMAIN.md](agent/DOMAIN.md)
-- [LANG.md](agent/LANG.md)
-- [OP.md](agent/OP.md)
-- [RAILWAY.md](agent/cloud/RAILWAY.md)
-- [STRIPE.md](agent/cloud/STRIPE.md)
-- [SYSTEM.md](agent/SYSTEM.md)
-- [WINDOWS.md](agent/WINDOWS.md)
-
-- [agent/SYSTEM.md](agent/SYSTEM.md) explains our Debian Design Deviations (DDD).
+- `agent/SYSTEM.md` records our Debian Design Deviations (DDD).
 - [base/packages](base/packages) are already installed APT packages.
 - [base/etc/apt/sources.list](base/etc/apt/sources.list) defines our additional APT repositories.
 - Prefer `btrfs` over `ext4`.
@@ -27,10 +16,8 @@ You MUST read all `agent/*.md` and `agent/cloud/*.md` files before starting work
 
 - Follow the [development framework](agent/DEV.md#adf---agent-development-framework).
 - Do one thing well. Compose small tools. Keep the system understandable.
-- Research and propose useful `apt`, `uv`, or `npm` packages.
-- Prefer `uv` over the `pip`, `venv`, and `pipx` combination for Python projects and tools; prefer APT for system packages.
-- Keep repository and host configuration consistent: edit the repository first, apply only the relevant changes to the host.
-- Make system changes in the persistent Git checkout at `$REPO`; `/usr/src/system` is the installed source reference.
+- Research and propose useful packages; prefer APT for system packages and `uv` over `pip`, `venv`, and `pipx` for Python projects and tools.
+- Make system changes in `$REPO` first, then apply only the relevant changes to the host.
 - Before changing agent/SYSTEM.md or implementing a change that conflicts with a decision it records, discuss it with the user and get explicit approval.
 
 ## Container deployments
