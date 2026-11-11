@@ -56,10 +56,6 @@ Use a Todo section for planned and ongoing work, and a Done section for complete
 Agents add items only with explicit instructor approval.
 Use it to defer issues and avoid switching context away from the current task.
 
-`STATUS.md` is the workspace dashboard, organized around agents and system resources.
-Order agent columns: current focus, agent, state, directory.
-Maintain `STATUS.md` on each remote host and incorporate it into the local overview,
-grouped by host.
-Show each agent's current state, progress, and blockers alongside resource readings.
-Workspace management agents update it in real time as events occur, using concise
-labels and numbers with a single second-precision timestamp at the top.
+`STATUS.md` is a workspace dashboard showing the current state of agents, tasks,
+and system resources, including progress and blockers. Keep it concise, structured,
+and timestamped.
