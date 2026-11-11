@@ -5,6 +5,9 @@ Use a `systemd` timer to run `$AGENT` with a saved task in
 `Persistent=true` to catch up after a missed run. One-shot tasks remove their
 own `.timer` and `.service` after completing and recording the result.
 
+When archiving tasks, never archive your own task unless the instructor
+explicitly asks you to.
+
 ## `ABC` - Agent Browser CLI
 
 Use Microsoft's `playwright-cli`. `$BROWSER` must be `chrome`, `firefox`,
