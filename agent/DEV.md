@@ -39,7 +39,7 @@ $WORK/
 ├── AGENTS.md
 ├── doc/
 ├── PLAN.md                  # Todo
-├── STATUS.md                # Observed agent and system state
+├── STATUS.md                # Monitor
 └── BACKLOG.md               # Issues
 ```
 
@@ -47,18 +47,16 @@ Use `dev/` for named projects and dated `job/` directories for ad hoc work.
 
 Other artifacts, such as workspace-unrelated files, go in `tmp/` pending migration.
 
-### PLAN.md
+`PLAN.md` describes goals and the work needed to achieve them.
+Agents add items only with explicit instructor approval.
+Organize items hierarchically because tasks can depend on other tasks.
+Use a Todo section for planned and ongoing work, and a Done section for completed work.
 
-`PLAN.md` records goals, tasks, dependencies, and intended next steps.
-Preserve their hierarchy and keep each item to a short sentence.
+`BACKLOG.md` collects issues to revisit, with enough context to continue later.
+Agents add items only with explicit instructor approval.
+Use it to defer issues and avoid switching context away from the current task.
 
-### BACKLOG.md
-
-`BACKLOG.md` records unresolved issues and deferred follow-ups.
-Number issues in order, retain relevant evidence, and remove resolved items.
-
-### STATUS.md
-
-`STATUS.md` provides an overview of agents, tasks, progress, blockers, and system
-resource usage. Use concise sections with keywords and numbers, with a single
-timestamp at the top.
+`STATUS.md` is the workspace dashboard for agents, task progress, blockers, and
+system resources. Workspace management agents update it in real time as events occur.
+Use concise sections with keywords and numbers, with a single
+second-precision timestamp at the top.
