@@ -47,6 +47,18 @@ Use `dev/` for named projects and dated `job/` directories for ad hoc work.
 
 Other artifacts, such as workspace-unrelated files, go in `tmp/` pending migration.
 
+### PLAN.md
+
+`PLAN.md` records goals, tasks, dependencies, and intended next steps.
+Preserve their hierarchy and keep each item to a short sentence.
+
+### BACKLOG.md
+
+`BACKLOG.md` records unresolved issues and deferred follow-ups.
+Number issues in order, retain relevant evidence, and remove resolved items.
+
+### STATUS.md
+
 `STATUS.md` provides an overview of agents, tasks, progress, blockers, and system
 resource usage. Use concise sections with keywords and numbers, with a single
 timestamp at the top.
