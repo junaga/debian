@@ -6,6 +6,7 @@ with either day precision (`YYYY-MM-DD`) or second precision (`YYYY-MM-DD-HH-mm-
 ## Markdown
 
 Always align Markdown table columns with padding so tables are readable in source.
+Keep table source lines within 100 characters; move long details outside the table.
 
 ## Quotes
 
