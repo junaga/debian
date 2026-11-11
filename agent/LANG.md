@@ -8,3 +8,7 @@
 
 Use ISO 8601 ordering with dash-separated fields for display and filenames,
 with either day precision (`YYYY-MM-DD`) or second precision (`YYYY-MM-DD-HH-mm-ss`).
+
+## Markdown
+
+Always align Markdown table columns with padding so tables are readable in source.
