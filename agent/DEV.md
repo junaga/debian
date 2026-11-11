@@ -39,9 +39,14 @@ $WORK/
 ├── AGENTS.md
 ├── doc/
 ├── PLAN.md                  # Todo
+├── STATUS.md                # Observed agent and system state
 └── BACKLOG.md               # Issues
 ```
 
 Use `dev/` for named projects and dated `job/` directories for ad hoc work.
 
 Other artifacts, such as workspace-unrelated files, go in `tmp/` pending migration.
+
+`STATUS.md` provides an overview of agents, tasks, progress, blockers, and system
+resource usage. Use concise sections with keywords and numbers, with a single
+timestamp at the top.
