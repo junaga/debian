@@ -48,3 +48,12 @@ smartmontools
 nvidia-driver-cuda
 apache2
 cmark-gfm
+libgl1
+libglx0
+libopengl0
+libegl1
+libglx-nvidia0
+libegl-nvidia0
+libnvidia-egl-wayland1
+libwayland-client0
+libxkbcommon0
