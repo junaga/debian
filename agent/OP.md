@@ -22,16 +22,38 @@ THREAD_UUID="01a1b106-e12f-7be0-844f-588482207b23"
 
 ## `ABC` - Agent Browser CLI
 
-Use `agent-browser` directly from Codex. In Chrome, enable
-`chrome://inspect/#remote-debugging` and approve the connection. The default
-profile needs this manual toggle; debugging flags require a separate profile.
-Chrome asks again for each new connection; keep the session open while working.
+Use Microsoft's `playwright-cli`. Read `playwright-cli --help` or
+`playwright-cli <command> --help`. Bundled documentation is under
+`$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
+
+Use a named session and an explicit persistent profile for headless work.
+`--browser` accepts `chrome`, `firefox`, `webkit`, or `msedge`; `$BROWSER` may
+instead contain an executable name, so do not pass it without checking.
 
 ```sh
-export AGENT_BROWSER_SESSION="$CODEX_THREAD_ID"
-agent-browser --auto-connect --pin-tab open http://localhost/
-agent-browser snapshot -i
+playwright-cli -s=research open https://www.wikipedia.org/ --browser=chrome --profile="$WORK/data/browser/research"
+playwright-cli -s=research snapshot
+playwright-cli -s=research fill e34 Berlin  # Replace e34 with the current search-field ref.
+playwright-cli -s=research press Enter
+playwright-cli -s=research snapshot
+playwright-cli -s=research eval 'location.href'
+playwright-cli -s=research run-code 'async page => await page.title()'
+playwright-cli -s=research close
 ```
+
+Snapshot references can change; inspect the current snapshot before acting.
+Use `--headed` on `open` for a visible browser. Never share an active profile
+directory between browser processes.
+
+For existing Chrome, enable `chrome://inspect/#remote-debugging`, run
+`playwright-cli attach --cdp=chrome --session=live`, and approve the connection.
+Use `playwright-cli -s=live tab-new` for a dedicated tab, then finish with
+`playwright-cli -s=live detach`. Keep the connection open while working.
+Ask before restarting personal Chrome if attachment fails.
+
+Generate and save passwords in the browser, never in CLI arguments or separate
+files. Use human takeover for native password prompts, CAPTCHAs and security keys.
+Persistent profiles contain sensitive session data; keep them private.
 
 ## `BBP` - Background Batch Process
 
