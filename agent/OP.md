@@ -22,38 +22,30 @@ THREAD_UUID="01a1b106-e12f-7be0-844f-588482207b23"
 
 ## `ABC` - Agent Browser CLI
 
-Use Microsoft's `playwright-cli`. Read `playwright-cli --help` or
-`playwright-cli <command> --help`. Bundled documentation is under
-`$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
+Use Microsoft's `playwright-cli`. Read `$BROWSER` to select the browser.
 
-Use a named session and an explicit persistent profile for headless work.
-`--browser` accepts `chrome`, `firefox`, `webkit`, or `msedge`; `$BROWSER` may
-instead contain an executable name, so do not pass it without checking.
+Use one session per agent. A sole agent can use the default; concurrent agents
+and forks need distinct named sessions (`-s=NAME`) on every command. Separate
+running browsers also need separate profile directories.
 
 ```sh
-playwright-cli -s=research open https://www.wikipedia.org/ --browser=chrome --profile="$WORK/data/browser/research"
-playwright-cli -s=research snapshot
-playwright-cli -s=research fill e34 Berlin  # Replace e34 with the current search-field ref.
-playwright-cli -s=research press Enter
-playwright-cli -s=research snapshot
-playwright-cli -s=research eval 'location.href'
-playwright-cli -s=research run-code 'async page => await page.title()'
-playwright-cli -s=research close
+playwright-cli open https://www.wikipedia.org/ --profile="$WORK/dev/hello-world-project"
+playwright-cli snapshot
+playwright-cli fill e53 Berlin  # Use the current snapshot's search-field ref.
+playwright-cli press Enter
+playwright-cli eval 'location.href'
+playwright-cli close
 ```
 
-Snapshot references can change; inspect the current snapshot before acting.
-Use `--headed` on `open` for a visible browser. Never share an active profile
-directory between browser processes.
+Run Playwright scripts with `playwright-cli run-code --filename=script.js`;
+the file contains an `async page => { ... }` function.
 
-For existing Chrome, enable `chrome://inspect/#remote-debugging`, run
-`playwright-cli attach --cdp=chrome --session=live`, and approve the connection.
-Use `playwright-cli -s=live tab-new` for a dedicated tab, then finish with
-`playwright-cli -s=live detach`. Keep the connection open while working.
-Ask before restarting personal Chrome if attachment fails.
+Use `--headed` for visible control. To control an existing browser, use
+`playwright-cli attach` with its supported connection option, work in a new tab,
+and finish with `playwright-cli detach`.
 
-Generate and save passwords in the browser, never in CLI arguments or separate
-files. Use human takeover for native password prompts, CAPTCHAs and security keys.
-Persistent profiles contain sensitive session data; keep them private.
+Read CLI help for commands and configuration. Bundled docs are at
+`$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
 
 ## `BBP` - Background Batch Process
 
