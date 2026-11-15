@@ -34,7 +34,7 @@ The `WORK` variable is defined in [DDD 12](SYSTEM.md#ddd-12-the-work-environment
 $WORK/
 ├── dev/PROJECT/             # Named projects
 ├── job/YYYY-MM-DD/TASK/     # Work tasks
-├── tmp/
+├── env/
 │
 ├── AGENTS.md
 ├── doc/
@@ -45,7 +45,7 @@ $WORK/
 
 Use `dev/` for named projects and dated `job/` directories for ad hoc work.
 
-Other artifacts, such as workspace-unrelated files, go in `tmp/` pending migration.
+Use `env/` for machine-local environments (VMs, containers, test labs) and off-host state.
 
 `PLAN.md` describes goals and the work needed to achieve them.
 Agents add items only with explicit instructor approval.

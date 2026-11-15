@@ -24,6 +24,6 @@ Personal Chrome auto-discovery/approval, native password-manager prompts, real
 CAPTCHAs and physical security keys are outside this automated validation.
 
 Reproduction scripts, command outputs and screenshot are retained under
-`/usr/local/job/2026-11-15/abc-validation/`. Run `python3 test.py` and
+`/usr/local/env/ABC-test/smoke-validation/`. Run `python3 test.py` and
 `python3 attach-test.py` there. Tests use isolated profiles and local fixtures;
 the separate Wikipedia check requires Internet access.
