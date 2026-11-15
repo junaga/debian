@@ -48,7 +48,7 @@ function desktop {
     local target
     target="$(id -u "${1-1000}")" || return
     if [ "$target" = "$UID" ]; then
-        exec "${DESKTOP-/usr/libexec/labwc-session}"
+        exec systemd-cat "${DESKTOP-/usr/libexec/labwc-session}"
     fi
-    exec run0 --pipe -u "$target" "${DESKTOP-/usr/libexec/labwc-session}"
+    exec run0 --pipe -u "$target" systemd-cat "${DESKTOP-/usr/libexec/labwc-session}"
 }
