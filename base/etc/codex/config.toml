@@ -1,3 +1,5 @@
+model_reasoning_effort = "medium"
+
 # Updates are centrally managed with a supply-chain release-age delay.
 check_for_update_on_startup = false
 
