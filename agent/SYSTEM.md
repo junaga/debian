@@ -32,7 +32,7 @@ enforcement for "unauthenticated" repositories and packages.
 If a repository serves signed `InRelease` without a `.gpg` key, APT warns but
 continues.
 
-## DDD 11: Install updates every two minutes
+## DDD 11: Install updates every 30 minutes
 
 AI shortens the interval between disclosure and exploitation: Google observed
 it collapse from weeks to days in late 2025, and OpenAI has demonstrated that
@@ -44,11 +44,9 @@ exploitation. [Linux Foundation Akrites](https://www.linuxfoundation.org/press/l
 
 The threat is post-fix exposure: the time from a trusted publisher releasing a
 fix to this host installing it. This host minimizes that interval by converging
-every two minutes across every configured source and using `needrestart` to activate
+every 30 minutes across every configured source and using `needrestart` to activate
 eligible system services; user sessions and kernel reboots remain explicit
-because they are disruptive. That is 21,600 requests per month for one host;
-npm calls five million monthly requests clearly unreasonable.
-[npm Open Source Terms](https://docs.npmjs.com/policies/open-source-terms/)
+because they are disruptive. That is about 1,440 update runs per 30-day month.
 
 The host update procedure is defined in [base/upgrade.sh](../base/upgrade.sh).
 

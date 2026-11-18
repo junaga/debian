@@ -48,5 +48,5 @@ install -m 755 speedtest.mjs /usr/bin/cloudflare-speedtest
 # Resume an armed agent thread at boot.
 echo '@reboot root exec /bin/sh "$HOME/respawn.sh"' >> /etc/crontab
 
-# Update every two minutes on hosts; rebuild containers to update packages.
-test "${1-}" = "container" || echo '*/2 * * * * root sh "$REPO/base/upgrade.sh"' >> /etc/crontab
+# Update every 30 minutes on hosts; rebuild containers to update packages.
+test "${1-}" = "container" || echo '*/30 * * * * root . /etc/environment; systemd-cat -t system-upgrade sh "$REPO/base/upgrade.sh"' >> /etc/crontab
