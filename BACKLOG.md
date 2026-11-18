@@ -413,3 +413,10 @@ Keep `/root` as a compatibility symlink and preserve existing home data and
 account settings. The old DDD proposed `/usr/root`; the current container uses
 `/usr/local/data`. Resolve the destination before implementation. Keep this
 separate from DDD 12 and the `WORK` environment variable.
+
+## 25. Keep installer-generated kernel command lines host-specific
+
+Debian generates `/etc/kernel/cmdline` during systemd-boot setup using the
+target filesystem's UUID and, on Btrfs, its root subvolume. The full file is
+specific to each installation. Decide how the repository should supply shared
+boot options while preserving the generated file's host-specific values.
