@@ -39,6 +39,7 @@ lsb-release
 distro-info-data
 efibootmgr
 systemd-boot
+kdump-tools
 ntfs-3g
 dosfstools
 cryptsetup-bin

@@ -420,3 +420,10 @@ Debian generates `/etc/kernel/cmdline` during systemd-boot setup using the
 target filesystem's UUID and, on Btrfs, its root subvolume. The full file is
 specific to each installation. Decide how the repository should supply shared
 boot options while preserving the generated file's host-specific values.
+
+## 26. Revisit the kdump memory reservation
+
+Keep `crashkernel=256M` for now. After a normal reboot, use `kdump-config show`
+to estimate a smaller reservation. The current kernel and initramfs give a
+preliminary sizing floor of 155 MiB. Revisit CMA-based kdump if a future Debian
+kernel supports it and the potential for incomplete dumps is acceptable.

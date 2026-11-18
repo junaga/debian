@@ -25,6 +25,7 @@ rm -f /etc/npmrc /etc/pip.conf /etc/profile.d/uv.sh
 rm -f /var/lib/apt/lists/*_InRelease
 apt update
 apt install --yes $(cat packages) tini
+install -d -o root -g root -m 0700 /var/crash
 
 # Install deb-get
 curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bash -s install deb-get
