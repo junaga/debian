@@ -5,6 +5,12 @@ set -eu
 test "$(whoami)" != "root" && exec sudo -E sh "$0" "$@"
 cd "$(dirname "$0")"
 
+if [ -S /run/systemd/journal/stdout ] && command -v systemd-cat >/dev/null; then
+    [ "${BASE_INSTALL_JOURNAL-}" = 1 ] || exec env BASE_INSTALL_JOURNAL=1 systemd-cat -t base-install sh ./install.sh "$@"
+    echo "Starting base install (revision $(git rev-parse --short HEAD 2>/dev/null || echo unknown))"
+    trap 'echo "Base install finished (exit $?)"' EXIT
+fi
+
 export DEBIAN_FRONTEND="noninteractive"
 export NEEDRESTART_SUSPEND="1"
 
