@@ -31,6 +31,7 @@ fwupd
 xorriso
 squashfs-tools
 systemd-container
+systemd-coredump
 1password-cli
 google-cloud-cli
 azure-cli
