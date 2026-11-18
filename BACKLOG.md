@@ -427,3 +427,10 @@ Keep `crashkernel=256M` for now. After a normal reboot, use `kdump-config show`
 to estimate a smaller reservation. The current kernel and initramfs give a
 preliminary sizing floor of 155 MiB. Revisit CMA-based kdump if a future Debian
 kernel supports it and the potential for incomplete dumps is acceptable.
+
+## 27. Diagnose desktop freezes locally
+
+Investigate how to capture a labwc backtrace during a freeze without SSH.
+Start with a local virtual console. If switching consoles is unreliable,
+evaluate a timer outside labwc that records one backtrace after repeated
+Wayland timeouts and leaves the desktop running.
