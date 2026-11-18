@@ -47,6 +47,7 @@ cryptsetup-bin
 partclone
 fdisk
 smartmontools
+sysstat
 nvidia-driver-cuda
 apache2
 cmark-gfm

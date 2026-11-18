@@ -1,0 +1,9 @@
+[Unit]
+Description=Collect system activity every minute
+
+[Timer]
+OnCalendar=minutely
+AccuracySec=1s
+
+[Install]
+WantedBy=sysstat.service
