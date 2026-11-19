@@ -16,6 +16,7 @@ pup
 ripgrep
 rsync
 kitty-terminfo
+tmux
 seatd
 openssl
 fd-find

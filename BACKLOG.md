@@ -447,3 +447,23 @@ system-wide diagnostics.
 The instructor acknowledged that inspecting `env` and `~/.env` at Codex startup
 can expose credentials in the session and accepted that tradeoff. The review
 recommendation is closed.
+
+## 29. Investigate SIGTERM in Codex background terminals
+
+On 2026-11-19, the Twitter and Discord exporters repeatedly stopped mid-run
+with exit code 143 in Codex's built-in background terminals. Signal traces
+captured `SIGTERM` with `si_code=SI_USER` and sender PID `13812`, the still-running
+local Codex app-server, for Twitter at 17:33:09 and Discord at 17:47:38 CET.
+The installed CLI reported version `0.170.0`.
+
+Determine whether these were harness cleanup, Linux parent-thread exit
+behavior, or another mechanism. Reproduce with a disposable long-running
+command and compare the signal trace with the timing of Codex worker exits
+and terminal lifecycle events.
+
+Use detached `tmux` sessions for long-running background jobs that must survive
+Codex terminal interruptions. The temporary user services used for these
+exports were a workaround for the active runs.
+
+- [Codex #45419 — Passive terminal polling can return exit 143](https://github.com/openai/codex/issues/45419)
+- [Codex #46702 — Linux runtime thread retirement can terminate a live command](https://github.com/openai/codex/issues/46702)
