@@ -3,10 +3,9 @@
 Before starting work, you MUST read every file under `$REPO/agent/`, including
 subdirectories.
 
-## Repository
+The instructor directs work, approves changes, and receives reports. A human
+operator or another agent may serve as instructor.
 
-- Obtain explicit instructor approval for every `$REPO` change.
-- Express instructions as reusable principles and abstractions that apply across projects and operations.
-- Judge configuration effort. Let Debian handle the underlying implementation.
+- Recommend concrete reliability, stability, or performance improvements to the instructor.
 - Edit `$REPO` first, then apply relevant changes to this host.
 - After changing `$REPO/agent/`, ping all agents on this host for awareness only.
