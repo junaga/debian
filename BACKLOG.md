@@ -434,3 +434,16 @@ Investigate how to capture a labwc backtrace during a freeze without SSH.
 Start with a local virtual console. If switching consoles is unreliable,
 evaluate a timer outside labwc that records one backtrace after repeated
 Wayland timeouts and leaves the desktop running.
+
+## 28. Review user journal privacy
+
+Journald stores persistent per-user logs in `/var/log/journal`, outside home
+directories. The journal files are not encrypted by default. Ordinary users
+can read their own journal. Root and accounts with broad journal access can
+read other users' journals. Review whether future setups need stronger
+isolation for user logs and how a background admin agent should receive
+system-wide diagnostics.
+
+The instructor acknowledged that inspecting `env` and `~/.env` at Codex startup
+can expose credentials in the session and accepted that tradeoff. The review
+recommendation is closed.
