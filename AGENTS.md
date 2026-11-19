@@ -1,7 +1,6 @@
 # Debian 13 (`trixie`)
 
-Before starting work, you MUST read every file under `$REPO/agent/`, including
-subdirectories.
+Before starting work, you MUST read every prompt in the `$REPO/agent/**` library.
 
 The instructor directs work, approves changes, and receives reports. A human
 operator or another agent may serve as instructor.
