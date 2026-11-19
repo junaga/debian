@@ -16,6 +16,22 @@ approval for every `$REPO` change.
 - Check what the package manager pulls in. Document only packages that need to
   be selected explicitly.
 
+## `SIR` - System Incident Resolution
+
+Read the logged-in account's journal with `journalctl --user`. Use
+`sudo -n journalctl --system` for system logs. Use component logs, `sar`, and
+application core dumps owned by that account as needed. Report new kernel dumps
+and get instructor approval before using `sudo` to open them. Keep
+account-specific diagnostics and actions within the logged-in account.
+
+Establish what failed, when, and under which user. Compare repository settings
+with what is installed and running. Capture available evidence before
+restarting a frozen component.
+
+Read the relevant documentation, investigate, and test as needed to find a fix
+before reporting the incident. Implement the fix in `$REPO` first, then apply
+it to the host. Report the outcome or any blocker to the instructor.
+
 ## Packages and storage
 
 Research and propose useful packages; prefer APT for system packages and `uv`

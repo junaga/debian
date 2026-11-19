@@ -20,6 +20,7 @@ apt install --yes ca-certificates
 apt modernize-sources --assume-yes
 
 # Install configuration
+install -m 755 desktop.sh /usr/bin/desktop
 cp -r etc/. /etc/
 set -a; . /etc/environment; set +a
 rm -f /etc/skel/.bashrc /etc/skel/.bash_profile /etc/skel/.bash_login /etc/skel/.profile /etc/skel/.codex/AGENTS.md

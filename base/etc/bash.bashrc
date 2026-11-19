@@ -43,12 +43,3 @@ alias chat="codex --yolo agents"
 
 function man { echo "https://manpages.debian.org/$1.en"; }
 function rcode { code --remote "ssh-remote+$1" "$2"; }
-function desktop {
-    run0 --pipe sh -c 'echo 1 > /sys/module/zswap/parameters/enabled' || return
-    local target
-    target="$(id -u "${1-1000}")" || return
-    if [ "$target" = "$UID" ]; then
-        exec systemd-cat "${DESKTOP-/usr/libexec/labwc-session}"
-    fi
-    exec run0 --pipe -u "$target" systemd-cat "${DESKTOP-/usr/libexec/labwc-session}"
-}
