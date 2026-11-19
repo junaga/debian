@@ -80,16 +80,3 @@ partition through Debian's kernel hooks. System roots may remain Btrfs subvolume
 boot selection uses EFI variables instead of scanning root filesystems.
 
 Enable zswap when the [desktop function](../base/etc/bash.bashrc) starts a session.
-
-## DDD 14: Autonomous Background Agent
-
-Use background agents to handle administrative work automatically. The agent
-runs as the Unix account executing its launcher, including `root`. That account's
-permissions govern access to user files and diagnostics, so users can keep
-private work in a separate account.
-The agent has the same access as the user, including the user's home, the agent
-home, and the account environment. Reading the system journal or kernel dumps
-requires `sudo`. Reading kernel dumps also requires instructor approval.
-
-For example, the desktop launcher starts SIR in the background using the harness
-selected by `$AGENT`. [Desktop launcher](../base/desktop.sh)

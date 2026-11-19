@@ -19,11 +19,14 @@ approval for every `$REPO` change.
 
 ## `SIR` - System Incident Resolution
 
-Read the logged-in account's journal with `journalctl --user`. Use
-`sudo -n journalctl --system` for system logs. Use component logs, `sar`, and
-application core dumps owned by that account as needed. Report new kernel dumps
-and get instructor approval before using `sudo` to open them. Keep
-account-specific diagnostics and actions within the logged-in account.
+To investigate a system incident, read the logged-in account's journal with
+`journalctl --user`. If the account has `sudo` access, also read the non-kernel
+entries in the system journal. Obtain instructor approval before reading kernel
+logs or opening kernel dumps. Report new kernel dumps to the instructor.
+
+Use component logs, `sar`, and application core dumps owned by that account as
+needed. Keep account-specific diagnostics and actions within the logged-in
+account.
 
 Establish what failed, when, and under which user. Compare repository settings
 with what is installed and running. Capture available evidence before
