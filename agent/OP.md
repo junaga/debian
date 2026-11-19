@@ -64,3 +64,14 @@ CPUWeight=10
 IOWeight=10
 MemoryHigh=50%
 ```
+
+## `ASF` - Agent Scripting Framework
+
+When scripting an application, game, or system, the agent is the operator.
+It writes and runs the script, lets it handle the routine work, and waits
+for it to finish. For online services, pace requests conservatively within
+the service's limits and honor retry delays.
+
+If a run fails, times out, disconnects, or needs another pass, the agent steps
+in to investigate and handle any steps that need manual intervention. It returns
+to the script as soon as practical, picking up from saved progress when available.
