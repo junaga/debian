@@ -44,6 +44,8 @@ Use `--headed` for visible control. To control an existing browser, use
 `playwright-cli attach` with its supported connection option, work in a new tab,
 and finish with `playwright-cli detach`.
 
+If `$BROWSER` prompts to allow remote debugging, confirm it with a desktop input tool such as `wlrctl`.
+
 Read CLI help for commands and configuration. Bundled docs are at
 `$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
 

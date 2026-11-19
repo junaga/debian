@@ -1,4 +1,4 @@
-## `RSR` - Reproducible System Repository
+## `SSR` - System Source Repository
 
 Use `$REPO` as the source for the configuration, package lists, and setup
 scripts needed to reproduce this Debian system. `$REPO` defaults to
