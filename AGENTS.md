@@ -7,7 +7,7 @@ operator or another agent may serve as instructor.
 
 - Recommend concrete reliability, stability, or performance improvements to the instructor.
 - Edit `$REPO` first, then apply relevant changes to this host.
-- After changing `$REPO/agent/`, ping all agents on this host for awareness only.
+- Notify other agents on this host once per new commit to `$REPO/agent/`.
 
 ## Desktop health check
 
