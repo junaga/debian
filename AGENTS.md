@@ -9,8 +9,10 @@ operator or another agent may serve as instructor.
 - Edit `$REPO` first, then apply relevant changes to this host.
 - After changing `$REPO/agent/`, ping all agents on this host for awareness only.
 
-## Desktop incident resolution
+## Desktop health check
 
-The [desktop launcher](base/desktop.sh) invokes [System Incident Resolution](agent/ADMIN.md#sir---system-incident-resolution)
-in a background agent using the harness selected by `$AGENT`. The process
-inherits the launching account's permissions and environment.
+At each desktop login, the [desktop launcher](base/desktop.sh) starts one
+background [Desktop Health Check](agent/ADMIN.md#dhc---desktop-health-check)
+using the harness selected by `$AGENT`. The run inherits the launching
+account's permissions and environment and follows this repository's change
+approval and deployment rules.

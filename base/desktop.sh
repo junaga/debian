@@ -6,5 +6,5 @@
 set -a
 . "$HOME/.env"
 set +a
-systemd-cat -t sir "$AGENT" exec -C "${REPO:-$WORK/src}" "Run SIR." </dev/null &
+systemd-cat -t desktop-health "$AGENT" exec -C "${REPO:-$WORK/src}" "Run DHC." </dev/null &
 exec systemd-cat -t labwc-session "${DESKTOP:-/usr/libexec/labwc-session}"

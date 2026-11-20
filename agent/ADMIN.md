@@ -17,6 +17,27 @@ approval for every `$REPO` change.
 - Check what the package manager pulls in. Document only packages that need to
   be selected explicitly.
 
+## `DHC` - Desktop Health Check
+
+At desktop login, run one read-only check for failed system or user services,
+recent desktop incidents, and package updates that need operator action.
+Use `systemctl --user --failed` and `systemctl --failed`. Follow SIR's
+journal access rules. If the evidence indicates an incident, continue with
+SIR and obtain instructor approval before making changes.
+
+Check APT candidates with `LC_ALL=C apt list --upgradable`. Compare package
+names against the `Package:` patterns in
+[`automatic-upgrade.pref`](../base/etc/apt/automatic-upgrade.pref) to identify
+updates deferred by the scheduled updater. Report the installed and candidate
+versions for those packages. Skip same-version reinstallations. Use the
+existing APT indexes and check for `APT indexes refreshed` in the latest
+`system-upgrade` run before calling the results current. If the refresh
+failed or its freshness cannot be established, report that limitation.
+
+Surface actionable findings to the logged-in operator with `notify-send`
+and write the details to the journal. When there is no action to take, log
+the result without sending a desktop notification.
+
 ## `SIR` - System Incident Resolution
 
 To investigate a system incident, read the logged-in account's journal with
@@ -32,9 +53,28 @@ Establish what failed, when, and under which user. Compare repository settings
 with what is installed and running. Capture available evidence before
 restarting a frozen component.
 
-Read the relevant documentation, investigate, and test as needed to find a fix
-before reporting the incident. Implement the fix in `$REPO` first, then apply
-it to the host. Report the outcome or any blocker to the instructor.
+Consult the relevant documentation, identify the cause, fix it, and verify the
+result. Report the outcome or any blocker to the instructor.
+
+## `RAI` - Respawned Agent Instructions
+
+If an active agent must continue after a reboot or reinstall, prepare
+`$HOME/respawn.sh` to resume only the interrupted thread, using the same
+`AGENT` and the same Unix `USER` account, once at the next boot.
+
+The script must delete itself as its first action. The default `/etc/crontab`
+hook runs as root, so switch to the original account before invoking the agent
+if it ran under a different account. Preserve the script and the thread state
+across a reinstall.
+
+Example for a one-time `AGENT="codex"` resume under the thread owner's account.
+
+```sh
+rm -- "$HOME/respawn.sh"
+THREAD_UUID="<active-thread-id>"
+/usr/bin/codex app-server daemon start
+/usr/bin/codex queue --thread "$THREAD_UUID" --message "Continue..." --resume
+```
 
 ## Packages and storage
 

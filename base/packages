@@ -61,3 +61,4 @@ libegl-nvidia0
 libnvidia-egl-wayland1
 libwayland-client0
 libxkbcommon0
+libnotify-bin
