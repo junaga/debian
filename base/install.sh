@@ -41,6 +41,8 @@ curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bas
 deb-get install tailcat glab
 curl -fL https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/bin" sh
 UV_TOOL_DIR="/usr/lib/uv/tools" UV_TOOL_BIN_DIR="/usr/bin" uv tool install huggingface_hub
+UV_TOOL_DIR="/usr/lib/uv/tools" UV_TOOL_BIN_DIR="/usr/bin" uv tool install --link-mode copy cua
+chmod -R a+rX /usr/lib/uv/tools/cua
 
 npm install --global --no-fund @openai/codex
 npm uninstall --global agent-browser

@@ -3,7 +3,7 @@
 When scripting an application, game, or system, the agent is the operator.
 Use a reliable native or automation CLI, or report the failure to the instructor.
 Use Bash for shell scripting, `playwright-cli` for browser automation, and
-`wlrctl` for Wayland desktop input.
+Cua for graphical applications that need their own keyboard and pointer focus.
 
 The agent writes and runs the script for routine work, then waits for it to
 finish. Use detached `tmux` sessions with logs and checkpoints for long jobs.
@@ -38,8 +38,8 @@ Use `--headed` for visible control. To control an existing browser, use
 reuse that tab and its scroll position. Detach with `playwright-cli detach`.
 If scrolling stalls, try tab-local focus emulation and Playwright wheel input.
 
-If `$BROWSER` prompts to allow remote debugging, confirm it with a desktop input
-tool such as `wlrctl`. Coordinate approvals when agents share a browser.
+If `$BROWSER` prompts to allow remote debugging, confirm the prompt in the
+browser. Coordinate approvals when agents share a browser.
 
 Reuse signed-in browser sessions. For a new sign-in, use the account email
 and prefer a passkey over a password when available. Get instructor approval
@@ -50,6 +50,19 @@ separate confirmation after browser-control approval.
 
 Read CLI help for commands and configuration. Bundled docs are at
 `$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
+
+## `CUA` - Computer Use Agent
+
+Run native GUI apps in a Cua Space to keep the operator’s keyboard and pointer free.
+Use the ID of a graphical Space from the list to open its viewer.
+
+```sh
+cua sb ls
+cua sb view "$SPACE_ID"
+```
+
+Use `cua --help` or `cua sb --help` for built-in command help.
+[Cua CLI reference](https://cua.ai/docs/cua-cli/reference/cli)
 
 ## `BBP` - Background Batch Process
 
