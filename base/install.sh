@@ -41,8 +41,11 @@ curl -L https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bas
 deb-get install tailcat glab
 curl -fL https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/bin" sh
 UV_TOOL_DIR="/usr/lib/uv/tools" UV_TOOL_BIN_DIR="/usr/bin" uv tool install huggingface_hub
-UV_TOOL_DIR="/usr/lib/uv/tools" UV_TOOL_BIN_DIR="/usr/bin" uv tool install --link-mode copy cua
-chmod -R a+rX /usr/lib/uv/tools/cua
+# The standalone CLI release includes the Firecracker guest init.
+cua_installer=$(mktemp)
+curl -fsSL https://cua.ai/install.sh -o "$cua_installer"
+sh "$cua_installer" --cli-only --prefix /usr --no-onboarding --yes
+rm -f "$cua_installer"
 
 npm install --global --no-fund @openai/codex
 npm uninstall --global agent-browser
@@ -60,6 +63,7 @@ grep -Fqx "$resume_job" /etc/crontab || printf '%s\n' "$resume_job" >> /etc/cron
 
 # Update every 30 minutes on hosts; rebuild containers to update packages.
 if [ "${1-}" != "container" ]; then
+    apt install --yes qemu-system-x86 qemu-utils ovmf passt iptables
     install -o root -g root -m 0644 upgrade.sh /usr/libexec/system-upgrade
     sed -i '/^[^#]*root .*sh "\$REPO\/base\/upgrade\.sh"$/d' /etc/crontab
     install -o root -g root -m 0644 system-upgrade.cron /etc/cron.d/system-upgrade

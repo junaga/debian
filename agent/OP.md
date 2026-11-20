@@ -53,6 +53,12 @@ Read CLI help for commands and configuration. Bundled docs are at
 
 ## `CUA` - Computer Use Agent
 
+Use containers by default. Use a Firecracker microVM when a job needs its own
+Linux kernel. Use QEMU for full Windows VMs.
+Run `cua runtime setup firecracker` once as the guest owner for microVMs.
+On this host, use `CUA_MICROVM_BASE=squashfs` and include `/usr/sbin` in PATH.
+Keep reusable guest images and installation media under `$WORK/env/`.
+
 Run native GUI apps in a Cua Space to keep the operator’s keyboard and pointer free.
 Use the ID of a graphical Space from the list to open its viewer.
 
