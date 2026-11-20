@@ -15,7 +15,6 @@ tui.status_line = [
     "model-with-reasoning",
     "context-remaining",
     "five-hour-limit",
-    "weekly-limit",
 ]
 # Disable keyboard shortcuts for changing reasoning effort.
 tui.keymap.chat.decrease_reasoning_effort = []
