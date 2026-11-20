@@ -1,24 +1,17 @@
-## `AAI` - Automatic Agent Instruction
+## `ASF` - Agent Scripting Framework
 
-Use `cron` to schedule your own tasks or another AI `$AGENT`.
+When scripting an application, game, or system, the agent is the operator.
+Use a reliable native or automation CLI, or report the failure to the instructor.
+Use Bash for shell scripting, `playwright-cli` for browser automation, and
+`wlrctl` for Wayland desktop input.
 
-### Respawn
+The agent writes and runs the script for routine work, then waits for it to
+finish. Use detached `tmux` sessions with logs and checkpoints for long jobs.
+For online services, stay within service limits and honor retry delays.
 
-The default `/etc/crontab` entry runs `$HOME/respawn.sh` at boot.
-Use it to automatically invoke yourself across system reinstallation, reboot,
-or container redeployment by hardcoding the agent command and chat ID in the script.
-If `$HOME/respawn.sh` already exists, you MUST NOT overwrite it.
-
-#### Codex example
-
-- `$HOME/respawn.sh`
-
-```sh
-rm -- "$HOME/respawn.sh"
-THREAD_UUID="01a1b106-e12f-7be0-844f-588482207b23"
-/usr/bin/codex app-server daemon start
-/usr/bin/codex queue --thread "$THREAD_UUID" --message "Continue..." --resume
-```
+If a run fails or stalls, check the log, handle any manual steps, and resume
+from saved progress. Continue until the task is complete or a blocker needs
+the instructor.
 
 ## `ABC` - Agent Browser CLI
 
@@ -41,10 +34,19 @@ Run Playwright scripts with `playwright-cli run-code --filename=script.js`;
 the file contains an `async page => { ... }` function.
 
 Use `--headed` for visible control. To control an existing browser, use
-`playwright-cli attach` with its supported connection option, work in a new tab,
-and finish with `playwright-cli detach`.
+`playwright-cli attach` and work in a dedicated background tab. On restart,
+reuse that tab and its scroll position. Detach with `playwright-cli detach`.
+If scrolling stalls, try tab-local focus emulation and Playwright wheel input.
 
-If `$BROWSER` prompts to allow remote debugging, confirm it with a desktop input tool such as `wlrctl`.
+If `$BROWSER` prompts to allow remote debugging, confirm it with a desktop input
+tool such as `wlrctl`. Coordinate approvals when agents share a browser.
+
+Reuse signed-in browser sessions. For a new sign-in, use the account email
+and prefer a passkey over a password when available. Get instructor approval
+before signing up for a new account.
+
+[Roon's CAPTCHA example](https://x.com/tszzl/status/2122185311585447958) shows a
+separate confirmation after browser-control approval.
 
 Read CLI help for commands and configuration. Bundled docs are at
 `$(npm root -g)/@playwright/cli/skills/playwright-cli/`.
@@ -64,14 +66,3 @@ CPUWeight=10
 IOWeight=10
 MemoryHigh=50%
 ```
-
-## `ASF` - Agent Scripting Framework
-
-When scripting an application, game, or system, the agent is the operator.
-It writes and runs the script, lets it handle the routine work, and waits
-for it to finish. For online services, pace requests conservatively within
-the service's limits and honor retry delays.
-
-If a run fails, times out, disconnects, or needs another pass, the agent steps
-in to investigate and handle any steps that need manual intervention. It returns
-to the script as soon as practical, picking up from saved progress when available.
