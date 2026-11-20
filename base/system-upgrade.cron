@@ -1,0 +1,1 @@
+*/30 * * * * root /usr/bin/systemd-cat -t system-upgrade /bin/sh /usr/libexec/system-upgrade

@@ -1,0 +1,4 @@
+Explanation: Install kernel, bootloader, and initramfs updates during a deliberate upgrade.
+Package: /^linux-(image|headers|binary|modules|base|kbuild)(-|$)/ /^systemd-boot($|-)/ /^initramfs-tools($|-)/ /^grub($|-)/ /^shim($|-)/
+Pin: version *
+Pin-Priority: -1

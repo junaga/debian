@@ -23,14 +23,12 @@ Historical operating system abstractions that sparked paradigm shifts in the com
 | `package` | 1996    | Debian 1.1 Buzz    | Ubuntu         |
 | `service` | 2015    | Debian 8.0 Jessie  | Arch, NixOS    |
 
-## DDD 9: Replace `apt-secure` with HTTPS
+## DDD 9: Authenticate APT sources
 
-All package sources use HTTPS. HTTPS uses system CAs instead of APT's GPG
-(`.gpg`) keys. [`base/etc/apt/apt.conf`](../base/etc/apt/apt.conf) disables `apt-secure`
-enforcement for "unauthenticated" repositories and packages.
-
-If a repository serves signed `InRelease` without a `.gpg` key, APT warns but
-continues.
+Use HTTPS and keep Debian's default APT signature checks. Scope each
+third-party repository to its own signing key with `Signed-By`. Use the
+vendor's keyring for package-managed sources. Keep keys for sources managed
+by this repository in [base/etc/apt/keyrings](../base/etc/apt/keyrings).
 
 ## DDD 11: Install updates every 30 minutes
 
@@ -43,12 +41,14 @@ Akrites coordinates open-source remediation before those discoveries become
 exploitation. [Linux Foundation Akrites](https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats)
 
 The threat is post-fix exposure: the time from a trusted publisher releasing a
-fix to this host installing it. This host minimizes that interval by converging
-every 30 minutes across every configured source and using `needrestart` to activate
-eligible system services; user sessions and kernel reboots remain explicit
-because they are disruptive. That is about 1,440 update runs per 30-day month.
+fix to this host installing it. This host minimizes that interval by upgrading
+eligible packages every 30 minutes and using `needrestart` to activate eligible
+system services. The scheduled APT upgrade leaves package removals and updates
+to the kernel, bootloader, and initramfs for a manual upgrade. User-session
+restarts and reboots also remain manual.
 
-The host update procedure is defined in [base/upgrade.sh](../base/upgrade.sh).
+The installer deploys [base/upgrade.sh](../base/upgrade.sh) to a root-owned
+`/usr/libexec/system-upgrade` and schedules that copy through cron.
 
 Containers install packages when the image is built and receive updates through
 image rebuilds. Omit the host automatic-update cron job from container builds.

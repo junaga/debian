@@ -53,7 +53,12 @@ npm install --global --prefix /usr --no-fund @cloudflare/speedtest@1.14.2 playwr
 install -m 755 speedtest.mjs /usr/bin/cloudflare-speedtest
 
 # Resume an armed agent thread at boot.
-echo '@reboot root exec /bin/sh "$HOME/respawn.sh"' >> /etc/crontab
+resume_job='@reboot root exec /bin/sh "$HOME/respawn.sh"'
+grep -Fqx "$resume_job" /etc/crontab || printf '%s\n' "$resume_job" >> /etc/crontab
 
 # Update every 30 minutes on hosts; rebuild containers to update packages.
-test "${1-}" = "container" || echo '*/30 * * * * root . /etc/environment; systemd-cat -t system-upgrade sh "$REPO/base/upgrade.sh"' >> /etc/crontab
+if [ "${1-}" != "container" ]; then
+    install -o root -g root -m 0644 upgrade.sh /usr/libexec/system-upgrade
+    sed -i '/^[^#]*root .*sh "\$REPO\/base\/upgrade\.sh"$/d' /etc/crontab
+    install -o root -g root -m 0644 system-upgrade.cron /etc/cron.d/system-upgrade
+fi
