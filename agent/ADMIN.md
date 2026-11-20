@@ -56,24 +56,24 @@ restarting a frozen component.
 Consult the relevant documentation, identify the cause, fix it, and verify the
 result. Report the outcome or any blocker to the instructor.
 
-## `RAI` - Respawned Agent Instructions
+## `RAI` - Respawn Agent Invocation
 
-If an active agent must continue after a reboot or reinstall, prepare
-`$HOME/respawn.sh` to resume only the interrupted thread, using the same
-`AGENT` and the same Unix `USER` account, once at the next boot.
+If you initiate a host reboot or an OS reinstall, you may resume your own thread
+at the next boot. The boot hook runs `respawn.sh` from root’s home directory.
+For a reinstall, preserve both the script and your thread state.
 
-The script must delete itself as its first action. The default `/etc/crontab`
-hook runs as root, so switch to the original account before invoking the agent
-if it ran under a different account. Preserve the script and the thread state
-across a reinstall.
-
-Example for a one-time `AGENT="codex"` resume under the thread owner's account.
+**Codex example**
 
 ```sh
-rm -- "$HOME/respawn.sh"
-THREAD_UUID="<active-thread-id>"
-/usr/bin/codex app-server daemon start
-/usr/bin/codex queue --thread "$THREAD_UUID" --message "Continue..." --resume
+rm -- "$0" || exit 1
+USER='<your-unix-user>'
+THREAD='<your-current-thread-id>'
+
+exec runuser --login "$USER" --shell /bin/sh <<SH
+set -e
+codex app-server daemon start
+codex queue --thread "$THREAD" --message "Continue..." --resume
+SH
 ```
 
 ## Packages and storage
