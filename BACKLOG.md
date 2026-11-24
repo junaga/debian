@@ -467,3 +467,11 @@ exports were a workaround for the active runs.
 
 - [Codex #45419 — Passive terminal polling can return exit 143](https://github.com/openai/codex/issues/45419)
 - [Codex #46702 — Linux runtime thread retirement can terminate a live command](https://github.com/openai/codex/issues/46702)
+
+## 30. Evaluate a context rot canary
+
+Research whether a context rot canary can flag when an agent starts losing
+track of earlier task constraints in a long session. Review existing examples,
+then test whether a missed canary predicts missed constraints and whether the
+agent can still pass the check after losing track of a constraint. Use the
+results to decide whether to recommend the practice and when to use it.
