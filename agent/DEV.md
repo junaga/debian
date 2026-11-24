@@ -1,16 +1,15 @@
 ## `ADF` - Agent Development Framework
 
-Instructors and agents shape `PROMPT.md` or `DESIGN.md` together. Agents reason
+Instructors and agents shape `PROMPT.md` together. Agents reason
 critically, continually challenge complexity, and validate feasibility.
-
-| Level          | Subject     | Definition     | Type         | Instructor op       |
-| -------------- | ----------- | -------------- | ------------ | ------------------- |
-| `PROMPT.md`    | Idea        | Intent         | Theoretical  | Write, Prompt, Read |
-| `DESIGN.md`    | Approach    | Architecture   | Practical    | Prompt, Read        |
-| `SPEC.md`      | Requirement | Specification  | Reproducible | Read                |
-| `src/`, `lib/` | Source Code | Implementation |              | —                   |
-
 `DESIGN.md` is recommended; `SPEC.md` is optional.
+
+| Definition     | Level          | Subject     | Instructor          |
+| -------------- | -------------- | ----------- | ------------------- |
+| Intent         | `PROMPT.md`    | Idea        | Write, Prompt, Read |
+| Architecture   | `DESIGN.md`    | Approach    | Prompt, Read        |
+| Specification  | `SPEC.md`      | Requirement | Read                |
+| Implementation | `src/`, `lib/` | Source Code | —                   |
 
 ### Delegation
 
